@@ -1,4 +1,4 @@
 cdk
 ===
 
-CDK for the Duckbox Development Toolchain
+CDK for the Audioniek's Duckbox Development Toolchain
