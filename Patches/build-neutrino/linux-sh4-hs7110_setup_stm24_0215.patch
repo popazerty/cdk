@@ -1,8 +1,8 @@
 *** a/arch/sh/kernel/setup.c	2012-03-31 15:26:54.000000000 +0100
 --- a/arch/sh/kernel/setup.c.patched	2012-03-31 15:26:54.340928000 +0100
 ***************
-*** 388,393 ****
---- 388,421 ----
+*** 389,394 ****
+--- 389,422 ----
   #endif
   #endif
   
@@ -249,11 +249,11 @@
 -			.out1_enabled = 0, });
 -
 -	stx7111_configure_ssc_spi(0, NULL);
-+	stx7111_configure_ssc_i2c(0);
- 	stx7111_configure_ssc_i2c(1); /* J12=1-2, J16=1-2 */
--	peripherals_i2c_bus = stx7111_configure_ssc_i2c(2);
-+	stx7111_configure_ssc_i2c(2);
- 	stx7111_configure_ssc_i2c(3);
++	stx7111_configure_ssc_i2c(0, NULL);
+ 	stx7111_configure_ssc_i2c(1, NULL); /* J12=1-2, J16=1-2 */
+-	peripherals_i2c_bus = stx7111_configure_ssc_i2c(2, NULL);
++	stx7111_configure_ssc_i2c(2, NULL);
+ 	stx7111_configure_ssc_i2c(3, NULL);
  
  	stx7111_configure_usb(&(struct stx7111_usb_config) {
 @@ -246,14 +245,6 @@
@@ -274,7 +274,7 @@
 
 --- linux-sh4/arch/sh/include/asm/irq-ilc.h	2012-03-31 15:26:54.634523363 +0200
 +++ linux-sh4/arch/sh/include/asm/irq-ilc.h.patched	2012-03-31 15:26:54.084558439 +0200
-@@ -40,7 +40,7 @@
+@@ -44,7 +44,7 @@
  #define ILC_IRQ(x)	(ILC_FIRST_IRQ + (x))
  #elif	defined(CONFIG_CPU_SUBTYPE_STX7111)
  #define ILC_FIRST_IRQ	176
@@ -313,7 +313,7 @@
  		},
 --- linux-sh4/drivers/stm/gpio.c	2012-03-31 15:26:55.000000000 +0200
 +++ linux-sh4/drivers/stm/gpio.c.patched	2012-07-08 17:17:27.000000000 +0200
-@@ -27,12 +27,17 @@
+@@ -27,6 +27,10 @@
  #include <linux/stm/platform.h>
  #include <linux/stm/pad.h>
  #include <linux/stm/pio.h>
@@ -321,9 +321,10 @@
 +#include <linux/proc_fs.h>
 +#include <linux/kallsyms.h>
 +#endif
+ #include <linux/stm/pm_sys.h>
  #include "reg_pio.h"
  
- 
+@@ -34,6 +38,7 @@
  
  struct stpio_pin {
  #ifdef CONFIG_STPIO
@@ -331,9 +332,17 @@
  	void (*func)(struct stpio_pin *pin, void *dev);
  	void* dev;
  	unsigned short port_no, pin_no;
-@@ -352,6 +356,9 @@
+@@ -52,6 +57,7 @@
+ #ifdef CONFIG_HIBERNATION
+ 	unsigned char pm_saved_data;
+ #endif
++	unsigned char direction;
+ 	struct stpio_pin stpio;
+ };
  
- 	port->pins[offset].direction = direction;
+@@ -392,6 +398,9 @@
+ 
+ 	gpio_pm_set_direction(&port->pins[offset], direction);
  	set__PIO_PCx(port->base, offset, direction);
 +
 + 	if (!port->pins[offset].stpio.pin_name)
@@ -341,7 +350,7 @@
  }
  
  
-@@ -470,6 +477,10 @@
+@@ -510,6 +519,10 @@
  
  void stpio_free_pin(struct stpio_pin *pin)
  {
@@ -352,7 +361,7 @@
  	stm_pad_release_gpio(stm_gpio(pin->port_no, pin->pin_no));
  }
  EXPORT_SYMBOL(stpio_free_pin);
-@@ -584,6 +595,86 @@
+@@ -624,6 +637,86 @@
  	set_irq_type(irq, triggertype);
  }
  EXPORT_SYMBOL(stpio_set_irq_type);
@@ -439,7 +448,7 @@
  
  #endif /* CONFIG_STPIO */
  
-@@ -964,7 +1055,11 @@
+@@ -1031,7 +1124,11 @@
  static int __init stm_gpio_init(void)
  {
  	int ret;
@@ -449,14 +458,14 @@
 + 	if (proc_stpio)
 + 		proc_stpio->read_proc = stpio_read_proc;
 + #endif
- 	ret = sysdev_class_register(&stm_gpio_sysdev_class);
+ 	ret = platform_driver_register(&stm_gpio_driver);
  	if (ret)
  		return ret;
-
+ 
 *** linux-sh4/drivers/net/phy/phy_device.c	2012-03-31 15:26:54.440157990 +0300
 --- linux-sh4/drivers/net/phy/phy_device.c.patched	2012-03-31 15:26:54.308158605 +0300
 ***************
-*** 962,968 ****
+*** 1104,1110 ****
   		return retval;
   	}
   
@@ -464,7 +473,7 @@
   
   	return 0;
   }
---- 962,968 ----
+--- 1104,1110 ----
   		return retval;
   	}
   
@@ -476,8 +485,8 @@
 *** linux-sh4/drivers/net/stmmac/stmmac_mdio.c	2012-03-31 15:26:54.233314199 +0300
 --- linux-sh4/drivers/net/stmmac/stmmac_mdio.c.patched	2012-03-31 15:26:54.531239690 +0300
 ***************
-*** 169,174 ****
---- 169,175 ----
+*** 170,175 ****
+--- 170,176 ----
   	priv->mii = new_bus;
   
   	found = 0;
@@ -486,7 +495,7 @@
   		struct phy_device *phydev = new_bus->phy_map[addr];
   		if (phydev) {
 ***************
-*** 191,202 ****
+*** 194,205 ****
   			 * and no PHY number was provided to the MAC,
   			 * use the one probed here.
   			 */
@@ -499,7 +508,7 @@
   			switch (phydev->irq) {
   			case PHY_POLL:
   				irq_str = "POLL";
---- 192,213 ----
+--- 195,216 ----
   			 * and no PHY number was provided to the MAC,
   			 * use the one probed here.
   			 */

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Fortis HS7810A"
+echo "Fortis HS7110"
 
 MODDIR=/lib/modules
 echo "Init frontpanel"
@@ -8,12 +8,9 @@ insmod $MODDIR/nuvoton.ko paramDebug=0
 insmod $MODDIR/simu_button.ko
 
 if [ -e /var/etc/.firstboot ]; then
-   echo "1min" >/dev/vfd
    echo "WAIT 1 min"
    rm /var/etc/.firstboot
    touch /dev/.devfsd
-else
-   echo "LD10" > /dev/vfd
 fi
 
 /etc/init.d/mountvirtfs start
@@ -26,12 +23,10 @@ insmod $MODDIR/autofs4.ko
 /usr/sbin/automount --timeout=5 /autofs file /etc/auto.usb
 
 echo "Starting DEBUG Interface"
-echo "LD 9" > /dev/vfd
 /etc/init.d/mountall start
 /etc/init.d/hostname start
 
 echo "Init stmfb"
-echo "LD 8" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7111.ko
 insmod $MODDIR/stmfb.ko display0=1280x720-32@50:15m:pal:yuv:yuv
 
@@ -42,29 +37,24 @@ if [ ! -e /lib/firmware/audio.elf ]; then
 fi
 
 echo "Load video firmware"
-echo "LD 7" > /dev/vfd
 #/bin/dd if=/dev/zero of=/dev/st231-0 bs=1024 count=4096
 /bin/ustslave /dev/st231-0 /lib/firmware/video.elf
 
 echo "Load audio firmware"
-echo "LD 6" > /dev/vfd
 #/bin/dd if=/dev/zero of=/dev/st231-1 bs=1024 count=4096
 /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf
 
 echo "Init embx"
-echo "LD 5" > /dev/vfd
 insmod $MODDIR/embxshell.ko
 insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
 insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS"
-echo "LD 4" > /dev/vfd
 insmod $MODDIR/avs.ko type=avs_pio
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
 echo "Init player $player"
-echo "LD 3" > /dev/vfd
 
 insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
@@ -99,7 +89,6 @@ insmod $MODDIR/smartcard.ko
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
-echo "LD 2" > /dev/vfd
 showiframe -p /var/boot/bootlogo.mvi &
 stfbcontrol a 0
 
@@ -113,7 +102,6 @@ mknod /dev/sci1 c 169 1
 stfbcontrol a 255
 
 echo "Starting telnetd"
-echo "LD 1" > /dev/vfd
 /usr/sbin/telnetd -l /bin/autologin
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
@@ -137,7 +125,6 @@ fi
 #timefix
 date -s "201401011200"
 
-echo "NEU" > /dev/vfd
 echo "LOADING NEUTRINO"
 
 until false
@@ -148,18 +135,14 @@ do
    echo "neutrino ended <- RTV: " $rtv
    case "$rtv" in
       0) echo "0 - SHUTDOWN"
-         echo "SHUT" > /dev/vfd
          init 0;;
       1) echo "1 - REBOOT"
-         echo "REBT" > /dev/vfd
          init 6;;
       *) echo "* - ERROR"
-         echo "ERR " > /dev/vfd
          init 6;;
    esac
 done
 
 #never reached
-echo "REBOOT HS7810A" > /dev/vfd
-echo "REBOOT HS7810A"
+echo "REBOOT HS7110"
 init 6

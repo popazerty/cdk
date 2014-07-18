@@ -2,7 +2,7 @@
 # IMPORTANT: it is expected that only one define is set
 #
 CUBEMOD = $(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)
-MODNAME = $(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(CUBEMOD)$(FORTIS_HDBOX)$(ATEVIO7500)$(OCTAGON1008)$(HS7810A)$(HS7110)$(ATEMIO530)$(ATEMIO520)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(SPARK)$(SPARK7162)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)
+MODNAME = $(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(CUBEMOD)$(FORTIS_HDBOX)$(ATEVIO7500)$(OCTAGON1008)$(HS7810A)$(HS7110)$(ATEMIO530)$(ATEMIO520)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(SPARK)$(SPARK7162)$(VITAMIN_HD5000)$(SAGEMCOM88)
 DEPMOD = $(hostprefix)/bin/depmod
 
 #
@@ -67,18 +67,20 @@ OCTAGON1008PATCHES_24 = $(COMMONPATCHES_24) \
 ATEVIO7500PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-atevio7500_setup_stm24$(PATCH_STR).patch \
-		$(if $(ENIGMA2),linux-sh4-atevio7500_mtdconcat_stm24$(PATCH_STR).patch) \
+		linux-sh4-atevio7500_mtdconcat_stm24$(PATCH_STR).patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch
 
 HS7810APATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7810a_setup_stm24$(PATCH_STR).patch \
+		$(if $(NEUTRINO),linux-sh4-hs7810a_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
 HS7110PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7110_setup_stm24$(PATCH_STR).patch \
+		$(if $(NEUTRINO),linux-sh4-hs7110_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
@@ -190,11 +192,6 @@ SAGEMCOM88PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-sagemcom88_sound_stm24$(PATCH_STR).patch
 
-ARIVALINK200PATCHES_24 = $(COMMONPATCHES_24) \
-		linux-sh4-arivalink200_setup_stm24$(PATCH_STR).patch \
-		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
-		linux-sh4-ipbox_bdinfo_stm24$(PATCH_STR).patch
-
 KERNELPATCHES_24 = \
 		$(if $(UFS910),$(UFS910PATCHES_24)) \
 		$(if $(UFS912),$(UFS912PATCHES_24)) \
@@ -220,8 +217,7 @@ KERNELPATCHES_24 = \
 		$(if $(IPBOX55),$(IPBOX55PATCHES_24)) \
 		$(if $(CUBEMOD),$(CUBEREVOPATCHES_24)) \
 		$(if $(VITAMIN_HD5000),$(VITAMINHD5000PATCHES_24)) \
-		$(if $(SAGEMCOM88),$(SAGEMCOM88PATCHES_24)) \
-		$(if $(ARIVALINK200),$(ARIVALINK200PATCHES_24))
+		$(if $(SAGEMCOM88),$(SAGEMCOM88PATCHES_24))
 
 if ENABLE_ENIGMA2
 BUILDCONFIG=build-enigma2
@@ -294,11 +290,6 @@ $(D)/tfkernel.do_compile:
 	cd $(KERNEL_DIR) && \
 		$(MAKE) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(target)- uImage
 	touch $@
-
-linux-kernel-clean:
-	rm -f $(DEPDIR)/linux-kernel
-	rm -f $(DEPDIR)/linux-kernel.do_compile
-	rm -f $(DEPDIR)/linux-kernel.do_prepare
 
 #
 # Helper
