@@ -1,0 +1,92 @@
+  0.081	PYTHON_START
+  0.087	SimpleSummary
+  0.270	LOAD:GUISkin
+  0.386	LOAD:ElementTree
+  0.725	LOAD:enigma_skin
+  4.954	LoadSkin
+  5.441	LoadSkinDefaultDone
+  5.454	LOAD:Source
+  5.455	LOAD:GUIComponent
+  5.456	LOAD:eRCInput
+ 10.621	LOAD:enigma
+ 10.622	LOAD:InfoBarGenerics
+ 10.826	ChannelSelection.py 1
+ 10.986	ChannelSelection.py 2
+ 10.987	ChannelSelection.py 2.1
+ 11.014	ChannelSelection.py 2.2
+ 11.015	ChannelSelection.py 2.3
+ 11.016	ChannelSelection.py 3
+ 11.049	ChannelSelection.py 4
+ 11.121	ChannelSelection.py after imports
+ 11.628	LOAD:InitBar_Components
+ 11.629	LOAD:HelpableScreen
+ 11.640	Bouquets
+ 11.664	ParentalControl
+ 11.685	LOAD:Navigation
+ 11.699	LOAD:skin
+ 11.700	LOAD:Tools
+ 11.703	config.misc
+ 11.727	Twisted
+ 13.442	LOAD:Plugin
+ 13.445	LOAD:Wizard
+ 13.564	misc
+ 13.565	LOAD:ScreenGlobals
+ 13.638	Screen
+ 13.641	Standby,PowerKey
+ 13.643	Scart
+ 13.648	Load:CI
+ 13.665	Load:VolumeControl
+ 13.725	VolumeControl
+ 13.726	Init:skin
+ 14.472	InputDevice
+ 14.524	SetupDevices
+ 16.076	AVSwitch
+ 16.130	RecordingConfig
+ 16.142	UsageConfig
+ 16.391	keymapparser
+ 16.643	Network
+ 16.689	LCD
+ 16.928	RFMod
+ 16.934	Init:CI
+ 16.953	RcModel
+ 16.961	readPluginList
+ 16.973	plugin GraphMultiEPG
+ 17.295	plugin OpenWebif
+ 22.216	plugin MediaPlayer
+ 22.318	plugin CutListEditor
+ 22.362	plugin DVDBurn
+ 22.386	plugin WebInterface
+ 22.398	plugin Tuxtxt
+ 22.415	plugin PicturePlayer
+ 22.427	plugin SocketMMI
+ 22.477	plugin Sparkoptions
+ 22.918	plugin MediaScanner
+ 22.957	plugin Softcam-manager
+ 23.028	plugin DVDPlayer
+ 23.046	plugin FastScan
+ 23.084	plugin OSD3DSetup
+ 23.105	plugin Hotplug
+ 23.117	plugin SatelliteEquipmentControl
+ 23.135	plugin WirelessLan
+ 23.314	plugin VideoTune
+ 23.328	plugin Videomode
+ 23.596	plugin SkinSelector
+ 23.614	plugin CableScan
+ 23.649	plugin DiseqcTester
+ 23.750	plugin VFD-Icons
+ 24.145	plugin NetworkWizard
+ 24.158	plugin OSDPositionSetup
+ 24.177	plugin Satfinder
+ 24.299	plugin SoftwareManager
+ 25.253	plugin PositionerSetup
+ 25.350	plugin VideoClippingSetup
+ 25.369	plugin VideoEnhancement
+ 25.434	plugin DefaultServicesScanner
+ 25.451	plugin NetworkBrowser
+ 25.746	plugin HdmiCEC
+ 25.914	Init:Session
+ 26.535	wizards
+ 30.274	Init:VolumeControl
+ 30.382	Init:PowerKey
+ 30.396	Init:Trashcan
+ 30.397	RunReactor
