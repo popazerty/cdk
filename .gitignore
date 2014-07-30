@@ -1,3 +1,4 @@
+*~
 Archive
 COPYING
 INSTALL
@@ -7,6 +8,7 @@ Makefile.am.local
 Makefile-archive
 aclocal.m4
 autom4te.cache
+build
 config.log
 config.status
 configure
