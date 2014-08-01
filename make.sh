@@ -26,15 +26,13 @@ CONFIGPARAM=" \
 
 ##############################################
 
-echo "
-  _______                     _____              _     _         _
- |__   __|                   |  __ \            | |   | |       | |
-    | | ___  __ _ _ __ ___   | |  | |_   _  ____| | __| |_  __ _| | ___ ___
-    | |/ _ \/ _\` | '_ \` _ \  | |  | | | | |/  __| |/ /| __|/ _\` | |/ _ | __|
-    | |  __/ (_| | | | | | | | |__| | |_| |  (__|   < | |_| (_| | |  __|__ \\
-    |_|\___|\__,_|_| |_| |_| |_____/ \__,_|\____|_|\_\ \__|\__,_|_|\___|___/
-
-"
+echo "     _             _ _             _      _                  _     _ _    "
+echo "    / \  _   _  __| (_) ___  _ __ (_) ___| | _____        __| | __| | |_  "
+echo "   / _ \| | | |/ _  | |/ _ \|  _ \| |/ _ \ |/ / __|_____ / _  |/ _  | __| "
+echo "  / ___ \ |_| | (_| | | (_) | | | | |  __/   <\__ \_____| (_| | (_| | |_  "
+echo " /_/   \_\__,_|\__,_|_|\___/|_| |_|_|\___|_|\_\___/      \__,_|\__,_|\__| "
+echo "                                                                          "
+echo
 
 ##############################################
 
@@ -62,7 +60,7 @@ echo "    1) Kathrein UFS-910"
 echo "    3) Kathrein UFS-912"
 echo "    4) Kathrein UFS-922"
 echo "    5) Topfield 7700 HDPVR"
-echo "    6) Fortis based (HDBOX)"
+echo "    6) Fortis FS9000/9200 (HDBOX)"
 echo "    7) SpiderBox HL-101"
 echo "    8) Edision Argus vip"
 echo "    9) Cuberevo (IPBOX 9000)"
@@ -73,9 +71,9 @@ echo "   13) Cuberevo 9500HD (7000HD)"
 echo "   14) Cuberevo 2000HD"
 echo "   15) Cuberevo mini_fta (200HD)"
 echo "   16) Homecast 5101"
-echo "   17) Octagon 1008"
+echo "   17) Fortis HS9510 (Octagon 1008)"
 echo "   18) SPARK"
-echo "   19) Atevio7500"
+echo "   19) Fortis HS8200 (Atevio7500)"
 echo "   20) SPARK7162"
 echo "   21) IPBOX9900"
 echo "   22) IPBOX99"
@@ -306,7 +304,7 @@ esac
 echo -e "\nMedia Framework:"
 echo "   1) eplayer3"
 echo "   2) gstreamer"
-echo "   3) use build-in (recommended for Neutrino)"
+echo "   3) use built-in (recommended for Neutrino)"
 echo "   4) gstreamer+eplayer3 (recommended for openPLI)"
 case $5 in
 	[1-4]) REPLY=$5
@@ -347,7 +345,7 @@ esac
 
 echo -e "\nSelect to build:"
 echo "   1) Neutrino"
-echo "   2) Enigma2 + Wlan"
+echo "   2) Enigma2 + WLAN"
 case $7 in
 	[1-2]) REPLY=$7
 	echo -e "\nSelected to build: $REPLY\n"
@@ -383,10 +381,16 @@ echo && \
 echo $CONFIGPARAM >lastChoice
 echo " "
 echo "----------------------------------------"
-echo "Your build enivroment is ready :-)"
+echo "Your build enivronment is ready :-)"
 echo "----------------------------------------"
+echo
+echo "You can now do one of these:"
 echo "  make yaud-neutrino-mp"
 echo "  make yaud-neutrino-mp-next"
 echo "  make yaud-neutrino-hd2-exp"
+echo "  make yaud-neutrino-mp-github"
+echo "  make yaud-neutrino-mp-martii-github"
+echo
 echo "  make yaud-enigma2-pli-nightly"
-echo " "
+echo
+
