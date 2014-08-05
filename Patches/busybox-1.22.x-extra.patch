@@ -9,7 +9,7 @@
 
 --- busybox-1.13.2/archival/libarchive/get_header_tar.c.orig	2008-11-09 18:28:02.000000000 +0100
 +++ busybox-1.13.2/archival/libarchive/get_header_tar.c	2009-02-11 22:34:52.000000000 +0100
-@@ -252,6 +252,8 @@
+@@ -329,6 +329,8 @@
  			file_header->name = concat_path_file(tar.prefix, tar.name);
  		} else
  			file_header->name = xstrdup(tar.name);
@@ -42,7 +42,7 @@ Index: busybox-1.13.2/Makefile
 ===================================================================
 --- busybox-1.13.2.orig/Makefile	2009-03-19 15:44:37.419270265 +0300
 +++ busybox-1.13.2/Makefile	2009-03-19 15:45:57.737521296 +0300
-@@ -471,6 +471,10 @@
+@@ -492,6 +492,10 @@
  		util-linux/ \
  		util-linux/volume_id/ \
  

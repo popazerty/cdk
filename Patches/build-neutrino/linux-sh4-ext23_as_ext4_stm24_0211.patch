@@ -1,6 +1,6 @@
 --- a/fs/ext4/Kconfig
 +++ b/fs/ext4/Kconfig
-@@ -26,6 +26,16 @@ config EXT4_FS
+@@ -26,6 +26,16 @@
  
  	  If unsure, say N.
  
@@ -19,7 +19,7 @@
  	depends on EXT4_FS
 --- a/fs/ext4/super.c
 +++ b/fs/ext4/super.c
-@@ -3994,6 +3994,58 @@ static int ext4_get_sb(struct file_syste
+@@ -3993,6 +3993,58 @@
  	return get_sb_bdev(fs_type, flags, dev_name, data, ext4_fill_super,mnt);
  }
  
@@ -78,7 +78,7 @@
  static struct file_system_type ext4_fs_type = {
  	.owner		= THIS_MODULE,
  	.name		= "ext4",
-@@ -4024,11 +4076,15 @@ static int __init init_ext4_fs(void)
+@@ -4023,11 +4075,15 @@
  	err = init_inodecache();
  	if (err)
  		goto out1;
@@ -94,7 +94,7 @@
  	destroy_inodecache();
  out1:
  	exit_ext4_xattr();
-@@ -4044,6 +4100,8 @@ out4:
+@@ -4043,6 +4099,8 @@
  
  static void __exit exit_ext4_fs(void)
  {

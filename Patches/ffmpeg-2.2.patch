@@ -12,7 +12,7 @@
  }
 --- a/ffprobe.c.orig	2014-03-29 15:06:56.324212030 +0100
 +++ b/ffprobe.c	2014-03-29 15:11:13.724201206 +0100
-@@ -2443,8 +2443,6 @@
+@@ -2460,8 +2460,6 @@
      print_str("version", FFMPEG_VERSION);
      print_fmt("copyright", "Copyright (c) %d-%d the FFmpeg developers",
                program_birth_year, CONFIG_THIS_YEAR);
