@@ -158,7 +158,7 @@ AM_CONDITIONAL(ENABLE_BUILDINPLAYER,test "$enable_buildinplayer" = "yes")
 AC_SUBST(BUILDINPLAYER)
 
 AC_ARG_ENABLE(fortis_hdbox,
-	AS_HELP_STRING(--enable-fortis_hdbox, enable Fortis/hdbox FS-9200HD PVR stuff),
+	AS_HELP_STRING(--enable-fortis_hdbox, enable Fortis/hdbox FS9000/9200HD PVR stuff),
 	[case "${enableval}" in
 		yes) FORTIS_HDBOX=fortis_hdbox ;;
 	esac],[enable_fortis_hdbox=no])
@@ -180,6 +180,38 @@ AC_ARG_ENABLE(octagon1008,
 	esac],[enable_octagon1008=no])
 AM_CONDITIONAL(ENABLE_OCTAGON1008,test "$enable_octagon1008" = "yes")
 AC_SUBST(OCTAGON1008)
+
+AC_ARG_ENABLE(hs7110,
+	AS_HELP_STRING(--enable-hs7110, enable fortis hs7110 stuff),
+	[case "${enableval}" in
+		yes) HS7110=hs7110 ;;
+	esac],[enable_hs7110=no])
+AM_CONDITIONAL(ENABLE_HS7110,test "$enable_hs7110" = "yes")
+AC_SUBST(HS7110)
+
+AC_ARG_ENABLE(hs7810a,
+	AS_HELP_STRING(--enable-hs7810a, enable fortis hs7810a stuff),
+	[case "${enableval}" in
+		yes) HS7810A=hs7810a ;;
+	esac],[enable_hs7810a=no])
+AM_CONDITIONAL(ENABLE_HS7810A,test "$enable_hs7810a" = "yes")
+AC_SUBST(HS7810A)
+
+AC_ARG_ENABLE(hs7119,
+	AS_HELP_STRING(--enable-hs7119, enable fortis hs7119 stuff),
+	[case "${enableval}" in
+		yes) HS7119=hs7119 ;;
+	esac],[enable_hs7119=no])
+AM_CONDITIONAL(ENABLE_HS7119,test "$enable_hs7119" = "yes")
+AC_SUBST(HS7119)
+
+AC_ARG_ENABLE(hs7819a,
+	AS_HELP_STRING(--enable-hs7819, enable fortis hs7819 stuff),
+	[case "${enableval}" in
+		yes) HS7819=hs7819 ;;
+	esac],[enable_hs7819=no])
+AM_CONDITIONAL(ENABLE_HS7819,test "$enable_hs7819" = "yes")
+AC_SUBST(HS7819)
 
 AC_ARG_ENABLE(tf7700,
 	AS_HELP_STRING(--enable-tf7700, enable topfield tf7700 stuff),
@@ -277,14 +309,6 @@ AC_ARG_ENABLE(ufs913,
 AM_CONDITIONAL(ENABLE_UFS913,test "$enable_ufs913" = "yes")
 AC_SUBST(UFS913)
 
-AC_ARG_ENABLE(hs7810a,
-	AS_HELP_STRING(--enable-hs7810a, enable fortis hs7810a stuff),
-	[case "${enableval}" in
-		yes) HS7810A=hs7810a ;;
-	esac],[enable_hs7810a=no])
-AM_CONDITIONAL(ENABLE_HS7810A,test "$enable_hs7810a" = "yes")
-AC_SUBST(HS7810A)
-
 AC_ARG_ENABLE(vitamin_hd5000,
 	AS_HELP_STRING(--enable-vitamin_hd5000,    enable vitamin_hd5000 stuff),
 	[case "${enableval}" in
@@ -300,14 +324,6 @@ AC_ARG_ENABLE(sagemcom88,
 	esac],[enable_sagemcom88=no])
 AM_CONDITIONAL(ENABLE_SAGEMCOM88,test "$enable_sagemcom88" = "yes")
 AC_SUBST(SAGEMCOM88)
-
-AC_ARG_ENABLE(hs7110,
-	AS_HELP_STRING(--enable-hs7110, enable fortis hs7110 stuff),
-	[case "${enableval}" in
-		yes) HS7110=hs7110 ;;
-	esac],[enable_hs7110=no])
-AM_CONDITIONAL(ENABLE_HS7110,test "$enable_hs7110" = "yes")
-AC_SUBST(HS7110)
 
 AC_ARG_ENABLE(atemio520,
 	AS_HELP_STRING(--enable-atemio520, enable atemio520 stuff),
