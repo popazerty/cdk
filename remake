@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ "$KATIDIR" != "" ]; then
+   CURDIR=`pwd`
+   KATIDIR=${CURDIR%/cvs/cdk}
+   export PATH=/usr/sbin:/sbin:$PATH
+   CONFIGPARAM=`cat lastChoice`
+   echo
+   echo "Performing autogen.sh..."
+   echo "------------------------"
+   ./autogen.sh
+   echo
+   echo "Performing configure..."
+   echo "-----------------------"
+   echo
+   ./configure $CONFIGPARAM
+fi
+
