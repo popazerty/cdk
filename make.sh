@@ -8,7 +8,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 5: Media Framework (1-4)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1/Neutrino=2) (1-2)"
- echo "Parameter 8: Neutrino variant (1-6)"
+ echo "Parameter 8: Neutrino variant (1-5)"
  echo "Parameter 9: Bootloader version (1-2) (target system 19 only)"
  exit
 fi
@@ -28,12 +28,11 @@ CONFIGPARAM=" \
 
 ##############################################
 
-echo "     _             _ _             _      _                  _     _ _    "
-echo "    / \  _   _  __| (_) ___  _ __ (_) ___| | _____        __| | __| | |_  "
-echo "   / _ \| | | |/ _  | |/ _ \|  _ \| |/ _ \ |/ / __|_____ / _  |/ _  | __| "
-echo "  / ___ \ |_| | (_| | | (_) | | | | |  __/   <\__ \_____| (_| | (_| | |_  "
-echo " /_/   \_\__,_|\__,_|_|\___/|_| |_|_|\___|_|\_\___/      \__,_|\__,_|\__| "
-echo "                                                                          "
+echo "     _             _ _             _      _                _     _ _    "
+echo "    / \  _   _  __| (_) ___  _ __ (_) ___| | _____      __| | __| | |_  "
+echo "   / _ \| | | |/ _  | |/ _ \|  _ \| |/ _ \ |/ / __|___ / _  |/ _  | __| "
+echo "  / ___ \ |_| | (_| | | (_) | | | | |  __/   <\__ \___| (_| | (_| | |_  "
+echo " /_/   \_\__,_|\__,_|_|\___/|_| |_|_|\___|_|\_\___/    \__,_|\__,_|\__| "
 echo
 
 ##############################################
@@ -99,8 +98,8 @@ case $1 in
 esac
 
 case "$REPLY" in
-	 1) TARGET="--enable-ufs910";BOXTYPE="--with-boxtype=ufs910";RECEIVER="Kathrein UFS-922";;
-	 3) TARGET="--enable-ufs912";BOXTYPE="--with-boxtype=ufs912";RECEIVER="Kathrein UFS-922";;
+	 1) TARGET="--enable-ufs910";BOXTYPE="--with-boxtype=ufs910";RECEIVER="Kathrein UFS-910";;
+	 3) TARGET="--enable-ufs912";BOXTYPE="--with-boxtype=ufs912";RECEIVER="Kathrein UFS-912";;
 	 4) TARGET="--enable-ufs922";BOXTYPE="--with-boxtype=ufs922";RECEIVER="Kathrein UFS-922";;
 	 5) TARGET="--enable-tf7700";BOXTYPE="--with-boxtype=tf7700";RECEIVER="Topfield TF77X0 HDPVR";;
 	 6) TARGET="--enable-fortis_hdbox";BOXTYPE="--with-boxtype=fortis_hdbox";RECEIVER="Fortis FS9000/9200";;
@@ -322,23 +321,21 @@ esac
 case "$REPLY" in
 	2)	CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
-			[1-6])	REPLY=$8;;
+			[1-5])	REPLY=$8;;
 			*)	echo -e "\nWhich neutrino variant do you want to build?"
-				echo "   1) neutrino"
-				echo "   2) neutrino-mp"
-				echo "   3) neutrino-mp-next"
-				echo "   4) neutrino-hd2-exp"
-				echo "   5) neutrino-mp-github"
-				echo "   6) neutrino-mp-martii-github"
-				read -p " Select Neutrino variant (1-6)? ";;
+				echo "   1) neutrino-mp"
+				echo "   2) neutrino-mp-next"
+				echo "   3) neutrino-hd2-exp"
+				echo "   4) neutrino-mp-github"
+				echo "   5) neutrino-mp-martii-github"
+				read -p " Select Neutrino variant (1-5)? ";;
 		esac
 		case "$REPLY" in
-			2)	IMAGEN="neutrino-mp";;
-			3)	IMAGEN="neutrino-mp-next";;
-			4)	IMAGEN="neutrino-hd2-exp";;
-			5)	IMAGEN="neutrino-mp-github";;
-			6)	IMAGEN="neutrino-mp-martii-github";;
-			*)	IMAGEN="neutrino";;
+			2)	IMAGEN="neutrino-mp-next";;
+			3)	IMAGEN="neutrino-hd2-exp";;
+			4)	IMAGEN="neutrino-mp-github";;
+			5)	IMAGEN="neutrino-mp-martii-github";;
+			*)	IMAGEN="neutrino-mp";;
 		esac
 		NEUTRINO=$REPLY;;
 	*)	CONFIGPARAM="$CONFIGPARAM --enable-enigma2 --enable-wlandriver"
@@ -386,12 +383,11 @@ if [ "$IMAGEN" == "enigma2" ]; then
   echo "make yaud-enigma2-pli-nightly" >> $CURDIR/build
 else
   case "$NEUTRINO" in
-    1) echo "make yaud-neutrino" >> $CURDIR/build;;
-    2) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
-    3) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-    5) echo "make yaud-neutrino-mp-github" >> $CURDIR/build;;
-    6) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
+    1) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
+    2) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
+    3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
+    4) echo "make yaud-neutrino-mp-github" >> $CURDIR/build;;
+    5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
     *) exit;;
   esac
 fi
