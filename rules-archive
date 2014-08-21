@@ -76,7 +76,8 @@ howl-1.0.0.tar.gz;http://downloads.sourceforge.net/project/howl/howl/1.0.0
 zlib-1.2.8.tar.gz;http://zlib.net
 readline-6.2.tar.gz;http://ftp.gnu.org/gnu/readline
 lirc-0.9.0.tar.gz;http://prdownloads.sourceforge.net/lirc
-libsigc++-1.2.5.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
+libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
+libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
 glib-2.28.3.tar.gz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.28
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
 libmng-1.0.10.tar.bz2;http://dfn.dl.sourceforge.net/sourceforge/libmng
@@ -153,6 +154,7 @@ libplist-1.10.tar.gz;http://cgit.sukimashita.com/libplist.git/snapshot
 #
 # PYTHON
 #
+gdata-2.0.18.tar.gz;https://gdata-python-client.googlecode.com/files
 elementtree-1.2.6-20050316.tar.gz;http://effbot.org/media/downloads
 libxml2-2.9.0.tar.gz;http://xmlsoft.org/sources
 libxslt-1.1.28.tar.gz;http://xmlsoft.org/sources
@@ -161,7 +163,7 @@ libxmlccwrap-0.0.12.tar.gz;http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwra
 setuptools-0.6c11.tar.gz;http://pypi.python.org/packages/source/s/setuptools
 Twisted-13.0.0.tar.bz2;http://twistedmatrix.com/Releases/Twisted/13.0
 TwistedWeb2-8.1.0.tar.bz2;http://twistedmatrix.com/Releases/Web2/8.1
-TwistedMail-12.2.0.tar.bz2;http://twistedmatrix.com/Releases/Mail/12.0/TwistedMail-12.2.0.tar.bz2
+TwistedMail-12.2.0.tar.bz2;http://twistedmatrix.com/Releases/Mail/12.2
 Imaging-1.1.7.tar.gz;http://effbot.org/downloads
 pycrypto-2.5.tar.gz;http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto
 pyOpenSSL-0.11.tar.gz;http://launchpad.net/pyopenssl/main/0.11/+download

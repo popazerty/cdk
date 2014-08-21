@@ -1,3 +1,64 @@
+*** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 22:22:25.000000000 +0200
+--- linux-sh4/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 23:33:55.732873713 +0200
+***************
+*** 169,174 ****
+--- 169,175 ----
+  	priv->mii = new_bus;
+  
+  	found = 0;
++ 
+  	for (addr = 0; addr < PHY_MAX_ADDR; addr++) {
+  		struct phy_device *phydev = new_bus->phy_map[addr];
+  		if (phydev) {
+***************
+*** 191,202 ****
+  			 * and no PHY number was provided to the MAC,
+  			 * use the one probed here.
+  			 */
+! 			if ((priv->plat->bus_id == mdio_bus_data->bus_id) &&
+! 			    (priv->plat->phy_addr == -1))
+  				priv->plat->phy_addr = addr;
+  
+- 			act = (priv->plat->bus_id == mdio_bus_data->bus_id) &&
+- 				(priv->plat->phy_addr == addr);
+  			switch (phydev->irq) {
+  			case PHY_POLL:
+  				irq_str = "POLL";
+--- 192,214 ----
+  			 * and no PHY number was provided to the MAC,
+  			 * use the one probed here.
+  			 */
+! 
+! 			act = 0;
+! 
+! 			if ((priv->plat->bus_id == mdio_bus_data->bus_id) && (/*(priv->plat->phy_addr == -1) ||*/
+! 					(phydev->phy_id == 0x0181b880) || // Davicom DM9161E
+! 					(phydev->phy_id == 0x0181b8a0) || // Davicom DM9161A
+! 					(phydev->phy_id == 0x00181b80) || // Davicom DM9131
+! 					(phydev->phy_id == 0x1c040011) || // STe100p
+! 					(phydev->phy_id == 0x00061c50) || // STe101p
+! 					(phydev->phy_id == 0x00008201) || // RTL8201CP
+! 					(phydev->phy_id == 0x0007c0f1) || // Pingulux
+! 					(phydev->phy_id == 0x001cc912)))  // RTL821x
+! 			{
+  				priv->plat->phy_addr = addr;
++ 				act=1;
++ 			}
+  
+  			switch (phydev->irq) {
+  			case PHY_POLL:
+  				irq_str = "POLL";
+*** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/net/stmmac/dwmac_lib.c	2011-11-24 22:22:25.000000000 +0200
+--- linux-sh4/drivers/net/stmmac/dwmac_lib.c	2011-11-24 23:33:55.732873713 +0200
+@@ -210,7 +210,7 @@
+ 	}
+ 	/* Optional hardware blocks, interrupts should be disabled */
+ 	if (unlikely(intr_status &
+-		     (DMA_STATUS_GPI | DMA_STATUS_GMI | DMA_STATUS_GLI)))
++		     (DMA_STATUS_GPI | DMA_STATUS_GMI | DMA_STATUS_GLI)) && printk_ratelimit())
+ 		pr_info("%s: unexpected status %08x\n", __func__, intr_status);
+ 	/* Clear the interrupt by writing a logic 1 to the CSR5[15-0] */
+ 	writel((intr_status & 0x1ffff), ioaddr + DMA_STATUS);
 diff -crp linux-sh4/drivers/net/phy/realtek.c linux-sh4/drivers/net/phy/realtek.c
 *** linux-sh4/drivers/net/phy/realtek.c	2009-12-03 04:51:21.000000000 +0100
 --- linux-sh4/drivers/net/phy/realtek.c	2014-07-10 17:43:32.815015201 +0200
@@ -303,7 +364,7 @@ diff -urN linux-sh4-2.6.32.61_stm24_0215.org/arch/sh/boards/arivalink200/setup.c
 +
 +static int __init mb442_device_init(void)
 +{
-+	stx7100_configure_sata();
++	//stx7100_configure_sata();
 +	stx7100_configure_ssc_i2c(0, NULL);
 +	stx7100_configure_ssc_i2c(1, NULL);
 +	stx7100_configure_ssc_i2c(2, NULL);
@@ -361,6 +422,45 @@ diff -urN linux-sh4-2.6.32.61_stm24_0215.org/arch/sh/Makefile linux-sh4/arch/sh/
  core-y	+= $(addprefix arch/sh/boards/, \
 --- linux-sh4/drivers/stm/stx7100_comms.c.orig	2011-01-09 14:19:17.000000000 +0100
 +++ linux-sh4/drivers/stm/stx7100_comms.c	2011-01-09 14:19:52.000000000 +0100
+@@ -36,34 +36,25 @@
+ 	[1] = {
+ 		.gpios_num = 4,
+ 		.gpios = (struct stm_pad_gpio []) {
+-			STM_PAD_PIO_OUT(1, 0, 1),	/* TX */
+-			STM_PAD_PIO_IN(1, 1, -1),	/* RX */
+-			STM_PAD_PIO_IN_NAMED(1, 4, -1, "CTS"),
+-			STM_PAD_PIO_OUT_NAMED(1, 5, 1, "RTS"),
++			STM_PAD_PIO_OUT(5, 0, 1),	/* TX */
++			STM_PAD_PIO_IN(5, 1, -1),	/* RX */
++			STM_PAD_PIO_IN_NAMED(5, 2, -1, "CTS"),
++			STM_PAD_PIO_OUT_NAMED(5, 3, 1, "RTS"),
+ 		},
+ 	},
+ 	[2] = {
+ 		.gpios_num = 4,
+ 		.gpios = (struct stm_pad_gpio []) {
+ 			STM_PAD_PIO_OUT(4, 3, 1),	/* TX */
+ 			STM_PAD_PIO_IN(4, 2, -1),	/* RX */
+ 			STM_PAD_PIO_IN_NAMED(4, 4, -1, "CTS"),
+ 			STM_PAD_PIO_OUT_NAMED(4, 5, 1, "RTS"),
+ 		},
+ 		.sysconfs_num = 1,
+ 		.sysconfs = (struct stm_pad_sysconf []) {
+ 			/* SCIF_PIO_OUT_EN = 0 */
+ 			STM_PAD_SYS_CFG(7, 0, 0, 0),
+ 		},
+ 	},
+-	[3] = {
+-		.gpios_num = 4,
+-		.gpios = (struct stm_pad_gpio []) {
+-			STM_PAD_PIO_OUT(5, 0, 1),	/* TX */
+-			STM_PAD_PIO_IN(5, 1, -1),	/* RX */
+-			STM_PAD_PIO_IN_NAMED(5, 2, -1, "CTS"),
+-			STM_PAD_PIO_OUT_NAMED(5, 3, 1, "RTS"),
+-		},
+-	},
+ };
+ 
 @@ -240,12 +240,12 @@
  			STM_PAD_PIO_BIDIR_NAMED(3, 0, 1, "SCL"),
  			STM_PAD_PIO_BIDIR_NAMED(3, 1, 1, "SDA"),

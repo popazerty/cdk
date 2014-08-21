@@ -14,7 +14,7 @@ $(targetprefix)/var/etc/.version:
 #
 #
 NEUTRINO_DEPS  = bootstrap libcrypto libcurl libid3tag libmad libvorbisidec libpng libjpeg libgif libfreetype
-NEUTRINO_DEPS += ffmpeg liblua libdvbsipp libopenthreads libusb libalsa
+NEUTRINO_DEPS += ffmpeg liblua libdvbsipp libsigc libopenthreads libusb libalsa
 NEUTRINO_DEPS += $(EXTERNALLCD_DEP) $(MEDIAFW_DEP)
 
 N_CFLAGS   = -Wall -W -Wshadow -pipe -Os -fno-strict-aliasing -funsigned-char
@@ -630,3 +630,113 @@ neutrino-hd2-exp-distclean:
 	rm -f $(D)/neutrino-hd2-exp
 	rm -f $(D)/neutrino-hd2-exp.do_compile
 	rm -f $(D)/neutrino-hd2-exp.do_prepare
+
+################################################################################
+#
+# yaud-neutrino-mp-tangos
+#
+yaud-neutrino-mp-tangos: yaud-none lirc \
+		boot-elf neutrino-mp-tangos release_neutrino
+	@TUXBOX_YAUD_CUSTOMIZE@
+
+yaud-neutrino-mp-tangos-plugins: yaud-none lirc \
+		boot-elf neutrino-mp-tangos neutrino-mp-plugins release_neutrino
+	@TUXBOX_YAUD_CUSTOMIZE@
+
+yaud-neutrino-mp-tangos-all: yaud-none lirc \
+		boot-elf neutrino-mp-tangos neutrino-mp-plugins shairport release_neutrino
+	@TUXBOX_YAUD_CUSTOMIZE@
+
+#
+# neutrino-mp-tangos
+#
+NEUTRINO_MP_TANGOS_PATCHES =
+
+$(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
+	rm -rf $(appsdir)/neutrino-mp-tangos
+	rm -rf $(appsdir)/neutrino-mp-tangos.org
+	rm -rf $(N_OBJDIR)
+	[ -d "$(archivedir)/neutrino-mp-tangos.git" ] && \
+	(cd $(archivedir)/neutrino-mp-tangos.git; git pull; cd "$(buildprefix)";); \
+	[ -d "$(archivedir)/neutrino-mp-tangos.git" ] || \
+	git clone https://github.com/TangoCash/nmp-tangos.git $(archivedir)/neutrino-mp-tangos.git; \
+	cp -ra $(archivedir)/neutrino-mp-tangos.git $(appsdir)/neutrino-mp-tangos; \
+	(cd $(appsdir)/neutrino-mp-tangos; git checkout next; cd "$(buildprefix)";); \
+	cp -ra $(appsdir)/neutrino-mp-tangos $(appsdir)/neutrino-mp-tangos.org
+	for i in $(NEUTRINO_MP_TANGOS_PATCHES); do \
+		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		cd $(appsdir)/neutrino-mp-tangos && patch -p1 -i $$i; \
+	done;
+	touch $@
+
+$(D)/neutrino-mp-tangos.config.status:
+	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR) && \
+	cd $(N_OBJDIR) && \
+		$(appsdir)/neutrino-mp-tangos/autogen.sh && \
+		$(BUILDENV) \
+		$(appsdir)/neutrino-mp-tangos/configure \
+			--build=$(build) \
+			--host=$(target) \
+			$(N_CONFIG_OPTS) \
+			--disable-upnp \
+			--enable-lua \
+			--enable-ffmpegdec \
+			--enable-giflib \
+			--with-boxtype=$(BOXTYPE) \
+			--with-tremor \
+			--with-libdir=/usr/lib \
+			--with-datadir=/usr/share/tuxbox \
+			--with-fontdir=/usr/share/fonts \
+			--with-configdir=/var/tuxbox/config \
+			--with-gamesdir=/var/tuxbox/games \
+			--with-plugindir=/var/tuxbox/plugins \
+			--with-stb-hal-includes=$(appsdir)/libstb-hal-github/include \
+			--with-stb-hal-build=$(appsdir)/libstb-hal-github \
+			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
+			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
+			$(PLATFORM_CPPFLAGS) \
+			CPPFLAGS="$(N_CPPFLAGS)"
+
+$(appsdir)/neutrino-mp-tangos/src/gui/version.h:
+	@rm -f $@; \
+	echo '#define BUILT_DATE "'`date`'"' > $@
+	@if test -d $(appsdir)/libstb-hal-github ; then \
+		pushd $(appsdir)/libstb-hal-github ; \
+		HAL_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		pushd $(appsdir)/neutrino-mp-tangos ; \
+		NMP_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		pushd $(buildprefix) ; \
+		DDT_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		echo '#define VCS "DDT-rev'$$DDT_REV'_HAL-rev'$$HAL_REV'-next_NMP-rev'$$NMP_REV'-tangos"' >> $@ ; \
+	fi
+
+
+$(D)/neutrino-mp-tangos.do_compile: neutrino-mp-tangos.config.status $(appsdir)/neutrino-mp-tangos/src/gui/version.h
+	cd $(appsdir)/neutrino-mp-tangos && \
+		$(MAKE) -C $(N_OBJDIR) all
+	touch $@
+
+$(D)/neutrino-mp-tangos: neutrino-mp-tangos.do_prepare neutrino-mp-tangos.do_compile
+	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
+	rm -f $(targetprefix)/var/etc/.version
+	make $(targetprefix)/var/etc/.version
+	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
+	$(target)-strip $(targetprefix)/usr/local/bin/pzapit
+	$(target)-strip $(targetprefix)/usr/local/bin/sectionsdcontrol
+	$(target)-strip $(targetprefix)/usr/local/sbin/udpstreampes
+	touch $@
+
+neutrino-mp-tangos-clean:
+	rm -f $(D)/neutrino-mp-tangos
+	rm -f $(appsdir)/neutrino-mp-tangos/src/gui/version.h
+	cd $(N_OBJDIR) && \
+		$(MAKE) -C $(N_OBJDIR) distclean
+
+neutrino-mp-tangos-distclean:
+	rm -rf $(N_OBJDIR)
+	rm -f $(D)/neutrino-mp-tangos*
+
+

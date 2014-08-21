@@ -89,7 +89,8 @@ libboost;boost-1.53.0;boost_1_53_0;boost_1_53_0.tar.bz2;extract:boost_1_53_0.tar
 libz;1.2.8;zlib-1.2.8;zlib-1.2.8.tar.gz;extract:zlib-1.2.8.tar.gz;patch:zlib-1.2.8.patch
 libreadline;6.2;readline-6.2;readline-6.2.tar.gz;extract:readline-6.2.tar.gz
 lirc;0.9.0;lirc-0.9.0;lirc-0.9.0.tar.gz:lirc-0.9.0-try_first_last_remote.patch;extract:lirc-0.9.0.tar.gz;patch:lirc-0.9.0-try_first_last_remote.patch
-libsigc;1.2.5;libsigc++-1.2.5;libsigc++-1.2.5.tar.gz;extract:libsigc++-1.2.5.tar.gz
+libsigc_e2;1.2.7;libsigc++-1.2.7;libsigc++-1.2.7.tar.gz;extract:libsigc++-1.2.7.tar.gz
+libsigc;2.3.2;libsigc++-2.3.2;libsigc++-2.3.2.tar.xz;extract:libsigc++-2.3.2.tar.xz
 glib2;2.28.3;glib-2.28.3;glib-2.28.3.tar.gz:glib-2.28.3.patch;extract:glib-2.28.3.tar.gz;patch:glib-2.28.3.patch
 libiconv;1.14;libiconv-1.14;libiconv-1.14.tar.gz;extract:libiconv-1.14.tar.gz
 libmng;1.0.10;libmng-1.0.10;libmng-1.0.10.tar.bz2;extract:libmng-1.0.10.tar.bz2
@@ -163,6 +164,7 @@ libplist;1.10;libplist-1.10;libplist-1.10.tar.gz;extract:libplist-1.10.tar.gz
 #
 # PYTHON
 #
+gdata;2.0.18;gdata-2.0.18;gdata-2.0.18.tar.gz;extract:gdata-2.0.18.tar.gz
 elementtree;1.2.6-20050316;elementtree-1.2.6-20050316;elementtree-1.2.6-20050316.tar.gz;extract:elementtree-1.2.6-20050316.tar.gz
 libxml2;2.9.0;libxml2-2.9.0;libxml2-2.9.0.tar.gz:libxml2-2.9.0.patch;extract:libxml2-2.9.0.tar.gz;patch:libxml2-2.9.0.patch
 libxslt;1.1.28;libxslt-1.1.28;libxslt-1.1.28.tar.gz;extract:libxslt-1.1.28.tar.gz

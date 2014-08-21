@@ -56,6 +56,44 @@ CONFIGPARAM="${CONFIGPARAM} --host=${host_alias} --build=${host_alias}"
 
 ##############################################
 
+<<<<<<< HEAD
+=======
+echo "Targets:"
+echo "    1) Kathrein UFS-910"
+echo "    3) Kathrein UFS-912"
+echo "    4) Kathrein UFS-922"
+echo "    5) Topfield 7700 HDPVR"
+echo "    6) Fortis based (HDBOX)"
+echo "    7) SpiderBox HL-101"
+echo "    8) Edision Argus vip"
+echo "    9) Cuberevo (IPBOX 9000)"
+echo "   10) Cuberevo mini (IPBOX 900)"
+echo "   11) Cuberevo mini2 (IPBOX 910)"
+echo "   12) Cuberevo 250 (IPBOX 91)"
+echo "   13) Cuberevo 9500HD (7000HD)"
+echo "   14) Cuberevo 2000HD"
+echo "   15) Cuberevo mini_fta (200HD)"
+echo "   16) Homecast 5101"
+echo "   17) Octagon 1008"
+echo "   18) SPARK"
+echo "   19) Atevio7500"
+echo "   20) SPARK7162"
+echo "   21) IPBOX9900"
+echo "   22) IPBOX99"
+echo "   23) IPBOX55"
+echo "   24) Fortis HS7810A"
+echo "   25) B4Team ADB 5800S"
+echo "   26) Fortis HS7110"
+echo "   27) Atemio520"
+echo "   28) Kathrein UFS-913"
+echo "   29) Kathrein UFC-960"
+echo "   30) Vitamin HD5000"
+echo "   31) Atemio530"
+echo "   32) SagemCom 88 series"
+echo "   33) Ariva@Link200"
+echo "   34) fortis DP7000 (not finished yet)"
+
+>>>>>>> upstream/master
 case $1 in
 	[1-9]|1[0-9]|2[0-9]|3[0-9]) REPLY=$1;;
 	*)
@@ -98,6 +136,7 @@ case $1 in
 esac
 
 case "$REPLY" in
+<<<<<<< HEAD
 	 1) TARGET="--enable-ufs910";BOXTYPE="--with-boxtype=ufs910";RECEIVER="Kathrein UFS-910";;
 	 3) TARGET="--enable-ufs912";BOXTYPE="--with-boxtype=ufs912";RECEIVER="Kathrein UFS-912";;
 	 4) TARGET="--enable-ufs922";BOXTYPE="--with-boxtype=ufs922";RECEIVER="Kathrein UFS-922";;
@@ -132,6 +171,41 @@ case "$REPLY" in
 	33) TARGET="--enable-arivalink200";BOXTYPE="--with-boxtype=arivalink200";RECEIVER="Ariva@Link 200";;
 	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";RECEIVER="Fortis HS7119";;
 	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";RECEIVER="Fortis HS7819";;
+=======
+	 1) TARGET="--enable-ufs910";BOXTYPE="--with-boxtype=ufs910";;
+	 3) TARGET="--enable-ufs912";BOXTYPE="--with-boxtype=ufs912";;
+	 4) TARGET="--enable-ufs922";BOXTYPE="--with-boxtype=ufs922";;
+	 5) TARGET="--enable-tf7700";BOXTYPE="--with-boxtype=tf7700";;
+	 6) TARGET="--enable-fortis_hdbox";BOXTYPE="--with-boxtype=fortis_hdbox";;
+	 7) TARGET="--enable-hl101";BOXTYPE="--with-boxtype=hl101";;
+	 8) TARGET="--enable-vip";BOXTYPE="--with-boxtype=vip";;
+	 9) TARGET="--enable-cuberevo";BOXTYPE="--with-boxtype=cuberevo";;
+	10) TARGET="--enable-cuberevo_mini";BOXTYPE="--with-boxtype=cuberevo_mini";;
+	11) TARGET="--enable-cuberevo_mini2";BOXTYPE="--with-boxtype=cuberevo_mini2";;
+	12) TARGET="--enable-cuberevo_250hd";BOXTYPE="--with-boxtype=cuberevo_250hd";;
+	13) TARGET="--enable-cuberevo_9500hd";BOXTYPE="--with-boxtype=cuberevo_9500hd";;
+	14) TARGET="--enable-cuberevo_2000hd";BOXTYPE="--with-boxtype=cuberevo_2000hd";;
+	15) TARGET="--enable-cuberevo_mini_fta";BOXTYPE="--with-boxtype=cuberevo_mini_fta";;
+	16) TARGET="--enable-homecast5101";BOXTYPE="--with-boxtype=homecast5101";;
+	17) TARGET="--enable-octagon1008";BOXTYPE="--with-boxtype=octagon1008";;
+	18) TARGET="--enable-spark";BOXTYPE="--with-boxtype=spark";;
+	19) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
+	20) TARGET="--enable-spark7162";BOXTYPE="--with-boxtype=spark7162";;
+	21) TARGET="--enable-ipbox9900";BOXTYPE="--with-boxtype=ipbox9900";;
+	22) TARGET="--enable-ipbox99";BOXTYPE="--with-boxtype=ipbox99";;
+	23) TARGET="--enable-ipbox55";BOXTYPE="--with-boxtype=ipbox55";;
+	24) TARGET="--enable-hs7810a";BOXTYPE="--with-boxtype=hs7810a";;
+	25) TARGET="--enable-adb_box";BOXTYPE="--with-boxtype=adb_box";;
+	26) TARGET="--enable-hs7110";BOXTYPE="--with-boxtype=hs7110";;
+	27) TARGET="--enable-atemio520";BOXTYPE="--with-boxtype=atemio520";;
+	28) TARGET="--enable-ufs913";BOXTYPE="--with-boxtype=ufs913";;
+	29) TARGET="--enable-ufc960";BOXTYPE="--with-boxtype=ufc960";;
+	30) TARGET="--enable-vitamin_hd5000";BOXTYPE="--with-boxtype=vitamin_hd5000";;
+	31) TARGET="--enable-atemio530";BOXTYPE="--with-boxtype=atemio530";;
+	32) TARGET="--enable-sagemcom88";BOXTYPE="--with-boxtype=sagemcom88";;
+	33) TARGET="--enable-arivalink200";BOXTYPE="--with-boxtype=arivalink200";;
+	34) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";;
+>>>>>>> upstream/master
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
