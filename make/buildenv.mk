@@ -1,8 +1,3 @@
-export CFLAGS
-export CXXFLAGS
-export DRPM
-export DRPMBUILD
-
 #
 # Stlinux Version
 #

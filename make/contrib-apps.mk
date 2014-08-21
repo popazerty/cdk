@@ -8,19 +8,26 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 			--target=$(target) \
 			--prefix=/usr \
 			--with-terminfo-dirs=/usr/share/terminfo \
-			--disable-big-core \
-			--without-debug \
-			--without-progs \
-			--without-ada \
-			--without-profile \
 			--with-shared \
-			--disable-rpath \
+			--without-cxx \
 			--without-cxx-binding \
+			--without-ada \
+			--without-progs \
+			--without-tests \
+			--disable-big-core \
+			--without-profile \
+			--disable-rpath \
+			--disable-rpath-hack \
+			--enable-echo \
+			--enable-const \
+			--enable-overwrite \
+			--enable-pc-files \
+			--without-manpages \
 			--with-fallbacks='linux vt100 xterm' && \
 		$(MAKE) libs HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)" && \
-			@INSTALL_libncurses@
+		@INSTALL_libncurses@
 	@CLEANUP_libncurses@
 	touch $@
 

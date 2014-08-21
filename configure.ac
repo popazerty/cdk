@@ -213,6 +213,14 @@ AC_ARG_ENABLE(hs7819a,
 AM_CONDITIONAL(ENABLE_HS7819,test "$enable_hs7819" = "yes")
 AC_SUBST(HS7819)
 
+AC_ARG_ENABLE(fortis_dp7000,
+	AS_HELP_STRING(--enable-fortis_dp7000, enable fortis_dp7000 stuff),
+	[case "${enableval}" in
+		yes) FORTIS_DP7000=fortis_dp7000 ;;
+	esac],[enable_fortis_dp7000=no])
+AM_CONDITIONAL(ENABLE_FORTIS_DP7000,test "$enable_fortis_dp7000" = "yes")
+AC_SUBST(FORTIS_DP7000)
+
 AC_ARG_ENABLE(tf7700,
 	AS_HELP_STRING(--enable-tf7700, enable topfield tf7700 stuff),
 	[case "${enableval}" in
@@ -436,14 +444,6 @@ AC_ARG_ENABLE(ipbox55,
 	esac],[enable_ipbox55=no])
 AM_CONDITIONAL(ENABLE_IPBOX55,test "$enable_ipbox55" = "yes")
 AC_SUBST(IPBOX55)
-
-AC_ARG_ENABLE(fortis_dp7000,
-	AS_HELP_STRING(--enable-fortis_dp7000, enable fortis_dp7000 stuff),
-	[case "${enableval}" in
-		yes) FORTIS_DP7000=fortis_dp7000 ;;
-	esac],[enable_fortis_dp7000=no])
-AM_CONDITIONAL(ENABLE_FORTIS_DP7000,test "$enable_fortis_dp7000" = "yes")
-AC_SUBST(FORTIS_DP7000)
 
 AC_SUBST(CFLAGS)
 AC_SUBST(TARGET_CFLAGS)
@@ -858,15 +858,12 @@ TUXBOX_RULES_MAKE(wget)
 #
 # python
 #
-TUXBOX_RULES_MAKE(gdata)
 TUXBOX_RULES_MAKE(elementtree)
 TUXBOX_RULES_MAKE(libxml2)
 TUXBOX_RULES_MAKE(libxslt)
 TUXBOX_RULES_MAKE(lxml)
 TUXBOX_RULES_MAKE(setuptools)
 TUXBOX_RULES_MAKE(twisted)
-TUXBOX_RULES_MAKE(twistedweb2)
-TUXBOX_RULES_MAKE(twistedmail)
 TUXBOX_RULES_MAKE(pilimaging)
 TUXBOX_RULES_MAKE(host_python)
 TUXBOX_RULES_MAKE(python)
@@ -975,6 +972,8 @@ ${srcdir}/rules-archive.pl ${srcdir}/rules-archive > Makefile-archive
 AC_MSG_RESULT([
 summary:
 ----------------------------------------
+ccache support              : $enable_ccache
+$ccacheinfo
 target cpu/boxtype          : $CPU_MODEL / $BOXTYPE
 linux kernel                : ${KERNELVERSION%.*}
 kernelversion               : $KERNELVERSION
@@ -1001,8 +1000,7 @@ MediaFw                     : $MEDIAFW
 MediaFw Dep                 : $MEDIAFW_DEP
 EXTERNALLCD                 : $enable_externallcd
 EXTERNALLCD_DEP             : $EXTERNALLCD_DEP
-ccache support              : $enable_ccache
-$ccacheinfo
+----------------------------------------
 ])
 
 if test "$dircheck" = "fail"; then

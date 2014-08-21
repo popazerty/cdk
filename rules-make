@@ -102,7 +102,7 @@ webkitdfb;2010-11-18;webkitdfb_2010-11-18;webkitdfb_2010-11-18.tar.gz:webkitdfb.
 icu4c;4_4_1;icu/source;icu4c-4_4_1-src.tgz:icu4c-4_4_1_locales.patch;extract:icu4c-4_4_1-src.tgz
 enchant;1.5.0;enchant-1.5.0;enchant-1.5.0.tar.gz;extract:enchant-1.5.0.tar.gz
 lite;0.9.0;lite-0.9.0+git0.7982ccc;lite-0.9.0+git0.7982ccc.tar.bz2;extract:lite-0.9.0+git0.7982ccc.tar.bz2
-sqlite;3.7.11;sqlite-autoconf-3071100;sqlite-autoconf-3071100.tar.gz;extract:sqlite-autoconf-3071100.tar.gz
+sqlite;3.8.6;sqlite-autoconf-3080600;sqlite-autoconf-3080600.tar.gz;extract:sqlite-autoconf-3080600.tar.gz
 cairo;1.8.10;cairo-1.8.10;cairo-1.8.10.tar.gz;extract:cairo-1.8.10.tar.gz;patch:cairo-1.8.10.patch
 libexpat;2.1.0;expat-2.1.0;expat-2.1.0.tar.gz;extract:expat-2.1.0.tar.gz
 libcap;2.22;libcap-2.22;libcap-2.22.tar.bz2;extract:libcap-2.22.tar.bz2;patch:libcap-2.22.patch
@@ -164,15 +164,12 @@ libplist;1.10;libplist-1.10;libplist-1.10.tar.gz;extract:libplist-1.10.tar.gz
 #
 # PYTHON
 #
-gdata;2.0.18;gdata-2.0.18;gdata-2.0.18.tar.gz;extract:gdata-2.0.18.tar.gz
 elementtree;1.2.6-20050316;elementtree-1.2.6-20050316;elementtree-1.2.6-20050316.tar.gz;extract:elementtree-1.2.6-20050316.tar.gz
 libxml2;2.9.0;libxml2-2.9.0;libxml2-2.9.0.tar.gz:libxml2-2.9.0.patch;extract:libxml2-2.9.0.tar.gz;patch:libxml2-2.9.0.patch
 libxslt;1.1.28;libxslt-1.1.28;libxslt-1.1.28.tar.gz;extract:libxslt-1.1.28.tar.gz
 lxml;2.2.8;lxml-2.2.8;lxml-2.2.8.tgz;extract:lxml-2.2.8.tgz
 setuptools;0.6c11;setuptools-0.6c11;setuptools-0.6c11.tar.gz;extract:setuptools-0.6c11.tar.gz
-twisted;13.0.0;Twisted-13.0.0;Twisted-13.0.0.tar.bz2;extract:Twisted-13.0.0.tar.bz2
-twistedweb2;8.1.0;TwistedWeb2-8.1.0;TwistedWeb2-8.1.0.tar.bz2;extract:TwistedWeb2-8.1.0.tar.bz2
-twistedmail;12.2.0;TwistedMail-12.2.0;TwistedMail-12.2.0.tar.bz2;extract:TwistedMail-12.2.0.tar.bz2
+twisted;14.0.0;Twisted-14.0.0;Twisted-14.0.0.tar.bz2;extract:Twisted-14.0.0.tar.bz2
 pilimaging;1.1.7;Imaging-1.1.7;Imaging-1.1.7.tar.gz;extract:Imaging-1.1.7.tar.gz;patch:Imaging-1.1.7-crosscompiling.patch
 pycrypto;2.5;pycrypto-2.5;pycrypto-2.5.tar.gz;extract:pycrypto-2.5.tar.gz;patch:python-pycrypto-no-usr-include.patch
 pyopenssl;0.11;pyOpenSSL-0.11;pyOpenSSL-0.11.tar.gz;extract:pyOpenSSL-0.11.tar.gz

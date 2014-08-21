@@ -31,7 +31,6 @@ $(D)/host_module_init_tools: @DEPENDS_host_module_init_tools@ directories
 #
 # host_mtd_utils
 #
-#$(D)/host_mtd_utils: $(D)/bootstrap @DEPENDS_host_mtd_utils@
 $(D)/host_mtd_utils: @DEPENDS_host_mtd_utils@
 	@PREPARE_host_mtd_utils@
 	cd @DIR_host_mtd_utils@ && \

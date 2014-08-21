@@ -1028,23 +1028,52 @@ endif
 
 	$(INSTALL_DIR) $(prefix)/release$(PYTHON_DIR)
 	cp -a $(targetprefix)$(PYTHON_DIR)/* $(prefix)/release$(PYTHON_DIR)/
+
+	rm -rf $(prefix)/release$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
+	rm -rf $(prefix)/release$(PYTHON_DIR)/ctypes/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/email/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/json/tests
+	rm -rf $(prefix)/release$(PYTHON_DIR)/lib2to3/tests
+	rm -rf $(prefix)/release$(PYTHON_DIR)/sqlite3/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/unittest/test
+
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah-2.4.4-py$(PYTHON_VERSION).egg-info
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah/Tests
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/elementtree-1.2.6_20050316-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/lxml
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/lxml-2.2.8-py$(PYTHON_VERSION).egg-info
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxml2mod.so
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxsltmod.so
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/OpenSSL/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/PIL/PIL-1.1.7-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pyOpenSSL-0.11-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/python_wifi-0.5.0-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pycrypto-2.5-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pyusb-1.0.0a3-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/setuptools
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/setuptools-0.6c11-py$(PYTHON_VERSION).egg-info
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/zope/interface/tests
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/zope.interface-4.0.1-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Twisted-13.0.0-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,manhole,names,news,trial,words,application,enterprise,flow,lore,pair,runner,scripts,tap,topfiles}
-	rm -rf $(prefix)/release$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Twisted-14.0.0-py$(PYTHON_VERSION).egg-info
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/application/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/conch/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/internet/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/lore/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/mail/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/manhole/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/names/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/news/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/pair/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/persisted/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/protocols/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/python/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/runner/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/scripts/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/trial/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/web/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/words/test
 
 #
 # copy SH4 remote control files from .../root/release to /usr/local/share/enigma2/rc_models
@@ -1309,11 +1338,7 @@ endif
 # IMPORTANT: it is assumed that only one variable is set. Otherwise the target name won't be resolved.
 #
 $(D)/release_enigma2: \
-<<<<<<< HEAD
-$(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)
-=======
-$(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7810A)$(HS7110)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)$(FORTIS_DP7000)
->>>>>>> upstream/master
+$(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)$(FORTIS_DP7000)
 	touch $@
 
 #

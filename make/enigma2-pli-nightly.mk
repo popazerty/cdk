@@ -13,7 +13,7 @@ ENIGMA2_DEPS += libexpat libdvbsipp python libxml2 libxslt elementtree zope_inte
 ENIGMA2_DEPS += lxml libxmlccwrap libdreamdvd tuxtxt32bpp sdparm hotplug_e2 wpa_supplicant wireless_tools minidlna opkg ethtool
 ENIGMA2_DEPS += $(MEDIAFW_DEP) $(EXTERNALLCD_DEP)
 
-E_CONFIG_OPTS =
+E_CONFIG_OPTS = --enable-duckbox
 
 if ENABLE_SPARK
 E_CONFIG_OPTS += --enable-spark

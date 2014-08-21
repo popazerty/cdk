@@ -96,10 +96,12 @@ $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samb
 		./autogen.sh && \
 		$(BUILDENV) \
 		libreplace_cv_HAVE_GETADDRINFO=no \
+		libreplace_cv_READDIR_NEEDED=no \
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix= \
+			--includedir=/usr/include \
 			--exec-prefix=/usr \
 			--disable-pie \
 			--disable-avahi \
@@ -137,7 +139,7 @@ $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samb
 			--without-acl-support \
 			--with-configdir=/etc/samba \
 			--with-privatedir=/etc/samba \
-			--with-mandir=/usr/share/man \
+			--with-mandir=no \
 			--with-piddir=/var/run \
 			--with-logfilebase=/var/log \
 			--with-lockdir=/var/lock \

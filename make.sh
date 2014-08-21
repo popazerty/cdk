@@ -204,7 +204,7 @@ if [ "$3" ]; then
 	REPLY="$3"
 else
 	REPLY=N
-	read -p "Activate debug (y/N)? "
+	read -p "   Activate debug (y/N)? "
 fi
 [ "$REPLY" == "y" -o "$REPLY" == "Y" ] && CONFIGPARAM="$CONFIGPARAM --enable-debug"
 DEBUGR=$REPLY
@@ -346,9 +346,13 @@ esac
 
 ##############################################
 
-CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD $MKTARGET"
+CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD $IMAGE"
 
 ##############################################
+
+# configure still wants this
+# ignore errors here
+automake --add-missing
 
 echo && \
 echo "Performing autogen.sh..." && \
