@@ -235,6 +235,10 @@ elif test "$BOXTYPE" = "hs7110"; then
 	AC_DEFINE(HAVE_HS7110_HARDWARE, 1, [building for a hs7110])
 elif test "$BOXTYPE" = "hs7810a"; then
 	AC_DEFINE(HAVE_HS7810A_HARDWARE, 1, [building for a hs7810a])
+elif test "$BOXTYPE" = "hs7119"; then
+	AC_DEFINE(HAVE_HS7119_HARDWARE, 1, [building for a hs7119])
+elif test "$BOXTYPE" = "hs7819"; then
+	AC_DEFINE(HAVE_HS7819_HARDWARE, 1, [building for a hs7819])
 elif test "$BOXTYPE" = "adb_box"; then
 	AC_DEFINE(HAVE_ADB_BOX_HARDWARE, 1, [building for a adb_box])
 elif test "$BOXTYPE" = "atemio520"; then
