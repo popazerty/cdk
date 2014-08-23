@@ -161,8 +161,8 @@ libxmlccwrap-0.0.12.tar.gz;http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwra
 setuptools-0.6c11.tar.gz;http://pypi.python.org/packages/source/s/setuptools
 Twisted-14.0.0.tar.bz2;http://twistedmatrix.com/Releases/Twisted/14.0
 Imaging-1.1.7.tar.gz;http://effbot.org/downloads
-pycrypto-2.5.tar.gz;http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto
-pyOpenSSL-0.11.tar.gz;http://launchpad.net/pyopenssl/main/0.11/+download
+pycrypto-2.5.tar.gz;http://pypi.python.org/packages/source/p/pycrypto
+pyOpenSSL-0.12.tar.gz;http://pypi.python.org/packages/source/p/pyOpenSSL
 pyusb-1.0.0a3.tar.gz;http://pypi.python.org/packages/source/p/pyusb
 Python-2.7.3.tar.bz2;http://www.python.org/ftp/python/2.7.3
 python-wifi-0.5.0.tar.bz2;http://freefr.dl.sourceforge.net/project/pythonwifi.berlios
