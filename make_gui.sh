@@ -94,6 +94,11 @@ ${DIALOG} --menu "\n Select Target:\n " $height $width $listheight \
 29	"Kathrein UFC-960" \
 30	"Vitamin HD5000" \
 31	"Atemio530" \
+32	"SagemCom 88 series"
+33	"Ferguson Ariva @Link 200"
+34	"Fortis HS7119 (not finished yet)"
+35	"Fortis HS7819 (not finished yet)"
+36	"Fortis DP7000 (not finished yet)"
 2> ${tempfile}
 
 opt=${?}
@@ -132,6 +137,11 @@ case "$REPLY" in
 	29) TARGET="--enable-ufc960";BOXTYPE="--with-boxtype=ufc960";;
 	30) TARGET="--enable-vitamin_hd5000";BOXTYPE="--with-boxtype=vitamin_hd5000";;
 	31) TARGET="--enable-atemio530";BOXTYPE="--with-boxtype=atemio530";;
+	32) TARGET="--enable-sagemcom88";BOXTYPE="--with-boxtype=sagemcom88";;
+	33) TARGET="--enable-arivalink200";BOXTYPE="--with-boxtype=arivalink200";;
+	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";;
+	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";;
+	36) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";;
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"

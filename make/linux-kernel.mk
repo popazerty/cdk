@@ -9,6 +9,7 @@ DEPMOD = $(hostprefix)/bin/depmod
 # Patches Kernel 24
 #
 COMMONPATCHES_24 = \
+		linux-kbuild-generate-mudules-builtin.patch \
 		linux-sh4-linuxdvb_stm24$(PATCH_STR).patch \
 		$(if $(P0209),linux-sh4-makefile_stm24.patch) \
 		linux-sh4-sound_stm24$(PATCH_STR).patch \
@@ -26,7 +27,6 @@ COMMONPATCHES_24 = \
 		$(if $(P0209),linux-sh4-dwmac_stm24_0209.patch) \
 		$(if $(P0209),linux-sh4-directfb_stm24$(PATCH_STR).patch) \
 		$(if $(P0211)$(P0214)$(P0215),linux-sh4-console_missing_argument_stm24$(PATCH_STR).patch)
-
 
 #		$(if $(P0209)$(P0211),linux-sh4-remove_pcm_reader_stm24.patch)
 
@@ -70,6 +70,13 @@ ATEVIO7500PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-atevio7500_mtdconcat_stm24$(PATCH_STR).patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch
 
+HS7110PATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-lmb_stm24$(PATCH_STR).patch \
+		linux-sh4-hs7110_setup_stm24$(PATCH_STR).patch \
+		$(if $(NEUTRINO),linux-sh4-hs7110_mtdconcat_stm24$(PATCH_STR).patch) \
+		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
+		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
+
 HS7810APATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7810a_setup_stm24$(PATCH_STR).patch \
@@ -77,10 +84,15 @@ HS7810APATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
-HS7110PATCHES_24 = $(COMMONPATCHES_24) \
+HS7119PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
-		linux-sh4-hs7110_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7110_mtdconcat_stm24$(PATCH_STR).patch) \
+		linux-sh4-hs7119_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
+		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
+
+HS7819PATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-lmb_stm24$(PATCH_STR).patch \
+		linux-sh4-hs7819_setup_stm24$(PATCH_STR).patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
@@ -213,8 +225,10 @@ KERNELPATCHES_24 = \
 		$(if $(SPARK),$(SPARK_PATCHES_24)) \
 		$(if $(SPARK7162),$(SPARK7162_PATCHES_24)) \
 		$(if $(FORTIS_HDBOX),$(FORTISPATCHES_24)) \
-		$(if $(HS7810A),$(HS7810APATCHES_24)) \
 		$(if $(HS7110),$(HS7110PATCHES_24)) \
+		$(if $(HS7810A),$(HS7810APATCHES_24)) \
+		$(if $(HS7119),$(HS7119PATCHES_24)) \
+		$(if $(HS7819),$(HS7819PATCHES_24)) \
 		$(if $(ATEMIO520),$(ATEMIO520PATCHES_24)) \
 		$(if $(ATEMIO530),$(ATEMIO530PATCHES_24)) \
 		$(if $(ATEVIO7500),$(ATEVIO7500PATCHES_24)) \
@@ -259,7 +273,7 @@ HOST_KERNEL_VERSION = 2.6.32.61$(KERNELSTMLABEL)-$(KERNELLABEL)
 endif
 HOST_KERNEL_PATCHES = $(KERNELPATCHES_24)
 HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,-,$(KERNELVERSION))_$(MODNAME).config$(DEBUG_STR)
-HOST_KERNEL_RPM = $(archivedir)/$(STLINUX)-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.rpm
+HOST_KERNEL_RPM = $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.rpm
 
 $(D)/linux-kernel.do_prepare: \
 		$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=Patches/$(BUILDCONFIG$)/%)) \
@@ -300,6 +314,11 @@ $(D)/tfkernel.do_compile:
 	cd $(KERNEL_DIR) && \
 		$(MAKE) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(target)- uImage
 	touch $@
+
+linux-kernel-clean:
+	rm -f $(DEPDIR)/linux-kernel
+	rm -f $(DEPDIR)/linux-kernel.do_compile
+	rm -f $(DEPDIR)/linux-kernel.do_prepare
 
 #
 # Helper

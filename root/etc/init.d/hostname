@@ -6,12 +6,12 @@
 # chkconfig: S 40 0
 #
 
-echo -n "Hostname: "
+echo -n "[hostname] Hostname: "
 
 if [ -f /etc/hostname ]
 then
 	hostname -F /etc/hostname
 fi
 
-echo $(hostname)"."
+echo $(hostname)
 

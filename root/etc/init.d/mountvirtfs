@@ -209,7 +209,7 @@ if grep -q "/dev tmpfs" /proc/mounts; then
 				# Fill initially ${devstatic} (nfs)
 				#
 				mount /rom -o rw,remount
-       	 			echo "Making devices in ${devstatic}..."
+       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
 				domakedev ${devstatic} && \
 					mount /rom -o ro,remount
 			fi
@@ -217,12 +217,12 @@ if grep -q "/dev tmpfs" /proc/mounts; then
 				# Fill initially ${devstatic} (usb)
 				#
 				mount /rom -o rw,remount
-       	 			echo "Making devices in ${devstatic}..."
+       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
 				domakedev ${devstatic} && \
 					mount /rom -o ro,remount
 			fi 
 			# Copy ${devstatic}/* to /dev tmpfs
-			echo "Copying device nodes to /dev"
+			echo "[mountvirtfs] Copying device nodes to /dev"
 			cp -a ${devstatic}/* /dev/
 
 		else
@@ -232,18 +232,18 @@ if grep -q "/dev tmpfs" /proc/mounts; then
   		if grep -q "/dev/root / nfs" /proc/mounts && [ ! -d ${devstatic}/pts ]; then
 				# Fill initially ${devstatic} (nfs)
 				#
-       	 			echo "Making devices in ${devstatic}..."
+       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
 			  domakedev ${devstatic}
 			fi
 			if grep -q "/dev/root / ext2" /proc/mounts && [ ! -d ${devstatic}/pts ]; then
 				# Fill initially ${devstatic} (usb)
 				#
-       	 			echo "Making devices in ${devstatic}..."
+       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
 			  domakedev ${devstatic}
 			fi
 	
 			# Copy ${devstatic}/* to /dev tmpfs
-			echo "Copying device nodes to /dev"
+			echo "[mountvirtfs] Copying device nodes to /dev"
 			cp -a ${devstatic}/* /dev/
 		fi
 		umount /rom/ram
@@ -255,20 +255,20 @@ else
   	if grep -q "/dev/root / nfs" /proc/mounts && [ ! -d /dev/pts ]; then
 			# Fill initially /dev (nfs)
 			#
-        		echo "Seems to be the first run - Making devices in /dev..."
+        		echo "[mountvirtfs] Seems to be the first run - Making devices in /dev..."
 			domakedev /dev
 		fi
 		if grep -q "/dev/root / ext[23]" /proc/mounts && [ ! -d /dev/pts ]; then
 			# Fill initially /dev (usb)
 			#
-        		echo "Seems to be the first run - Making devices in /dev..."
+        		echo "[mountvirtfs] Seems to be the first run - Making devices in /dev..."
 			domakedev /dev
 		fi
 
 		# Copy/Mount /dev in tmpfs
 		#
-		echo "Mount /dev in tmpfs"
-		echo "Copying device nodes to /dev"
+		echo "[mountvirtfs] Mount /dev in tmpfs"
+		echo "[mountvirtfs] Copying device nodes to /dev"
 		doramdev
 	fi
 fi

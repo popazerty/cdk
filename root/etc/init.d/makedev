@@ -2,7 +2,7 @@
 
 start()
 {
-  echo "Starting makedev"
+  echo "[makedev] Starting makedev..."
   # Check if started on target or on host
   MACHINE=`uname -m`
   if [ $MACHINE == "sh4" ]; then
@@ -20,11 +20,11 @@ start()
   fi
 
   # Decide if we have CI and/or TWIN/TRIPLET
-  CI="FALSE"
+  CI="No"
   TUNER="1"
-  for TARGET in cuberevo-9500hd cuberevo-mini2 cuberevo-mini cuberevo ufs922 ufs912 ufs913 ufc960 fortis atevio7500 octagon1008 hs7810a hs7110 whitebox ufs910 hl101 Edision-v1 Edision-v2 hs5101 tf7700 ipbox9900; do
+  for TARGET in cuberevo-9500hd cuberevo-mini2 cuberevo-mini cuberevo ufs922 ufs912 ufs913 ufc960 fortis atevio7500 octagon1008 hs7110 hs7810a hs7119 hs7819 ufs910 hl101 Edision-v1 Edision-v2 hs5101 tf7700 ipbox9900; do
     if [ ${HOST} == ${TARGET} ]; then
-      CI="TRUE"
+      CI="Yes"
       break
     fi
   done
@@ -44,17 +44,17 @@ start()
   done
 
   # Decide if we support HDMI CEC
-  HDMI_CEC="FALSE"
-  for TARGET in atevio7500 hs7110 hs7810a spark spark7162 ufs912 ufs913 whitebox; do
+  HDMI_CEC="No"
+  for TARGET in atevio7500 hs7110 hs7810a hs7119 hs7819 spark spark7162 ufs912 ufs913; do
     if [ ${HOST} == ${TARGET} ]; then
-      HDMI_CEC="TRUE"
+      HDMI_CEC="Yes"
       break
     fi
   done
 
-  echo "CI=${CI}"
-  echo "TUNER=${TUNER}"
-  echo "HDMI_CEC=${HDMI_CEC}"
+  echo " CI-slot(s) : ${CI}"
+  echo " Tuners     : ${TUNER}"
+  echo " HDMI CEC   : ${HDMI_CEC}"
 
   ${MAKEDEV} std
   ${MAKEDEV} fd
@@ -73,7 +73,7 @@ start()
   ${MAKEDEV} i2c mtd
 
   ${MAKEDEV} dvb
-  if [ ${CI} == "TRUE" ]; then
+  if [ ${CI} == "Yes" ]; then
     ${MAKEDEV} dvb_ci
     ${MAKEDEV} dvb_ca
   else
@@ -81,7 +81,7 @@ start()
   fi
   if [ ${TUNER} == "2" ] || [ ${TUNER} == "3" ]; then
     ${MAKEDEV} dvb_2nd
-    if [ ${CI} == "TRUE" ]; then
+    if [ ${CI} == "Yes" ]; then
       ${MAKEDEV} dvb_ca_2nd
     else
       ${MAKEDEV} dvb_ca_2nd_no
@@ -89,7 +89,7 @@ start()
   fi
   if [ ${TUNER} == "3" ]; then
     ${MAKEDEV} dvb_3rd
-    if [ ${CI} == "TRUE" ]; then
+    if [ ${CI} == "Yes" ]; then
       ${MAKEDEV} dvb_ca_3rd
     else
       ${MAKEDEV} dvb_ca_3rd_no
@@ -100,7 +100,7 @@ start()
   ${MAKEDEV} vfd
   ${MAKEDEV} rc
   ${MAKEDEV} hdmi
-  if [ ${HDMI_CEC} == "TRUE" ]; then
+  if [ ${HDMI_CEC} == "Yes" ]; then
     ${MAKEDEV} hdmi_cec
   fi
   ${MAKEDEV} ttyusb
@@ -132,6 +132,7 @@ start()
     fi
   done
 
+  echo "[makedev] done."
 }
 
 case "$1" in

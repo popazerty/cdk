@@ -205,7 +205,7 @@ AC_ARG_ENABLE(hs7119,
 AM_CONDITIONAL(ENABLE_HS7119,test "$enable_hs7119" = "yes")
 AC_SUBST(HS7119)
 
-AC_ARG_ENABLE(hs7819a,
+AC_ARG_ENABLE(hs7819,
 	AS_HELP_STRING(--enable-hs7819, enable fortis hs7819 stuff),
 	[case "${enableval}" in
 		yes) HS7819=hs7819 ;;

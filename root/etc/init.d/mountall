@@ -1,6 +1,5 @@
-#! /bin/sh
 #
-# mountall	Mount all filesystems.
+# mountall.sh	Mount all filesystems.
 #
 # Version:	@(#)mountall.sh  2.85-23  29-Jul-2004  miquels@cistron.nl
 #
@@ -15,7 +14,7 @@ TMPTIME=0
 #
 # Mount local file systems in /etc/fstab.
 #
-[ "$VERBOSE" != no ] && echo "Mounting local filesystems..."
+[ "$VERBOSE" != no ] && echo "[mountall] Mounting local filesystems..."
 mount -av -t nonfs,nonfs4,nosmbfs,nocifs,noncp,noncpfs,nocoda 2>&1 |
 	egrep -v '(already|nothing was) mounted'
 
