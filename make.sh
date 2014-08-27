@@ -133,7 +133,7 @@ case "$REPLY" in
 	33) TARGET="--enable-arivalink200";BOXTYPE="--with-boxtype=arivalink200";RECEIVER="Ariva@Link 200";;
 	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";RECEIVER="Fortis HS7119";;
 	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";RECEIVER="Fortis HS7819";;
-	36) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";RECEIVER="Fortis DP7000";;;
+	36) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";RECEIVER="Fortis DP7000";;
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
