@@ -52,7 +52,7 @@ esac
 host_alias=`echo ${host_alias} | sed -e "s/suse/${VENDOR}/"`
 
 # And add it to the config parameters.
-CONFIGPARAM="${CONFIGPARAM} --host=${host_alias} --build=${host_alias}"
+CONFIGPARAM="$CONFIGPARAM --host=$host_alias --build=$host_alias"
 
 ##############################################
 
@@ -350,10 +350,6 @@ CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD $IMAGE"
 
 ##############################################
 
-# configure still wants this
-# ignore errors here
-automake --add-missing
-
 echo && \
 echo "Performing autogen.sh..." && \
 echo "------------------------" && \
@@ -406,4 +402,5 @@ case "$REPLY" in
                 exit;;
   *)            $CURDIR/build;;
 esac
+
 
