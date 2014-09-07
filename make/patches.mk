@@ -9,13 +9,13 @@
 
 #NEUTRINO_MP_MARTII_GH_PATCHES += $(PATCHES)/
 
-# Neutrino MP Next from gitourius
+# Neutrino MP Next from gitorious
 #NEUTRINO_MP_LIBSTB_PATCHES += $(PATCHES)/
 
 #NEUTRINO_MP_NEXT_PATCHES += $(PATCHES)/
 # Neutrino HD2
 
-NEUTRINO_HD2_PATCHES+= $(PATCHES)/neutrino-hd2-exp.diff
+NEUTRINO_HD2_PATCHES += $(PATCHES)/neutrino-hd2-exp.diff
 
 #NEUTRINO_MP_TANGOS_PATCHES += $(PATCHES)/
 

@@ -87,7 +87,7 @@
  static const u32 default_msg_level = (NETIF_MSG_DRV | NETIF_MSG_PROBE |
  				      NETIF_MSG_LINK | NETIF_MSG_IFUP |
  				      NETIF_MSG_IFDOWN | NETIF_MSG_TIMER);
-@@ -978,7 +980,7 @@
+@@ -979,7 +981,7 @@
  	if (!is_valid_ether_addr(priv->dev->dev_addr)) {
  		priv->hw->mac->get_umac_addr((void __iomem *)
  					     priv->dev->base_addr,
@@ -96,7 +96,7 @@
  		if  (!is_valid_ether_addr(priv->dev->dev_addr))
  			random_ether_addr(priv->dev->dev_addr);
  	}
-@@ -2261,6 +2263,8 @@
+@@ -2262,6 +2264,8 @@
  					   (unsigned long *)&tmrate))
  				goto err;
  #endif
