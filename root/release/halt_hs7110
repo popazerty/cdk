@@ -49,6 +49,8 @@ fi
 
 #halt -d -f -n -i $poweroff $hddown
 
-/bin/fp_control -e
+/bin/fp_control -l 0 1 # red LED on
+sleep 1
+/bin/fp_control -e # shutdown
 
 : exit 0

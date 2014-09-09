@@ -247,25 +247,26 @@
  #elif defined(BOXMODEL_UFS910)
  	FP_ICON_USB = 0x10,
  	FP_ICON_HD,
-@@ -126,13 +170,23 @@
- 	FP_ICON_FR,
+@@ -127,12 +171,24 @@
  	FP_ICON_REC,
  	FP_ICON_CLOCK,
-+	FP_ICON_MAX
  #endif
 +#if !defined(FP_ICON_CAM1)
  	FP_ICON_CAM1 = FP_ICON_REC,
-+#elif !defined(FP_ICON_MUSIC)
-+ 	FP_ICON_MUSIC,
-+#elif !defined(FP_ICON_TV)
++#endif
++#if !defined(FP_ICON_TV)
  	FP_ICON_TV = FP_ICON_MUSIC,
-+#elif !defined(FP_ICON_RADIO)
++#endif
++#if !defined(FP_ICON_RADIO)
  	FP_ICON_RADIO = FP_ICON_MUSIC,
-+#elif !defined(FP_ICON_RECORD)
++#endif
++#if !defined(FP_ICON_RECORD)
  	FP_ICON_RECORD = FP_ICON_REC,
-+#elif !defined(FP_ICON_DOWNLOAD)
++#endif
++#if !defined(FP_ICON_DOWNLOAD)
  	FP_ICON_DOWNLOAD,
-+#elif !defined(FP_ICON_TIMESHIFT)
++#endif
++#if !defined(FP_ICON_TIMESHIFT)
  	FP_ICON_TIMESHIFT,
 +#endif
  	FP_ICON_MAX

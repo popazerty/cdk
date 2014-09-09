@@ -1,3 +1,8 @@
+export CFLAGS
+export CXXFLAGS
+export DRPM
+export DRPMBUILD
+
 #
 # Stlinux Version
 #
@@ -141,7 +146,7 @@ DRIVER_PLATFORM := \
 	$(if $(HS7110),HS7110=$(HS7110)) \
 	$(if $(HS7810A),HS7810A=$(HS7810A)) \
 	$(if $(HS7119),HS7119=$(HS7119)) \
-	$(if $(HS7819),HS7810A=$(HS7819)) \
+	$(if $(HS7819),HS7819=$(HS7819)) \
 	$(if $(ATEMIO520),ATEMIO520=$(ATEMIO520)) \
 	$(if $(ATEMIO530),ATEMIO530=$(ATEMIO530)) \
 	$(if $(TF7700),TF7700=$(TF7700)) \

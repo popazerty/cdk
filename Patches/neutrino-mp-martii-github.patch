@@ -701,4 +701,28 @@
  
  	HideHintBox();
  
+#--- neutrino-mp-martii-github.org/src/system/ytcache.cpp
+#+++ neutrino-mp-martii-github/src/system/ytcache.cpp
+#@@ -185,8 +185,9 @@
+# 	set_threadname("ytdownload");
+# 	cYTCache *caller = (cYTCache *)arg;
+# 
+#+#if defined(FP_ICON_DOWNLOAD)
+# 	CVFD::getInstance()->ShowIcon(FP_ICON_DOWNLOAD, true);
+#-
+#+#endif
+# 	while (caller->thread) {
+# 		MI_MOVIE_INFO mi;
+# 		{
+#@@ -217,8 +218,9 @@
+# 		}
+# 	}
+# 
+#+#if defined(FP_ICON_DOWNLOAD)
+# 	CVFD::getInstance()->ShowIcon(FP_ICON_DOWNLOAD, false);
+#-
+#+#endif
+# 	fprintf(stderr, "%s exiting\n", __func__);
+# 	pthread_exit(NULL);
+# }
 
