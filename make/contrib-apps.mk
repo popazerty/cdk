@@ -1,3 +1,6 @@
+#
+# libncurses
+#
 $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 	@PREPARE_libncurses@
 	cd @DIR_libncurses@ && \
@@ -23,10 +26,13 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 			--enable-overwrite \
 			--enable-pc-files \
 			--without-manpages \
-			--with-fallbacks='linux vt100 xterm' && \
+			--with-fallbacks='linux vt100 xterm' \
+			&& \
 		$(MAKE) libs HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)" && \
+		sed -e 's,^prefix="/usr",prefix="$(targetprefix)/usr",' < misc/ncurses-config > $(hostprefix)/bin/ncurses5-config && \
+		chmod 755 $(hostprefix)/bin/ncurses5-config && \
 		@INSTALL_libncurses@
 	@CLEANUP_libncurses@
 	touch $@
@@ -59,7 +65,8 @@ $(D)/grep: $(D)/bootstrap @DEPENDS_grep@
 			--disable-nls \
 			--disable-perl-regexp \
 			--libdir=$(targetprefix)/usr/lib \
-			--prefix=/usr && \
+			--prefix=/usr \
+			&& \
 		$(MAKE) && \
 		@INSTALL_grep@
 	@CLEANUP_grep@
@@ -76,7 +83,8 @@ $(D)/console_data: $(D)/bootstrap @DEPENDS_console_data@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=$(targetprefix) \
-			--with-main_compressor=gzip && \
+			--with-main_compressor=gzip \
+			&& \
 		$(MAKE) && \
 		@INSTALL_console_data@
 	@CLEANUP_console_data@
@@ -89,7 +97,8 @@ $(D)/sysvinit: $(D)/bootstrap @DEPENDS_sysvinit@
 	@PREPARE_sysvinit@
 	cd @DIR_sysvinit@ && \
 		$(BUILDENV) \
-		$(MAKE) -C src SULOGINLIBS=-lcrypt && \
+		$(MAKE) -C src SULOGINLIBS=-lcrypt \
+		&& \
 		@INSTALL_sysvinit@
 	@CLEANUP_sysvinit@
 	touch $@
@@ -106,7 +115,8 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb @DEPENDS_module_init_tools@
 			--build=$(build) \
 			--host=$(target) \
 			--disable-builddir \
-			--prefix= && \
+			--prefix= \
+			&& \
 		$(MAKE) && \
 		@INSTALL_module_init_tools@
 	$(call adapted-etc-files,$(MODULE_INIT_TOOLS_ADAPTED_ETC_FILES))
@@ -150,7 +160,8 @@ $(D)/openrdate: $(D)/bootstrap @DEPENDS_openrdate@ $(OPENRDATE_ADAPTED_ETC_FILES
 			--build=$(build) \
 			--host=$(target) \
 			--target=$(target) \
-			--prefix=/usr && \
+			--prefix=/usr \
+			&& \
 		$(MAKE) && \
 		@INSTALL_openrdate@
 	@CLEANUP_openrdate@
@@ -183,7 +194,8 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/utillinux @DEPENDS_e2fsprogs@
 			--enable-symlink-install \
 			--without-libintl-prefix \
 			--without-libiconv-prefix \
-			--with-root-prefix="" && \
+			--with-root-prefix="" \
+			&& \
 		$(MAKE) && \
 		$(MAKE) -C e2fsck e2fsck.static && \
 		@INSTALL_e2fsprogs@
@@ -212,7 +224,11 @@ $(D)/utillinux: $(D)/bootstrap $(D)/libz @DEPENDS_utillinux@
 			--disable-libmount \
 			--disable-bash-completion \
 			--without-ncurses \
-			--disable-wall && \
+			--disable-wall \
+			--without-python \
+			--disable-makeinstall-chown \
+			--without-systemdsystemunitdir \
+			&& \
 		$(MAKE) ARCH=sh4 && \
 		@INSTALL_utillinux@
 	@CLEANUP_utillinux@
@@ -235,7 +251,8 @@ $(D)/xfsprogs: $(D)/bootstrap $(D)/e2fsprogs $(D)/libreadline @DEPENDS_xfsprogs@
 			--enable-gettext=yes \
 			--enable-readline=yes \
 			--enable-editline=no \
-			--enable-termcap=yes && \
+			--enable-termcap=yes \
+			&& \
 		$(MAKE) $(MAKE_OPTS) && \
 		export top_builddir=`pwd` && \
 		@INSTALL_xfsprogs@
@@ -255,7 +272,8 @@ $(D)/mc: $(D)/bootstrap $(D)/glib2 @DEPENDS_mc@
 			--prefix=/usr \
 			--without-gpm-mouse \
 			--with-screen=ncurses \
-			--without-x && \
+			--without-x \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_mc@
 	@CLEANUP_mc@
@@ -273,7 +291,8 @@ $(D)/sdparm: $(D)/bootstrap @DEPENDS_sdparm@
 			--host=$(target) \
 			--prefix= \
 			--exec-prefix=/usr \
-			--mandir=/usr/share/man && \
+			--mandir=/usr/share/man \
+			&& \
 		$(MAKE) $(MAKE_OPTS) && \
 		@INSTALL_sdparm@
 	@( cd $(prefix)/$*cdkroot/usr/share/man/man8 && gzip -v9 sdparm.8 )
@@ -290,7 +309,8 @@ $(D)/ipkg: $(D)/bootstrap @DEPENDS_ipkg@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=/usr && \
+			--prefix=/usr \
+			&& \
 		$(MAKE) && \
 		@INSTALL_ipkg@
 	ln -sf ipkg-cl $(prefix)/$*cdkroot/usr/bin/ipkg && \
@@ -313,7 +333,8 @@ $(D)/zd1211: $(D)/bootstrap @DEPENDS_zd1211@
 			CROSS_COMPILE=$(target)- ARCH=sh \
 			BIN_DEST=$(targetprefix)/bin \
 			INSTALL_MOD_PATH=$(targetprefix) \
-			install && \
+			install \
+			&& \
 	$(DEPMOD) -ae -b $(targetprefix) -r $(KERNELVERSION)
 	@CLEANUP_zd1211@
 	touch $@
@@ -331,7 +352,8 @@ $(D)/nano: $(D)/bootstrap @DEPENDS_nano@
 			--prefix=/usr \
 			--disable-nls \
 			--enable-tiny \
-			--enable-color && \
+			--enable-color \
+			&& \
 		$(MAKE) && \
 		@INSTALL_nano@
 	@CLEANUP_nano@
@@ -349,7 +371,8 @@ $(D)/rsync: $(D)/bootstrap @DEPENDS_rsync@
 			--host=$(target) \
 			--prefix=/usr \
 			--disable-debug \
-			--disable-locale && \
+			--disable-locale \
+			&& \
 		$(MAKE) && \
 		@INSTALL_rsync@
 	@CLEANUP_rsync@
@@ -361,7 +384,8 @@ $(D)/rsync: $(D)/bootstrap @DEPENDS_rsync@
 $(D)/rfkill: $(D)/bootstrap @DEPENDS_rfkill@
 	@PREPARE_rfkill@
 	cd @DIR_rfkill@ && \
-		$(MAKE) $(MAKE_OPTS) && \
+		$(MAKE) $(MAKE_OPTS) \
+		&& \
 		@INSTALL_rfkill@
 	@CLEANUP_rfkill@
 	touch $@
@@ -395,7 +419,8 @@ $(D)/fuse: $(D)/bootstrap @DEPENDS_fuse@
 			--build=$(build) \
 			--host=$(target) \
 			--target=$(target) \
-			--prefix=/usr && \
+			--prefix=/usr \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_fuse@
 		-rm $(prefix)/$*cdkroot/etc/udev/rules.d/99-fuse.rules
@@ -418,7 +443,8 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/fuse @DEPENDS_curlftpfs@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=/usr && \
+			--prefix=/usr \
+			&& \
 		$(MAKE) && \
 		@INSTALL_curlftpfs@
 	@CLEANUP_curlftpfs@
@@ -430,7 +456,8 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/fuse @DEPENDS_curlftpfs@
 $(D)/pngquant: $(D)/bootstrap $(D)/libz $(D)/libpng @DEPENDS_pngquant@
 	@PREPARE_pngquant@
 	cd @DIR_pngquant@ && \
-		$(target)-gcc -O3 -Wall -I. -funroll-loops -fomit-frame-pointer -o pngquant pngquant.c rwpng.c -lpng -lz -lm && \
+		$(target)-gcc -O3 -Wall -I. -funroll-loops -fomit-frame-pointer -o pngquant pngquant.c rwpng.c -lpng -lz -lm \
+		&& \
 		@INSTALL_pngquant@
 	@CLEANUP_pngquant@
 	touch $@
@@ -447,7 +474,8 @@ $(D)/mplayer: $(D)/bootstrap @DEPENDS_mplayer@
 			--target=$(target) \
 			--host-cc=gcc \
 			--prefix=/usr \
-			--disable-mencoder && \
+			--disable-mencoder \
+			&& \
 		$(MAKE) CC="$(target)-gcc" && \
 		@INSTALL_mplayer@
 	@CLEANUP_mplayer@
@@ -490,7 +518,8 @@ $(D)/mencoder: $(D)/bootstrap @DEPENDS_mencoder@
 			--disable-v4l2 \
 			--disable-fbdev \
 			--disable-dvb \
-			--disable-mplayer && \
+			--disable-mplayer \
+			&& \
 		$(MAKE) CC="$(target)-gcc" && \
 		@INSTALL_mencoder@
 	@CLEANUP_mencoder@
@@ -508,7 +537,8 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_jfsutils@
 			--host=$(target) \
 			--target=$(target) \
 			--disable-dependency-tracking \
-			--prefix= && \
+			--prefix= \
+			&& \
 		$(MAKE) && \
 		@INSTALL_jfsutils@
 	@CLEANUP_jfsutils@
@@ -521,8 +551,9 @@ $(D)/dosfstools: $(D)/bootstrap @DEPENDS_dosfstools@
 	@PREPARE_dosfstools@
 	cd @DIR_dosfstools@ && \
 		$(MAKE) all \
-		CC=$(target)-gcc \
-		OPTFLAGS="$(TARGET_CFLAGS) -fomit-frame-pointer -D_FILE_OFFSET_BITS=64" && \
+			CC=$(target)-gcc \
+			OPTFLAGS="$(TARGET_CFLAGS) -fomit-frame-pointer -D_FILE_OFFSET_BITS=64" \
+			&& \
 		@INSTALL_dosfstools@
 	@CLEANUP_dosfstools@
 	touch $@
@@ -538,7 +569,8 @@ $(D)/hddtemp: $(D)/bootstrap @DEPENDS_hddtemp@
 			--with-db_path=/var/hddtemp.db \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix= && \
+			--prefix= \
+			&& \
 		$(MAKE) all && \
 		$(MAKE) install DESTDIR=$(targetprefix)
 		$(INSTALL) -d $(targetprefix)/var/tuxbox/config
@@ -553,7 +585,8 @@ $(D)/hdparm: $(D)/bootstrap @DEPENDS_hdparm@
 	@PREPARE_hdparm@
 	cd @DIR_hdparm@ && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=$(target)- all && \
+		$(MAKE) CROSS=$(target)- all \
+		&& \
 		@INSTALL_hdparm@
 	@CLEANUP_hdparm@
 	touch $@
@@ -568,6 +601,7 @@ $(D)/fdisk: $(D)/bootstrap $(D)/parted @DEPENDS_fdisk@
 		./configure \
 			--host=$(target) \
 			--prefix=/usr \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_fdisk@
 	@CLEANUP_fdisk@
@@ -589,7 +623,8 @@ $(D)/parted: $(D)/bootstrap $(D)/libreadline $(D)/e2fsprogs @DEPENDS_parted@
 			--target=$(target) \
 			--prefix=$(targetprefix)/usr \
 			--disable-device-mapper \
-			--disable-nls && \
+			--disable-nls \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_parted@
 	@CLEANUP_parted@
@@ -609,7 +644,8 @@ $(D)/opkg: $(D)/bootstrap @DEPENDS_opkg@
 			--prefix=/usr \
 			--disable-curl \
 			--disable-gpg \
-			--with-opkglibdir=/var && \
+			--with-opkglibdir=/var \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_opkg@
 	@CLEANUP_opkg@
@@ -626,7 +662,8 @@ $(D)/sysstat: $(D)/bootstrap @DEPENDS_sysstat@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-			--disable-documentation && \
+			--disable-documentation \
+			&& \
 		$(MAKE) && \
 		@INSTALL_sysstat@
 	@CLEANUP_sysstat@
@@ -644,7 +681,8 @@ $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_autofs@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=/usr && \
+			--prefix=/usr \
+			&& \
 		$(MAKE) all CC=$(target)-gcc STRIP=$(target)-strip SUBDIRS="lib daemon modules" && \
 		@INSTALL_autofs@
 	@CLEANUP_autofs@
@@ -677,7 +715,8 @@ $(D)/imagemagick: $(D)/bootstrap @DEPENDS_imagemagick@
 			--without-zlib \
 			--enable-shared \
 			--enable-static \
-			--without-x && \
+			--without-x \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_imagemagick@
 	@CLEANUP_imagemagick@
@@ -696,7 +735,8 @@ $(D)/hotplug_e2: $(D)/bootstrap @DEPENDS_hotplug_e2@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=/usr && \
+			--prefix=/usr \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_hotplug_e2@
 	@CLEANUP_hotplug_e2@
@@ -738,7 +778,8 @@ $(D)/dbus: $(D)/bootstrap $(D)/libexpat @DEPENDS_dbus@
 			--without-systemdsystemunitdir \
 			--enable-abstract-sockets \
 			--disable-systemd \
-			--disable-static && \
+			--disable-static \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_dbus@
 	@CLEANUP_dbus@
@@ -770,7 +811,8 @@ $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi
 			--disable-qt4 \
 			--disable-nls \
 			--enable-core-docs \
-			--with-distro=none && \
+			--with-distro=none \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_avahi@
 	@CLEANUP_avahi@
@@ -804,7 +846,8 @@ $(D)/wget: $(D)/bootstrap $(D)/libcrypto @DEPENDS_wget@
 			--with-libssl-prefix=$(targetprefix) \
 			--disable-ipv6 \
 			--disable-debug \
-			--disable-nls && \
+			--disable-nls \
+			&& \
 		$(MAKE) && \
 		@INSTALL_wget@
 	@CLEANUP_wget@

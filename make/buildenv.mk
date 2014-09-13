@@ -1,15 +1,3 @@
-export CFLAGS
-export CXXFLAGS
-export DRPM
-export DRPMBUILD
-
-#
-# Stlinux Version
-#
-STLINUX := stlinux24
-STM_SRC := $(STLINUX)
-STM_RELOCATE := /opt/STM/STLinux-2.4
-
 #
 # Python Version
 #
@@ -57,17 +45,21 @@ WGET=$(SOCKSIFY) wget --progress=bar
 #
 BUILDENV := \
 	unset CONFIG_SITE && \
-	AR=$(target)-ar \
-	AS=$(target)-as \
 	CC=$(target)-gcc \
 	CXX=$(target)-g++ \
+	LD=$(target)-ld \
 	NM=$(target)-nm \
+	AR=$(target)-ar \
+	AS=$(target)-as \
 	RANLIB=$(target)-ranlib \
 	STRIP=$(target)-strip \
+	OBJCOPY=$(target)-objcopy \
+	OBJDUMP=$(target)-objdump \
+	LN_S="ln -s" \
 	CFLAGS="$(TARGET_CFLAGS)" \
 	CXXFLAGS="$(TARGET_CFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig
+	PKG_CONFIG_PATH="$(targetprefix)/usr/lib/pkgconfig"
 
 MAKE_OPTS := \
 	CC=$(target)-gcc \

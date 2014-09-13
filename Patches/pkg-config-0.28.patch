@@ -4,7 +4,7 @@ diff -Nurd pkg-config-0.28/glib/configure.ac pkg-config-0.28/glib/configure.ac
 @@ -288,7 +288,6 @@
  AM_CONDITIONAL(HAVE_CXX, [test "$CXX" != ""])
  AC_LANG_RESTORE
-
+ 
 -AM_PROG_CC_STDC
  AM_PROG_CC_C_O
  AC_PROG_INSTALL

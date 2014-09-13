@@ -40,6 +40,23 @@ $(D)/host_mtd_utils: @DEPENDS_host_mtd_utils@
 	touch $@
 
 #
+#
+#
+$(D)/host_glib2_genmarshal: @DEPENDS_host_glib2_genmarshal@ host-filesystem
+	@PREPARE_host_glib2_genmarshal@
+	export PKG_CONFIG=/usr/bin/pkg-config && \
+	cd @DIR_host_glib2_genmarshal@ && \
+		./configure \
+			--enable-static=yes \
+			--enable-shared=no \
+			--prefix=`pwd`/out \
+		&& \
+		$(MAKE) install && \
+		cp -a out/bin/glib-* $(hostprefix)/bin
+	@CLEANUP_host_glib2_genmarshal@
+	touch $@
+
+#
 # host_python
 #
 $(D)/host_python: @DEPENDS_host_python@

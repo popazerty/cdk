@@ -9,4 +9,3 @@
   int transparent = vc->vc_decor.bg_color == bg_color;
   struct fbcon_ops *ops = info->fbcon_par;
   u8 *dst;
-

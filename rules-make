@@ -30,6 +30,7 @@ ipkg_host;0.99.163;ipkg-host;ipkg-0.99.163.tar.gz:ipkg-host.patch;dirextract:ipk
 host_pkgconfig;0.28;pkg-config-0.28;pkg-config-0.28.tar.gz;extract:pkg-config-0.28.tar.gz;patch:pkg-config-0.28.patch
 host_module_init_tools;3.16;module-init-tools-3.16;module-init-tools-3.16.tar.bz2;extract:module-init-tools-3.16.tar.bz2;patch:module-init-tools-no-man.patch
 host_mtd_utils;1.5.0;mtd-utils-1.5.0;mtd-utils-1.5.0.tar.bz2;extract:mtd-utils-1.5.0.tar.bz2;patch:host-mtd-utils-1.5.0.patch
+host_glib2_genmarshal;2.28.3;glib-2.28.3;glib-2.28.3.tar.gz:glib-2.28.3.patch;extract:glib-2.28.3.tar.gz;patch:glib-2.28.3.patch
 uboot_tf7700;1.3.1;u-boot-1.3.1;u-boot-1.3.1.tar.bz2;extract:u-boot-1.3.1.tar.bz2;patch:u-boot-1.3.1.patch;patch:u-boot-1.3.1_stm23_0043_tf7700.patch
 
 #
@@ -53,7 +54,7 @@ libungif;4.1.4;libungif-4.1.4;libungif-4.1.4.tar.bz2;extract:libungif-4.1.4.tar.
 libjpeg;8d;jpeg-8d;jpegsrc.v8d.tar.gz:jpeg.patch;extract:jpegsrc.v8d.tar.gz;patch:jpeg.patch
 libjpeg_turbo;1.2.1;libjpeg-turbo-1.2.1;libjpeg-turbo-1.2.1.tar.gz;extract:libjpeg-turbo-1.2.1.tar.gz
 libpng12;1.2.50;libpng-1.2.50;libpng-1.2.50.tar.bz2;extract:libpng-1.2.50.tar.bz2
-libpng;1.6.12;libpng-1.6.12;libpng-1.6.12.tar.gz;extract:libpng-1.6.12.tar.gz
+libpng;1.6.12;libpng-1.6.12;libpng-1.6.12.tar.gz;extract:libpng-1.6.12.tar.gz;patch:libpng-1.6.10.patch
 libtiff;4.0.3;tiff-4.0.3;tiff-4.0.3.tar.gz;extract:tiff-4.0.3.tar.gz
 pixman;0.18.0;pixman-0.18.0;pixman-0.18.0.tar.gz;extract:pixman-0.18.0.tar.gz
 
@@ -81,17 +82,20 @@ libvorbisidec;1.0.2+svn18153;libvorbisidec-1.0.2+svn18153;libvorbisidec_1.0.2+sv
 #
 # contrib libs
 #
-libcrypto;0.9.8y;openssl-0.9.8y;openssl-0.9.8y.tar.gz;extract:openssl-0.9.8y.tar.gz;patch:openssl-0.9.8.patch;patch:openssl-0.9.8-parallel-build.patch
+libcrypto;0.9.8zb;openssl-0.9.8zb;openssl-0.9.8zb.tar.gz;extract:openssl-0.9.8zb.tar.gz;patch:openssl-0.9.8.patch;patch:openssl-0.9.8-parallel-build.patch
 liblua;5.2.3;lua-5.2.3;lua-5.2.3.tar.gz;extract:lua-5.2.3.tar.gz;patch:liblua-5.2.3-luaposix-31.patch
 howl;1.0.0;howl-1.0.0;howl-1.0.0.tar.gz;extract:howl-1.0.0.tar.gz
 libopenthreads;1.00;openthreads;;
 libboost;boost-1.53.0;boost_1_53_0;boost_1_53_0.tar.bz2;extract:boost_1_53_0.tar.bz2;patch:libboost.patch
 libz;1.2.8;zlib-1.2.8;zlib-1.2.8.tar.gz;extract:zlib-1.2.8.tar.gz;patch:zlib-1.2.8.patch
 libreadline;6.2;readline-6.2;readline-6.2.tar.gz;extract:readline-6.2.tar.gz
+librtmpdump;2.4;rtmpdump;rtmpdump.git;extract:rtmpdump.git;patch:rtmpdump-2.4.patch
 lirc;0.9.0;lirc-0.9.0;lirc-0.9.0.tar.gz:lirc-0.9.0-try_first_last_remote.patch;extract:lirc-0.9.0.tar.gz;patch:lirc-0.9.0-try_first_last_remote.patch
 libsigc_e2;1.2.7;libsigc++-1.2.7;libsigc++-1.2.7.tar.gz;extract:libsigc++-1.2.7.tar.gz
 libsigc;2.3.2;libsigc++-2.3.2;libsigc++-2.3.2.tar.xz;extract:libsigc++-2.3.2.tar.xz
 glib2;2.28.3;glib-2.28.3;glib-2.28.3.tar.gz:glib-2.28.3.patch;extract:glib-2.28.3.tar.gz;patch:glib-2.28.3.patch
+libffi;3.1;libffi-3.1;libffi-3.1.tar.gz;extract:libffi-3.1.tar.gz;patch:libffi-3.1.patch
+orc;0.4.18;orc-0.4.18;orc-0.4.18.tar.gz;extract:orc-0.4.18.tar.gz
 libiconv;1.14;libiconv-1.14;libiconv-1.14.tar.gz;extract:libiconv-1.14.tar.gz
 libmng;1.0.10;libmng-1.0.10;libmng-1.0.10.tar.bz2;extract:libmng-1.0.10.tar.bz2
 lcms;1.17;lcms-1.17;lcms-1.17.tar.gz:lcms.patch;extract:lcms-1.17.tar.gz;patch:lcms.patch
@@ -110,7 +114,6 @@ libxmlccwrap;0.0.12;libxmlccwrap-0.0.12;libxmlccwrap-0.0.12.tar.gz;extract:libxm
 ffmpeg;2.2.4;ffmpeg-2.2.4;ffmpeg-2.2.4.tar.bz2;extract:ffmpeg-2.2.4.tar.bz2;patch:ffmpeg-2.2.patch
 evebrowser;0.0.1;evebrowser-0.0.1
 brofs;1.2;BroFS1.2;BroFS1.2.tgz;extract:BroFS1.2.tgz
-rtmpdump;2.4;rtmpdump-2.4;rtmpdump-2.4.tar.gz;extract:rtmpdump-2.4.tar.gz;move:rtmpdump:rtmpdump-2.4;patch:rtmpdump-2.4.patch
 libdvbsipp;0.3.7;libdvbsi++-0.3.7;libdvbsi++-0.3.7.tar.bz2;extract:libdvbsi++-0.3.7.tar.bz2;patch:libdvbsi++-0.3.7.patch
 libmodplug;0.8.8.4;libmodplug-0.8.8.4;libmodplug-0.8.8.4.tar.gz;extract:libmodplug-0.8.8.4.tar.gz
 lzo;2.06;lzo-2.06;lzo-2.06.tar.gz;extract:lzo-2.06.tar.gz
@@ -126,7 +129,6 @@ djmount;0.71;djmount-0.71;djmount-0.71.tar.gz;extract:djmount-0.71.tar.gz
 libupnp;1.6.17;libupnp-1.6.17;libupnp-1.6.17.tar.bz2;extract:libupnp-1.6.17.tar.bz2
 rarfs;0.1.0;rarfs-0.1.0;rarfs-0.1.0.tar.gz;extract:rarfs-0.1.0.tar.gz
 sshfs;2.4;sshfs-fuse-2.4;sshfs-fuse-2.4.tar.bz2;extract:sshfs-fuse-2.4.tar.bz2
-gmediarender;0.0.6;gmediarender-0.0.6;gmediarender-0.0.6.tar.bz2;extract:gmediarender-0.0.6.tar.bz2;patch:gmediarender.patch
 tinyxml;2.6.2;tinyxml2.6.2;tinyxml_2_6_2.tar.gz;extract:tinyxml_2_6_2.tar.gz;move:tinyxml:tinyxml2.6.2;patch:tinyxml2.6.2.patch
 libnfs;c0ebf57b21;libnfs-c0ebf57b21;libnfs.git;extract:libnfs.git
 taglib;1.8;taglib-1.8;taglib-1.8.tar.gz;extract:taglib-1.8.tar.gz
@@ -169,27 +171,29 @@ libxml2;2.9.0;libxml2-2.9.0;libxml2-2.9.0.tar.gz:libxml2-2.9.0.patch;extract:lib
 libxslt;1.1.28;libxslt-1.1.28;libxslt-1.1.28.tar.gz;extract:libxslt-1.1.28.tar.gz
 lxml;2.2.8;lxml-2.2.8;lxml-2.2.8.tgz;extract:lxml-2.2.8.tgz
 setuptools;0.6c11;setuptools-0.6c11;setuptools-0.6c11.tar.gz;extract:setuptools-0.6c11.tar.gz
-twisted;14.0.0;Twisted-14.0.0;Twisted-14.0.0.tar.bz2;extract:Twisted-14.0.0.tar.bz2
+twisted;13.2.0;Twisted-13.2.0;Twisted-13.2.0.tar.bz2;extract:Twisted-13.2.0.tar.bz2
 pilimaging;1.1.7;Imaging-1.1.7;Imaging-1.1.7.tar.gz;extract:Imaging-1.1.7.tar.gz;patch:Imaging-1.1.7-crosscompiling.patch
 pycrypto;2.5;pycrypto-2.5;pycrypto-2.5.tar.gz;extract:pycrypto-2.5.tar.gz;patch:python-pycrypto-no-usr-include.patch
-pyopenssl;0.12;pyOpenSSL-0.12;pyOpenSSL-0.12.tar.gz;extract:pyOpenSSL-0.12.tar.gz
+pyopenssl;0.13;pyOpenSSL-0.13;pyOpenSSL-0.13.tar.gz;extract:pyOpenSSL-0.13.tar.gz
 pyusb;1.0.0a3;pyusb-1.0.0a3;pyusb-1.0.0a3.tar.gz;extract:pyusb-1.0.0a3.tar.gz
 host_python;2.7.3;host-python-2.7.3;Python-2.7.3.tar.bz2:python_2.7.3.patch;extract:Python-2.7.3.tar.bz2;move:Python-2.7.3:host-python-2.7.3;patch:python_2.7.3.patch
 python;2.7.3;python-2.7.3;Python-2.7.3.tar.bz2:python_2.7.3.patch;extract:Python-2.7.3.tar.bz2;move:Python-2.7.3:python-2.7.3;patch:python_2.7.3.patch;patch:python_2.7.3-ctypes-libffi-fix.patch;patch:python_2.7.3-pgettext.patch
 pythonwifi;0.5.0;python-wifi-0.5.0;python-wifi-0.5.0.tar.bz2;extract:python-wifi-0.5.0.tar.bz2
 pythoncheetah;2.4.4;Cheetah-2.4.4;Cheetah-2.4.4.tar.gz;extract:Cheetah-2.4.4.tar.gz
-zope_interface;4.0.1;zope.interface-4.0.1;zope.interface-4.0.1.tar.gz;extract:zope.interface-4.0.1.tar.gz
+pythonmechanize;0.2.5;mechanize-0.2.5;mechanize-0.2.5.tar.gz;extract:mechanize-0.2.5.tar.gz
+zope_interface;4.1.1;zope.interface-4.1.1;zope.interface-4.1.1.tar.gz;extract:zope.interface-4.1.1.tar.gz
 
 #
 # GSTREAMER
 #
-gstreamer;0.10.36;gstreamer-0.10.36;gstreamer-0.10.36.tar.bz2;extract:gstreamer-0.10.36.tar.bz2;patch:gstreamer.patch
-gst_plugins_base;0.10.36;gst-plugins-base-0.10.36;gst-plugins-base-0.10.36.tar.bz2;extract:gst-plugins-base-0.10.36.tar.bz2
-gst_plugins_good;0.10.31;gst-plugins-good-0.10.31;gst-plugins-good-0.10.31.tar.bz2;extract:gst-plugins-good-0.10.31.tar.bz2;patch:gst-plugins-good-0.10.29_avidemux_only_send_pts_on_keyframe.patch
-gst_plugins_bad;0.10.23;gst-plugins-bad-0.10.23;gst-plugins-bad-0.10.23.tar.bz2:gst-plugins-bad-0.10.22-mpegtsdemux_remove_bluray_pgs_detection.patch:gst-plugins-bad-0.10.22-mpegtsdemux_speedup.patch;extract:gst-plugins-bad-0.10.23.tar.bz2;patch:gst-plugins-bad-0.10.22-mpegtsdemux_remove_bluray_pgs_detection.patch;patch:gst-plugins-bad-0.10.22-mpegtsdemux_speedup.patch
+gstreamer;0.10.36;gstreamer-0.10.36;gstreamer-0.10.36.tar.bz2;extract:gstreamer-0.10.36.tar.bz2;patch:gstreamer-0.10.36.patch
+gst_plugins_base;0.10.36;gst-plugins-base-0.10.36;gst-plugins-base-0.10.36.tar.bz2;extract:gst-plugins-base-0.10.36.tar.bz2;patch:gst-plugins-base-0.10.36.patch
+gst_plugins_good;0.10.31;gst-plugins-good-0.10.31;gst-plugins-good-0.10.31.tar.bz2;extract:gst-plugins-good-0.10.31.tar.bz2;patch:gst-plugins-good-0.10.31.patch
+gst_plugins_bad;0.10.23;gst-plugins-bad-0.10.23;gst-plugins-bad-0.10.23.tar.bz2;extract:gst-plugins-bad-0.10.23.tar.bz2;patch:gst-plugins-bad-0.10.23.patch
 gst_plugins_ugly;0.10.19;gst-plugins-ugly-0.10.19;gst-plugins-ugly-0.10.19.tar.bz2;extract:gst-plugins-ugly-0.10.19.tar.bz2
-gst_ffmpeg;0.10.13;gst-ffmpeg-0.10.13;gst-ffmpeg-0.10.13.tar.bz2;extract:gst-ffmpeg-0.10.13.tar.bz2;patch:gst-ffmpeg-0.10.12_lower_rank.patch
-gst_plugins_fluendo_mpegdemux;0.10.71;gst-fluendo-mpegdemux-0.10.71;gst-fluendo-mpegdemux-0.10.71.tar.gz:gst-plugins-fluendo-mpegdemux-0.10.69-add_dts_hd_detection.patch;extract:gst-fluendo-mpegdemux-0.10.71.tar.gz;patch:gst-plugins-fluendo-mpegdemux-0.10.69-add_dts_hd_detection.patch
+gst_ffmpeg;0.10.13;gst-ffmpeg-0.10.13;gst-ffmpeg-0.10.13.tar.bz2;extract:gst-ffmpeg-0.10.13.tar.bz2;patch:gst-ffmpeg-0.10.13.patch
+gst_gmediarender;0.0.6;gmediarender-0.0.6;gmediarender-0.0.6.tar.bz2;extract:gmediarender-0.0.6.tar.bz2;patch:gst-gmediarender-0.0.6.patch
+gst_plugins_fluendo_mpegdemux;0.10.71;gst-fluendo-mpegdemux-0.10.71;gst-fluendo-mpegdemux-0.10.71.tar.gz;extract:gst-fluendo-mpegdemux-0.10.71.tar.gz;patch:gst-plugins-fluendo-mpegdemux-0.10.71.patch
 gst_plugins_dvbmediasink;0.10.1;gst-plugins-dvbmediasink-0.10.1;;link:../apps/libs/gst-plugins-dvbmediasink:gst-plugins-dvbmediasink-0.10.1
 gst_plugin_subsink;1.0;gst-plugin-subsink;gst-plugin-subsink.git;extract:gst-plugin-subsink.git
 
@@ -219,7 +223,7 @@ libdpfax;ax;dpf-ax;dpf-ax.svn;extract:dpf-ax.svn
 # File Systems and Disk Management
 #
 dosfstools;3.0.16;dosfstools-3.0.16;dosfstools-3.0.16.tar.gz;extract:dosfstools-3.0.16.tar.gz
-e2fsprogs;1.42.10;e2fsprogs-1.42.10;e2fsprogs-1.42.10.tar.gz;extract:e2fsprogs-1.42.10.tar.gz;patch:e2fsprogs-1.42.10.patch
+e2fsprogs;1.42.11;e2fsprogs-1.42.11;e2fsprogs-1.42.11.tar.gz;extract:e2fsprogs-1.42.11.tar.gz;patch:e2fsprogs-1.42.11.patch
 fdisk;1.3.0a;fdisk-1.3.0a;fdisk-1.3.0a.tar.gz;extract:fdisk-1.3.0a.tar.gz
 fuse;2.9.2;fuse-2.9.2;fuse-2.9.2.tar.gz;extract:fuse-2.9.2.tar.gz
 hddtemp;0.3-beta15;hddtemp-0.3-beta15;hddtemp-0.3-beta15.tar.bz2;extract:hddtemp-0.3-beta15.tar.bz2

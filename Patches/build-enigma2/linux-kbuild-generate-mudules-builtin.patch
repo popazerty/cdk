@@ -96,7 +96,7 @@ index ab8dc35..49efae7 100644
  	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig
  else
  # external modules needs include/linux/autoconf.h and include/config/auto.conf
-@@ -908,6 +908,9 @@
+@@ -901,6 +901,9 @@
  PHONY += $(vmlinux-dirs)
  $(vmlinux-dirs): prepare scripts
  	$(Q)$(MAKE) $(build)=$@
@@ -106,7 +106,7 @@ index ab8dc35..49efae7 100644
  
  # Build the kernel release string
  #
-@@ -1158,6 +1161,7 @@
+@@ -1151,6 +1154,7 @@
  PHONY += modules
  modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux)
  	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
@@ -114,7 +114,7 @@ index ab8dc35..49efae7 100644
  	@$(kecho) '  Building modules, stage 2.';
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.fwinst obj=firmware __fw_modbuild
-@@ -1187,6 +1191,7 @@
+@@ -1180,6 +1184,7 @@
  		ln -s $(objtree) $(MODLIB)/build ; \
  	fi
  	@cp -f $(objtree)/modules.order $(MODLIB)/
@@ -122,7 +122,7 @@ index ab8dc35..49efae7 100644
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
  
  # This depmod is only for convenience to give the initial
-@@ -1249,7 +1254,7 @@
+@@ -1242,7 +1247,7 @@
  		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
  		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
  		-o -name '*.symtypes' -o -name 'modules.order' \
@@ -131,7 +131,7 @@ index ab8dc35..49efae7 100644
  		-o -name '*.gcno' \) -type f -print | xargs rm -f
  
  # mrproper - Delete all generated files, including .config
-@@ -1448,7 +1453,8 @@
+@@ -1441,7 +1446,8 @@
  clean:	rm-dirs := $(MODVERDIR)
  clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers \
                     $(KBUILD_EXTMOD)/Module.markers \
@@ -143,7 +143,7 @@ index ab8dc35..49efae7 100644
  	$(call cmd,rmfiles)
 --- a/scripts/Kbuild.include
 +++ b/scripts/Kbuild.include
-@@ -153,6 +153,12 @@
+@@ -148,6 +148,12 @@
  # Usage:
  # $(Q)$(MAKE) $(build)=dir
  build := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.build obj

@@ -1,5 +1,5 @@
---- gst-plugins-good-0.10.29/gst/avi/gstavidemux.c.org	2011-04-16 17:28:08.000000000 -0700
-+++ gst-plugins-good-0.10.29/gst/avi/gstavidemux.c	2011-12-17 06:31:58.000000000 -0800
+--- a/gst/avi/gstavidemux.c
++++ b/gst/avi/gstavidemux.c
 @@ -4747,12 +4747,16 @@
      buf = gst_avi_demux_invert (stream, buf);
  
@@ -20,3 +20,14 @@
      GST_BUFFER_DURATION (buf) = duration;
      GST_BUFFER_OFFSET (buf) = out_offset;
      GST_BUFFER_OFFSET_END (buf) = out_offset_end;
+--- a/gst/isomp4/qtdemux.h
++++ b/gst/isomp4/qtdemux.h
+@@ -111,7 +111,7 @@
+   guint64 seek_offset;
+ 
+   gboolean upstream_seekable;
+-  gboolean upstream_size;
++  gint64 upstream_size;
+ };
+ 
+ struct _GstQTDemuxClass {

@@ -1015,20 +1015,48 @@ endif
 	fi
 
 #
+# hotplug
+#
+	if [ -e $(targetprefix)/usr/bin/hotplug_e2_helper ]; then \
+		cp -dp $(targetprefix)/usr/bin/hotplug_e2_helper $(prefix)/release/sbin/hotplug; \
+		cp -dp $(targetprefix)/usr/bin/bdpoll $(prefix)/release/sbin/; \
+		rm -f $(prefix)/release/bin/hotplug; \
+	else \
+		cp -dp $(targetprefix)/bin/hotplug $(prefix)/release/sbin/; \
+	fi
+
+#
+# WLAN
+#
+	if [ -e $(targetprefix)/usr/sbin/ifrename ]; then \
+		$(target)-strip $(targetprefix)/usr/local/sbin/wpa_cli; \
+		$(target)-strip $(targetprefix)/usr/local/sbin/wpa_passphrase; \
+		$(target)-strip $(targetprefix)/usr/local/sbin/wpa_supplicant; \
+		cp -dp $(targetprefix)/usr/sbin/ifrename $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwconfig $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwevent $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwgetid $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwlist $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwpriv $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwspy $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/local/sbin/wpa_cli $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/local/sbin/wpa_passphrase $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/local/sbin/wpa_supplicant $(prefix)/release/usr/sbin/; \
+	fi
+
+#
 # delete unnecessary plugins and files
 #
 	rm -rf $(prefix)/release/lib/autofs
 	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
-
+	rm -rf $(prefix)/release/usr/lib/gcc
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/DemoPlugins
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/FrontprocessorUpgrade
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/NFIFlash
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/FileManager
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/TuxboxPlugins
-
 	$(INSTALL_DIR) $(prefix)/release$(PYTHON_DIR)
 	cp -a $(targetprefix)$(PYTHON_DIR)/* $(prefix)/release$(PYTHON_DIR)/
-
 	rm -rf $(prefix)/release$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
 	rm -rf $(prefix)/release$(PYTHON_DIR)/ctypes/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/email/test
@@ -1036,7 +1064,6 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/lib2to3/tests
 	rm -rf $(prefix)/release$(PYTHON_DIR)/sqlite3/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/unittest/test
-
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah-2.4.4-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah/Tests
@@ -1047,15 +1074,16 @@ endif
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxsltmod.so
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/OpenSSL/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/PIL/PIL-1.1.7-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pyOpenSSL-0.11-py$(PYTHON_VERSION).egg-info
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pyOpenSSL-0.13-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/python_wifi-0.5.0-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pycrypto-2.5-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pyusb-1.0.0a3-py$(PYTHON_VERSION).egg-info
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/mechanize-0.2.5-py2.7.egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/setuptools
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/setuptools-0.6c11-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/zope/interface/tests
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/zope.interface-4.0.1-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Twisted-14.0.0-py$(PYTHON_VERSION).egg-info
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Twisted-13.0.0-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/application/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/conch/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/internet/test
@@ -1157,38 +1185,10 @@ endif
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
 #	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
-
-#
-# hotplug
-#
-	if [ -e $(targetprefix)/usr/bin/hotplug_e2_helper ]; then \
-		cp -dp $(targetprefix)/usr/bin/hotplug_e2_helper $(prefix)/release/sbin/hotplug; \
-		cp -dp $(targetprefix)/usr/bin/bdpoll $(prefix)/release/sbin/; \
-		rm -f $(prefix)/release/bin/hotplug; \
-	else \
-		cp -dp $(targetprefix)/bin/hotplug $(prefix)/release/sbin/; \
-	fi
-
-#
-# WLAN
-#
-	if [ -e $(targetprefix)/usr/sbin/ifrename ]; then \
-		$(target)-strip $(targetprefix)/usr/local/sbin/wpa_cli; \
-		$(target)-strip $(targetprefix)/usr/local/sbin/wpa_passphrase; \
-		$(target)-strip $(targetprefix)/usr/local/sbin/wpa_supplicant; \
-		cp -dp $(targetprefix)/usr/sbin/ifrename $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/sbin/iwconfig $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/sbin/iwevent $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/sbin/iwgetid $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/sbin/iwlist $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/sbin/iwpriv $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/sbin/iwspy $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/local/sbin/wpa_cli $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/local/sbin/wpa_passphrase $(prefix)/release/usr/sbin/; \
-		cp -dp $(targetprefix)/usr/local/sbin/wpa_supplicant $(prefix)/release/usr/sbin/; \
-	fi
 
 #
 # alsa

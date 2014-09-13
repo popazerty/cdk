@@ -22,6 +22,7 @@ N_CFLAGS   = -Wall -W -Wshadow -pipe -Os -fno-strict-aliasing -funsigned-char
 
 N_CPPFLAGS = -I$(driverdir)/bpamem
 N_CPPFLAGS += -I$(targetprefix)/usr/include/
+N_CPPFLAGS += -I$(buildprefix)/$(KERNEL_DIR)/include
 
 if BOXTYPE_SPARK
 N_CPPFLAGS += -I$(driverdir)/frontcontroller/aotom_spark
@@ -88,7 +89,6 @@ $(appsdir)/libstb-hal-github/config.status: | $(NEUTRINO_DEPS)
 			--with-boxtype=$(BOXTYPE) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/libstb-hal-github.do_compile: $(appsdir)/libstb-hal-github/config.status
@@ -230,7 +230,6 @@ $(appsdir)/neutrino-mp-martii-github/config.status:
 			--with-stb-hal-build=$(appsdir)/libstb-hal-github \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/neutrino-mp-martii-github.do_compile: $(appsdir)/neutrino-mp-martii-github/config.status
@@ -306,7 +305,6 @@ $(appsdir)/libstb-hal/config.status: bootstrap
 			--with-boxtype=$(BOXTYPE) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/libstb-hal.do_compile: $(appsdir)/libstb-hal/config.status
@@ -369,7 +367,6 @@ $(appsdir)/neutrino-mp/config.status:
 			--with-stb-hal-build=$(appsdir)/libstb-hal \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/neutrino-mp.do_compile: $(appsdir)/neutrino-mp/config.status
@@ -456,7 +453,6 @@ $(D)/libstb-hal-next.config.status: bootstrap
 			--with-boxtype=$(BOXTYPE) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 	touch $@
 
@@ -522,7 +518,6 @@ $(D)/neutrino-mp-next.config.status:
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(appsdir)/neutrino-mp-next/src/gui/version.h:
@@ -622,7 +617,6 @@ $(appsdir)/nhd2-exp/config.status:
 			--enable-ci \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/neutrino-hd2-exp: neutrino-hd2-exp.do_prepare neutrino-hd2-exp.do_compile
@@ -712,7 +706,6 @@ $(D)/neutrino-mp-tangos.config.status:
 			--with-stb-hal-build=$(appsdir)/libstb-hal-github \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			$(PLATFORM_CPPFLAGS) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(appsdir)/neutrino-mp-tangos/src/gui/version.h:

@@ -859,6 +859,11 @@ endif
 # Delete unnecessary files
 #
 	rm -rf $(prefix)/release/lib/autofs
+	rm -f $(prefix)/release/lib/libSegFault*
+	rm -f $(prefix)/release/lib/libthread_db*
+	rm -f $(prefix)/release/lib/libanl*
+	rm -rf $(prefix)/release/usr/lib/m4-nofpu/
+	rm -f $(prefix)/release/lib/modules/lzo*.ko
 	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
 	rm -rf $(prefix)/release/usr/lib/alsa-lib
 	rm -rf $(prefix)/release/usr/lib/alsaplayer
@@ -866,7 +871,6 @@ endif
 	rm -rf $(prefix)/release/usr/lib/gcc
 	rm -rf $(prefix)/release/usr/lib/gio
 	rm -rf $(prefix)/release/usr/lib/glib-2.0
-	rm -rf $(prefix)/release/usr/lib/libffi-3.0.10
 	rm -f $(prefix)/release/usr/lib/libexpat*
 	rm -f $(prefix)/release/usr/lib/libfontconfig*
 	rm -f $(prefix)/release/usr/lib/libtermcap*
@@ -876,16 +880,13 @@ endif
 	rm -f $(prefix)/release/usr/lib/libdvdnav*
 	rm -f $(prefix)/release/usr/lib/libdvdread*
 	rm -f $(prefix)/release/usr/lib/libncurses*
-	rm -f $(prefix)/release/lib/libSegFault*
-	rm -f $(prefix)/release/lib/libthread_db*
 	rm -f $(prefix)/release/usr/lib/libthread_db*
-	rm -f $(prefix)/release/lib/libanl*
 	rm -f $(prefix)/release/usr/lib/libanl*
-	rm -rf $(prefix)/release/lib/m4-nofpu/
 	rm -f $(prefix)/release/usr/lib/libopkg*
-	rm -f $(prefix)/release/lib/modules/lzo*.ko
+	rm -rf $(prefix)/release/usr/lib/sigc++-2.0
 	rm -f $(prefix)/release/bin/gitVCInfo
 	rm -f $(prefix)/release/bin/libstb-hal-test
+	rm -f $(prefix)/release/bin/wdctl
 
 #
 # alsa

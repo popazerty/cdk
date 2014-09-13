@@ -1,6 +1,6 @@
---- gst-plugins-bad-0.10.22-org/gst/mpegdemux/gstmpegdemux.c	2009-08-11 00:50:05.000000000 +0200
-+++ gst-plugins-bad-0.10.22-org/gst/mpegdemux/gstmpegdemux.c	2009-09-10 11:31:04.000000000 +0200
-@@ -310,7 +309,10 @@
+--- a/gst/mpegdemux/gstmpegdemux.c
++++ b/gst/mpegdemux/gstmpegdemux.c
+@@ -285,7 +285,10 @@
      if (stream != NULL) {
        if (stream->pad)
          gst_element_remove_pad (GST_ELEMENT_CAST (demux), stream->pad);
@@ -12,7 +12,7 @@
        g_free (stream);
        demux->streams[i] = NULL;
      }
-@@ -427,6 +429,15 @@
+@@ -415,6 +418,15 @@
    stream->type = stream_type;
    stream->pad = gst_pad_new_from_template (template, name);
    stream->segment_thresh = threshold;
@@ -28,7 +28,7 @@
    gst_pad_set_event_function (stream->pad,
        GST_DEBUG_FUNCPTR (gst_flups_demux_src_event));
    gst_pad_set_query_function (stream->pad,
-@@ -478,6 +488,7 @@
+@@ -466,6 +478,7 @@
    GstFlowReturn result;
    guint64 timestamp;
    guint size;
@@ -36,7 +36,7 @@
  
    if (stream == NULL)
      goto no_stream;
-@@ -580,11 +591,38 @@
+@@ -568,11 +581,38 @@
    demux->next_pts = G_MAXUINT64;
    demux->next_dts = G_MAXUINT64;
  
@@ -80,9 +80,9 @@
  
    return result;
  
---- gst-plugins-bad-0.10.22-org/gst/mpegdemux/gstmpegdemux.h	2009-08-11 00:50:05.000000000 +0200
-+++ gst-plugins-bad-0.10.22-org/gst/mpegdemux/gstmpegdemux.h	2009-09-10 11:27:46.000000000 +0200
-@@ -93,6 +93,10 @@
+--- a/gst/mpegdemux/gstmpegdemux.h
++++ b/gst/mpegdemux/gstmpegdemux.h
+@@ -92,6 +92,10 @@
    gboolean discont;
    gboolean notlinked;
    gboolean need_segment;
@@ -93,4 +93,17 @@
  };
  
  struct _GstFluPSDemux
-
+--- a/gst/mpegdemux/gstmpegtsdemux.c
++++ b/gst/mpegdemux/gstmpegtsdemux.c
+@@ -821,11 +821,6 @@
+       name = g_strdup_printf ("subpicture_%04x", stream->PID);
+       caps = gst_caps_new_simple ("video/x-dvd-subpicture", NULL);
+       break;
+-    case ST_BD_PGS_SUBPICTURE:
+-      template = klass->subpicture_template;
+-      name = g_strdup_printf ("subpicture_%04x", stream->PID);
+-      caps = gst_caps_new_simple ("subpicture/x-pgs", NULL);
+-      break;
+     default:
+       break;
+   }

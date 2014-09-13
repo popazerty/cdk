@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ "$KATIDIR" != "" ]; then
+if [ "$CURRENT_PATH" = "" ]; then
    CURDIR=`pwd`
-   KATIDIR=${CURDIR%/cvs/cdk}
+   CURRENT_PATH=${CURDIR%/cdk}
    export PATH=/usr/sbin:/sbin:$PATH
    CONFIGPARAM=`cat lastChoice`
    echo

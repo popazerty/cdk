@@ -93,7 +93,7 @@ case $1 in
 		echo "   32) SagemCom 88 series"
 		echo "   33) Ferguson Ariva @Link 200"
 		echo "   34) Fortis HS7119 (not finished yet)"
-		echo "   35) Fortis HS7819 (not finished yet)"
+		echo "   35) Fortis HS7819 (almost finished)"
 		echo "   36) Fortis DP7000 (not finished yet)"
 		read -p "Select target (1-36)? ";;
 esac
@@ -382,7 +382,7 @@ echo "Image                    : $IMAGEN"
 echo "----------------------------------------"
 echo
 # Create build executable file
-cat ./remake > $CURDIR/build
+cat $CURDIR/remake > $CURDIR/build
 if [ "$IMAGEN" == "enigma2" ]; then
   echo "make yaud-enigma2-pli-nightly" >> $CURDIR/build
 else

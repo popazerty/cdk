@@ -27,5 +27,3 @@
 +AC_CONFIG_HEADERS([config.h])
  
  AM_INIT_AUTOMAKE(libvorbisidec,1.2.1)
- 
-

@@ -728,6 +728,7 @@ TUXBOX_RULES_MAKE(cramfs)
 TUXBOX_RULES_MAKE(host_pkgconfig)
 TUXBOX_RULES_MAKE(host_module_init_tools)
 TUXBOX_RULES_MAKE(host_mtd_utils)
+TUXBOX_RULES_MAKE(host_glib2_genmarshal)
 TUXBOX_RULES_MAKE(uboot_tf7700)
 
 #
@@ -791,6 +792,8 @@ TUXBOX_RULES_MAKE(lirc)
 TUXBOX_RULES_MAKE(libsigc_e2)
 TUXBOX_RULES_MAKE(libsigc)
 TUXBOX_RULES_MAKE(glib2)
+TUXBOX_RULES_MAKE(libffi)
+TUXBOX_RULES_MAKE(orc)
 TUXBOX_RULES_MAKE(libiconv)
 TUXBOX_RULES_MAKE(libmng)
 TUXBOX_RULES_MAKE(lcms)
@@ -808,7 +811,7 @@ TUXBOX_RULES_MAKE(sqlite)
 TUXBOX_RULES_MAKE(cairo)
 TUXBOX_RULES_MAKE(evebrowser)
 TUXBOX_RULES_MAKE(brofs)
-TUXBOX_RULES_MAKE(rtmpdump)
+TUXBOX_RULES_MAKE(librtmpdump)
 TUXBOX_RULES_MAKE(libdvbsipp)
 TUXBOX_RULES_MAKE(libmodplug)
 TUXBOX_RULES_MAKE(lzo)
@@ -824,7 +827,6 @@ TUXBOX_RULES_MAKE(djmount)
 TUXBOX_RULES_MAKE(libupnp)
 TUXBOX_RULES_MAKE(rarfs)
 TUXBOX_RULES_MAKE(sshfs)
-TUXBOX_RULES_MAKE(gmediarender)
 TUXBOX_RULES_MAKE(tinyxml)
 TUXBOX_RULES_MAKE(libnfs)
 TUXBOX_RULES_MAKE(taglib)
@@ -872,6 +874,7 @@ TUXBOX_RULES_MAKE(pyusb)
 TUXBOX_RULES_MAKE(pyopenssl)
 TUXBOX_RULES_MAKE(pythonwifi)
 TUXBOX_RULES_MAKE(pythoncheetah)
+TUXBOX_RULES_MAKE(pythonmechanize)
 TUXBOX_RULES_MAKE(zope_interface)
 
 #
@@ -883,6 +886,7 @@ TUXBOX_RULES_MAKE(gst_plugins_good)
 TUXBOX_RULES_MAKE(gst_plugins_bad)
 TUXBOX_RULES_MAKE(gst_plugins_ugly)
 TUXBOX_RULES_MAKE(gst_ffmpeg)
+TUXBOX_RULES_MAKE(gst_gmediarender)
 TUXBOX_RULES_MAKE(gst_plugins_fluendo_mpegdemux)
 TUXBOX_RULES_MAKE(gst_plugins_dvbmediasink)
 TUXBOX_RULES_MAKE(gst_plugin_subsink)
@@ -998,8 +1002,8 @@ Multicom406                 : $enable_multicom406
 MediaFw Gstreamer           : $enable_mediafwgstreamer
 MediaFw                     : $MEDIAFW
 MediaFw Dep                 : $MEDIAFW_DEP
-EXTERNALLCD                 : $enable_externallcd
-EXTERNALLCD_DEP             : $EXTERNALLCD_DEP
+External LCD                : $enable_externallcd
+External LCD dependancy     : $EXTERNALLCD_DEP
 ----------------------------------------
 ])
 
