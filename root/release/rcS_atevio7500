@@ -184,7 +184,7 @@ if [ -e $MODDIR/cifs.ko ]; then
 fi
 
 echo "Init ftp (LOAD 1)"
-echo "LOAD 1" >/dev/vfd
+echo "LOAD 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
 

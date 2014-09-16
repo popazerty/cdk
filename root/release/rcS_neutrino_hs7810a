@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 140909.1
+#Version 140915.1
 
 echo "[rcS] Start"
 echo "Fortis HS7810A Neutrino"
@@ -11,10 +11,11 @@ if [ ! -e /dev/vfd ]; then
    mknod -m 0660 /dev/vfd c 147 0
 fi
 insmod $MODDIR/nuvoton.ko paramDebug=0
+insmod $MODDIR/simu_button.ko
 
 if [ -e /var/etc/.firstboot ]; then
    echo "1min" > /dev/vfd
-   echo "WAIT 1 min"
+   echo "[rcS] WAIT 1 minute"
    rm /var/etc/.firstboot
    sleep 1
    touch /dev/.devfsd
@@ -82,7 +83,7 @@ insmod $MODDIR/stm_v4l2.ko
 
 insmod $MODDIR/pseudocard.ko
 
-echo "[rcS] Init frontends"
+echo "[rcS] Init frontend"
 insmod $MODDIR/lnb.ko type=a8293
 insmod $MODDIR/stv090x.ko paramDebug=0
 insmod $MODDIR/starci.ko
@@ -91,6 +92,7 @@ mknod /dev/lnb c 149 0
 
 insmod $MODDIR/pti.ko
 insmod $MODDIR/stm_monitor.ko
+insmod $MODDIR/stmsysfs.ko
 insmod $MODDIR/stmdvb.ko
 
 echo "[rcS] Init player2 (LOAD 3)"
@@ -100,6 +102,7 @@ insmod $MODDIR/sth264pp.ko
 insmod $MODDIR/stmalloc.ko
 insmod $MODDIR/platform.ko
 insmod $MODDIR/silencegen.ko
+
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
@@ -130,12 +133,8 @@ fi
 
 stfbcontrol a 0
 
-echo "[rcS] Init frontpanel (LOAD 2)"
+echo "[rcS] Init remote control (LOAD 2)"
 echo "LD 2" > /dev/vfd
-insmod $MODDIR/simu_button.ko
-
-echo "[rcS] Init remote control"
-mknod /dev/rc c 147 1 
 /bin/evremote2 10 140 &
 
 stfbcontrol a 255
@@ -147,18 +146,18 @@ echo "LD 1" >/dev/vfd
 /usr/sbin/inetd
 
 #timefix
-date -s "201408011200"
+date -s "201409011200"
 
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
-   echo "Booting from nfs, don't set network"
+   echo "[rcS] Booting from nfs, don't set network"
 else
    if [ -e /etc/network/interfaces ]; then
       ip addr flush eth0
       /etc/init.d/networking stop
       DHCP=`grep -c dhcp /etc/network/interfaces`
       if [ "$DHCP" -eq "1" ]; then
-         echo "Starting dhcp"
+         echo "[rcS] Starting DHCP"
          /etc/init.d/udhcpc start
       fi
       /etc/init.d/networking start
@@ -176,13 +175,13 @@ do
    echo "[rcS] Neutrino ended <- return value: " $rtv
    case "$rtv" in
       0) echo "SHUTDOWN"
-         echo "SHUT" > /dev/vfd
+         echo "Shdn" > /dev/vfd
          init 0;;
       1) echo "REBOOT"
-         echo "REBT" > /dev/vfd
+         echo "rebt" > /dev/vfd
          init 6;;
       *) echo "ERROR"
-         echo "ERR " > /dev/vfd
+         echo "Err " > /dev/vfd
          init 6;;
    esac
 done

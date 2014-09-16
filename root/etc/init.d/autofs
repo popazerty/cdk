@@ -4,7 +4,7 @@ MODDIR=/lib/modules
 
 load()
 {
-  echo "Loading autofs"
+  echo "[autofs] Loading autofs"
   if [ -e $MODDIR/autofs4.ko ]; then
     insmod $MODDIR/autofs4.ko
   fi
@@ -12,7 +12,7 @@ load()
 
 unload()
 {
-  echo "Unloading autofs"
+  echo "[autofs] Unloading autofs"
   if [ -e $MODDIR/autofs4.ko ]; then
     rmmod $MODDIR/autofs4.ko
   fi
@@ -20,14 +20,14 @@ unload()
 
 start()
 {
-  echo "Starting autofs"
+  echo "[autofs] Starting autofs"
   /usr/sbin/automount --timeout=5 /autofs file /etc/auto.hotplug
   /usr/sbin/automount --ghost --timeout=5 /media/net file /etc/auto.network
 }
 
 stop()
 {
-  echo "Stoping autofs"
+  echo "[autofs] Stopping autofs"
   killall automount
 }
 

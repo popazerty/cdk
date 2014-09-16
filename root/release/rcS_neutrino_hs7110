@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 140908.2
+#Version 140916.1
 
 echo "[rcS] Start"
 echo "Fortis HS7110 Neutrino"
@@ -11,9 +11,10 @@ if [ ! -e /dev/vfd ]; then
    mknod -m 0660 /dev/vfd c 147 0
 fi
 insmod $MODDIR/nuvoton.ko paramDebug=0
+insmod $MODDIR/simu_button.ko
 
 if [ -e /var/etc/.firstboot ]; then
-   echo "WAIT 1 min"
+   echo "[rcS] WAIT 1 minute"
    rm /var/etc/.firstboot
    sleep 1
    touch /dev/.devfsd
@@ -40,7 +41,7 @@ echo "[rcS] Starting telnetd"
 
 echo "[rcS] Init stmfb (LOAD 9)"
 insmod $MODDIR/stmcore-display-sti7111.ko
-insmod $MODDIR/stmfb.ko display0=1280x720-32@50:15m:pal:yuv:yuv
+insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:yuv:yuv;# display1=720x576-16@50:1m:pal:cvbs;
 
 echo "[rcS] Loading modules"
 
@@ -50,12 +51,10 @@ if [ ! -e /lib/firmware/audio.elf ] || [ ! -e /lib/firmware/video.elf ]; then
 fi
 
 echo "[rcS] Load video firmware (LOAD 8)"
-echo "LOAD 8" > /dev/vfd
 /bin/dd if=/dev/zero of=/dev/st231-0 bs=1024 count=4096 2> /dev/null
 /bin/ustslave /dev/st231-0 /lib/firmware/video.elf
 
 echo "[rcS] Load audio firmware (LOAD 7)"
-echo "LOAD 7" > /dev/vfd
 /bin/dd if=/dev/zero of=/dev/st231-1 bs=1024 count=4096 2> /dev/null
 /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf
 
@@ -97,6 +96,7 @@ insmod $MODDIR/sth264pp.ko
 insmod $MODDIR/stmalloc.ko
 insmod $MODDIR/platform.ko
 insmod $MODDIR/silencegen.ko
+
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
@@ -127,11 +127,7 @@ fi
 
 stfbcontrol a 0
 
-echo "[rcS] Init frontpanel (LOAD 2)"
-insmod $MODDIR/simu_button.ko
-
-echo "[rcS] Init remote control"
-#mknod /dev/rc c 147 1 
+echo "[rcS] Init remote control (LOAD 2)"
 /bin/evremote2 10 140 &
 
 stfbcontrol a 255
@@ -142,18 +138,18 @@ echo "[rcS] Init portmap & ftp (LOAD 1)"
 /usr/sbin/inetd
 
 #timefix
-date -s "201408011200"
+date -s "201409011200"
 
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
-   echo "Booting from nfs, don't set network"
+   echo "[rcS] Booting from nfs, don't set network"
 else
    if [ -e /etc/network/interfaces ]; then
       ip addr flush eth0
       /etc/init.d/networking stop
       DHCP=`grep -c dhcp /etc/network/interfaces`
       if [ "$DHCP" -eq "1" ]; then
-         echo "Starting dhcp"
+         echo "[rcS] Starting DHCP"
          /etc/init.d/udhcpc start
       fi
       /etc/init.d/networking start
