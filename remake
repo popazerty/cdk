@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$CURRENT_PATH" = "" ]; then
+if [ ! -e ./config.status ] && [ -e ./lastChoice ]; then
    CURDIR=`pwd`
    CURRENT_PATH=${CURDIR%/cdk}
    export PATH=/usr/sbin:/sbin:$PATH
