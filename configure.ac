@@ -1,10 +1,6 @@
 AC_INIT([tuxbox-cdk],[0])
 AC_PREREQ(2.59)
 
-AC_CANONICAL_HOST
-host_arch=`which arch > /dev/null 2>&1 && arch || uname -m`
-AC_SUBST(host_arch)
-
 AC_CANONICAL_BUILD
 AC_SUBST(build)
 
@@ -24,22 +20,6 @@ AM_INIT_AUTOMAKE([-Wno-portability])
 AM_MAINTAINER_MODE
 
 AC_PROG_CC
-
-if test -z "$CFLAGS" ; then
-	CFLAGS="-O2"
-fi
-
-if test -z "$TARGET_CFLAGS" -o -z "$TARGET_CXXFLAGS"; then
-	TARGET_CFLAGS="-pipe"
-	if test "$enable_debug" = "yes"; then
-		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g3 -gdwarf-2"
-		TARGET_LDFLAGS=""
-	else
-		TARGET_CFLAGS="$TARGET_CFLAGS -Os"
-		TARGET_LDFLAGS="-Wl,-O1"
-	fi
-	TARGET_CXXFLAGS="$TARGET_CFLAGS"
-fi
 
 AC_ARG_ENABLE(neutrino,
 	AS_HELP_STRING(--enable-neutrino, Setting up the CDK to build neutrino),
@@ -445,11 +425,6 @@ AC_ARG_ENABLE(ipbox55,
 AM_CONDITIONAL(ENABLE_IPBOX55,test "$enable_ipbox55" = "yes")
 AC_SUBST(IPBOX55)
 
-AC_SUBST(CFLAGS)
-AC_SUBST(TARGET_CFLAGS)
-AC_SUBST(TARGET_CXXFLAGS)
-AC_SUBST(TARGET_LDFLAGS)
-
 AC_PREFIX_DEFAULT(/ufs910)
 if test "$prefix" = "NONE"; then
 	prefix=/ufs910
@@ -512,6 +487,14 @@ AC_ARG_WITH(driverdir,
 	[  --with-driverdir=DIR    driver dir from cvs [[[CVS/]driver]]],
 	[driverdir="$with_driverdir"],[driverdir="NONE"])
 
+AC_ARG_WITH(sourcedir,
+	[  --with-sourcedir=DIR      source dir from cvs [[source/]]],
+	[sourcedir="$with_sourcedir"],[sourcedir="NONE"])
+
+AC_ARG_WITH(buildtmp,
+	[  --with-buildtmp=DIR      buildtmp dir from cvs [[buildtmp/]]],
+	[buildtmp="$with_buildtmp"],[buildtmp="NONE"])
+
 AC_ARG_WITH(gnuserver,
 	[  --with-gnuserver=ADDRESS   the gnu server for gnu-stuff (without ftp://)],
 	[gnuserver="$with_gnuserver"],[gnuserver=ftp.gwdg.de/pub/misc/gnu/ftp/gnu])
@@ -531,12 +514,24 @@ if test "$cvsdir" = "NONE"; then
 	if test "$driverdir" = "NONE"; then
 		driverdir="$buildprefix/driver"
 	fi
+	if test "$sourcedir" = "NONE"; then
+		sourcedir="$buildprefix/source"
+	fi
+	if test "$buildtmp" = "NONE"; then
+		buildtmp="$buildprefix/build_tmp"
+	fi
 else
 	if test "$appsdir" = "NONE"; then
 		appsdir="$cvsdir/apps"
 	fi
 	if test "$driverdir" = "NONE"; then
 		driverdir="$cvsdir/driver"
+	fi
+	if test "$sourcedir" = "NONE"; then
+		sourcedir="$cvsdir/source"
+	fi
+	if test "$buildtmp" = "NONE"; then
+		buildtmp="$cvsdir/build_tmp"
 	fi
 fi
 
@@ -552,9 +547,32 @@ fi
 
 AC_SUBST(appsdir)
 AC_SUBST(driverdir)
+AC_SUBST(sourcedir)
+AC_SUBST(buildtmp)
 AC_SUBST(gnuserver)
 AC_SUBST(defaultserver)
 AC_SUBST(archivedir)
+
+if test -z "$CFLAGS" ; then
+	CFLAGS="-O2"
+fi
+
+if test -z "$TARGET_CFLAGS" -o -z "$TARGET_CXXFLAGS"; then
+	TARGET_CFLAGS="-pipe"
+	if test "$enable_debug" = "yes"; then
+		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g3 -gdwarf-2"
+		TARGET_LDFLAGS=""
+	else
+		TARGET_CFLAGS="$TARGET_CFLAGS -Os -I$targetprefix/usr/include"
+		TARGET_LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
+	fi
+	TARGET_CXXFLAGS="$TARGET_CFLAGS"
+fi
+AC_SUBST(CFLAGS)
+AC_SUBST(TARGET_CFLAGS)
+AC_SUBST(TARGET_CXXFLAGS)
+AC_SUBST(TARGET_LDFLAGS)
+
 
 AC_PATH_PROG(M4,m4,no)
 if test "$M4" = "no"; then
@@ -833,6 +851,9 @@ TUXBOX_RULES_MAKE(taglib)
 TUXBOX_RULES_MAKE(libdaemon)
 TUXBOX_RULES_MAKE(libplist)
 
+TUXBOX_RULES_MAKE(libxml2)
+TUXBOX_RULES_MAKE(libxslt)
+
 #
 # contrib apps
 #
@@ -860,9 +881,8 @@ TUXBOX_RULES_MAKE(wget)
 #
 # python
 #
+TUXBOX_RULES_MAKE(gdata)
 TUXBOX_RULES_MAKE(elementtree)
-TUXBOX_RULES_MAKE(libxml2)
-TUXBOX_RULES_MAKE(libxslt)
 TUXBOX_RULES_MAKE(lxml)
 TUXBOX_RULES_MAKE(setuptools)
 TUXBOX_RULES_MAKE(twisted)
@@ -953,11 +973,15 @@ TUXBOX_RULES_MAKE(xupnpd)
 #
 # localmacros
 #
-$INSTALL -d BUILD
+crossprefix=$prefix/cross
+AC_SUBST(crossprefix)
 
 #
-# mkdir archivedir
+# mkdir
 #
+test -d $prefix || mkdir $prefix
+test -d $buildtmp || mkdir $buildtmp
+test -d $sourcedir || mkdir $sourcedir
 test -d $archivedir || mkdir $archivedir
 
 #
@@ -990,10 +1014,13 @@ DEBUG                       : $enable_debug
 boot prefix                 : $bootprefix
 serversupport               : $serversupport
 host prefix                 : $hostprefix
+cross prefix                : $crossprefix
 target prefix               : $targetprefix
 build prefix                : $buildprefix
 target apps directory       : $appsdir
 driver directory            : $driverdir
+source directory            : $sourcedir
+buildtmp directory          : $buildtmp
 customization directory     : $customizationsdir
 archive directory           : $archivedir
 Player191                   : $enable_player191
@@ -1034,7 +1061,7 @@ fi
 
 TUXBOX_CUSTOMIZE='[[ -x $(customizationsdir)/$(notdir $@)-local.sh ] && KERNELVERSION=$(KERNELVERSION) && BOXTYPE=$(BOXTYPE) && $(customizationsdir)/$(notdir $@)-local.sh $(buildprefix) || true]'
 AC_SUBST(TUXBOX_CUSTOMIZE)
-TUXBOX_YAUD_CUSTOMIZE='[[ -x $(customizationsdir)/$(notdir $@)-local.sh ] && KERNELVERSION=$(KERNELVERSION) && BOXTYPE=$(BOXTYPE) && $(customizationsdir)/$(notdir $@)-local.sh $(prefix) $(prefix)/$*cdkroot $(buildprefix) $(appsdir) $(flashscriptdir) $(BOXTYPE) || true]'
+TUXBOX_YAUD_CUSTOMIZE='[[ -x $(customizationsdir)/$(notdir $@)-local.sh ] && KERNELVERSION=$(KERNELVERSION) && BOXTYPE=$(BOXTYPE) && $(customizationsdir)/$(notdir $@)-local.sh $(prefix) $(prefix)/$*cdkroot $(buildprefix) $(sourcedir) $(flashscriptdir) $(BOXTYPE) || true]'
 AC_SUBST(TUXBOX_YAUD_CUSTOMIZE)
 TUXBOX_TOUCH='[@[ "x$*" = "x" ] && touch $@ || true]'
 AC_SUBST(TUXBOX_TOUCH)

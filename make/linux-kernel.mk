@@ -24,6 +24,8 @@ COMMONPATCHES_24 = \
 		linux-tune_stm24.patch \
 		linux-sh4-permit_gcc_command_line_sections_stm24.patch \
 		linux-sh4-mmap_stm24.patch \
+		$(if $(P0215),linux-ratelimit-bug_stm24$(PATCH_STR).patch) \
+		$(if $(P0215),linux-patch_swap_notify_core_support_stm24$(PATCH_STR).patch) \
 		$(if $(P0209),linux-sh4-dwmac_stm24_0209.patch) \
 		$(if $(P0209),linux-sh4-directfb_stm24$(PATCH_STR).patch) \
 		$(if $(P0211)$(P0214)$(P0215),linux-sh4-console_missing_argument_stm24$(PATCH_STR).patch)
@@ -281,7 +283,7 @@ $(D)/linux-kernel.do_prepare: \
 		$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=Patches/$(BUILDCONFIG$)/%)) \
 		$(HOST_KERNEL_RPM)
 	rm -rf linux-sh4*
-	unpack-rpm.sh $(buildprefix)/BUILD $(STM_RELOCATE)/devkit/sources/kernel $(buildprefix) $(lastword $^)
+	unpack-rpm.sh $(buildtmp) $(STM_RELOCATE)/devkit/sources/kernel $(buildprefix) $(lastword $^)
 	$(if $(HOST_KERNEL_PATCHES),cd $(KERNEL_DIR) && cat $(HOST_KERNEL_PATCHES:%=$(buildprefix)/Patches/$(BUILDCONFIG$)/%) | patch -p1)
 	$(INSTALL) -m644 Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
 	ln -s $(KERNEL_DIR) $(buildprefix)/linux-sh4
@@ -295,9 +297,9 @@ $(D)/linux-kernel.do_prepare: \
 
 $(D)/linux-kernel.do_compile: $(D)/linux-kernel.do_prepare Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS)
 	cd $(KERNEL_DIR) && \
-		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- mrproper && \
 		@M4@ $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) > .config && \
-		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- uImage modules
+		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- uImage modules && \
+		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)-
 	touch $@
 
 $(D)/linux-kernel: $(D)/bootstrap $(D)/linux-kernel.do_compile

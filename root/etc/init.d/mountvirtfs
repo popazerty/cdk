@@ -118,9 +118,9 @@ domount () {
 	else
 		# Need to update mtab only ?
 		if [ -n "$DO_MTAB" ] &&
-		   ! grep -E -sq "^([^ ]+) +$3 +" /etc/mtab
+			! grep -E -sq "^([^ ]+) +$3 +" /etc/mtab
 		then
-				mount -f -t $TYPE $OPTS $4 $TYPE $3
+			mount -f -t $TYPE $OPTS $4 $TYPE $3
 		fi
 	fi
 }
@@ -161,7 +161,7 @@ domount sysfs "" /sys
 #grep -q "/dev/sd[a-d][1-9] / ext[2|3]" /proc/mounts && mount $MOUNT_N / -o errors=remount-ro,noatime,nodiratime,ro,remount
 
 domakedev() {
-        cd $1
+	cd $1
 	ln -sf ../../sbin/MAKEDEV MAKEDEV
 	/etc/init.d/makedev start
 }
@@ -209,15 +209,15 @@ if grep -q "/dev tmpfs" /proc/mounts; then
 				# Fill initially ${devstatic} (nfs)
 				#
 				mount /rom -o rw,remount
-       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
+				echo "[mountvirtfs] Making devices in ${devstatic}..."
 				domakedev ${devstatic} && \
 					mount /rom -o ro,remount
 			fi
-	    if  grep -q "/dev/root /rom ext2" /proc/mounts && [ ! -d ${devstatic}/pts ]; then
+			if grep -q "/dev/root /rom ext2" /proc/mounts && [ ! -d ${devstatic}/pts ]; then
 				# Fill initially ${devstatic} (usb)
 				#
 				mount /rom -o rw,remount
-       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
+				echo "[mountvirtfs] Making devices in ${devstatic}..."
 				domakedev ${devstatic} && \
 					mount /rom -o ro,remount
 			fi 
@@ -229,16 +229,16 @@ if grep -q "/dev tmpfs" /proc/mounts; then
 			#devstatic="/ram/dev.flash"
 			devstatic="/dev.static"
 
-  		if grep -q "/dev/root / nfs" /proc/mounts && [ ! -d ${devstatic}/pts ]; then
+			if grep -q "/dev/root / nfs" /proc/mounts && [ ! -d ${devstatic}/pts ]; then
 				# Fill initially ${devstatic} (nfs)
 				#
-       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
-			  domakedev ${devstatic}
+				echo "[mountvirtfs] Making devices in ${devstatic}..."
+				domakedev ${devstatic}
 			fi
 			if grep -q "/dev/root / ext2" /proc/mounts && [ ! -d ${devstatic}/pts ]; then
 				# Fill initially ${devstatic} (usb)
 				#
-       	 			echo "[mountvirtfs] Making devices in ${devstatic}..."
+				echo "[mountvirtfs] Making devices in ${devstatic}..."
 			  domakedev ${devstatic}
 			fi
 	
@@ -252,16 +252,16 @@ else
 	if [ -x /sbin/udevd ]; then
 		:
 	else
-  	if grep -q "/dev/root / nfs" /proc/mounts && [ ! -d /dev/pts ]; then
+		if grep -q "/dev/root / nfs" /proc/mounts && [ ! -d /dev/pts ]; then
 			# Fill initially /dev (nfs)
 			#
-        		echo "[mountvirtfs] Seems to be the first run - Making devices in /dev..."
+			echo "[mountvirtfs] Seems to be the first run - Making devices in /dev..."
 			domakedev /dev
 		fi
 		if grep -q "/dev/root / ext[23]" /proc/mounts && [ ! -d /dev/pts ]; then
 			# Fill initially /dev (usb)
 			#
-        		echo "[mountvirtfs] Seems to be the first run - Making devices in /dev..."
+			echo "[mountvirtfs] Seems to be the first run - Making devices in /dev..."
 			domakedev /dev
 		fi
 

@@ -14,7 +14,8 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(NFS_UTILS_ADAPTED_ETC_FILES:%=ro
 			--enable-ipv6=no \
 			--disable-tirpc \
 			--disable-nfsv4 \
-			--without-tcp-wrappers && \
+			--without-tcp-wrappers \
+		&& \
 		$(MAKE) && \
 		@INSTALL_nfs_utils@
 	( cd $(buildprefix)/root/etc && for i in $(NFS_UTILS_ADAPTED_ETC_FILES); do \
@@ -33,7 +34,8 @@ $(D)/libevent: $(D)/bootstrap @DEPENDS_libevent@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=$(prefix)/$*cdkroot/usr/ && \
+			--prefix=$(prefix)/$*cdkroot/usr/ \
+		&& \
 		$(MAKE) && \
 		@INSTALL_libevent@
 	@CLEANUP_libevent@
@@ -50,7 +52,8 @@ $(D)/libnfsidmap: $(D)/bootstrap @DEPENDS_libnfsidmap@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=$(prefix)/$*cdkroot/usr/ && \
+			--prefix=$(prefix)/$*cdkroot/usr/ \
+		&& \
 		$(MAKE) && \
 		@INSTALL_libnfsidmap@
 	@CLEANUP_libnfsidmap@
@@ -80,7 +83,8 @@ $(D)/ethtool: $(D)/bootstrap @DEPENDS_ethtool@
 			--build=$(build) \
 			--host=$(target) \
 			--libdir=$(targetprefix)/usr/lib \
-			--prefix=/usr && \
+			--prefix=/usr \
+		&& \
 		$(MAKE) && \
 		@INSTALL_ethtool@
 	@CLEANUP_ethtool@
@@ -144,7 +148,8 @@ $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samb
 			--with-logfilebase=/var/log \
 			--with-lockdir=/var/lock \
 			--with-swatdir=/usr/share/swat \
-			--disable-cups && \
+			--disable-cups \
+		&& \
 		$(MAKE) $(MAKE_OPTS) && \
 		$(MAKE) $(MAKE_OPTS) installservers installbin installscripts installdat installmodules \
 			SBIN_PROGS="bin/smbd bin/nmbd bin/winbindd" DESTDIR=$(prefix)/$*cdkroot/ prefix=./. && \
@@ -178,7 +183,8 @@ $(D)/ntp: $(D)/bootstrap @DEPENDS_ntp@
 			--build=$(build) \
 			--host=$(target) \
 			--target=$(target) \
-			--prefix=/usr && \
+			--prefix=/usr \
+		&& \
 		$(MAKE) && \
 		@INSTALL_ntp@
 	@CLEANUP_ntp@
@@ -199,7 +205,8 @@ $(D)/lighttpd.do_compile: $(D)/lighttpd.do_prepare
 			--host=$(target) \
 			--prefix= \
 			--exec-prefix=/usr \
-			--datarootdir=/usr/share && \
+			--datarootdir=/usr/share \
+		&& \
 		$(MAKE)
 	touch $@
 
@@ -235,6 +242,10 @@ $(D)/wpa_supplicant: $(D)/bootstrap $(D)/libcrypto $(D)/wireless_tools @DEPENDS_
 	@PREPARE_wpa_supplicant@
 	cd @DIR_wpa_supplicant@/wpa_supplicant && \
 		$(INSTALL) -m 644 $(buildprefix)/Patches/wpa_supplicant.config .config && \
+		export CFLAGS=-I$(targetprefix)/usr/include && \
+		export LIBS="-L$(targetprefix)/usr/lib -Wl,-rpath-link,$(targetprefix)/usr/lib" && \
+		export LDFLAGS="-L$(targetprefix)/usr/lib" && \
+		export DESTDIR=$(targetprefix)/usr && \
 		$(MAKE) $(MAKE_OPTS) && \
 		@INSTALL_wpa_supplicant@
 	@CLEANUP_wpa_supplicant@

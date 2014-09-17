@@ -6,22 +6,19 @@ PYTHON_DIR = /usr/lib/python$(PYTHON_VERSION)
 PYTHON_INCLUDE_DIR = /usr/include/python$(PYTHON_VERSION)
 
 #
-# helper-"functions":
 #
-PATCHES    = $(buildprefix)/Patches
-TARGETLIB  = $(targetprefix)/usr/lib
-REWRITE_LIBDIR = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(TARGETLIB)
-REWRITE_LIBDEP = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/usr/lib,\$(TARGETLIB)," $(TARGETLIB)
-REWRITE_PKGCONF = sed -i "s,^prefix=.*,prefix=$(targetprefix)/usr,"
+#
+PATH := $(hostprefix)/bin:$(crossprefix)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
 
-#
-# CCACHE
-#
-if ENABLE_CCACHE
-PATH := $(hostprefix)/ccache-bin:$(hostprefix)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
-else
-PATH := $(hostprefix)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
-endif
+PKG_CONFIG = $(hostprefix)/bin/$(target)-pkg-config
+PKG_CONFIG_LIBDIR = $(targetprefix)/usr/lib
+PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
+
+PATCHES         = $(buildprefix)/Patches
+TARGETLIB       = $(targetprefix)/usr/lib
+REWRITE_LIBDIR  = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(TARGETLIB)
+REWRITE_LIBDEP  = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/usr/lib,\$(TARGETLIB)," $(TARGETLIB)
+REWRITE_PKGCONF = sed -i "s,^prefix=.*,prefix=$(targetprefix)/usr,"
 
 #
 #
@@ -57,6 +54,7 @@ BUILDENV := \
 	OBJDUMP=$(target)-objdump \
 	LN_S="ln -s" \
 	CFLAGS="$(TARGET_CFLAGS)" \
+	CPPFLAGS="$(TARGET_CFLAGS)" \
 	CXXFLAGS="$(TARGET_CFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	PKG_CONFIG_PATH="$(targetprefix)/usr/lib/pkgconfig"

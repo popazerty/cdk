@@ -1,7 +1,6 @@
 $(D)/bootstrap: \
 	$(CCACHE) \
 	host_pkgconfig \
-	host-filesystem \
 	crosstool \
 	host_module_init_tools \
 	host_mtd_utils

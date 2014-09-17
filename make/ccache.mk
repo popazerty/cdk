@@ -13,15 +13,15 @@ if ENABLE_CCACHE
 CCACHE_TUXBOX_BIN = $(ccachedir)/ccache
 
 # tuxbox-cdk ccache environment dir
-CCACHE_BINDIR = $(hostprefix)/ccache-bin
+CCACHE_BINDIR = $(hostprefix)/bin
 
 # generate links
 CCACHE_LINKS = \
+	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/cc;\
 	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/gcc;\
 	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/g++; \
 	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/$(target)-gcc; \
-	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/$(target)-g++; \
-	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/$(target)-cpp
+	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/$(target)-g++
 
 # ccache test will show you ccache statistics
 CCACHE_TEST = $(CCACHE_TUXBOX_BIN) -s

@@ -1,26 +1,17 @@
---- a/drivers/char/lirc/lirc_stm.c	2014-04-09 06:54:15.000000000 +0200
-+++ b/drivers/char/lirc/lirc_stm.c	2014-03-20 18:46:14.000000000 +0100
-@@ -882,7 +882,7 @@
- 	rx.error = 0;
- 	rx.off_rbuf = 0;
- 	rx.sumUs = 0;
--	memset(rx.rbuf, 0, LIRC_STM_BUFSIZE);
-+	memset(rx.rbuf, 0, LIRC_STM_BUFSIZE*4);		//fix freebox 12.01.2012 
- }
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -388,7 +388,7 @@
+ 		cfi_fixup_major_minor(cfi, extp);
  
- static void lirc_stm_rx_interrupt(int irq, void *dev_id)
-@@ -1376,7 +1376,7 @@
- 	 */
- 
- 	if ((rx.rbuf = (lirc_t *) devm_kzalloc(dev,
--					       LIRC_STM_BUFSIZE,
-+					       (LIRC_STM_BUFSIZE*4),	//fix freebox 12.01.2012 
- 					       GFP_KERNEL)) == NULL)
- 		return -ENOMEM;
- 
+ 		if (extp->MajorVersion != '1' ||
+-		    (extp->MinorVersion < '0' || extp->MinorVersion > '4')) {
++		    (extp->MinorVersion < '0' || extp->MinorVersion > '5')) {
+ 			printk(KERN_ERR "  Unknown Amd/Fujitsu Extended Query "
+ 			       "version %c.%c.\n",  extp->MajorVersion,
+ 			       extp->MinorVersion);
 --- a/arch/sh/boards/mach-mb680/setup.c	2014-04-09 06:54:15.000000000 +0200
 +++ b/arch/sh/boards/mach-mb680/setup.c	2014-03-20 18:46:14.000000000 +0100
-@@ -26,22 +26,53 @@
+@@ -22,22 +22,53 @@
  #include <linux/input.h>
  #include <linux/stm/platform.h>
  #include <linux/stm/stx7105.h>
@@ -34,7 +25,7 @@
  #include <asm/irq-ilc.h>
  #include <mach/common.h>
  #include "../mach-st/mb705-epld.h"
-+//#include <linux/stm/pio.h>
++#include <linux/stm/pio.h> //j00zek spdif enable need it
  
  
 +#define PIO13_2 stm_gpio(13, 2) //reset usb1
@@ -159,7 +150,7 @@
  
  	return 0;
  }
-@@ -121,135 +105,58 @@
+@@ -120,135 +104,58 @@
  	.phy_mask = 0,
  };
  
@@ -332,7 +323,7 @@
 +//j00zek end
  	/*
  	 * Note that USB port configuration depends on jumper
-@@ -229,8 +275,9 @@
+@@ -259,8 +275,9 @@
  	 * norm	|  4[5]	J5B:2-3			 4[7]	J10B:2-3
  	 * alt	| 12[6]	J5B:1-2  J6G:open	14[7]	J10B:1-2  J11H:open
  	 */
@@ -377,7 +368,7 @@
 -	 *	J15A : fitted
 -	 */
 +	/* enable optical out */
-+	//stpio_request_pin(10, 6, "opt_out", STPIO_ALT_OUT);
++	stpio_request_pin(10, 6, "opt_out", STPIO_ALT_OUT);
 +
  	stx7105_configure_lirc(&(struct stx7105_lirc_config) {
 -#ifdef CONFIG_LIRC_STM_UHF
@@ -399,8 +390,8 @@
  	/* Configure STEM interrupts as active low. */
 -	set_irq_type(ILC_EXT_IRQ(1), IRQ_TYPE_LEVEL_LOW);
 -	set_irq_type(ILC_EXT_IRQ(2), IRQ_TYPE_LEVEL_LOW);
-+//	set_irq_type(ILC_EXT_IRQ(1), IRQ_TYPE_LEVEL_LOW);
-+//	set_irq_type(ILC_EXT_IRQ(2), IRQ_TYPE_LEVEL_LOW);
++	set_irq_type(ILC_EXT_IRQ(1), IRQ_TYPE_LEVEL_LOW);
++	set_irq_type(ILC_EXT_IRQ(2), IRQ_TYPE_LEVEL_LOW);
  #endif
  }
  

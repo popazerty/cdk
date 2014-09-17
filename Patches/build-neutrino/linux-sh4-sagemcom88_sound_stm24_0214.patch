@@ -173,9 +173,9 @@ diff -Nur stx7105_audio.c.orig stx7105_audio.c
  
  	unsigned char fdma_initiator;
  	unsigned int fdma_request_line;
-diff -Nur /dev/null common.c
+diff -ruN stm.org/common.c stm/common.c
 --- a/dev/null
-+++ b/sound/stm/common.c
++++ b/sound/stm/common.c	2012-10-11 11:46:27.000000000 -0700
 @@ -0,0 +1,774 @@
 +/*
 + *   Helpful ;-) routines for STMicroelectronics' SoCs audio drivers
@@ -951,9 +951,9 @@ diff -Nur /dev/null common.c
 +			vuc->dig_subframe[0], vuc->dig_subframe[1],
 +			vuc->dig_subframe[2], vuc->dig_subframe[3]);
 +}
-diff -Nur ./sound/stm/common.h.orig ./sound/stm/common.h
---- a/sound/stm/common.h.orig	2014-05-24 09:34:26.000000000 +0200
-+++ b/sound/stm/common.h	2012-10-11 20:51:57.000000000 +0200
+diff -ruN stm.org/common.h stm/common.h
+--- a/drivers/stm/common.h	2014-06-17 22:22:26.000000000 -0700
++++ b/sound/stm/common.h	2012-10-11 11:51:57.000000000 -0700
 @@ -19,12 +19,29 @@
  
  
@@ -988,14 +988,14 @@ diff -Nur ./sound/stm/common.h.orig ./sound/stm/common.h
  
  
  
-@@ -56,19 +73,8 @@
+@@ -56,17 +73,6 @@
  int snd_stm_conv_disable(struct snd_stm_conv_group *group);
  int snd_stm_conv_mute(struct snd_stm_conv_group *group);
  int snd_stm_conv_unmute(struct snd_stm_conv_group *group);
 -int snd_stm_conv_init(void);
 -void snd_stm_conv_exit(void);
- 
- 
+-
+-
 -/*
 - * Clocks control interface
 - */
@@ -1003,12 +1003,10 @@ diff -Nur ./sound/stm/common.h.orig ./sound/stm/common.h
 -struct clk *snd_stm_clk_get(struct device *dev, const char *id,
 -		struct snd_card *card, int card_device);
 -void snd_stm_clk_put(struct clk *clk);
--
--
  
- /*
-  * PCM buffer memory management
-@@ -125,9 +130,26 @@
+ 
+ 
+@@ -124,9 +130,26 @@
  
  
  /*
@@ -1035,7 +1033,7 @@ diff -Nur ./sound/stm/common.h.orig ./sound/stm/common.h
  int snd_stm_info_register(struct snd_info_entry **entry,
  		const char *name,
  		void (read)(struct snd_info_entry *, struct snd_info_buffer *),
-@@ -155,6 +177,36 @@
+@@ -154,6 +177,36 @@
  
  
  /*
@@ -1072,7 +1070,7 @@ diff -Nur ./sound/stm/common.h.orig ./sound/stm/common.h
   * Debug features
   */
  
-@@ -163,15 +215,52 @@
+@@ -162,15 +215,52 @@
  void snd_stm_hex_dump(void *data, int size);
  void snd_stm_iec958_dump(const struct snd_aes_iec958 *vuc);
  
@@ -1128,7 +1126,7 @@ diff -Nur ./sound/stm/common.h.orig ./sound/stm/common.h
  		} while (0)
  
  #define snd_stm_assert(expr, args...) \
-@@ -186,47 +275,51 @@
+@@ -185,47 +275,51 @@
  				args; \
  			} \
  		} while (0)
@@ -1199,9 +1197,1693 @@ diff -Nur ./sound/stm/common.h.orig ./sound/stm/common.h
  
  #endif
  
-diff -Nur /dev/null ./sound/stm/conv_int_dac.c
+diff -ruN stm.org/conv.c stm/conv.c
+--- a/drivers/stm/conv.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/conv.c	2012-10-11 11:46:27.000000000 -0700
+@@ -26,14 +26,11 @@
+ #include <linux/device.h>
+ #include <sound/control.h>
+ 
++#define COMPONENT conv
+ #include "common.h"
+ 
+ 
+ 
+-extern int snd_stm_debug_level;
+-
+-
+-
+ /*
+  * Converters infrastructure description
+  */
+@@ -76,7 +73,7 @@
+ 	char name[1]; /* "Expandable" */
+ };
+ 
+-#define SND_STM_BUS_ID_SIZE 30
++#define SND_STM_BUS_ID_SIZE 64
+ struct snd_stm_conv_source {
+ 	struct list_head list;
+ 
+@@ -94,8 +91,8 @@
+ 	snd_stm_magic_field;
+ };
+ 
+-static LIST_HEAD(snd_stm_conv_sources); /* Sources list */
+-static DEFINE_MUTEX(snd_stm_conv_mutex); /* Big Converters Structure Lock ;-) */
++LIST_HEAD(snd_stm_conv_sources); /* Sources list */
++DEFINE_MUTEX(snd_stm_conv_mutex); /* Big Converters Structure Lock ;-) */
+ 
+ 
+ 
+@@ -107,8 +104,10 @@
+ {
+ 	snd_stm_printd(1, "snd_stm_conv_get_name(group=%p)\n", group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
++	if (snd_BUG_ON(!group))
++		return NULL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return NULL;
+ 
+ 	return group->name;
+ }
+@@ -120,8 +119,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_get_format(group=%p)\n", group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
+ 
+ 	/* All configured converters must share the same input format -
+ 	 * get first of them and check the rest; if any of converters
+@@ -152,8 +153,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_get_oversampling(group=%p)\n",
+ 			group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
+ 
+ 	/* All configured converters must share the same oversampling value -
+ 	 * get first of them and check the rest; if any of converters
+@@ -162,8 +165,10 @@
+ 	list_for_each_entry(converter, &group->converters, list) {
+ 		int oversampling;
+ 
+-		BUG_ON(!converter);
+-		BUG_ON(!snd_stm_magic_valid(converter));
++		if (snd_BUG_ON(!converter))
++			return -EINVAL;
++		if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++			return -EINVAL;
+ 
+ 		oversampling = converter->ops->get_oversampling(
+ 				converter->priv);
+@@ -190,17 +195,24 @@
+ 	snd_stm_printd(1, "snd_stm_conv_enable(group=%p, channel_from=%d, "
+ 			"channel_to=%d)\n", group, channel_from, channel_to);
+ 
+-	BUG_ON(channel_to < channel_from);
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
+-	BUG_ON(group->enabled);
++	if (snd_BUG_ON(!(channel_to >= channel_from)))
++		return -EINVAL;
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
++	if (snd_BUG_ON(group->enabled))
++		return -EINVAL;
+ 
+ 	group->enabled = 1;
+ 
+ 	list_for_each_entry(converter, &group->converters, list) {
+-		BUG_ON(!converter);
+-		BUG_ON(!snd_stm_magic_valid(converter));
+-		BUG_ON(converter->enabled);
++		if (snd_BUG_ON(!converter))
++			return -EINVAL;
++		if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++			return -EINVAL;
++		if (snd_BUG_ON(converter->enabled))
++			continue;
+ 
+ 		spin_lock(&converter->status_lock);
+ 
+@@ -236,15 +248,20 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_disable(group=%p)\n", group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
+-	BUG_ON(!group->enabled);
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
++	if (snd_BUG_ON(!group->enabled))
++		return -EINVAL;
+ 
+ 	group->enabled = 0;
+ 
+ 	list_for_each_entry(converter, &group->converters, list) {
+-		BUG_ON(!converter);
+-		BUG_ON(!snd_stm_magic_valid(converter));
++		if (snd_BUG_ON(!converter))
++			return -EINVAL;
++		if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++			return -EINVAL;
+ 
+ 		spin_lock(&converter->status_lock);
+ 
+@@ -277,16 +294,22 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_mute(group=%p)\n", group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
+-	BUG_ON(!group->enabled);
+-	BUG_ON(group->muted_by_source);
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
++	if (snd_BUG_ON(!group->enabled))
++		return -EINVAL;
++	if (snd_BUG_ON(group->muted_by_source))
++		return -EINVAL;
+ 
+ 	group->muted_by_source = 1;
+ 
+ 	list_for_each_entry(converter, &group->converters, list) {
+-		BUG_ON(!converter);
+-		BUG_ON(!snd_stm_magic_valid(converter));
++		if (snd_BUG_ON(!converter))
++			return -EINVAL;
++		if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++			return -EINVAL;
+ 
+ 		spin_lock(&converter->status_lock);
+ 
+@@ -320,16 +343,22 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_unmute(group=%p)\n", group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
+-	BUG_ON(!group->enabled);
+-	BUG_ON(!group->muted_by_source);
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
++	if (snd_BUG_ON(!group->enabled))
++		return -EINVAL;
++	if (snd_BUG_ON(!group->muted_by_source))
++		return -EINVAL;
+ 
+ 	group->muted_by_source = 0;
+ 
+ 	list_for_each_entry(converter, &group->converters, list) {
+-		BUG_ON(!converter);
+-		BUG_ON(!snd_stm_magic_valid(converter));
++		if (snd_BUG_ON(!converter))
++			return -EINVAL;
++		if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++			return -EINVAL;
+ 
+ 		spin_lock(&converter->status_lock);
+ 
+@@ -370,8 +399,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_ctl_mute_get(kcontrol=0x%p,"
+ 			" ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!converter);
+-	BUG_ON(!snd_stm_magic_valid(converter));
++	if (snd_BUG_ON(!converter))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++		return -EINVAL;
+ 
+ 	spin_lock(&converter->status_lock);
+ 
+@@ -391,9 +422,13 @@
+ 	snd_stm_printd(1, "snd_stm_conv_ctl_mute_put(kcontrol=0x%p,"
+ 			" ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!converter);
+-	BUG_ON(!snd_stm_magic_valid(converter));
+-	BUG_ON(!converter->ops->set_muted);
++	if (snd_BUG_ON(!converter))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++		return -EINVAL;
++
++	if (snd_BUG_ON(!converter->ops->set_muted))
++		return -EINVAL;
+ 
+ 	spin_lock(&converter->status_lock);
+ 
+@@ -436,13 +471,17 @@
+ 	snd_stm_printd(1, "snd_stm_conv_ctl_mute_add(converter=%p)\n",
+ 			converter);
+ 
+-	BUG_ON(!converter);
+-	BUG_ON(!snd_stm_magic_valid(converter));
++	if (snd_BUG_ON(!converter))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++		return -EINVAL;
+ 
+ 	source = converter->group->source;
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
++	if (snd_BUG_ON(!source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return -EINVAL;
+ 
+ 	snd_stm_conv_ctl_mute.device = source->card_device;
+ 
+@@ -475,8 +514,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_ctl_route_info(kcontrol=0x%p,"
+ 			" uinfo=0x%p)\n", kcontrol, uinfo);
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
++	if (snd_BUG_ON(!source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return -EINVAL;
+ 
+ 	uinfo->type = SNDRV_CTL_ELEM_TYPE_ENUMERATED;
+ 	uinfo->count = 1;
+@@ -510,8 +551,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_ctl_route_get(kcontrol=0x%p,"
+ 			" ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
++	if (snd_BUG_ON(!source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return -EINVAL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -541,8 +584,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_ctl_route_put(kcontrol=0x%p,"
+ 			" ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
++	if (snd_BUG_ON(!source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return -EINVAL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -577,8 +622,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_ctl_route_add(source=%p)\n", source);
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
++	if (snd_BUG_ON(!source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return -EINVAL;
+ 
+ 	snd_stm_conv_ctl_route.device = source->card_device;
+ 
+@@ -604,7 +651,7 @@
+  * Converters router implementation
+  */
+ 
+-static inline int snd_stm_conv_more_than_one_entry(const struct list_head *head)
++static int snd_stm_conv_more_than_one_entry(const struct list_head *head)
+ {
+ 	return !list_empty(head) && !list_is_last(head->next, head);
+ }
+@@ -617,8 +664,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_get_source(bus=%p, bus_id='%s')\n",
+ 			bus, bus_id);
+ 
+-	BUG_ON(!bus);
+-	BUG_ON(!bus_id);
++	if (snd_BUG_ON(!bus))
++		return NULL;
++	if (snd_BUG_ON(!bus_id))
++		return NULL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -658,11 +707,16 @@
+ 			"channels_num=%d, card=%p, card_device=%d)\n",
+ 			bus, bus_id, channels_num, card, card_device);
+ 
+-	BUG_ON(!bus);
+-	BUG_ON(!bus_id);
+-	BUG_ON(channels_num <= 0);
+-	BUG_ON(!card);
+-	BUG_ON(card_device < 0);
++	if (snd_BUG_ON(!bus))
++		return NULL;
++	if (snd_BUG_ON(!bus_id))
++		return NULL;
++	if (snd_BUG_ON(channels_num <= 0))
++		return NULL;
++	if (snd_BUG_ON(!card))
++		return NULL;
++	if (snd_BUG_ON(card_device < 0))
++		return NULL;
+ 
+ 	source = snd_stm_conv_get_source(bus, bus_id);
+ 	if (!source) {
+@@ -670,8 +724,10 @@
+ 		return NULL;
+ 	}
+ 
+-	BUG_ON(source->channels_num != 0);
+-	BUG_ON(source->card);
++	if (snd_BUG_ON(source->channels_num != 0))
++		return NULL;
++	if (snd_BUG_ON(source->card))
++		return NULL;
+ 
+ 	source->channels_num = channels_num;
+ 	source->card = card;
+@@ -690,10 +746,10 @@
+ 	list_for_each_entry(group, &source->groups, list) {
+ 		struct snd_stm_conv_converter *converter;
+ 
+-		BUG_ON(!snd_stm_magic_valid(group));
++		snd_BUG_ON(!snd_stm_magic_valid(group));
+ 
+-		list_for_each_entry(converter, &group->converters, list) {
+-			BUG_ON(!snd_stm_magic_valid(converter));
++		list_for_each_entry(converter, &group->converters, list){
++			snd_BUG_ON(!snd_stm_magic_valid(converter));
+ 
+ 			if (converter->ops->set_muted &&
+ 					snd_stm_conv_ctl_mute_add(converter)
+@@ -713,8 +769,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_unregister_source(source=%p)\n",
+ 		       source);
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
++	if (snd_BUG_ON(!source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return -EINVAL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -742,12 +800,16 @@
+ 	snd_stm_printd(1, "snd_stm_conv_get_group(source=%p, name='%s')\n",
+ 			source, name);
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
+-	BUG_ON(!name);
++	if (snd_BUG_ON(!source))
++		return NULL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return NULL;
++	if (snd_BUG_ON(!name))
++		return NULL;
+ 
+ 	/* Random memory fuse */
+-	BUG_ON(strlen(name) > 1024);
++	if (snd_BUG_ON(strlen(name) >= 1024))
++		return NULL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -794,13 +856,17 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_remove_group(group=%p)\n", group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
+ 
+ 	source = group->source;
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
++	if (snd_BUG_ON(!source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return -EINVAL;
+ 
+ 	list_del(&group->list);
+ 
+@@ -856,12 +922,17 @@
+ 			group_name, ops, priv, source_bus, source_bus_id,
+ 			source_channel_from, source_channel_to);
+ 
+-	BUG_ON(!group_name);
+-	BUG_ON(!ops);
+-	BUG_ON(!source_bus);
+-	BUG_ON(!source_bus_id);
+-	BUG_ON(source_channel_from < 0);
+-	BUG_ON(source_channel_to < source_channel_from);
++	if (snd_BUG_ON(!group_name))
++		return NULL;
++	if (snd_BUG_ON(!ops))
++		return NULL;
++	if (snd_BUG_ON(!source_bus))
++		return NULL;
++	if (snd_BUG_ON(!source_bus_id))
++		return NULL;
++	if (snd_BUG_ON((source_channel_from < 0) ||
++		       (source_channel_to < source_channel_from)))
++		return NULL;
+ 
+ 	/* Create converter description */
+ 
+@@ -938,13 +1009,17 @@
+ 	snd_stm_printd(1, "snd_stm_conv_unregister_converter(converter=%p)\n",
+ 			converter);
+ 
+-	BUG_ON(!converter);
+-	BUG_ON(!snd_stm_magic_valid(converter));
++	if (snd_BUG_ON(!converter))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++		return -EINVAL;
+ 
+ 	group = converter->group;
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -970,8 +1045,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_get_card_device(converter=%p)\n",
+ 			converter);
+ 
+-	BUG_ON(!converter);
+-	BUG_ON(!snd_stm_magic_valid(converter));
++	if (snd_BUG_ON(!converter))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(converter)))
++		return -EINVAL;
+ 
+ 	return converter->group->source->card_device;
+ }
+@@ -983,9 +1060,13 @@
+ {
+ 	snd_stm_printd(1, "snd_stm_conv_request_group(source=%p)\n", source);
+ 
+-	BUG_ON(!source);
+-	BUG_ON(!snd_stm_magic_valid(source));
+-	BUG_ON(source->group_active);
++	if (snd_BUG_ON(!source))
++		return NULL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(source)))
++		return NULL;
++
++	if (snd_BUG_ON(source->group_active))
++		return NULL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -1000,11 +1081,18 @@
+ {
+ 	snd_stm_printd(1, "snd_stm_conv_release_group(group=%p)\n", group);
+ 
+-	BUG_ON(!group);
+-	BUG_ON(!snd_stm_magic_valid(group));
+-	BUG_ON(!group->source);
+-	BUG_ON(!snd_stm_magic_valid(group->source));
+-	BUG_ON(group != group->source->group_active);
++	if (snd_BUG_ON(!group))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group)))
++		return -EINVAL;
++
++	if (snd_BUG_ON(!group->source))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(group->source)))
++		return -EINVAL;
++
++	if (snd_BUG_ON(group != group->source->group_active))
++		return -EINVAL;
+ 
+ 	mutex_lock(&snd_stm_conv_mutex);
+ 
+@@ -1074,7 +1162,7 @@
+  */
+ 
+ 
+-int __init snd_stm_conv_init(void)
++int snd_stm_conv_init(void)
+ {
+ 	/* Register converters information file in ALSA's procfs */
+ 
+diff -ruN stm.org/conv_dummy.c stm/conv_dummy.c
+--- a/drivers/stm/conv_dummy.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/conv_dummy.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' dummy DAC driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -26,15 +26,10 @@
+ #include <linux/platform_device.h>
+ #include <sound/stm.h>
+ 
++#define COMPONENT conv_dummy
+ #include "common.h"
+ 
+ 
+-
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Dummy converter instance structure
+  */
+@@ -58,8 +53,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_dummy_get_format(priv=%p)\n", priv);
+ 
+-	BUG_ON(!conv_dummy);
+-	BUG_ON(!snd_stm_magic_valid(conv_dummy));
++	if (snd_BUG_ON(!conv_dummy))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_dummy)))
++		return -EINVAL;
+ 
+ 	return conv_dummy->info->format;
+ }
+@@ -71,8 +68,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_dummy_get_oversampling(priv=%p)\n",
+ 			priv);
+ 
+-	BUG_ON(!conv_dummy);
+-	BUG_ON(!snd_stm_magic_valid(conv_dummy));
++	if (snd_BUG_ON(!conv_dummy))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_dummy)))
++		return -EINVAL;
+ 
+ 	return conv_dummy->info->oversampling;
+ }
+@@ -92,9 +91,10 @@
+ {
+ 	struct snd_stm_conv_dummy *conv_dummy;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(0, "--- Probing device '%s'...\n", dev_name(&pdev->dev));
+ 
+-	BUG_ON(!pdev->dev.platform_data);
++	if (snd_BUG_ON(pdev->dev.platform_data == NULL))
++		return -EINVAL;
+ 
+ 	conv_dummy = kzalloc(sizeof(*conv_dummy), GFP_KERNEL);
+ 	if (!conv_dummy) {
+@@ -122,6 +122,8 @@
+ 
+ 	platform_set_drvdata(pdev, conv_dummy);
+ 
++	snd_stm_printd(0, "--- Probed successfully!\n");
++
+ 	return 0;
+ }
+ 
+@@ -129,8 +131,10 @@
+ {
+ 	struct snd_stm_conv_dummy *conv_dummy = platform_get_drvdata(pdev);
+ 
+-	BUG_ON(!conv_dummy);
+-	BUG_ON(!snd_stm_magic_valid(conv_dummy));
++	if (snd_BUG_ON(!conv_dummy))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_dummy)))
++		return -EINVAL;
+ 
+ 	snd_stm_conv_unregister_converter(conv_dummy->converter);
+ 
+@@ -141,7 +145,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_conv_dummy_driver = {
+-	.driver.name = "snd_conv_dummy",
++	.driver = {
++		.name = "snd_conv_dummy",
++	},
+ 	.probe = snd_stm_conv_dummy_probe,
+ 	.remove = snd_stm_conv_dummy_remove,
+ };
+diff -ruN stm.org/conv_epld.c stm/conv_epld.c
+--- a/drivers/stm/conv_epld.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/conv_epld.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' EPLD-controlled ADC/DAC driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -28,22 +28,18 @@
+ #include <sound/info.h>
+ #include <sound/stm.h>
+ 
++#define COMPONENT conv_epld
+ #include "common.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Internal DAC instance structure
+  */
+ 
+ struct snd_stm_conv_epld {
+ 	/* System informations */
+-	const char *dev_name;
++	const char *bus_id;
+ 	struct snd_stm_conv_converter *converter;
+ 	struct snd_stm_conv_epld_info *info;
+ 
+@@ -86,8 +82,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_epld_get_format(priv=%p)\n", priv);
+ 
+-	BUG_ON(!conv_epld);
+-	BUG_ON(!snd_stm_magic_valid(conv_epld));
++	if (snd_BUG_ON(!conv_epld))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_epld)))
++		return -EINVAL;
+ 
+ 	return conv_epld->info->format;
+ }
+@@ -99,8 +97,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_epld_get_oversampling(priv=%p)\n",
+ 			priv);
+ 
+-	BUG_ON(!conv_epld);
+-	BUG_ON(!snd_stm_magic_valid(conv_epld));
++	if (snd_BUG_ON(!conv_epld))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_epld)))
++		return -EINVAL;
+ 
+ 	return conv_epld->info->oversampling;
+ }
+@@ -112,16 +112,19 @@
+ 	snd_stm_printd(1, "snd_stm_conv_epld_enable(enabled=%d, priv=%p)\n",
+ 			enabled, priv);
+ 
+-	BUG_ON(!conv_epld);
+-	BUG_ON(!snd_stm_magic_valid(conv_epld));
+-	BUG_ON(!conv_epld->info->enable_supported);
++	if (snd_BUG_ON(!conv_epld))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_epld)))
++		return -EINVAL;
++	if (snd_BUG_ON(!conv_epld->info->enable_supported))
++		return -EINVAL;
+ 
+ 	snd_stm_printd(1, "%sabling DAC %s's.\n", enabled ? "En" : "Dis",
+-			conv_epld->dev_name);
++			conv_epld->bus_id);
+ 
+ 	snd_stm_conv_epld_set(conv_epld->info->enable_offset,
+ 			conv_epld->info->enable_mask,
+-			enabled ? conv_epld->info->enable_value :
++			enabled ? conv_epld->info->enable_value:
+ 			conv_epld->info->disable_value);
+ 
+ 	return 0;
+@@ -134,12 +137,15 @@
+ 	snd_stm_printd(1, "snd_stm_conv_epld_set_muted(muted=%d, priv=%p)\n",
+ 			muted, priv);
+ 
+-	BUG_ON(!conv_epld);
+-	BUG_ON(!snd_stm_magic_valid(conv_epld));
+-	BUG_ON(!conv_epld->info->mute_supported);
++	if (snd_BUG_ON(!conv_epld))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_epld)))
++		return -EINVAL;
++	if (snd_BUG_ON(!conv_epld->info->mute_supported))
++		return -EINVAL;
+ 
+ 	snd_stm_printd(1, "%suting DAC %s.\n", muted ? "M" : "Unm",
+-			conv_epld->dev_name);
++			conv_epld->bus_id);
+ 
+ 	snd_stm_conv_epld_set(conv_epld->info->mute_offset,
+ 			conv_epld->info->mute_mask,
+@@ -163,10 +169,12 @@
+ {
+ 	struct snd_stm_conv_epld *conv_epld = entry->private_data;
+ 
+-	BUG_ON(!conv_epld);
+-	BUG_ON(!snd_stm_magic_valid(conv_epld));
++	if (snd_BUG_ON(!conv_epld))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_epld)))
++		return;
+ 
+-	snd_iprintf(buffer, "--- %s ---\n", conv_epld->dev_name);
++	snd_iprintf(buffer, "--- %s ---\n", conv_epld->bus_id);
+ 
+ 	if (conv_epld->info->enable_supported)
+ 		DUMP_EPLD(conv_epld->info->enable_offset);
+@@ -187,9 +195,10 @@
+ 	int result = 0;
+ 	struct snd_stm_conv_epld *conv_epld;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(0, "--- Probing device '%s'...\n", dev_name(&pdev->dev));
+ 
+-	BUG_ON(!pdev->dev.platform_data);
++	if (snd_BUG_ON(pdev->dev.platform_data == NULL))
++		return -EINVAL;
+ 
+ 	conv_epld = kzalloc(sizeof(*conv_epld), GFP_KERNEL);
+ 	if (!conv_epld) {
+@@ -199,7 +208,7 @@
+ 		goto error_alloc;
+ 	}
+ 	snd_stm_magic_set(conv_epld);
+-	conv_epld->dev_name = dev_name(&pdev->dev);
++	conv_epld->bus_id = dev_name(&pdev->dev);
+ 	conv_epld->info = pdev->dev.platform_data;
+ 
+ 	conv_epld->ops.get_format = snd_stm_conv_epld_get_format;
+@@ -211,7 +220,8 @@
+ 
+ 	/* Get connections */
+ 
+-	BUG_ON(!conv_epld->info->source_bus_id);
++	if (snd_BUG_ON(conv_epld->info->source_bus_id == NULL))
++		return -EINVAL;
+ 	snd_stm_printd(0, "This DAC is attached to PCM player '%s'.\n",
+ 			conv_epld->info->source_bus_id);
+ 	conv_epld->converter = snd_stm_conv_register_converter(
+@@ -240,7 +250,7 @@
+ 	/* Additional procfs info */
+ 
+ 	snd_stm_info_register(&conv_epld->proc_entry,
+-			conv_epld->dev_name,
++			conv_epld->bus_id,
+ 			snd_stm_conv_epld_read_info,
+ 			conv_epld);
+ 
+@@ -248,6 +258,8 @@
+ 
+ 	platform_set_drvdata(pdev, conv_epld);
+ 
++	snd_stm_printd(0, "--- Probed successfully!\n");
++
+ 	return 0;
+ 
+ error_attach:
+@@ -261,9 +273,12 @@
+ {
+ 	struct snd_stm_conv_epld *conv_epld = platform_get_drvdata(pdev);
+ 
+-	BUG_ON(!conv_epld);
+-	BUG_ON(!snd_stm_magic_valid(conv_epld));
++	if (snd_BUG_ON(!conv_epld))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_epld)))
++		return -EINVAL;
+ 
++	snd_device_free(snd_stm_card_get(), conv_epld);
+ 	snd_stm_conv_unregister_converter(conv_epld->converter);
+ 
+ 	/* Remove procfs entry */
+@@ -289,7 +304,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_conv_epld_driver = {
+-	.driver.name = "snd_conv_epld",
++	.driver = {
++		.name = "snd_conv_epld",
++	},
+ 	.probe = snd_stm_conv_epld_probe,
+ 	.remove = snd_stm_conv_epld_remove,
+ };
+diff -ruN stm.org/conv_gpio.c stm/conv_gpio.c
+--- a/drivers/stm/conv_gpio.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/conv_gpio.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' GPIO-controlled ADC/DAC driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -32,22 +32,18 @@
+ #include <sound/info.h>
+ #include <sound/stm.h>
+ 
++#define COMPONENT conv_gpio
+ #include "common.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Internal DAC instance structure
+  */
+ 
+ struct snd_stm_conv_gpio {
+ 	/* System informations */
+-	const char *dev_name;
++	const char *bus_id;
+ 	struct snd_stm_conv_converter *converter;
+ 	struct snd_stm_conv_gpio_info *info;
+ 	struct snd_stm_conv_ops ops;
+@@ -78,8 +74,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_gpio_work(work=%p)\n", work);
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
++	if (snd_BUG_ON(!conv_gpio))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return;
+ 
+ 	spin_lock(&conv_gpio->work_lock);
+ 
+@@ -107,8 +105,10 @@
+ 			"enable_not_mute=%d, value=%d)\n",
+ 			conv_gpio, enable_not_mute, value);
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
++	if (snd_BUG_ON(!conv_gpio))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return;
+ 
+ 	if (conv_gpio->may_sleep) {
+ 		spin_lock(&conv_gpio->work_lock);
+@@ -136,8 +136,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_gpio_get_format(priv=%p)\n", priv);
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
++	if (snd_BUG_ON(!conv_gpio))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return -EINVAL;
+ 
+ 	return conv_gpio->info->format;
+ }
+@@ -149,8 +151,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_gpio_get_oversampling(priv=%p)\n",
+ 			priv);
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
++	if (snd_BUG_ON(!conv_gpio))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return -EINVAL;
+ 
+ 	return conv_gpio->info->oversampling;
+ }
+@@ -162,12 +166,15 @@
+ 	snd_stm_printd(1, "snd_stm_conv_gpio_enable(enabled=%d, priv=%p)\n",
+ 			enabled, priv);
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
+-	BUG_ON(!conv_gpio->info->enable_supported);
++	if (snd_BUG_ON(!conv_gpio))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return -EINVAL;
++	if (snd_BUG_ON(!conv_gpio->info->enable_supported))
++		return -EINVAL;
+ 
+ 	snd_stm_printd(1, "%sabling DAC %s's.\n", enabled ? "En" : "Dis",
+-			conv_gpio->dev_name);
++			conv_gpio->bus_id);
+ 
+ 	snd_stm_conv_gpio_set_value(conv_gpio, 1,
+ 			enabled ? conv_gpio->info->enable_value :
+@@ -183,12 +190,15 @@
+ 	snd_stm_printd(1, "snd_stm_conv_gpio_set_muted(muted=%d, priv=%p)\n",
+ 			muted, priv);
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
+-	BUG_ON(!conv_gpio->info->mute_supported);
++	if (snd_BUG_ON(!conv_gpio))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return -EINVAL;
++	if (snd_BUG_ON(!conv_gpio->info->mute_supported))
++		return -EINVAL;
+ 
+ 	snd_stm_printd(1, "%suting DAC %s.\n", muted ? "M" : "Unm",
+-			conv_gpio->dev_name);
++			conv_gpio->bus_id);
+ 
+ 	snd_stm_conv_gpio_set_value(conv_gpio, 0,
+ 			muted ? conv_gpio->info->mute_value :
+@@ -208,10 +218,12 @@
+ {
+ 	struct snd_stm_conv_gpio *conv_gpio = entry->private_data;
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
++	if (snd_BUG_ON(!conv_gpio))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return;
+ 
+-	snd_iprintf(buffer, "--- %s ---\n", conv_gpio->dev_name);
++	snd_iprintf(buffer, "--- %s ---\n", conv_gpio->bus_id);
+ 
+ 	snd_iprintf(buffer, "enable_gpio(%d) = %d\n",
+ 			conv_gpio->info->enable_gpio,
+@@ -235,9 +247,10 @@
+ 	int result = 0;
+ 	struct snd_stm_conv_gpio *conv_gpio;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(0, "--- Probing device '%s'...\n", dev_name(&pdev->dev));
+ 
+-	BUG_ON(!pdev->dev.platform_data);
++	if (snd_BUG_ON(pdev->dev.platform_data == NULL))
++		return -EINVAL;
+ 
+ 	conv_gpio = kzalloc(sizeof(*conv_gpio), GFP_KERNEL);
+ 	if (!conv_gpio) {
+@@ -247,7 +260,7 @@
+ 		goto error_alloc;
+ 	}
+ 	snd_stm_magic_set(conv_gpio);
+-	conv_gpio->dev_name = dev_name(&pdev->dev);
++	conv_gpio->bus_id = dev_name(&pdev->dev);
+ 	conv_gpio->info = pdev->dev.platform_data;
+ 
+ 	conv_gpio->ops.get_format = snd_stm_conv_gpio_get_format;
+@@ -259,7 +272,8 @@
+ 
+ 	/* Get connections */
+ 
+-	BUG_ON(!conv_gpio->info->source_bus_id);
++	if (snd_BUG_ON(conv_gpio->info->source_bus_id == NULL))
++		return -EINVAL;
+ 	snd_stm_printd(0, "This DAC is attached to PCM player '%s'.\n",
+ 			conv_gpio->info->source_bus_id);
+ 	conv_gpio->converter = snd_stm_conv_register_converter(
+@@ -277,7 +291,7 @@
+ 
+ 	if (conv_gpio->info->enable_supported) {
+ 		result = gpio_request(conv_gpio->info->enable_gpio,
+-				conv_gpio->dev_name);
++				conv_gpio->bus_id);
+ 		if (result != 0) {
+ 			snd_stm_printe("Can't reserve 'enable' GPIO line!\n");
+ 			goto error_gpio_request_enable;
+@@ -296,7 +310,7 @@
+ 
+ 	if (conv_gpio->info->mute_supported) {
+ 		result = gpio_request(conv_gpio->info->mute_gpio,
+-				conv_gpio->dev_name);
++				conv_gpio->bus_id);
+ 		if (result != 0) {
+ 			snd_stm_printe("Can't reserve 'mute' GPIO line!\n");
+ 			goto error_gpio_request_mute;
+@@ -323,7 +337,7 @@
+ 	/* Additional procfs info */
+ 
+ 	snd_stm_info_register(&conv_gpio->proc_entry,
+-			conv_gpio->dev_name,
++			conv_gpio->bus_id,
+ 			snd_stm_conv_gpio_read_info,
+ 			conv_gpio);
+ 
+@@ -331,6 +345,8 @@
+ 
+ 	platform_set_drvdata(pdev, conv_gpio);
+ 
++	snd_stm_printd(0, "--- Probed successfully!\n");
++
+ 	return 0;
+ 
+ error_gpio_direction_output_mute:
+@@ -353,9 +369,12 @@
+ {
+ 	struct snd_stm_conv_gpio *conv_gpio = platform_get_drvdata(pdev);
+ 
+-	BUG_ON(!conv_gpio);
+-	BUG_ON(!snd_stm_magic_valid(conv_gpio));
++	if (snd_BUG_ON(!conv_gpio))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_gpio)))
++		return -EINVAL;
+ 
++	snd_device_free(snd_stm_card_get(), conv_gpio);
+ 	snd_stm_conv_unregister_converter(conv_gpio->converter);
+ 
+ 	/* Remove procfs entry */
+@@ -364,7 +383,7 @@
+ 
+ 	/* Wait for the possibly scheduled work... */
+ 
+-	if (conv_gpio->may_sleep)
++	if (conv_gpio->may_sleep);
+ 		flush_scheduled_work();
+ 
+ 	/* Muting and disabling - just to be sure ;-) */
+@@ -388,7 +407,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_conv_gpio_driver = {
+-	.driver.name = "snd_conv_gpio",
++	.driver = {
++		.name = "snd_conv_gpio",
++	},
+ 	.probe = snd_stm_conv_gpio_probe,
+ 	.remove = snd_stm_conv_gpio_remove,
+ };
+diff -ruN stm.org/conv_i2c.c stm/conv_i2c.c
+--- a/drivers/stm/conv_i2c.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/conv_i2c.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' I2C-controlled ADC/DAC driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -31,15 +31,11 @@
+ #include <sound/info.h>
+ #include <sound/stm.h>
+ 
++#define COMPONENT conv_i2c
+ #include "common.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Internal converter instance structure
+  */
+@@ -78,8 +74,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_i2c_work(work=%p)\n", work);
+ 
+-	BUG_ON(!conv_i2c);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2c));
++	if (snd_BUG_ON(!conv_i2c))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2c)))
++		return;
+ 
+ 	spin_lock(&conv_i2c->work_lock);
+ 
+@@ -136,8 +134,10 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_conv_i2c_get_format(priv=%p)\n", priv);
+ 
+-	BUG_ON(!conv_i2c);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2c));
++	if (snd_BUG_ON(!conv_i2c))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2c)))
++		return -EINVAL;
+ 
+ 	return conv_i2c->info->format;
+ }
+@@ -149,8 +149,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2c_get_oversampling(priv=%p)\n",
+ 			priv);
+ 
+-	BUG_ON(!conv_i2c);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2c));
++	if (snd_BUG_ON(!conv_i2c))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2c)))
++		return -EINVAL;
+ 
+ 	return conv_i2c->info->oversampling;
+ }
+@@ -162,9 +164,12 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2c_enable(enabled=%d, priv=%p)\n",
+ 			enabled, priv);
+ 
+-	BUG_ON(!conv_i2c);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2c));
+-	BUG_ON(!conv_i2c->info->enable_supported);
++	if (snd_BUG_ON(!conv_i2c))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2c)))
++		return -EINVAL;
++	if (snd_BUG_ON(!conv_i2c->info->enable_supported))
++		return -EINVAL;
+ 
+ 	snd_stm_printd(1, "%sabling DAC %s's.\n", enabled ? "En" : "Dis",
+ 			dev_name(&conv_i2c->client->dev));
+@@ -184,9 +189,12 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2c_set_muted(muted=%d, priv=%p)\n",
+ 			muted, priv);
+ 
+-	BUG_ON(!conv_i2c);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2c));
+-	BUG_ON(!conv_i2c->info->mute_supported);
++	if (snd_BUG_ON(!conv_i2c))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2c)))
++		return -EINVAL;
++	if (snd_BUG_ON(!conv_i2c->info->mute_supported))
++		return -EINVAL;
+ 
+ 	snd_stm_printd(1, "%suting DAC %s.\n", muted ? "M" : "Unm",
+ 			dev_name(&conv_i2c->client->dev));
+@@ -205,15 +213,17 @@
+  * I2C driver routines
+  */
+ 
+-static int snd_stm_conv_i2c_probe(struct i2c_client *client,
++int snd_stm_conv_i2c_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
+ {
+ 	int result = 0;
+ 	struct snd_stm_conv_i2c *conv_i2c;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&client->dev));
++	snd_stm_printd(0, "--- Probing I2C device '%s'...\n",
++			dev_name(&client->dev));
+ 
+-	BUG_ON(!client->dev.platform_data);
++	if (snd_BUG_ON(client->dev.platform_data == NULL))
++		return -EINVAL;
+ 
+ 	conv_i2c = kzalloc(sizeof(*conv_i2c), GFP_KERNEL);
+ 	if (!conv_i2c) {
+@@ -248,7 +258,8 @@
+ 
+ 	/* Get connections */
+ 
+-	BUG_ON(!conv_i2c->info->source_bus_id);
++	if (snd_BUG_ON(conv_i2c->info->source_bus_id == NULL))
++		return -EINVAL;
+ 	snd_stm_printd(0, "This converter is attached to '%s'.\n",
+ 			conv_i2c->info->source_bus_id);
+ 	conv_i2c->converter = snd_stm_conv_register_converter(
+@@ -297,6 +308,8 @@
+ 
+ 	i2c_set_clientdata(client, conv_i2c);
+ 
++	snd_stm_printd(0, "--- Probed successfully!\n");
++
+ 	return 0;
+ 
+ error_set_muted:
+@@ -314,9 +327,12 @@
+ {
+ 	struct snd_stm_conv_i2c *conv_i2c = i2c_get_clientdata(client);
+ 
+-	BUG_ON(!conv_i2c);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2c));
++	if (snd_BUG_ON(!conv_i2c))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2c)))
++		return -EINVAL;
+ 
++	snd_device_free(snd_stm_card_get(), conv_i2c);
+ 	snd_stm_conv_unregister_converter(conv_i2c->converter);
+ 
+ 	/* Wait for the possibly scheduled work... */
+@@ -339,7 +355,9 @@
+ }
+ 
+ static struct i2c_driver snd_stm_conv_i2c_driver = {
+-	.driver.name = "snd_conv_i2c",
++	.driver = {
++		.name = "snd_conv_i2c",
++	},
+ 	.probe = snd_stm_conv_i2c_probe,
+ 	.remove = snd_stm_conv_i2c_remove,
+ };
+diff -ruN stm.org/conv_i2sspdif.c stm/conv_i2sspdif.c
+--- a/drivers/stm/conv_i2sspdif.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/conv_i2sspdif.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' I2S to SPDIF converter driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -30,16 +30,12 @@
+ #include <sound/info.h>
+ #include <sound/stm.h>
+ 
++#define COMPONENT conv_i2sspdif
+ #include "common.h"
+ #include "reg_aud_spdifpc.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Hardware-related definitions
+  */
+@@ -89,27 +85,6 @@
+ 
+ #define CHA_STA_TRIES 50000
+ 
+-static int snd_stm_conv_i2sspdif_set_cha_sta(struct snd_stm_conv_i2sspdif
+-		*conv_i2sspdif, unsigned long *status)
+-{
+-	int j;
+-
+-	/* Clear the channel status update bit (only IP v4 or later) */
+-	if (conv_i2sspdif->ver >= 4)
+-		set__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(conv_i2sspdif, 1);
+-
+-	/* Set the channel status */
+-	for (j = 0; j < 6; j++)
+-		set__AUD_SPDIFPC_CHA_STA(conv_i2sspdif, j, status[j]);
+-
+-	/* Verify the channel status is set */
+-	for (j = 0; j < 6; j++)
+-		if (get__AUD_SPDIFPC_CHA_STA(conv_i2sspdif, j) != status[j])
+-			return 0;
+-
+-	return 1;
+-}
+-
+ static int snd_stm_conv_i2sspdif_iec958_set(struct snd_stm_conv_i2sspdif
+ 		*conv_i2sspdif, struct snd_aes_iec958 *iec958)
+ {
+@@ -119,8 +94,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_iec958_set(conv_i2sspdif=%p"
+ 			", iec958=%p)\n", conv_i2sspdif, iec958);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
+ 
+ 	/* I2S to SPDIF converter should be used only for playing
+ 	 * PCM (non compressed) data, so validity bit should be always
+@@ -132,10 +109,10 @@
+ 	 * converter hardware, so it is better not to do this at all... */
+ 	set__AUD_SPDIFPC_DATA__USER_DATA_BITS(conv_i2sspdif, 0);
+ 
+-	BUG_ON(memcmp(snd_stm_conv_i2sspdif_iec958_zeroed.subcode,
++	snd_BUG_ON(memcmp(snd_stm_conv_i2sspdif_iec958_zeroed.subcode,
+ 			  iec958->subcode, sizeof(iec958->subcode)) != 0);
+ 
+-	if (conv_i2sspdif->ver < 4) {
++	if (conv_i2sspdif->ver < ver__AUD_SPDIFPC__65_3_0) {
+ 		/* Converter hardware by default puts every single bit of
+ 		 * status to separate SPDIF subframe (instead of putting
+ 		 * the same bit to both left and right subframes).
+@@ -163,26 +140,6 @@
+ 
+ 			status[i] = word | (word << 1);
+ 		}
+-
+-		/* Set converter's channel status registers - they are realised
+-		 * in such a ridiculous way that write to them is enabled only
+-		 * in (about) 300us time window after CHL_STS_BUFF_EMPTY bit
+-		 * is asserted... And this happens once every 2ms (only when
+-		 * converter is enabled and gets data...) */
+-
+-		for (i = 0; i < CHA_STA_TRIES; i++) {
+-
+-			if (get__AUD_SPDIFPC_STA__CHL_STS_BUFF_EMPTY(
+-							conv_i2sspdif)) {
+-
+-				ok = snd_stm_conv_i2sspdif_set_cha_sta(
+-								conv_i2sspdif,
+-								status);
+-
+-				if (ok)
+-					break;
+-			}
+-		}
+ 	} else {
+ 		/* Fortunately in some hardware there is a "sane" mode
+ 		 * of channel status registers operation... :-) */
+@@ -192,12 +149,31 @@
+ 					iec958->status[i * 4 + 1] << 8 |
+ 					iec958->status[i * 4 + 2] << 16 |
+ 					iec958->status[i * 4 + 3] << 24;
+-
+-		/* Set converter's channel status registers */
+-		ok = snd_stm_conv_i2sspdif_set_cha_sta(conv_i2sspdif, status);
+ 	}
+ 
+-
++	/* Set converter's channel status registers - they are realised
++	 * in such a ridiculous way that write to them is enabled only
++	 * in (about) 300us time window after CHL_STS_BUFF_EMPTY bit
++	 * is asserted... And this happens once every 2ms (only when
++	 * converter is enabled and gets data...) */
++
++	ok = 0;
++	for (i = 0; i < CHA_STA_TRIES; i++) {
++		if (get__AUD_SPDIFPC_STA__CHL_STS_BUFF_EMPTY(conv_i2sspdif)) {
++			for (j = 0; j < 6; j++)
++				set__AUD_SPDIFPC_CHA_STA(conv_i2sspdif, j,
++						status[j]);
++			ok = 1;
++			for (j = 0; j < 6; j++)
++				if (get__AUD_SPDIFPC_CHA_STA(conv_i2sspdif,
++						j) != status[j]) {
++					ok = 0;
++					break;
++				}
++			if (ok)
++				break;
++		}
++	}
+ 	if (!ok) {
+ 		snd_stm_printe("WARNING! Failed to set channel status registers"
+ 				" for converter %s! (tried %d times)\n",
+@@ -239,8 +215,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_oversampling("
+ 			"conv_i2sspdif=%p)\n", conv_i2sspdif);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
+ 
+ 	return DEFAULT_OVERSAMPLING;
+ }
+@@ -254,13 +232,17 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_enable(conv_i2sspdif=%p)\n",
+ 			conv_i2sspdif);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
+-	BUG_ON(conv_i2sspdif->enabled);
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
++	if (snd_BUG_ON(conv_i2sspdif->enabled))
++		return -EINVAL;
+ 
+ 	oversampling = snd_stm_conv_i2sspdif_oversampling(conv_i2sspdif);
+-	BUG_ON(oversampling <= 0);
+-	BUG_ON((oversampling % 128) != 0);
++	if (snd_BUG_ON((oversampling <= 0) ||
++		       (oversampling % 128) != 0))
++		return -EINVAL;
+ 
+ 	set__AUD_SPDIFPC_CFG(conv_i2sspdif,
+ 		mask__AUD_SPDIFPC_CFG__DEVICE_EN__ENABLED(conv_i2sspdif) |
+@@ -279,7 +261,7 @@
+ 	 * of SPDIF block) - pathetic! ;-) Setting bit 6 of config register
+ 	 * enables a mode in which channel status bits in L/R subframes
+ 	 * are identical, and whole block is served... */
+-	if (conv_i2sspdif->ver >= 4)
++	if (conv_i2sspdif->ver >= ver__AUD_SPDIFPC__65_3_0)
+ 		set__AUD_SPDIFPC_CFG__CHA_STA_BITS__FRAME(conv_i2sspdif);
+ 
+ 	spin_lock(&conv_i2sspdif->iec958_default_lock);
+@@ -300,9 +282,12 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_disable(conv_i2sspdif=%p)\n",
+ 			conv_i2sspdif);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
+-	BUG_ON(!conv_i2sspdif->enabled);
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
++	if (snd_BUG_ON(!conv_i2sspdif->enabled))
++		return -EINVAL;
+ 
+ 	if (snd_stm_conv_i2sspdif_iec958_set(conv_i2sspdif,
+ 			&snd_stm_conv_i2sspdif_iec958_zeroed) != 0)
+@@ -332,7 +317,7 @@
+ {
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_get_format(priv=%p)\n", priv);
+ 
+-	return SND_STM_FORMAT__I2S | SND_STM_FORMAT__SUBFRAME_32_BITS;
++	return (SND_STM_FORMAT__I2S | SND_STM_FORMAT__SUBFRAME_32_BITS);
+ }
+ 
+ static int snd_stm_conv_i2sspdif_get_oversampling(void *priv)
+@@ -342,8 +327,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_get_oversampling(priv=%p)\n",
+ 			priv);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
+ 
+ 	return snd_stm_conv_i2sspdif_oversampling(conv_i2sspdif);
+ }
+@@ -355,8 +342,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_set_enabled(enabled=%d, "
+ 			"priv=%p)\n", enabled, priv);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
+ 
+ 	snd_stm_printd(1, "%sabling I2S to SPDIF converter '%s'.\n",
+ 			enabled ? "En" : "Dis",
+@@ -389,8 +378,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_ctl_default_get("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
+ 
+ 	spin_lock(&conv_i2sspdif->iec958_default_lock);
+ 	ucontrol->value.iec958 = conv_i2sspdif->iec958_default;
+@@ -409,8 +400,10 @@
+ 	snd_stm_printd(1, "snd_stm_conv_i2sspdif_ctl_default_put("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
+ 
+ 	spin_lock(&conv_i2sspdif->iec958_default_lock);
+ 	if (snd_stm_iec958_cmp(&conv_i2sspdif->iec958_default,
+@@ -464,8 +457,10 @@
+ 		entry->private_data;
+ 	int i;
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return;
+ 
+ 	snd_iprintf(buffer, "--- %s ---\n", dev_name(conv_i2sspdif->device));
+ 	snd_iprintf(buffer, "base = 0x%p\n", conv_i2sspdif->base);
+@@ -500,11 +495,18 @@
+ 	struct snd_stm_conv_i2sspdif *conv_i2sspdif = snd_device->device_data;
+ 	int i;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
++	snd_stm_printd(1, "snd_stm_conv_i2sspdif_register(snd_device=0x%p)\n",
++			snd_device);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
+-	BUG_ON(conv_i2sspdif->enabled);
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
++	if (snd_BUG_ON(conv_i2sspdif->enabled))
++		return -EINVAL;
++
++	snd_stm_printd(0, "--- Registering I2S to SPDIF converter '%s'...\n",
++			dev_name(conv_i2sspdif->device));
+ 
+ 	/* Initialize converter's input & SPDIF player as disabled */
+ 
+@@ -543,6 +545,8 @@
+ 		}
+ 	}
+ 
++	snd_stm_printd(0, "--- Registered successfully!\n");
++
+ 	return 0;
+ }
+ 
+@@ -550,11 +554,15 @@
+ {
+ 	struct snd_stm_conv_i2sspdif *conv_i2sspdif = snd_device->device_data;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
++	snd_stm_printd(1, "snd_stm_conv_i2sspdif_disconnect(snd_device=0x%p)\n",
++			snd_device);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
+-	BUG_ON(conv_i2sspdif->enabled);
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
++	if (snd_BUG_ON(conv_i2sspdif->enabled))
++		return -EINVAL;
+ 
+ 	/* Remove procfs entry */
+ 
+@@ -592,9 +600,10 @@
+ 			pdev->dev.platform_data;
+ 	struct snd_stm_conv_i2sspdif *conv_i2sspdif;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(0, "--- Probing device '%s'...\n", dev_name(&pdev->dev));
+ 
+-	BUG_ON(!conv_i2sspdif_info);
++	if (snd_BUG_ON(conv_i2sspdif_info == NULL))
++		return -EINVAL;
+ 
+ 	conv_i2sspdif = kzalloc(sizeof(*conv_i2sspdif), GFP_KERNEL);
+ 	if (!conv_i2sspdif) {
+@@ -605,7 +614,8 @@
+ 	}
+ 	snd_stm_magic_set(conv_i2sspdif);
+ 	conv_i2sspdif->ver = conv_i2sspdif_info->ver;
+-	BUG_ON(conv_i2sspdif->ver <= 0);
++	if (snd_BUG_ON(!conv_i2sspdif->ver <= 0))
++		return -EINVAL;
+ 	conv_i2sspdif->info = conv_i2sspdif_info;
+ 	conv_i2sspdif->device = &pdev->dev;
+ 	spin_lock_init(&conv_i2sspdif->iec958_default_lock);
+@@ -621,7 +631,8 @@
+ 
+ 	/* Get connections */
+ 
+-	BUG_ON(!conv_i2sspdif_info->source_bus_id);
++	if (snd_BUG_ON(conv_i2sspdif_info->source_bus_id == NULL))
++		return -EINVAL;
+ 	snd_stm_printd(0, "This I2S-SPDIF converter is attached to PCM player"
+ 			" '%s'.\n",
+ 			conv_i2sspdif_info->source_bus_id);
+@@ -651,6 +662,8 @@
+ 
+ 	platform_set_drvdata(pdev, conv_i2sspdif);
+ 
++	snd_stm_printd(0, "--- Probed successfully!\n");
++
+ 	return result;
+ 
+ error_device:
+@@ -669,8 +682,10 @@
+ 	struct snd_stm_conv_i2sspdif *conv_i2sspdif =
+ 			platform_get_drvdata(pdev);
+ 
+-	BUG_ON(!conv_i2sspdif);
+-	BUG_ON(!snd_stm_magic_valid(conv_i2sspdif));
++	if (snd_BUG_ON(!conv_i2sspdif))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(conv_i2sspdif)))
++		return -EINVAL;
+ 
+ 	snd_stm_conv_unregister_converter(conv_i2sspdif->converter);
+ 	snd_stm_memory_release(conv_i2sspdif->mem_region, conv_i2sspdif->base);
+@@ -682,7 +697,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_conv_i2sspdif_driver = {
+-	.driver.name = "snd_conv_i2sspdif",
++	.driver = {
++		.name = "snd_conv_i2sspdif",
++	},
+ 	.probe = snd_stm_conv_i2sspdif_probe,
+ 	.remove = snd_stm_conv_i2sspdif_remove,
+ };
+@@ -693,19 +710,12 @@
+  * Initialization
+  */
+ 
+-static int __init snd_stm_conv_i2sspdif_init(void)
++int snd_stm_conv_i2sspdif_init(void)
+ {
+ 	return platform_driver_register(&snd_stm_conv_i2sspdif_driver);
+ }
+ 
+-static void __exit snd_stm_conv_i2sspdif_exit(void)
++void snd_stm_conv_i2sspdif_exit(void)
+ {
+ 	platform_driver_unregister(&snd_stm_conv_i2sspdif_driver);
+ }
+-
+-MODULE_AUTHOR("Pawel Moll <pawel.moll@st.com>");
+-MODULE_DESCRIPTION("STMicroelectronics I2S to SPDIF converter driver");
+-MODULE_LICENSE("GPL");
+-
+-module_init(snd_stm_conv_i2sspdif_init);
+-module_exit(snd_stm_conv_i2sspdif_exit);
+diff -ruN stm.org/conv_int_dac.c stm/conv_int_dac.c
 --- a/dev/null
-+++ b/sound/stm/conv_int_dac.c
++++ b/sound/stm/conv_int_dac.c	2012-10-11 11:46:27.000000000 -0700
 @@ -0,0 +1,361 @@
 +/*
 + *   STMicroelectronics System-on-Chips' internal audio DAC driver
@@ -1564,9 +3246,9 @@ diff -Nur /dev/null ./sound/stm/conv_int_dac.c
 +{
 +	platform_driver_unregister(&snd_stm_conv_int_dac_driver);
 +}
-diff -Nur /dev/null ./sound/stm/fsynth.c
+diff -ruN stm.org/fsynth.c stm/fsynth.c
 --- a/dev/null
-+++ b/sound/stm/fsynth.c
++++ b/sound/stm/fsynth.c	2012-10-11 11:46:27.000000000 -0700
 @@ -0,0 +1,813 @@
 +/*
 + *   STMicroelectronics System-on-Chips' audio oversampling frequency
@@ -2381,9 +4063,9 @@ diff -Nur /dev/null ./sound/stm/fsynth.c
 +{
 +	platform_driver_unregister(&snd_stm_fsynth_driver);
 +}
-diff -Nur /dev/null ./sound/stm/init.c
+diff -ruN stm.org/init.c stm/init.c
 --- a/dev/null
-+++ b/sound/stm/init.c
++++ b/sound/stm/init.c	2012-10-11 11:46:27.000000000 -0700
 @@ -0,0 +1,139 @@
 +/*
 + *   STMicrolectronics System-on-Chips' audio subsystem core driver
@@ -2524,9 +4206,1360 @@ diff -Nur /dev/null ./sound/stm/init.c
 +
 +module_init(snd_stm_init)
 +module_exit(snd_stm_exit)
-diff -Nur /dev/null ./sound/stm/reg_7105_audcfg.h
---- a/dev/null	2014-05-29 17:15:53.871772965 +0200
-+++ b/sound/stm/reg_7105_audcfg.h	2012-10-11 20:46:27.000000000 +0200
+diff -ruN stm.org/Kconfig stm/Kconfig
+--- a/drivers/stm/Kconfig	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/Kconfig	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ menuconfig SND_STM
+ 	tristate "STMicroelectronics SoCs support"
+ 	depends on SND
+-	depends on CPU_SUBTYPE_ST40
++	depends on CPU_SUBTYPE_STX7100 || CPU_SUBTYPE_STX7105 || CPU_SUBTYPE_STX7111 || CPU_SUBTYPE_STX7141 || CPU_SUBTYPE_STX7200
+ 	select STM_DMA
+ 	select SND_PCM
+ 	help
+@@ -18,36 +18,6 @@
+ 		To compile this driver as a module, choose M here: the module
+ 	 	will be called snd-stm.ko
+ 
+-config SND_STM_PCM_PLAYER
+-	tristate
+-	depends on SND_STM
+-	default n
+-
+-config SND_STM_PCM_READER
+-	tristate
+-	depends on SND_STM
+-	default n
+-
+-config SND_STM_SPDIF_PLAYER
+-	tristate
+-	depends on SND_STM
+-	default n
+-
+-config SND_STM_CONV_DAC_MEMORY_MAPPED
+-	tristate
+-	depends on SND_STM
+-	default n
+-
+-config SND_STM_CONV_DAC_SYSCONF
+-	tristate
+-	depends on SND_STM
+-	default n
+-
+-config SND_STM_CONV_I2S_TO_SPDIF
+-	tristate
+-	depends on SND_STM
+-	default n
+-
+ config SND_STM_BPA2_PARTITION_NAME
+ 	string "Name of BPA2 partition to allocate buffers from"
+ 	depends on SND_STM
+@@ -67,32 +37,28 @@
+ 		"snd-stm.bpa2_part=<name>", if driver is compiled into
+ 		kernel).
+ 
+-comment "SOC support"
++config SND_STM_DEBUG_LEVEL
++	int "Default debug verbosity level"
+ 	depends on SND_STM
+-
+-config SND_STM_FLI75XX
+-	tristate "Freeman 510/520/530/540/560 support"
+-	depends on SND_STM
+-	default y if CPU_SUBTYPE_FLI75XX
+-	select SND_STM_PCM_PLAYER
+-	select SND_STM_PCM_READER
+-	select SND_STM_SPDIF_PLAYER
++	depends on SND_DEBUG
++	default 0
+ 	help
+-		Select this to get ALSA driver for Freeman 510/520/530/540/560
+-		(FLI7510/FLI7520/FLI7530/FLI7540/FLI7560) chips.
+-
+-		If you compile this driver as a module, it will be
+-		called snd-stm-fli75xx.ko
++		Defines debug verbosity level (bigger number equals more
++		messages). This can be overridden using "debug=<n>" module
++		parameter or "snd-stm.debug=<n>" kernel command line
++		parameter. You can also change this value in runtime,
++		using /sys/module/snd_stm/parameters/debug.
++
++		There is also fine-grained debug verbosity control available -
++		just put "#define DEBUG <n>" in debugged component _before_
++		#including "common.h", or alter the value using sysfs file
++		/sys/module/snd_stm/parameter/debug_component_name (or
++		use module/kernel command line parameter ;-)...
+ 
+ config SND_STM_STX7100
+ 	tristate "STx7100 and STx7109 support"
+ 	depends on SND_STM
+ 	default y if CPU_SUBTYPE_STX7100
+-	select SND_STM_PCM_PLAYER
+-	select SND_STM_PCM_READER
+-	select SND_STM_SPDIF_PLAYER
+-	select SND_STM_CONV_DAC_MEMORY_MAPPED
+-	select SND_STM_CONV_I2S_TO_SPDIF
+ 	help
+ 		Select this to get ALSA driver for STx7100 and STx7109 chips.
+ 
+@@ -100,44 +66,19 @@
+ 		called snd-stm-stx7100.ko
+ 
+ config SND_STM_STX7105
+-	tristate "STx7105 and STx7106 support"
++	tristate "STx7105 support"
+ 	depends on SND_STM
+ 	default y if CPU_SUBTYPE_STX7105
+-	select SND_STM_PCM_PLAYER
+-	select SND_STM_PCM_READER
+-	select SND_STM_SPDIF_PLAYER
+-	select SND_STM_CONV_DAC_MEMORY_MAPPED
+-	select SND_STM_CONV_I2S_TO_SPDIF
+ 	help
+-		Select this to get ALSA driver for STx7105 and STx7106 chips.
++		Select this to get ALSA driver for STx7105 chip.
+ 
+ 		If you compile this driver as a module, it will be
+ 		called snd-stm-stx7105.ko
+ 
+-config SND_STM_STX7108
+-	tristate "STx7108 support"
+-	depends on SND_STM
+-	default y if CPU_SUBTYPE_STX7108
+-	select SND_STM_PCM_PLAYER
+-	select SND_STM_PCM_READER
+-	select SND_STM_SPDIF_PLAYER
+-	select SND_STM_CONV_DAC_SYSCONF
+-	select SND_STM_CONV_I2S_TO_SPDIF
+-	help
+-		Select this to get ALSA driver for STx7108 chip.
+-
+-		If you compile this driver as a module, it will be
+-		called snd-stm-stx7108.ko
+-
+ config SND_STM_STX7111
+ 	tristate "STx7111 support"
+ 	depends on SND_STM
+ 	default y if CPU_SUBTYPE_STX7111
+-	select SND_STM_PCM_PLAYER
+-	select SND_STM_PCM_READER
+-	select SND_STM_SPDIF_PLAYER
+-	select SND_STM_CONV_DAC_MEMORY_MAPPED
+-	select SND_STM_CONV_I2S_TO_SPDIF
+ 	help
+ 		Select this to get ALSA driver for STx7111 chip.
+ 
+@@ -148,11 +89,6 @@
+ 	tristate "STx7141 support"
+ 	depends on SND_STM
+ 	default y if CPU_SUBTYPE_STX7141
+-	select SND_STM_PCM_PLAYER
+-	select SND_STM_PCM_READER
+-	select SND_STM_SPDIF_PLAYER
+-	select SND_STM_CONV_DAC_MEMORY_MAPPED
+-	select SND_STM_CONV_I2S_TO_SPDIF
+ 	help
+ 		Select this to get ALSA driver for STx7141 chip.
+ 
+@@ -163,20 +99,12 @@
+ 	tristate "STx7200 support"
+ 	depends on SND_STM
+ 	default y if CPU_SUBTYPE_STX7200
+-	select SND_STM_PCM_PLAYER
+-	select SND_STM_PCM_READER
+-	select SND_STM_SPDIF_PLAYER
+-	select SND_STM_CONV_DAC_MEMORY_MAPPED
+-	select SND_STM_CONV_I2S_TO_SPDIF
+ 	help
+ 		Select this to get ALSA driver for STx7200 chip.
+ 
+ 		If you compile this driver as a module, it will be
+ 		called snd-stm-stx7111.ko
+ 
+-comment "External converters"
+-	depends on SND_STM
+-
+ config SND_STM_CONV_DUMMY
+ 	tristate "Dummy converter driver"
+ 	depends on SND_STM
+diff -ruN stm.org/Makefile stm/Makefile
+--- a/drivers/stm/Makefile	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/Makefile	2012-10-11 11:46:27.000000000 -0700
+@@ -1,32 +1,7 @@
+-# Core
+-
+-obj-$(CONFIG_SND_STM) += snd-stm-core.o
+-snd-stm-core-y := core.o clock.o conv.o
+-
+-obj-$(CONFIG_SND_STM_PCM_PLAYER) += snd-stm-pcm-player.o
+-snd-stm-pcm-player-y := pcm_player.o
+-
+-obj-$(CONFIG_SND_STM_PCM_READER) += snd-stm-pcm-reader.o
+-snd-stm-pcm-reader-y := pcm_reader.o
+-
+-obj-$(CONFIG_SND_STM_SPDIF_PLAYER) += snd-stm-spdif-player.o
+-snd-stm-spdif-player-y := spdif_player.o
+-
+-obj-$(CONFIG_SND_STM_CONV_I2S_TO_SPDIF) += snd-stm-conv-i2sspdif.o
+-snd-stm-conv-i2sspdif-y := conv_i2sspdif.o
+-
+-obj-$(CONFIG_SND_STM_CONV_DAC_MEMORY_MAPPED) += snd-stm-conv-dac-mem.o
+-snd-stm-conv-dac-mem-y := conv_dac_mem.o
+-
+-obj-$(CONFIG_SND_STM_CONV_DAC_SYSCONF) += snd-stm-conv-dac-sc.o
+-snd-stm-conv-dac-sc-y := conv_dac_sc.o
+-
+-
+-
+-# SOCs
+-
+-obj-$(CONFIG_SND_STM_FLI75XX) += snd-stm-fli75xx.o
+-snd-stm-fli75xx-y := fli75xx.o
++obj-$(CONFIG_SND_STM) += snd-stm.o
++snd-stm-y := init.o common.o fsynth.o
++snd-stm-y += conv.o conv_i2sspdif.o conv_int_dac.o
++snd-stm-y += pcm_player.o pcm_reader.o spdif_player.o
+ 
+ obj-$(CONFIG_SND_STM_STX7100) += snd-stm-stx7100.o
+ snd-stm-stx7100-y := stx7100.o
+@@ -34,9 +9,6 @@
+ obj-$(CONFIG_SND_STM_STX7105) += snd-stm-stx7105.o
+ snd-stm-stx7105-y := stx7105.o
+ 
+-obj-$(CONFIG_SND_STM_STX7108) += snd-stm-stx7108.o
+-snd-stm-stx7108-y := stx7108.o
+-
+ obj-$(CONFIG_SND_STM_STX7111) += snd-stm-stx7111.o
+ snd-stm-stx7111-y := stx7111.o
+ 
+@@ -46,18 +18,14 @@
+ obj-$(CONFIG_SND_STM_STX7200) += snd-stm-stx7200.o
+ snd-stm-stx7200-y := stx7200.o
+ 
+-
+-
+-# External converters
+-
+ obj-$(CONFIG_SND_STM_CONV_DUMMY) += snd-stm-conv-dummy.o
+ snd-stm-conv-dummy-y := conv_dummy.o
+ 
+-obj-$(CONFIG_SND_STM_CONV_EPLD) += snd-stm-conv-epld.o
+-snd-stm-conv-epld-y := conv_epld.o
+-
+ obj-$(CONFIG_SND_STM_CONV_GPIO) += snd-stm-conv-gpio.o
+ snd-stm-conv-gpio-y := conv_gpio.o
+ 
++obj-$(CONFIG_SND_STM_CONV_EPLD) += snd-stm-conv-epld.o
++snd-stm-conv-epld-y := conv_epld.o
++
+ obj-$(CONFIG_SND_STM_CONV_I2C) += snd-stm-conv-i2c.o
+ snd-stm-conv-i2c-y := conv_i2c.o
+diff -ruN stm.org/pcm_player.c stm/pcm_player.c
+--- a/drivers/stm/pcm_player.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/pcm_player.c	2014-05-24 02:19:13.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' PCM player driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *           Mark Glaisher
+@@ -22,14 +22,12 @@
+  *
+  */
+ 
+-#include <asm/cacheflush.h>
+-#include <asm/clock.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+-#include <linux/stm/pad.h>
++#include <asm/cacheflush.h>
+ #include <linux/stm/stm-dma.h>
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+@@ -37,16 +35,12 @@
+ #include <sound/info.h>
+ #include <sound/pcm_params.h>
+ 
++#define COMPONENT pcm_player
+ #include "common.h"
+ #include "reg_aud_pcmout.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Some hardware-related definitions
+  */
+@@ -79,7 +73,7 @@
+ 	int fdma_channel;
+ 
+ 	/* Environment settings */
+-	struct clk *clock;
++	struct snd_stm_fsynth_channel *fsynth_channel;
+ 	struct snd_pcm_hw_constraint_list channels_constraint;
+ 	struct snd_stm_conv_source *conv_source;
+ 
+@@ -91,7 +85,6 @@
+ 	int fdma_max_transfer_size;
+ 	struct stm_dma_params fdma_params;
+ 	struct stm_dma_req *fdma_request;
+-	struct stm_pad_state *pads;
+ 
+ 	snd_stm_magic_field;
+ };
+@@ -111,14 +104,14 @@
+ 	snd_stm_printd(2, "snd_stm_pcm_player_irq_handler(irq=%d, "
+ 			"dev_id=0x%p)\n", irq, dev_id);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	/* Get interrupt status & clear them immediately */
+-	preempt_disable();
+ 	status = get__AUD_PCMOUT_ITS(pcm_player);
+ 	set__AUD_PCMOUT_ITS_CLR(pcm_player, status);
+-	preempt_enable();
+ 
+ 	/* Underflow? */
+ 	if (unlikely(status & mask__AUD_PCMOUT_ITS__UNF__PENDING(pcm_player))) {
+@@ -132,7 +125,8 @@
+ 			mask__AUD_PCMOUT_ITS__NSAMPLE__PENDING(pcm_player))) {
+ 		/* Period successfully played */
+ 		do {
+-			BUG_ON(!pcm_player->substream);
++			if (snd_BUG_ON(!pcm_player->substream))
++				break;
+ 
+ 			snd_stm_printd(2, "Period elapsed ('%s')\n",
+ 					dev_name(pcm_player->device));
+@@ -143,7 +137,7 @@
+ 	}
+ 
+ 	/* Some alien interrupt??? */
+-	BUG_ON(result != IRQ_HANDLED);
++	snd_BUG_ON(result != IRQ_HANDLED);
+ 
+ 	return result;
+ }
+@@ -191,9 +185,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_open(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	snd_pcm_set_sync(substream);  /* TODO: ??? */
+ 
+@@ -206,7 +201,7 @@
+ 				dev_name(pcm_player->device),
+ 				snd_stm_conv_get_name(pcm_player->conv_group));
+ 	else
+-		snd_stm_printd(1, "No converter attached to '%s'!\n",
++		snd_stm_printd(1, "Warning! No converter attached to '%s'!\n",
+ 				dev_name(pcm_player->device));
+ 
+ 	/* Set up constraints & pass hardware capabilities info to ALSA */
+@@ -254,8 +249,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_close(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	if (pcm_player->conv_group) {
+ 		snd_stm_conv_release_group(pcm_player->conv_group);
+@@ -276,9 +273,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_hw_free(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	/* This callback may be called more than once... */
+ 
+@@ -318,9 +316,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_hw_params(substream=0x%p,"
+ 			" hw_params=0x%p)\n", substream, hw_params);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	/* This function may be called many times, so let's be prepared... */
+ 	if (snd_stm_buffer_is_allocated(pcm_player->buffer))
+@@ -349,13 +348,17 @@
+ 	snd_stm_printd(1, "FDMA request trigger limit and transfer size set "
+ 			"to %d.\n", transfer_size);
+ 
+-	BUG_ON(buffer_bytes % transfer_bytes != 0);
+-	BUG_ON(transfer_size > pcm_player->fdma_max_transfer_size);
++	if (snd_BUG_ON(buffer_bytes % transfer_bytes != 0))
++		return -EINVAL;
++	if (snd_BUG_ON(transfer_size > pcm_player->fdma_max_transfer_size))
++		return -EINVAL;
+ 	fdma_req_config.count = transfer_size;
+ 
+-	BUG_ON(transfer_size != 1 && transfer_size % 2 != 0);
+-	BUG_ON(transfer_size >
+-	       mask__AUD_PCMOUT_FMT__DMA_REQ_TRIG_LMT(pcm_player));
++	if (snd_BUG_ON(transfer_size != 1 && transfer_size % 2 != 0))
++		return -EINVAL;
++	if (snd_BUG_ON(transfer_size >
++		       mask__AUD_PCMOUT_FMT__DMA_REQ_TRIG_LMT(pcm_player)))
++		return -EINVAL;
+ 	set__AUD_PCMOUT_FMT__DMA_REQ_TRIG_LMT(pcm_player, transfer_size);
+ 
+ 	/* Configure FDMA transfer */
+@@ -405,16 +408,17 @@
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	unsigned int format, lr_pol;
+ 	int oversampling, bits_in_output_frame;
+-	int result;
+ 
+ 	snd_stm_printd(1, "snd_stm_pcm_player_prepare(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
+-	BUG_ON(!runtime);
+-	BUG_ON(runtime->period_size * runtime->channels >=
+-	       MAX_SAMPLES_PER_PERIOD);
++	if (snd_BUG_ON(!pcm_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
++	if (snd_BUG_ON(runtime->period_size * runtime->channels >=
++		       MAX_SAMPLES_PER_PERIOD))
++		return -EINVAL;
+ 
+ 	/* Configure SPDIF synchronisation */
+ 
+@@ -437,32 +441,25 @@
+ 			dev_name(pcm_player->device), runtime->rate,
+ 			oversampling);
+ 
+-	BUG_ON(oversampling < 0);
++	if (snd_BUG_ON(oversampling <= 0))
++		return -EINVAL;
+ 
+ 	/* For 32 bits subframe oversampling must be a multiple of 128,
+ 	 * for 16 bits - of 64 */
+-	BUG_ON((format & SND_STM_FORMAT__SUBFRAME_32_BITS) &&
+-		(oversampling % 128 != 0));
+-	BUG_ON(!(format & SND_STM_FORMAT__SUBFRAME_16_BITS) &&
+-		(oversampling % 64 != 0));
++	if (snd_BUG_ON(((format & SND_STM_FORMAT__SUBFRAME_32_BITS) &&
++			(oversampling % 128 != 0)) ||
++		       (!(format & SND_STM_FORMAT__SUBFRAME_32_BITS) &&
++			(oversampling % 64 != 0))))
++		return -EINVAL;
+ 
+ 	/* Set up frequency synthesizer */
+ 
+-	result = clk_enable(pcm_player->clock);
+-	if (result != 0) {
+-		snd_stm_printe("Can't enable clock for player '%s'!\n",
+-				dev_name(pcm_player->device));
+-		return result;
+-	}
++//	printk("############### rate = %d oversampling=%d",runtime->rate,oversampling);
++//############### rate = 48000 oversampling=256
++//############### rate = 48000 oversampling=128
+ 
+-	result = clk_set_rate(pcm_player->clock,
+-				runtime->rate * oversampling);
+-	if (result != 0) {
+-		snd_stm_printe("Can't configure clock for player '%s'!\n",
+-				dev_name(pcm_player->device));
+-		clk_disable(pcm_player->clock);
+-		return result;
+-	}
++	snd_stm_fsynth_set_frequency(pcm_player->fsynth_channel,
++			runtime->rate * oversampling);
+ 
+ 	/* Set up player hardware */
+ 
+@@ -480,7 +477,7 @@
+ 	case SND_STM_FORMAT__SUBFRAME_32_BITS:
+ 		snd_stm_printd(1, "- 32 bits per subframe\n");
+ 		set__AUD_PCMOUT_FMT__NBIT__32_BITS(pcm_player);
+-		if (pcm_player->ver > 5)
++		if (pcm_player->ver > ver__AUD_PCMOUT__65_1_3)
+ 			set__AUD_PCMOUT_FMT__DATA_SIZE__32_BITS(pcm_player);
+ 		else
+ 			set__AUD_PCMOUT_FMT__DATA_SIZE__24_BITS(pcm_player);
+@@ -601,9 +598,10 @@
+ 
+ 	/* Number of channels... */
+ 
+-	BUG_ON(runtime->channels % 2 != 0);
+-	BUG_ON(runtime->channels < 2);
+-	BUG_ON(runtime->channels > 10);
++	if (snd_BUG_ON((runtime->channels % 2 != 0) ||
++		       (runtime->channels < 2) ||
++		       (runtime->channels > 10)))
++		return -EINVAL;
+ 
+ 	set__AUD_PCMOUT_FMT__NUM_CH(pcm_player, runtime->channels / 2);
+ 
+@@ -619,8 +617,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_start(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	/* Un-reset PCM player */
+ 
+@@ -633,7 +633,6 @@
+ 	if (result != 0) {
+ 		snd_stm_printe("Can't launch FDMA transfer for player '%s'!\n",
+ 			       dev_name(pcm_player->device));
+-		clk_disable(pcm_player->clock);
+ 		return -EINVAL;
+ 	}
+ 	while (dma_get_status(pcm_player->fdma_channel) !=
+@@ -671,8 +670,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_stop(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	/* Mute & shutdown DAC */
+ 
+@@ -695,9 +696,7 @@
+ 
+ 	dma_stop_channel(pcm_player->fdma_channel);
+ 
+-	/* Stop the clock & reset PCM player */
+-
+-	clk_disable(pcm_player->clock);
++	/* Reset PCM player */
+ 	set__AUD_PCMOUT_RST__SRSTP__RESET(pcm_player);
+ 
+ 	return 0;
+@@ -711,8 +710,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_pause(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	/* "Mute" player
+ 	 * Documentation describes this mode in a wrong way - data is _not_
+@@ -731,8 +732,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_player_release(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	/* "Unmute" player */
+ 
+@@ -773,9 +776,10 @@
+ 	snd_stm_printd(2, "snd_stm_pcm_player_pointer(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	residue = get_dma_residue(pcm_player->fdma_channel);
+ 	hwptr = (runtime->dma_bytes - residue) % runtime->dma_bytes;
+@@ -818,8 +822,10 @@
+ {
+ 	struct snd_stm_pcm_player *pcm_player = entry->private_data;
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return;
+ 
+ 	snd_iprintf(buffer, "--- %s ---\n", dev_name(pcm_player->device));
+ 	snd_iprintf(buffer, "base = 0x%p\n", pcm_player->base);
+@@ -840,34 +846,44 @@
+ 
+ static int snd_stm_pcm_player_register(struct snd_device *snd_device)
+ {
++	int result;
+ 	struct snd_stm_pcm_player *pcm_player = snd_device->device_data;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
++	snd_stm_printd(1, "snd_stm_pcm_player_register(snd_device=0x%p)\n",
++			snd_device);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
++
++	snd_stm_printd(0, "--- Registering player '%s'...\n",
++			dev_name(pcm_player->device));
+ 
+ 	/* Set reset mode */
+ 
+ 	set__AUD_PCMOUT_RST__SRSTP__RESET(pcm_player);
+ 
+ 	/* TODO: well, hardcoded - shall anyone use it?
+-	 * And what does it actually mean? */
++	 * And what it actually means? */
+ 
+-	if (pcm_player->ver > 5)
++	if (pcm_player->ver > ver__AUD_PCMOUT__65_1_3)
+ 		set__AUD_PCMOUT_FMT__BACK_STALLING__DISABLED(pcm_player);
+ 	set__AUD_PCMOUT_CTRL__RND__NO_ROUNDING(pcm_player);
+ 
+ 	/* Get frequency synthesizer channel */
+ 
+-	pcm_player->clock = snd_stm_clk_get(pcm_player->device,
+-			"pcm_player_clk", snd_device->card,
+-			pcm_player->info->card_device);
+-	if (!pcm_player->clock || IS_ERR(pcm_player->clock)) {
+-		snd_stm_printe("Failed to get a clock for '%s'!\n",
+-				dev_name(pcm_player->device));
++	if (snd_BUG_ON(pcm_player->info->fsynth_bus_id == NULL))
++		return -EINVAL;
++	snd_stm_printd(0, "Player connected to %s's output %d.\n",
++			pcm_player->info->fsynth_bus_id,
++			pcm_player->info->fsynth_output);
++
++	pcm_player->fsynth_channel = snd_stm_fsynth_get_channel(
++			pcm_player->info->fsynth_bus_id,
++			pcm_player->info->fsynth_output);
++	if (snd_BUG_ON(pcm_player->fsynth_channel == NULL))
+ 		return -EINVAL;
+-	}
+ 
+ 	/* Registers view in ALSA's procfs */
+ 
+@@ -875,6 +891,17 @@
+ 			dev_name(pcm_player->device),
+ 			snd_stm_pcm_player_dump_registers, pcm_player);
+ 
++	/* Create ALSA controls */
++
++	result = snd_stm_fsynth_add_adjustement_ctl(pcm_player->fsynth_channel,
++			snd_device->card, pcm_player->info->card_device);
++	if (result < 0) {
++		snd_stm_printe("Failed to add fsynth adjustment control!\n");
++		return result;
++	}
++
++	snd_stm_printd(0, "--- Registered successfully!\n");
++
+ 	return 0;
+ }
+ 
+@@ -882,12 +909,13 @@
+ {
+ 	struct snd_stm_pcm_player *pcm_player = snd_device->device_data;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
+-
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	snd_stm_printd(1, "snd_stm_pcm_player_disconnect(snd_device=0x%p)\n",
++			snd_device);
+ 
+-	snd_stm_clk_put(pcm_player->clock);
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+ 	snd_stm_info_unregister(pcm_player->proc_entry);
+ 
+@@ -912,9 +940,12 @@
+ 	struct snd_card *card = snd_stm_card_get();
+ 	int i;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(1, "snd_stm_pcm_player_probe(pdev=%p)\n", pdev);
+ 
+-	BUG_ON(!card);
++	snd_stm_printd(0, "Probing device '%s'...\n", dev_name(&pdev->dev));
++
++	if (snd_BUG_ON(card == NULL))
++		return -EINVAL;
+ 
+ 	pcm_player = kzalloc(sizeof(*pcm_player), GFP_KERNEL);
+ 	if (!pcm_player) {
+@@ -925,9 +956,11 @@
+ 	}
+ 	snd_stm_magic_set(pcm_player);
+ 	pcm_player->info = pdev->dev.platform_data;
+-	BUG_ON(!pcm_player->info);
++	if (snd_BUG_ON(pcm_player->info == NULL))
++		return -EINVAL;
+ 	pcm_player->ver = pcm_player->info->ver;
+-	BUG_ON(pcm_player->ver <= 0);
++	if (snd_BUG_ON(pcm_player->ver <= 0))
++		return -EINVAL;
+ 	pcm_player->device = &pdev->dev;
+ 
+ 	/* Get resources */
+@@ -961,9 +994,9 @@
+ 	 * - 30 cells (120 bytes) in STx7100/9 and STx7200 cut 1.0
+ 	 * - 70 cells (280 bytes) in STx7111 and STx7200 cut 2.0. */
+ 
+-	if (pcm_player->ver < 5)
++	if (pcm_player->ver < ver__AUD_PCMOUT__65_1_3)
+ 		pcm_player->fdma_max_transfer_size = 2;
+-	else if (pcm_player->ver == 5)
++	else if (pcm_player->ver == ver__AUD_PCMOUT__65_1_3)
+ 		pcm_player->fdma_max_transfer_size = 20;
+ 	else
+ 		pcm_player->fdma_max_transfer_size = 30;
+@@ -972,10 +1005,11 @@
+ 
+ 	snd_stm_printd(0, "Player's name is '%s'\n", pcm_player->info->name);
+ 
+-	BUG_ON(pcm_player->info->channels <= 0);
+-	BUG_ON(pcm_player->info->channels > 10);
+-	BUG_ON(pcm_player->info->channels % 2 != 0);
+-	if (pcm_player->ver > 1) {
++	if (snd_BUG_ON((pcm_player->info->channels <= 0) ||
++		       (pcm_player->info->channels > 10) ||
++		       (pcm_player->info->channels % 2 != 0)))
++		return -EINVAL;
++	if (pcm_player->ver > ver__AUD_PCMOUT__90_1_1) {
+ 		static unsigned int channels_2_10[] = { 2, 4, 6, 8, 10 };
+ 
+ 		pcm_player->channels_constraint.list = channels_2_10;
+@@ -997,7 +1031,7 @@
+ 
+ 	/* STx7100 has a problem with 16/16 bits FIFO organization,
+ 	 * so we disable the 16 bits samples capability... */
+-	if (pcm_player->ver <= 2)
++	if (pcm_player->ver <= ver__AUD_PCMOUT__90_1_3)
+ 		snd_stm_pcm_player_hw.formats &= ~SNDRV_PCM_FMTBIT_S16_LE;
+ 
+ 	/* Create ALSA lowlevel device */
+@@ -1046,27 +1080,12 @@
+ 		goto error_conv_register_source;
+ 	}
+ 
+-	/* Claim the pads */
+-
+-	if (pcm_player->info->pad_config) {
+-		pcm_player->pads = stm_pad_claim(pcm_player->info->pad_config,
+-				dev_name(&pdev->dev));
+-		if (!pcm_player->pads) {
+-			snd_stm_printe("Failed to claimed pads for '%s'!\n",
+-					dev_name(&pdev->dev));
+-			result = -EBUSY;
+-			goto error_pad_claim;
+-		}
+-	}
+-
+ 	/* Done now */
+ 
+ 	platform_set_drvdata(pdev, pcm_player);
+ 
+ 	return 0;
+ 
+-error_pad_claim:
+-	snd_stm_conv_unregister_source(pcm_player->conv_source);
+ error_conv_register_source:
+ 	snd_stm_buffer_dispose(pcm_player->buffer);
+ error_buffer_init:
+@@ -1093,11 +1112,11 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_pcm_player_remove(pdev=%p)\n", pdev);
+ 
+-	BUG_ON(!pcm_player);
+-	BUG_ON(!snd_stm_magic_valid(pcm_player));
++	if (snd_BUG_ON(!pcm_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_player)))
++		return -EINVAL;
+ 
+-	if (pcm_player->pads)
+-		stm_pad_release(pcm_player->pads);
+ 	snd_stm_conv_unregister_source(pcm_player->conv_source);
+ 	snd_stm_buffer_dispose(pcm_player->buffer);
+ 	snd_stm_fdma_release(pcm_player->fdma_channel);
+@@ -1111,7 +1130,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_pcm_player_driver = {
+-	.driver.name = "snd_pcm_player",
++	.driver = {
++		.name = "snd_pcm_player",
++	},
+ 	.probe = snd_stm_pcm_player_probe,
+ 	.remove = snd_stm_pcm_player_remove,
+ };
+@@ -1122,19 +1143,12 @@
+  * Initialization
+  */
+ 
+-static int __init snd_stm_pcm_player_init(void)
++int snd_stm_pcm_player_init(void)
+ {
+ 	return platform_driver_register(&snd_stm_pcm_player_driver);
+ }
+ 
+-static void __exit snd_stm_pcm_player_exit(void)
++void snd_stm_pcm_player_exit(void)
+ {
+ 	platform_driver_unregister(&snd_stm_pcm_player_driver);
+ }
+-
+-MODULE_AUTHOR("Pawel Moll <pawel.moll@st.com>");
+-MODULE_DESCRIPTION("STMicroelectronics PCM player driver");
+-MODULE_LICENSE("GPL");
+-
+-module_init(snd_stm_pcm_player_init);
+-module_exit(snd_stm_pcm_player_exit);
+diff -ruN stm.org/pcm_reader.c stm/pcm_reader.c
+--- a/drivers/stm/pcm_reader.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/pcm_reader.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' PCM reader driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -27,7 +27,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+ #include <asm/cacheflush.h>
+-#include <linux/stm/pad.h>
+ #include <linux/stm/stm-dma.h>
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+@@ -35,16 +34,12 @@
+ #include <sound/info.h>
+ #include <sound/pcm_params.h>
+ 
++#define COMPONENT pcm_reader
+ #include "common.h"
+ #include "reg_aud_pcmin.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Some hardware-related definitions
+  */
+@@ -85,7 +80,6 @@
+ 	struct stm_dma_params *fdma_params_list;
+ 	struct stm_dma_req *fdma_request;
+ 	int running;
+-	struct stm_pad_state *pads;
+ 
+ 	snd_stm_magic_field;
+ };
+@@ -105,14 +99,14 @@
+ 	snd_stm_printd(2, "snd_stm_pcm_reader_irq_handler(irq=%d, "
+ 			"dev_id=0x%p)\n", irq, dev_id);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	/* Get interrupt status & clear them immediately */
+-	preempt_disable();
+ 	status = get__AUD_PCMIN_ITS(pcm_reader);
+ 	set__AUD_PCMIN_ITS_CLR(pcm_reader, status);
+-	preempt_enable();
+ 
+ 	/* Overflow? */
+ 	if (unlikely(status & mask__AUD_PCMIN_ITS__OVF__PENDING(pcm_reader))) {
+@@ -125,7 +119,7 @@
+ 	}
+ 
+ 	/* Some alien interrupt??? */
+-	BUG_ON(result != IRQ_HANDLED);
++	snd_BUG_ON(result != IRQ_HANDLED);
+ 
+ 	return result;
+ }
+@@ -138,8 +132,10 @@
+ 	snd_stm_printd(2, "snd_stm_pcm_reader_callback_node_done(param=0x%lx"
+ 			")\n", param);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return;
+ 
+ 	if (!pcm_reader->running)
+ 		return;
+@@ -158,8 +154,10 @@
+ 	snd_stm_printd(2, "snd_stm_pcm_reader_callback_node_error(param=0x%lx"
+ 			")\n", param);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return;
+ 
+ 	if (!pcm_reader->running)
+ 		return;
+@@ -209,9 +207,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_open(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_reader || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	snd_pcm_set_sync(substream);  /* TODO: ??? */
+ 
+@@ -224,7 +223,7 @@
+ 				dev_name(pcm_reader->device),
+ 				snd_stm_conv_get_name(pcm_reader->conv_group));
+ 	else
+-		snd_stm_printd(1, "No converter attached to '%s'!\n",
++		snd_stm_printd(1, "Warning! No converter attached to '%s'!\n",
+ 				dev_name(pcm_reader->device));
+ 
+ 	/* Set up constraints & pass hardware capabilities info to ALSA */
+@@ -272,8 +271,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_close(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	if (pcm_reader->conv_group) {
+ 		snd_stm_conv_release_group(pcm_reader->conv_group);
+@@ -294,9 +295,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_hw_free(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_reader || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	/* This callback may be called more than once... */
+ 
+@@ -338,9 +340,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_hw_params(substream=0x%p,"
+ 			" hw_params=0x%p)\n", substream, hw_params);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_reader || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	/* This function may be called many times, so let's be prepared... */
+ 	if (snd_stm_buffer_is_allocated(pcm_reader->buffer))
+@@ -351,7 +354,8 @@
+ 	buffer_bytes = params_buffer_bytes(hw_params);
+ 	periods = params_periods(hw_params);
+ 	period_bytes = buffer_bytes / periods;
+-	BUG_ON(periods * period_bytes != buffer_bytes);
++	if (snd_BUG_ON(periods * period_bytes != buffer_bytes))
++		return -EINVAL;
+ 
+ 	/* Allocate buffer */
+ 
+@@ -375,19 +379,24 @@
+ 
+ 	snd_stm_printd(1, "FDMA request trigger limit set to %d.\n",
+ 			transfer_size);
+-	BUG_ON(buffer_bytes % transfer_bytes != 0);
+-	BUG_ON(transfer_size > pcm_reader->fdma_max_transfer_size);
+-	if (pcm_reader->ver > 3) {
+-		BUG_ON(transfer_size != 1 && transfer_size % 2 == 0);
+-		BUG_ON(transfer_size >
+-		       mask__AUD_PCMIN_FMT__DMA_REQ_TRIG_LMT(pcm_reader));
++	if (snd_BUG_ON(buffer_bytes % transfer_bytes != 0))
++		return -EINVAL;
++	if (snd_BUG_ON(transfer_size > pcm_reader->fdma_max_transfer_size))
++		return -EINVAL;
++	if (pcm_reader->ver > ver__AUD_PCMIN__65_2_0) {
++		if (snd_BUG_ON(transfer_size != 1 && transfer_size % 2 != 0))
++			return -EINVAL;
++		if (snd_BUG_ON(transfer_size >
++			mask__AUD_PCMIN_FMT__DMA_REQ_TRIG_LMT(pcm_reader)))
++			return -EINVAL;
+ 		set__AUD_PCMIN_FMT__DMA_REQ_TRIG_LMT(pcm_reader, transfer_size);
+ 		set__AUD_PCMIN_FMT__BACK_STALLING__DISABLED(pcm_reader);
+ 
+ 		/* This is a workaround for a problem in early releases
+ 		 * of multi-channel PCM Readers with FIFO underrunning (!!!),
+ 		 * caused by spurious request line generation... */
+-		if (pcm_reader->ver < 6 && transfer_size > 2)
++		if (pcm_reader->ver < ver__AUD_PCMIN__65_3_4 &&
++				transfer_size > 2)
+ 			fdma_req_config.count = transfer_size / 2;
+ 		else
+ 			fdma_req_config.count = transfer_size;
+@@ -489,9 +498,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_prepare(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_reader || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	/* Get format value from connected converter */
+ 
+@@ -569,11 +579,12 @@
+ 
+ 	/* Number of channels... */
+ 
+-	BUG_ON(runtime->channels % 2 != 0);
+-	BUG_ON(runtime->channels < 2);
+-	BUG_ON(runtime->channels > 10);
++	if (snd_BUG_ON(runtime->channels % 2 != 0))
++		return -EINVAL;
++	if (snd_BUG_ON(runtime->channels < 2 || runtime->channels > 10))
++		return -EINVAL;
+ 
+-	if (pcm_reader->ver > 3)
++	if (pcm_reader->ver > ver__AUD_PCMIN__65_2_0)
+ 		set__AUD_PCMIN_FMT__NUM_CH(pcm_reader, runtime->channels / 2);
+ 
+ 	return 0;
+@@ -588,8 +599,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_start(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	/* Un-reset PCM reader */
+ 
+@@ -639,8 +652,10 @@
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_stop(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	pcm_reader->running = 0;
+ 
+@@ -699,9 +714,10 @@
+ 	snd_stm_printd(2, "snd_stm_pcm_reader_pointer(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!pcm_reader || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	residue = get_dma_residue(pcm_reader->fdma_channel);
+ 	hwptr = (runtime->dma_bytes - residue) % runtime->dma_bytes;
+@@ -744,8 +760,10 @@
+ {
+ 	struct snd_stm_pcm_reader *pcm_reader = entry->private_data;
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return;
+ 
+ 	snd_iprintf(buffer, "--- %s ---\n", dev_name(pcm_reader->device));
+ 	snd_iprintf(buffer, "base = 0x%p\n", pcm_reader->base);
+@@ -768,17 +786,23 @@
+ {
+ 	struct snd_stm_pcm_reader *pcm_reader = snd_device->device_data;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
++	snd_stm_printd(1, "snd_stm_pcm_reader_register(snd_device=0x%p)\n",
++			snd_device);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
++
++	snd_stm_printd(0, "--- Registering reader '%s'...\n",
++			dev_name(pcm_reader->device));
+ 
+ 	/* Set reset mode */
+ 
+ 	set__AUD_PCMIN_RST__RSTP__RESET(pcm_reader);
+ 
+ 	/* TODO: well, hardcoded - shall anyone use it?
+-	 * And what does it actually mean? */
++	 * And what it actually means? */
+ 
+ 	set__AUD_PCMIN_CTRL__RND__NO_ROUNDING(pcm_reader);
+ 
+@@ -788,6 +812,8 @@
+ 			dev_name(pcm_reader->device),
+ 			snd_stm_pcm_reader_dump_registers, pcm_reader);
+ 
++	snd_stm_printd(0, "--- Registered successfully!\n");
++
+ 	return 0;
+ }
+ 
+@@ -795,10 +821,13 @@
+ {
+ 	struct snd_stm_pcm_reader *pcm_reader = snd_device->device_data;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
++	snd_stm_printd(1, "snd_stm_pcm_reader_disconnect(snd_device=0x%p)\n",
++			snd_device);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+ 	snd_stm_info_unregister(pcm_reader->proc_entry);
+ 
+@@ -823,9 +852,12 @@
+ 	struct snd_card *card = snd_stm_card_get();
+ 	int i;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(1, "snd_stm_pcm_reader_probe(pdev=%p)\n", pdev);
+ 
+-	BUG_ON(!card);
++	snd_stm_printd(0, "Probing device '%s'...\n", dev_name(&pdev->dev));
++
++	if (snd_BUG_ON(card == NULL))
++		return -EINVAL;
+ 
+ 	pcm_reader = kzalloc(sizeof(*pcm_reader), GFP_KERNEL);
+ 	if (!pcm_reader) {
+@@ -836,9 +868,11 @@
+ 	}
+ 	snd_stm_magic_set(pcm_reader);
+ 	pcm_reader->info = pdev->dev.platform_data;
+-	BUG_ON(!pcm_reader->info);
++	if (snd_BUG_ON(pcm_reader->info == NULL))
++		return -EINVAL;
+ 	pcm_reader->ver = pcm_reader->info->ver;
+-	BUG_ON(pcm_reader->ver <= 0);
++	if (snd_BUG_ON(pcm_reader->ver <= 0))
++		return -EINVAL;
+ 	pcm_reader->device = &pdev->dev;
+ 
+ 	/* Get resources */
+@@ -872,7 +906,7 @@
+ 	 * - 2 cells (8 bytes) in STx7100/9 and STx7200 cut 1.0
+ 	 * - 70 cells (280 bytes) in STx7111 and STx7200 cut 2.0. */
+ 
+-	if (pcm_reader->ver < 4)
++	if (pcm_reader->ver < ver__AUD_PCMIN__65_3_1)
+ 		pcm_reader->fdma_max_transfer_size = 2;
+ 	else
+ 		pcm_reader->fdma_max_transfer_size = 30;
+@@ -881,20 +915,22 @@
+ 
+ 	snd_stm_printd(0, "Reader's name is '%s'\n", pcm_reader->info->name);
+ 
+-	if (pcm_reader->ver < 5) {
++	if (pcm_reader->ver < ver__AUD_PCMIN__65_3_3) {
+ 		/* STx7111 has a hardware bug in PCM reader in multichannels
+ 		 * mode, so we will just not be using it ;-) */
+ 		static unsigned int channels_2[] = { 2 };
+ 
+-		BUG_ON(pcm_reader->info->channels != 2);
++		if (snd_BUG_ON(pcm_reader->info->channels != 2))
++			return -EINVAL;
+ 		pcm_reader->channels_constraint.list = channels_2;
+ 		pcm_reader->channels_constraint.count = 1;
+ 	} else {
+ 		static unsigned int channels_2_10[] = { 2, 4, 6, 8, 10 };
+ 
+-		BUG_ON(pcm_reader->info->channels <= 0);
+-		BUG_ON(pcm_reader->info->channels > 10);
+-		BUG_ON(pcm_reader->info->channels % 2 != 0);
++		if (snd_BUG_ON(pcm_reader->info->channels <= 0 ||
++			       pcm_reader->info->channels > 10 ||
++			       pcm_reader->info->channels % 2 != 0))
++			return -EINVAL;
+ 		pcm_reader->channels_constraint.list = channels_2_10;
+ 		pcm_reader->channels_constraint.count =
+ 			pcm_reader->info->channels / 2;
+@@ -950,27 +986,12 @@
+ 		goto error_conv_register_source;
+ 	}
+ 
+-	/* Claim the pads */
+-
+-	if (pcm_reader->info->pad_config) {
+-		pcm_reader->pads = stm_pad_claim(pcm_reader->info->pad_config,
+-				dev_name(&pdev->dev));
+-		if (!pcm_reader->pads) {
+-			snd_stm_printe("Failed to claimed pads for '%s'!\n",
+-					dev_name(&pdev->dev));
+-			result = -EBUSY;
+-			goto error_pad_claim;
+-		}
+-	}
+-
+ 	/* Done now */
+ 
+ 	platform_set_drvdata(pdev, pcm_reader);
+ 
+ 	return 0;
+ 
+-error_pad_claim:
+-	snd_stm_conv_unregister_source(pcm_reader->conv_source);
+ error_conv_register_source:
+ 	snd_stm_buffer_dispose(pcm_reader->buffer);
+ error_buffer_create:
+@@ -997,11 +1018,11 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_pcm_reader_remove(pdev=%p)\n", pdev);
+ 
+-	BUG_ON(!pcm_reader);
+-	BUG_ON(!snd_stm_magic_valid(pcm_reader));
++	if (snd_BUG_ON(!pcm_reader))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(pcm_reader)))
++		return -EINVAL;
+ 
+-	if (pcm_reader->pads)
+-		stm_pad_release(pcm_reader->pads);
+ 	snd_stm_conv_unregister_source(pcm_reader->conv_source);
+ 	snd_stm_buffer_dispose(pcm_reader->buffer);
+ 	snd_stm_fdma_release(pcm_reader->fdma_channel);
+@@ -1015,7 +1036,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_pcm_reader_driver = {
+-	.driver.name = "snd_pcm_reader",
++	.driver = {
++		.name = "snd_pcm_reader",
++	},
+ 	.probe = snd_stm_pcm_reader_probe,
+ 	.remove = snd_stm_pcm_reader_remove,
+ };
+@@ -1024,19 +1047,12 @@
+  * Initialization
+  */
+ 
+-static int __init snd_stm_pcm_reader_init(void)
++int snd_stm_pcm_reader_init(void)
+ {
+ 	return platform_driver_register(&snd_stm_pcm_reader_driver);
+ }
+ 
+-static void __exit snd_stm_pcm_reader_exit(void)
++void snd_stm_pcm_reader_exit(void)
+ {
+ 	platform_driver_unregister(&snd_stm_pcm_reader_driver);
+ }
+-
+-MODULE_AUTHOR("Pawel Moll <pawel.moll@st.com>");
+-MODULE_DESCRIPTION("STMicroelectronics PCM reader driver");
+-MODULE_LICENSE("GPL");
+-
+-module_init(snd_stm_pcm_reader_init);
+-module_exit(snd_stm_pcm_reader_exit);
+diff -ruN stm.org/reg_7105_audcfg.h stm/reg_7105_audcfg.h
+--- a/dev/null
++++ b/sound/stm/reg_7105_audcfg.h	2012-10-11 11:46:27.000000000 -0700
 @@ -0,0 +1,154 @@
 +#ifndef __SND_STM_7105_AUDCFG_H
 +#define __SND_STM_7105_AUDCFG_H
@@ -2682,9 +5715,9 @@ diff -Nur /dev/null ./sound/stm/reg_7105_audcfg.h
 +
 +
 +#endif
-diff -Nur /dev/null ./sound/stm/reg_audcfg_adac.h
---- a/dev/null	2014-05-29 17:15:53.871772965 +0200
-+++ b/sound/stm/reg_audcfg_adac.h	2012-10-11 20:46:27.000000000 +0200
+diff -ruN stm.org/reg_audcfg_adac.h stm/reg_audcfg_adac.h
+--- a/dev/null
++++ b/sound/stm/reg_audcfg_adac.h	2012-10-11 11:46:27.000000000 -0700
 @@ -0,0 +1,208 @@
 +#ifndef __SND_STM_AUDCFG_ADAC_H
 +#define __SND_STM_AUDCFG_ADAC_H
@@ -2894,9 +5927,9 @@ diff -Nur /dev/null ./sound/stm/reg_audcfg_adac.h
 +
 +
 +#endif
-diff -Nur /dev/null ./sound/stm/reg_audcfg_fsyn.h
---- a/dev/null	2014-05-29 17:15:53.871772965 +0200
-+++ b/sound/stm/reg_audcfg_fsyn.h	2012-10-11 20:46:27.000000000 +0200
+diff -ruN stm.org/reg_audcfg_fsyn.h stm/reg_audcfg_fsyn.h
+--- a/dev/null
++++ b/sound/stm/reg_audcfg_fsyn.h	2012-10-11 11:46:27.000000000 -0700
 @@ -0,0 +1,448 @@
 +#ifndef __SND_STM_AUDCFG_FSYN_H
 +#define __SND_STM_AUDCFG_FSYN_H
@@ -3346,3 +6379,1929 @@ diff -Nur /dev/null ./sound/stm/reg_audcfg_fsyn.h
 +
 +
 +#endif
+diff -ruN stm.org/reg_aud_pcmin.h stm/reg_aud_pcmin.h
+--- a/drivers/stm/reg_aud_pcmin.h	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/reg_aud_pcmin.h	2012-10-11 11:46:27.000000000 -0700
+@@ -2,6 +2,30 @@
+ #define __SND_STM_AUD_PCMIN_H
+ 
+ /*
++ * IP versions
++ */
++
++/* 7100 2.0, 7100 3.0 */
++#define ver__AUD_PCMIN__90_1_1 1
++
++/* 7109 2.0, 7109 3.0 */
++#define ver__AUD_PCMIN__90_2_0 2
++
++/* 7200 1.0 */
++#define ver__AUD_PCMIN__65_2_0 3
++
++/* 7111 */
++#define ver__AUD_PCMIN__65_3_1 4
++
++/* 7200 2.0 */
++#define ver__AUD_PCMIN__65_3_3 5
++
++/* 7200 3.0 */
++#define ver__AUD_PCMIN__65_3_4 6
++
++
++
++/*
+  * AUD_PCMIN_RST
+  */
+ 
+@@ -464,9 +488,9 @@
+ /* NUM_FRAMES */
+ 
+ #define shift__AUD_PCMIN_CTRL__NUM_FRAMES(ip) (ip->ver < \
+-	4 ? 4 : -1)
++	ver__AUD_PCMIN__65_3_1 ? 4 : -1)
+ #define mask__AUD_PCMIN_CTRL__NUM_FRAMES(ip) (ip->ver < \
+-	4 ? 0xfffffff : -1)
++	ver__AUD_PCMIN__65_3_1 ? 0xfffffff : -1)
+ #define get__AUD_PCMIN_CTRL__NUM_FRAMES(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_CTRL(ip)) >> shift__AUD_PCMIN_CTRL__NUM_FRAMES(ip)) \
+ 	& mask__AUD_PCMIN_CTRL__NUM_FRAMES(ip))
+@@ -481,9 +505,9 @@
+ /* MASTER_CLK_DIV */
+ 
+ #define shift__AUD_PCMIN_CTRL__MASTER_CLK_DIV(ip) (ip->ver < \
+-	4 ? -1 : 4)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 4)
+ #define mask__AUD_PCMIN_CTRL__MASTER_CLK_DIV(ip) (ip->ver < \
+-	4 ? -1 : 0xf)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0xf)
+ #define get__AUD_PCMIN_CTRL__MASTER_CLK_DIV(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_CTRL(ip)) >> \
+ 	shift__AUD_PCMIN_CTRL__MASTER_CLK_DIV(ip)) & \
+@@ -590,9 +614,9 @@
+ /* NFRAMES */
+ 
+ #define shift__AUD_PCMIN_STA__NFRAMES(ip) (ip->ver < \
+-	4 ? 19 : -1)
++	ver__AUD_PCMIN__65_3_1 ? 19 : -1)
+ #define mask__AUD_PCMIN_STA__NFRAMES(ip) (ip->ver < \
+-	4 ? 0x1 : -1)
++	ver__AUD_PCMIN__65_3_1 ? 0x1 : -1)
+ #define get__AUD_PCMIN_STA__NFRAMES(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_STA(ip)) >> shift__AUD_PCMIN_STA__NFRAMES(ip)) & \
+ 	mask__AUD_PCMIN_STA__NFRAMES(ip))
+@@ -604,7 +628,7 @@
+ 	offset__AUD_PCMIN_STA(ip))
+ 
+ #define value__AUD_PCMIN_STA__NFRAMES__DONE(ip) (ip->ver < \
+-	4 ? 0x1 : -1)
++	ver__AUD_PCMIN__65_3_1 ? 0x1 : -1)
+ #define mask__AUD_PCMIN_STA__NFRAMES__DONE(ip) \
+ 	(value__AUD_PCMIN_STA__NFRAMES__DONE(ip) << \
+ 	shift__AUD_PCMIN_STA__NFRAMES(ip))
+@@ -615,9 +639,9 @@
+ /* SAMPLES_IN_FIFO */
+ 
+ #define shift__AUD_PCMIN_STA__SAMPLES_IN_FIFO(ip) (ip->ver < \
+-	4 ? -1 : 19)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 19)
+ #define mask__AUD_PCMIN_STA__SAMPLES_IN_FIFO(ip) (ip->ver < \
+-	4 ? -1 : 0x7f)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x7f)
+ #define get__AUD_PCMIN_STA__SAMPLES_IN_FIFO(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_STA(ip)) >> \
+ 	shift__AUD_PCMIN_STA__SAMPLES_IN_FIFO(ip)) & \
+@@ -865,9 +889,9 @@
+ /* NUM_CH */
+ 
+ #define shift__AUD_PCMIN_FMT__NUM_CH(ip) (ip->ver < \
+-	4 ? -1 : 8)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 8)
+ #define mask__AUD_PCMIN_FMT__NUM_CH(ip) (ip->ver < \
+-	4 ? -1 : 0x7)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x7)
+ #define get__AUD_PCMIN_FMT__NUM_CH(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_FMT(ip)) >> shift__AUD_PCMIN_FMT__NUM_CH(ip)) & \
+ 	mask__AUD_PCMIN_FMT__NUM_CH(ip))
+@@ -878,7 +902,7 @@
+ 	ip->base + offset__AUD_PCMIN_FMT(ip))
+ 
+ #define value__AUD_PCMIN_FMT__NUM_CH__1_CHANNEL(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_PCMIN_FMT__NUM_CH__1_CHANNEL(ip) \
+ 	(value__AUD_PCMIN_FMT__NUM_CH__1_CHANNEL(ip) << \
+ 	shift__AUD_PCMIN_FMT__NUM_CH(ip))
+@@ -887,7 +911,7 @@
+ 	value__AUD_PCMIN_FMT__NUM_CH__1_CHANNEL(ip))
+ 
+ #define value__AUD_PCMIN_FMT__NUM_CH__2_CHANNELS(ip) (ip->ver < \
+-	4 ? -1 : 0x2)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x2)
+ #define mask__AUD_PCMIN_FMT__NUM_CH__2_CHANNELS(ip) \
+ 	(value__AUD_PCMIN_FMT__NUM_CH__2_CHANNELS(ip) << \
+ 	shift__AUD_PCMIN_FMT__NUM_CH(ip))
+@@ -896,7 +920,7 @@
+ 	value__AUD_PCMIN_FMT__NUM_CH__2_CHANNELS(ip))
+ 
+ #define value__AUD_PCMIN_FMT__NUM_CH__3_CHANNELS(ip) (ip->ver < \
+-	4 ? -1 : 0x3)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x3)
+ #define mask__AUD_PCMIN_FMT__NUM_CH__3_CHANNELS(ip) \
+ 	(value__AUD_PCMIN_FMT__NUM_CH__3_CHANNELS(ip) << \
+ 	shift__AUD_PCMIN_FMT__NUM_CH(ip))
+@@ -905,7 +929,7 @@
+ 	value__AUD_PCMIN_FMT__NUM_CH__3_CHANNELS(ip))
+ 
+ #define value__AUD_PCMIN_FMT__NUM_CH__4_CHANNELS(ip) (ip->ver < \
+-	4 ? -1 : 0x4)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x4)
+ #define mask__AUD_PCMIN_FMT__NUM_CH__4_CHANNELS(ip) \
+ 	(value__AUD_PCMIN_FMT__NUM_CH__4_CHANNELS(ip) << \
+ 	shift__AUD_PCMIN_FMT__NUM_CH(ip))
+@@ -914,7 +938,7 @@
+ 	value__AUD_PCMIN_FMT__NUM_CH__4_CHANNELS(ip))
+ 
+ #define value__AUD_PCMIN_FMT__NUM_CH__5_CHANNELS(ip) (ip->ver < \
+-	4 ? -1 : 0x5)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x5)
+ #define mask__AUD_PCMIN_FMT__NUM_CH__5_CHANNELS(ip) \
+ 	(value__AUD_PCMIN_FMT__NUM_CH__5_CHANNELS(ip) << \
+ 	shift__AUD_PCMIN_FMT__NUM_CH(ip))
+@@ -925,9 +949,9 @@
+ /* BACK_STALLING */
+ 
+ #define shift__AUD_PCMIN_FMT__BACK_STALLING(ip) (ip->ver < \
+-	4 ? -1 : 11)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 11)
+ #define mask__AUD_PCMIN_FMT__BACK_STALLING(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x1)
+ #define get__AUD_PCMIN_FMT__BACK_STALLING(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_FMT(ip)) >> shift__AUD_PCMIN_FMT__BACK_STALLING(ip)) \
+ 	& mask__AUD_PCMIN_FMT__BACK_STALLING(ip))
+@@ -940,7 +964,7 @@
+ 	offset__AUD_PCMIN_FMT(ip))
+ 
+ #define value__AUD_PCMIN_FMT__BACK_STALLING__DISABLED(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_PCMIN_FMT__BACK_STALLING__DISABLED(ip) \
+ 	(value__AUD_PCMIN_FMT__BACK_STALLING__DISABLED(ip) << \
+ 	shift__AUD_PCMIN_FMT__BACK_STALLING(ip))
+@@ -949,7 +973,7 @@
+ 	value__AUD_PCMIN_FMT__BACK_STALLING__DISABLED(ip))
+ 
+ #define value__AUD_PCMIN_FMT__BACK_STALLING__ENABLED(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_PCMIN_FMT__BACK_STALLING__ENABLED(ip) \
+ 	(value__AUD_PCMIN_FMT__BACK_STALLING__ENABLED(ip) << \
+ 	shift__AUD_PCMIN_FMT__BACK_STALLING(ip))
+@@ -960,9 +984,9 @@
+ /* MASTER_CLKEDGE */
+ 
+ #define shift__AUD_PCMIN_FMT__MASTER_CLKEDGE(ip) (ip->ver < \
+-	4 ? -1 : 12)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 12)
+ #define mask__AUD_PCMIN_FMT__MASTER_CLKEDGE(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x1)
+ #define get__AUD_PCMIN_FMT__MASTER_CLKEDGE(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_FMT(ip)) >> \
+ 	shift__AUD_PCMIN_FMT__MASTER_CLKEDGE(ip)) & \
+@@ -976,7 +1000,7 @@
+ 	offset__AUD_PCMIN_FMT(ip))
+ 
+ #define value__AUD_PCMIN_FMT__MASTER_CLKEDGE__RISING(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_PCMIN_FMT__MASTER_CLKEDGE__RISING(ip) \
+ 	(value__AUD_PCMIN_FMT__MASTER_CLKEDGE__RISING(ip) << \
+ 	shift__AUD_PCMIN_FMT__MASTER_CLKEDGE(ip))
+@@ -985,7 +1009,7 @@
+ 	value__AUD_PCMIN_FMT__MASTER_CLKEDGE__RISING(ip))
+ 
+ #define value__AUD_PCMIN_FMT__MASTER_CLKEDGE__FALLING(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_PCMIN_FMT__MASTER_CLKEDGE__FALLING(ip) \
+ 	(value__AUD_PCMIN_FMT__MASTER_CLKEDGE__FALLING(ip) << \
+ 	shift__AUD_PCMIN_FMT__MASTER_CLKEDGE(ip))
+@@ -996,9 +1020,9 @@
+ /* DMA_REQ_TRIG_LMT */
+ 
+ #define shift__AUD_PCMIN_FMT__DMA_REQ_TRIG_LMT(ip) (ip->ver < \
+-	4 ? -1 : 13)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 13)
+ #define mask__AUD_PCMIN_FMT__DMA_REQ_TRIG_LMT(ip) (ip->ver < \
+-	4 ? -1 : 0x7f)
++	ver__AUD_PCMIN__65_3_1 ? -1 : 0x7f)
+ #define get__AUD_PCMIN_FMT__DMA_REQ_TRIG_LMT(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMIN_FMT(ip)) >> \
+ 	shift__AUD_PCMIN_FMT__DMA_REQ_TRIG_LMT(ip)) & \
+diff -ruN stm.org/reg_aud_pcmout.h stm/reg_aud_pcmout.h
+--- a/drivers/stm/reg_aud_pcmout.h	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/reg_aud_pcmout.h	2012-10-11 11:46:27.000000000 -0700
+@@ -2,6 +2,30 @@
+ #define __SND_STM_AUD_PCMOUT_H
+ 
+ /*
++ * IP versions
++ */
++
++/* 7100 2.0 */
++#define ver__AUD_PCMOUT__90_1_1 1
++
++/* 7100 3.0 */
++#define ver__AUD_PCMOUT__90_1_3 2
++
++/* 7109 2.0 */
++#define ver__AUD_PCMOUT__90_2_0 3
++
++/* 7109 3.0 */
++#define ver__AUD_PCMOUT__90_2_1 4
++
++/* 7200 1.0 */
++#define ver__AUD_PCMOUT__65_1_3 5
++
++/* 7111, 7200 2.0 */
++#define ver__AUD_PCMOUT__65_2_2 6
++
++
++
++/*
+  * AUD_PCMOUT_RST
+  */
+ 
+@@ -674,7 +698,7 @@
+ 
+ #define shift__AUD_PCMOUT_FMT__DATA_SIZE(ip) 1
+ #define mask__AUD_PCMOUT_FMT__DATA_SIZE(ip) (ip->ver < \
+-	6 ? 0x3 : 0x7)
++	ver__AUD_PCMOUT__65_2_2 ? 0x3 : 0x7)
+ #define get__AUD_PCMOUT_FMT__DATA_SIZE(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> shift__AUD_PCMOUT_FMT__DATA_SIZE(ip)) & \
+ 	mask__AUD_PCMOUT_FMT__DATA_SIZE(ip))
+@@ -687,7 +711,7 @@
+ 	offset__AUD_PCMOUT_FMT(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__DATA_SIZE__16_BITS(ip) (ip->ver < \
+-	6 ? 0x3 : 0x0)
++	ver__AUD_PCMOUT__65_2_2 ? 0x3 : 0x0)
+ #define mask__AUD_PCMOUT_FMT__DATA_SIZE__16_BITS(ip) \
+ 	(value__AUD_PCMOUT_FMT__DATA_SIZE__16_BITS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__DATA_SIZE(ip))
+@@ -696,7 +720,7 @@
+ 	value__AUD_PCMOUT_FMT__DATA_SIZE__16_BITS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__DATA_SIZE__18_BITS(ip) (ip->ver < \
+-	6 ? 0x2 : 0x1)
++	ver__AUD_PCMOUT__65_2_2 ? 0x2 : 0x1)
+ #define mask__AUD_PCMOUT_FMT__DATA_SIZE__18_BITS(ip) \
+ 	(value__AUD_PCMOUT_FMT__DATA_SIZE__18_BITS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__DATA_SIZE(ip))
+@@ -705,7 +729,7 @@
+ 	value__AUD_PCMOUT_FMT__DATA_SIZE__18_BITS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__DATA_SIZE__20_BITS(ip) (ip->ver < \
+-	6 ? 0x1 : 0x2)
++	ver__AUD_PCMOUT__65_2_2 ? 0x1 : 0x2)
+ #define mask__AUD_PCMOUT_FMT__DATA_SIZE__20_BITS(ip) \
+ 	(value__AUD_PCMOUT_FMT__DATA_SIZE__20_BITS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__DATA_SIZE(ip))
+@@ -714,7 +738,7 @@
+ 	value__AUD_PCMOUT_FMT__DATA_SIZE__20_BITS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__DATA_SIZE__24_BITS(ip) (ip->ver < \
+-	6 ? 0x0 : 0x3)
++	ver__AUD_PCMOUT__65_2_2 ? 0x0 : 0x3)
+ #define mask__AUD_PCMOUT_FMT__DATA_SIZE__24_BITS(ip) \
+ 	(value__AUD_PCMOUT_FMT__DATA_SIZE__24_BITS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__DATA_SIZE(ip))
+@@ -723,7 +747,7 @@
+ 	value__AUD_PCMOUT_FMT__DATA_SIZE__24_BITS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__DATA_SIZE__28_BITS(ip) (ip->ver < \
+-	6 ? -1 : 0x4)
++	ver__AUD_PCMOUT__65_2_2 ? -1 : 0x4)
+ #define mask__AUD_PCMOUT_FMT__DATA_SIZE__28_BITS(ip) \
+ 	(value__AUD_PCMOUT_FMT__DATA_SIZE__28_BITS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__DATA_SIZE(ip))
+@@ -732,7 +756,7 @@
+ 	value__AUD_PCMOUT_FMT__DATA_SIZE__28_BITS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__DATA_SIZE__32_BITS(ip) (ip->ver < \
+-	6 ? -1 : 0x5)
++	ver__AUD_PCMOUT__65_2_2 ? -1 : 0x5)
+ #define mask__AUD_PCMOUT_FMT__DATA_SIZE__32_BITS(ip) \
+ 	(value__AUD_PCMOUT_FMT__DATA_SIZE__32_BITS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__DATA_SIZE(ip))
+@@ -743,7 +767,7 @@
+ /* LR_POL */
+ 
+ #define shift__AUD_PCMOUT_FMT__LR_POL(ip) (ip->ver < \
+-	6 ? 3 : 4)
++	ver__AUD_PCMOUT__65_2_2 ? 3 : 4)
+ #define mask__AUD_PCMOUT_FMT__LR_POL(ip) 0x1
+ #define get__AUD_PCMOUT_FMT__LR_POL(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> shift__AUD_PCMOUT_FMT__LR_POL(ip)) & \
+@@ -774,7 +798,7 @@
+ /* SCLK_EDGE */
+ 
+ #define shift__AUD_PCMOUT_FMT__SCLK_EDGE(ip) (ip->ver < \
+-	6 ? 4 : 5)
++	ver__AUD_PCMOUT__65_2_2 ? 4 : 5)
+ #define mask__AUD_PCMOUT_FMT__SCLK_EDGE(ip) 0x1
+ #define get__AUD_PCMOUT_FMT__SCLK_EDGE(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> shift__AUD_PCMOUT_FMT__SCLK_EDGE(ip)) & \
+@@ -788,7 +812,7 @@
+ 	offset__AUD_PCMOUT_FMT(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__SCLK_EDGE__RISING(ip) (ip->ver < \
+-	4 ? 0x1 : 0x0)
++	ver__AUD_PCMOUT__90_2_1 ? 0x1 : 0x0)
+ #define mask__AUD_PCMOUT_FMT__SCLK_EDGE__RISING(ip) \
+ 	(value__AUD_PCMOUT_FMT__SCLK_EDGE__RISING(ip) << \
+ 	shift__AUD_PCMOUT_FMT__SCLK_EDGE(ip))
+@@ -797,7 +821,7 @@
+ 	value__AUD_PCMOUT_FMT__SCLK_EDGE__RISING(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__SCLK_EDGE__FALLING(ip) (ip->ver < \
+-	4 ? 0x0 : 0x1)
++	ver__AUD_PCMOUT__90_2_1 ? 0x0 : 0x1)
+ #define mask__AUD_PCMOUT_FMT__SCLK_EDGE__FALLING(ip) \
+ 	(value__AUD_PCMOUT_FMT__SCLK_EDGE__FALLING(ip) << \
+ 	shift__AUD_PCMOUT_FMT__SCLK_EDGE(ip))
+@@ -808,7 +832,7 @@
+ /* PADDING */
+ 
+ #define shift__AUD_PCMOUT_FMT__PADDING(ip) (ip->ver < \
+-	6 ? 5 : 6)
++	ver__AUD_PCMOUT__65_2_2 ? 5 : 6)
+ #define mask__AUD_PCMOUT_FMT__PADDING(ip) 0x1
+ #define get__AUD_PCMOUT_FMT__PADDING(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> shift__AUD_PCMOUT_FMT__PADDING(ip)) & \
+@@ -839,7 +863,7 @@
+ /* ALIGN */
+ 
+ #define shift__AUD_PCMOUT_FMT__ALIGN(ip) (ip->ver < \
+-	6 ? 6 : 7)
++	ver__AUD_PCMOUT__65_2_2 ? 6 : 7)
+ #define mask__AUD_PCMOUT_FMT__ALIGN(ip) 0x1
+ #define get__AUD_PCMOUT_FMT__ALIGN(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> shift__AUD_PCMOUT_FMT__ALIGN(ip)) & \
+@@ -868,7 +892,7 @@
+ /* ORDER */
+ 
+ #define shift__AUD_PCMOUT_FMT__ORDER(ip) (ip->ver < \
+-	6 ? 7 : 8)
++	ver__AUD_PCMOUT__65_2_2 ? 7 : 8)
+ #define mask__AUD_PCMOUT_FMT__ORDER(ip) 0x1
+ #define get__AUD_PCMOUT_FMT__ORDER(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> shift__AUD_PCMOUT_FMT__ORDER(ip)) & \
+@@ -898,7 +922,7 @@
+ /* NUM_CH */
+ 
+ #define shift__AUD_PCMOUT_FMT__NUM_CH(ip) (ip->ver < \
+-	6 ? 8 : 9)
++	ver__AUD_PCMOUT__65_2_2 ? 8 : 9)
+ #define mask__AUD_PCMOUT_FMT__NUM_CH(ip) 0x7
+ #define get__AUD_PCMOUT_FMT__NUM_CH(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> shift__AUD_PCMOUT_FMT__NUM_CH(ip)) & \
+@@ -911,7 +935,7 @@
+ 	offset__AUD_PCMOUT_FMT(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__NUM_CH__1_CHANNEL(ip) (ip->ver < \
+-	2 ? -1 : 0x1)
++	ver__AUD_PCMOUT__90_1_3 ? -1 : 0x1)
+ #define mask__AUD_PCMOUT_FMT__NUM_CH__1_CHANNEL(ip) \
+ 	(value__AUD_PCMOUT_FMT__NUM_CH__1_CHANNEL(ip) << \
+ 	shift__AUD_PCMOUT_FMT__NUM_CH(ip))
+@@ -920,7 +944,7 @@
+ 	value__AUD_PCMOUT_FMT__NUM_CH__1_CHANNEL(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__NUM_CH__2_CHANNELS(ip) (ip->ver < \
+-	2 ? -1 : 0x2)
++	ver__AUD_PCMOUT__90_1_3 ? -1 : 0x2)
+ #define mask__AUD_PCMOUT_FMT__NUM_CH__2_CHANNELS(ip) \
+ 	(value__AUD_PCMOUT_FMT__NUM_CH__2_CHANNELS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__NUM_CH(ip))
+@@ -929,7 +953,7 @@
+ 	value__AUD_PCMOUT_FMT__NUM_CH__2_CHANNELS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__NUM_CH__3_CHANNELS(ip) (ip->ver < \
+-	2 ? -1 : 0x3)
++	ver__AUD_PCMOUT__90_1_3 ? -1 : 0x3)
+ #define mask__AUD_PCMOUT_FMT__NUM_CH__3_CHANNELS(ip) \
+ 	(value__AUD_PCMOUT_FMT__NUM_CH__3_CHANNELS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__NUM_CH(ip))
+@@ -938,7 +962,7 @@
+ 	value__AUD_PCMOUT_FMT__NUM_CH__3_CHANNELS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__NUM_CH__4_CHANNELS(ip) (ip->ver < \
+-	2 ? -1 : 0x4)
++	ver__AUD_PCMOUT__90_1_3 ? -1 : 0x4)
+ #define mask__AUD_PCMOUT_FMT__NUM_CH__4_CHANNELS(ip) \
+ 	(value__AUD_PCMOUT_FMT__NUM_CH__4_CHANNELS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__NUM_CH(ip))
+@@ -947,7 +971,7 @@
+ 	value__AUD_PCMOUT_FMT__NUM_CH__4_CHANNELS(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__NUM_CH__5_CHANNELS(ip) (ip->ver < \
+-	2 ? 0x5 : 0x5)
++	ver__AUD_PCMOUT__90_1_3 ? 0x5 : 0x5)
+ #define mask__AUD_PCMOUT_FMT__NUM_CH__5_CHANNELS(ip) \
+ 	(value__AUD_PCMOUT_FMT__NUM_CH__5_CHANNELS(ip) << \
+ 	shift__AUD_PCMOUT_FMT__NUM_CH(ip))
+@@ -958,9 +982,9 @@
+ /* BACK_STALLING */
+ 
+ #define shift__AUD_PCMOUT_FMT__BACK_STALLING(ip) (ip->ver < \
+-	6 ? -1 : 12)
++	ver__AUD_PCMOUT__65_2_2 ? -1 : 12)
+ #define mask__AUD_PCMOUT_FMT__BACK_STALLING(ip) (ip->ver < \
+-	6 ? -1 : 0x1)
++	ver__AUD_PCMOUT__65_2_2 ? -1 : 0x1)
+ #define get__AUD_PCMOUT_FMT__BACK_STALLING(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> \
+ 	shift__AUD_PCMOUT_FMT__BACK_STALLING(ip)) & \
+@@ -974,7 +998,7 @@
+ 	offset__AUD_PCMOUT_FMT(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__BACK_STALLING__DISABLED(ip) (ip->ver < \
+-	6 ? -1 : 0x0)
++	ver__AUD_PCMOUT__65_2_2 ? -1 : 0x0)
+ #define mask__AUD_PCMOUT_FMT__BACK_STALLING__DISABLED(ip) \
+ 	(value__AUD_PCMOUT_FMT__BACK_STALLING__DISABLED(ip) << \
+ 	shift__AUD_PCMOUT_FMT__BACK_STALLING(ip))
+@@ -983,7 +1007,7 @@
+ 	value__AUD_PCMOUT_FMT__BACK_STALLING__DISABLED(ip))
+ 
+ #define value__AUD_PCMOUT_FMT__BACK_STALLING__ENABLED(ip) (ip->ver < \
+-	6 ? -1 : 0x1)
++	ver__AUD_PCMOUT__65_2_2 ? -1 : 0x1)
+ #define mask__AUD_PCMOUT_FMT__BACK_STALLING__ENABLED(ip) \
+ 	(value__AUD_PCMOUT_FMT__BACK_STALLING__ENABLED(ip) << \
+ 	shift__AUD_PCMOUT_FMT__BACK_STALLING(ip))
+@@ -994,9 +1018,9 @@
+ /* DMA_REQ_TRIG_LMT */
+ 
+ #define shift__AUD_PCMOUT_FMT__DMA_REQ_TRIG_LMT(ip) (ip->ver < \
+-	6 ? 11 : 13)
++	ver__AUD_PCMOUT__65_2_2 ? 11 : 13)
+ #define mask__AUD_PCMOUT_FMT__DMA_REQ_TRIG_LMT(ip) (ip->ver < \
+-	6 ? 0x1f : 0x7f)
++	ver__AUD_PCMOUT__65_2_2 ? 0x1f : 0x7f)
+ #define get__AUD_PCMOUT_FMT__DMA_REQ_TRIG_LMT(ip) ((readl(ip->base + \
+ 	offset__AUD_PCMOUT_FMT(ip)) >> \
+ 	shift__AUD_PCMOUT_FMT__DMA_REQ_TRIG_LMT(ip)) & \
+diff -ruN stm.org/reg_aud_spdif.h stm/reg_aud_spdif.h
+--- a/drivers/stm/reg_aud_spdif.h	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/reg_aud_spdif.h	2012-10-11 11:46:27.000000000 -0700
+@@ -2,6 +2,24 @@
+ #define __SND_STM_AUD_SPDIF_H
+ 
+ /*
++ * IP versions
++ */
++
++/* 7100 2.0, 7100 3.0 */
++#define ver__AUD_SPDIF__90_1_1 1
++
++/* 7109 2.0, 7109 3.0 */
++#define ver__AUD_SPDIF__90_2_2 2
++
++/* 7200 1.0 */
++#define ver__AUD_SPDIF__65_2_0 3
++
++/* 7111, 7200 2.0 */
++#define ver__AUD_SPDIF__65_3_1 4
++
++
++
++/*
+  * AUD_SPDIF_RST
+  */
+ 
+@@ -1251,9 +1269,9 @@
+ /* SAMPLES_IN_FIFO */
+ 
+ #define shift__AUD_SPDIF_STA__SAMPLES_IN_FIFO(ip) (ip->ver < \
+-	4 ? -1 : 16)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 16)
+ #define mask__AUD_SPDIF_STA__SAMPLES_IN_FIFO(ip) (ip->ver < \
+-	4 ? -1 : 0x1f)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1f)
+ #define get__AUD_SPDIF_STA__SAMPLES_IN_FIFO(ip) ((readl(ip->base + \
+ 	offset__AUD_SPDIF_STA(ip)) >> \
+ 	shift__AUD_SPDIF_STA__SAMPLES_IN_FIFO(ip)) & \
+@@ -1590,7 +1608,7 @@
+  * AUD_SPDIF_CONFIG
+  */
+ 
+-#define offset__AUD_SPDIF_CONFIG(ip) (ip->ver < 4 \
++#define offset__AUD_SPDIF_CONFIG(ip) (ip->ver < ver__AUD_SPDIF__65_3_1 \
+ 	? -1 : 0x40)
+ #define get__AUD_SPDIF_CONFIG(ip) readl(ip->base + \
+ 	offset__AUD_SPDIF_CONFIG(ip))
+@@ -1600,10 +1618,10 @@
+ /* P_BIT */
+ 
+ #define shift__AUD_SPDIF_CONFIG__P_BIT(ip) (ip->ver < \
+-	4 ? -1 : 0)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0)
+ 
+ #define value__AUD_SPDIF_CONFIG__P_BIT__MASK(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__P_BIT__MASK(ip) \
+ 	(value__AUD_SPDIF_CONFIG__P_BIT__MASK(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__P_BIT(ip))
+@@ -1612,7 +1630,7 @@
+ 	value__AUD_SPDIF_CONFIG__P_BIT__MASK(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__P_BIT__HW(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__P_BIT__HW(ip) \
+ 	(value__AUD_SPDIF_CONFIG__P_BIT__HW(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__P_BIT(ip))
+@@ -1621,7 +1639,7 @@
+ 	value__AUD_SPDIF_CONFIG__P_BIT__HW(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__P_BIT__FDMA(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__P_BIT__FDMA(ip) \
+ 	(value__AUD_SPDIF_CONFIG__P_BIT__FDMA(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__P_BIT(ip))
+@@ -1632,10 +1650,10 @@
+ /* C_BIT */
+ 
+ #define shift__AUD_SPDIF_CONFIG__C_BIT(ip) (ip->ver < \
+-	4 ? -1 : 1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 1)
+ 
+ #define value__AUD_SPDIF_CONFIG__C_BIT__MASK(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__C_BIT__MASK(ip) \
+ 	(value__AUD_SPDIF_CONFIG__C_BIT__MASK(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__C_BIT(ip))
+@@ -1644,7 +1662,7 @@
+ 	value__AUD_SPDIF_CONFIG__C_BIT__MASK(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__C_BIT__FDMA(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__C_BIT__FDMA(ip) \
+ 	(value__AUD_SPDIF_CONFIG__C_BIT__FDMA(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__C_BIT(ip))
+@@ -1653,7 +1671,7 @@
+ 	value__AUD_SPDIF_CONFIG__C_BIT__FDMA(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__C_BIT__HW(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__C_BIT__HW(ip) \
+ 	(value__AUD_SPDIF_CONFIG__C_BIT__HW(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__C_BIT(ip))
+@@ -1664,10 +1682,10 @@
+ /* U_BIT */
+ 
+ #define shift__AUD_SPDIF_CONFIG__U_BIT(ip) (ip->ver < \
+-	4 ? -1 : 2)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 2)
+ 
+ #define value__AUD_SPDIF_CONFIG__U_BIT__MASK(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__U_BIT__MASK(ip) \
+ 	(value__AUD_SPDIF_CONFIG__U_BIT__MASK(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__U_BIT(ip))
+@@ -1676,7 +1694,7 @@
+ 	value__AUD_SPDIF_CONFIG__U_BIT__MASK(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__U_BIT__FDMA(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__U_BIT__FDMA(ip) \
+ 	(value__AUD_SPDIF_CONFIG__U_BIT__FDMA(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__U_BIT(ip))
+@@ -1685,7 +1703,7 @@
+ 	value__AUD_SPDIF_CONFIG__U_BIT__FDMA(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__U_BIT__HW(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__U_BIT__HW(ip) \
+ 	(value__AUD_SPDIF_CONFIG__U_BIT__HW(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__U_BIT(ip))
+@@ -1696,10 +1714,10 @@
+ /* V_BIT */
+ 
+ #define shift__AUD_SPDIF_CONFIG__V_BIT(ip) (ip->ver < \
+-	4 ? -1 : 2)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 2)
+ 
+ #define value__AUD_SPDIF_CONFIG__V_BIT__MASK(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__V_BIT__MASK(ip) \
+ 	(value__AUD_SPDIF_CONFIG__V_BIT__MASK(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__V_BIT(ip))
+@@ -1708,7 +1726,7 @@
+ 	value__AUD_SPDIF_CONFIG__V_BIT__MASK(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__V_BIT__FDMA(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__V_BIT__FDMA(ip) \
+ 	(value__AUD_SPDIF_CONFIG__V_BIT__FDMA(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__V_BIT(ip))
+@@ -1717,7 +1735,7 @@
+ 	value__AUD_SPDIF_CONFIG__V_BIT__FDMA(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__V_BIT__HW(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__V_BIT__HW(ip) \
+ 	(value__AUD_SPDIF_CONFIG__V_BIT__HW(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__V_BIT(ip))
+@@ -1728,9 +1746,9 @@
+ /* ONE_BIT_AUDIO */
+ 
+ #define shift__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO(ip) (ip->ver < \
+-	4 ? -1 : 4)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 4)
+ #define mask__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define get__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO(ip) ((readl(ip->base + \
+ 	offset__AUD_SPDIF_CONFIG(ip)) >> \
+ 	shift__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO(ip)) & \
+@@ -1744,7 +1762,7 @@
+ 	offset__AUD_SPDIF_CONFIG(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO__DISABLED(ip) (ip->ver \
+-	< 4 ? -1 : 0x0)
++	< ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO__DISABLED(ip) \
+ 	(value__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO__DISABLED(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO(ip))
+@@ -1753,7 +1771,7 @@
+ 	value__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO__DISABLED(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO__ENABLED(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO__ENABLED(ip) \
+ 	(value__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO__ENABLED(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__ONE_BIT_AUDIO(ip))
+@@ -1764,9 +1782,9 @@
+ /* MEM_FMT */
+ 
+ #define shift__AUD_SPDIF_CONFIG__MEM_FMT(ip) (ip->ver < \
+-	4 ? -1 : 5)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 5)
+ #define mask__AUD_SPDIF_CONFIG__MEM_FMT(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define get__AUD_SPDIF_CONFIG__MEM_FMT(ip) ((readl(ip->base + \
+ 	offset__AUD_SPDIF_CONFIG(ip)) >> shift__AUD_SPDIF_CONFIG__MEM_FMT(ip)) \
+ 	& mask__AUD_SPDIF_CONFIG__MEM_FMT(ip))
+@@ -1779,7 +1797,7 @@
+ 	offset__AUD_SPDIF_CONFIG(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__MEM_FMT__16_BITS_0_BITS(ip) (ip->ver \
+-	< 4 ? -1 : 0x0)
++	< ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__MEM_FMT__16_BITS_0_BITS(ip) \
+ 	(value__AUD_SPDIF_CONFIG__MEM_FMT__16_BITS_0_BITS(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__MEM_FMT(ip))
+@@ -1788,7 +1806,7 @@
+ 	value__AUD_SPDIF_CONFIG__MEM_FMT__16_BITS_0_BITS(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__MEM_FMT__16_BITS_16_BITS(ip) (ip->ver \
+-	< 4 ? -1 : 0x1)
++	< ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__MEM_FMT__16_BITS_16_BITS(ip) \
+ 	(value__AUD_SPDIF_CONFIG__MEM_FMT__16_BITS_16_BITS(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__MEM_FMT(ip))
+@@ -1799,9 +1817,9 @@
+ /* DTS_HD */
+ 
+ #define shift__AUD_SPDIF_CONFIG__DTS_HD(ip) (ip->ver < \
+-	4 ? -1 : 6)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 6)
+ #define mask__AUD_SPDIF_CONFIG__DTS_HD(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define get__AUD_SPDIF_CONFIG__DTS_HD(ip) ((readl(ip->base + \
+ 	offset__AUD_SPDIF_CONFIG(ip)) >> shift__AUD_SPDIF_CONFIG__DTS_HD(ip)) \
+ 	& mask__AUD_SPDIF_CONFIG__DTS_HD(ip))
+@@ -1814,7 +1832,7 @@
+ 	offset__AUD_SPDIF_CONFIG(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__DTS_HD__DISABLED(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__DTS_HD__DISABLED(ip) \
+ 	(value__AUD_SPDIF_CONFIG__DTS_HD__DISABLED(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__DTS_HD(ip))
+@@ -1823,7 +1841,7 @@
+ 	value__AUD_SPDIF_CONFIG__DTS_HD__DISABLED(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__DTS_HD__ENABLED(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__DTS_HD__ENABLED(ip) \
+ 	(value__AUD_SPDIF_CONFIG__DTS_HD__ENABLED(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__DTS_HD(ip))
+@@ -1834,9 +1852,9 @@
+ /* BACK_STALLING */
+ 
+ #define shift__AUD_SPDIF_CONFIG__BACK_STALLING(ip) (ip->ver < \
+-	4 ? -1 : 7)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 7)
+ #define mask__AUD_SPDIF_CONFIG__BACK_STALLING(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define get__AUD_SPDIF_CONFIG__BACK_STALLING(ip) ((readl(ip->base + \
+ 	offset__AUD_SPDIF_CONFIG(ip)) >> \
+ 	shift__AUD_SPDIF_CONFIG__BACK_STALLING(ip)) & \
+@@ -1850,7 +1868,7 @@
+ 	offset__AUD_SPDIF_CONFIG(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__BACK_STALLING__DISABLED(ip) (ip->ver \
+-	< 4 ? -1 : 0x0)
++	< ver__AUD_SPDIF__65_3_1 ? -1 : 0x0)
+ #define mask__AUD_SPDIF_CONFIG__BACK_STALLING__DISABLED(ip) \
+ 	(value__AUD_SPDIF_CONFIG__BACK_STALLING__DISABLED(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__BACK_STALLING(ip))
+@@ -1859,7 +1877,7 @@
+ 	value__AUD_SPDIF_CONFIG__BACK_STALLING__DISABLED(ip))
+ 
+ #define value__AUD_SPDIF_CONFIG__BACK_STALLING__ENABLED(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1)
+ #define mask__AUD_SPDIF_CONFIG__BACK_STALLING__ENABLED(ip) \
+ 	(value__AUD_SPDIF_CONFIG__BACK_STALLING__ENABLED(ip) << \
+ 	shift__AUD_SPDIF_CONFIG__BACK_STALLING(ip))
+@@ -1870,9 +1888,9 @@
+ /* DMA_REQ_TRIG_LMT */
+ 
+ #define shift__AUD_SPDIF_CONFIG__DMA_REQ_TRIG_LMT(ip) (ip->ver < \
+-	4 ? -1 : 8)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 8)
+ #define mask__AUD_SPDIF_CONFIG__DMA_REQ_TRIG_LMT(ip) (ip->ver < \
+-	4 ? -1 : 0x1f)
++	ver__AUD_SPDIF__65_3_1 ? -1 : 0x1f)
+ #define get__AUD_SPDIF_CONFIG__DMA_REQ_TRIG_LMT(ip) ((readl(ip->base + \
+ 	offset__AUD_SPDIF_CONFIG(ip)) >> \
+ 	shift__AUD_SPDIF_CONFIG__DMA_REQ_TRIG_LMT(ip)) & \
+diff -ruN stm.org/reg_aud_spdifpc.h stm/reg_aud_spdifpc.h
+--- a/drivers/stm/reg_aud_spdifpc.h	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/reg_aud_spdifpc.h	2012-10-11 11:46:27.000000000 -0700
+@@ -2,6 +2,24 @@
+ #define __SND_STM_AUD_SPDIFPC_H
+ 
+ /*
++ * IP versions
++ */
++
++/* 7100 2.0, 7100 3.0 */
++#define ver__AUD_SPDIFPC__90_1_0 1
++
++/* 7109 2.0, 7109 3.0 */
++#define ver__AUD_SPDIFPC__90_1_1 2
++
++/* 7200 1.0 */
++#define ver__AUD_SPDIFPC__65_1_2 3
++
++/* 7111, 7200 2.0 */
++#define ver__AUD_SPDIFPC__65_3_0 4
++
++
++
++/*
+  * AUD_SPDIFPC_CFG
+  */
+ 
+@@ -177,21 +195,11 @@
+ 	value__AUD_SPDIFPC_CFG__REQ_ACK_EN__ENABLED(ip))
+ 
+ /* CHA_STA_BITS */
+-#define shift__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(ip) 9
+-#define mask__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(ip) 0x1
+-
+-#define set__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(ip, value) \
+-	writel((readl(ip->base + offset__AUD_SPDIFPC_CFG(ip)) & \
+-	~(mask__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(ip) << \
+-	shift__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(ip))) | (((value) & \
+-	mask__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(ip)) << \
+-	shift__AUD_SPDIFPC_CFG__CHL_STS_UPDATE_CLR(ip)), ip->base + \
+-	offset__AUD_SPDIFPC_CFG(ip))
+ 
+ #define shift__AUD_SPDIFPC_CFG__CHA_STA_BITS(ip) (ip->ver < \
+-	4 ? -1 : 6)
++	ver__AUD_SPDIFPC__65_3_0 ? -1 : 6)
+ #define mask__AUD_SPDIFPC_CFG__CHA_STA_BITS(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIFPC__65_3_0 ? -1 : 0x1)
+ #define get__AUD_SPDIFPC_CFG__CHA_STA_BITS(ip) ((readl(ip->base + \
+ 	offset__AUD_SPDIFPC_CFG(ip)) >> \
+ 	shift__AUD_SPDIFPC_CFG__CHA_STA_BITS(ip)) & \
+@@ -205,7 +213,7 @@
+ 	offset__AUD_SPDIFPC_CFG(ip))
+ 
+ #define value__AUD_SPDIFPC_CFG__CHA_STA_BITS__SUBFRAME(ip) (ip->ver < \
+-	4 ? -1 : 0x0)
++	ver__AUD_SPDIFPC__65_3_0 ? -1 : 0x0)
+ #define mask__AUD_SPDIFPC_CFG__CHA_STA_BITS__SUBFRAME(ip) \
+ 	(value__AUD_SPDIFPC_CFG__CHA_STA_BITS__SUBFRAME(ip) << \
+ 	shift__AUD_SPDIFPC_CFG__CHA_STA_BITS(ip))
+@@ -214,7 +222,7 @@
+ 	value__AUD_SPDIFPC_CFG__CHA_STA_BITS__SUBFRAME(ip))
+ 
+ #define value__AUD_SPDIFPC_CFG__CHA_STA_BITS__FRAME(ip) (ip->ver < \
+-	4 ? -1 : 0x1)
++	ver__AUD_SPDIFPC__65_3_0 ? -1 : 0x1)
+ #define mask__AUD_SPDIFPC_CFG__CHA_STA_BITS__FRAME(ip) \
+ 	(value__AUD_SPDIFPC_CFG__CHA_STA_BITS__FRAME(ip) << \
+ 	shift__AUD_SPDIFPC_CFG__CHA_STA_BITS(ip))
+diff -ruN stm.org/spdif_player.c stm/spdif_player.c
+--- a/drivers/stm/spdif_player.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/spdif_player.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+  *   STMicroelectronics System-on-Chips' SPDIF player driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -21,14 +21,12 @@
+  *
+  */
+ 
+-#include <asm/cacheflush.h>
+-#include <asm/clock.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+-#include <linux/stm/pad.h>
++#include <asm/cacheflush.h>
+ #include <linux/stm/stm-dma.h>
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+@@ -37,16 +35,12 @@
+ #include <sound/info.h>
+ #include <sound/asoundef.h>
+ 
++#define COMPONENT spdif_player
+ #include "common.h"
+ #include "reg_aud_spdif.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
+-
+-
+-
+ /*
+  * Some hardware-related definitions
+  */
+@@ -97,7 +91,7 @@
+ 	int fdma_channel;
+ 
+ 	/* Environment settings */
+-	struct clk *clock;
++	struct snd_stm_fsynth_channel *fsynth_channel;
+ 	struct snd_stm_conv_source *conv_source;
+ 
+ 	/* Default settings (controlled by controls ;-) */
+@@ -115,7 +109,6 @@
+ 	struct snd_stm_spdif_player_settings stream_settings;
+ 	int stream_iec958_status_cnt;
+ 	int stream_iec958_subcode_cnt;
+-	struct stm_pad_state *pads;
+ 
+ 	snd_stm_magic_field;
+ };
+@@ -135,14 +128,14 @@
+ 	snd_stm_printd(2, "snd_stm_spdif_player_irq_handler(irq=%d, "
+ 			"dev_id=0x%p)\n", irq, dev_id);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	/* Get interrupt status & clear them immediately */
+-	preempt_disable();
+ 	status = get__AUD_SPDIF_ITS(spdif_player);
+ 	set__AUD_SPDIF_ITS_CLR(spdif_player, status);
+-	preempt_enable();
+ 
+ 	if (unlikely(status &
+ 			mask__AUD_SPDIF_ITS__UNF__PENDING(spdif_player))) {
+@@ -156,7 +149,8 @@
+ 			mask__AUD_SPDIF_ITS__NSAMPLE__PENDING(spdif_player))) {
+ 		/* Period successfully played */
+ 		do {
+-			BUG_ON(!spdif_player->substream);
++			if (snd_BUG_ON(!spdif_player->substream))
++				break;
+ 
+ 			snd_stm_printd(2, "Period elapsed ('%s')\n",
+ 					dev_name(spdif_player->device));
+@@ -167,7 +161,7 @@
+ 	}
+ 
+ 	/* Some alien interrupt??? */
+-	BUG_ON(result != IRQ_HANDLED);
++	snd_BUG_ON(result != IRQ_HANDLED);
+ 
+ 	return result;
+ }
+@@ -259,9 +253,8 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_open(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!spdif_player || !spdif_player || !runtime))
++		return -EINVAL;
+ 
+ 	snd_pcm_set_sync(substream);  /* TODO: ??? */
+ 
+@@ -275,7 +268,7 @@
+ 				snd_stm_conv_get_name(
+ 				spdif_player->conv_group));
+ 	else
+-		snd_stm_printd(1, "No converter attached to '%s'!\n",
++		snd_stm_printd(1, "Warning! No converter attached to '%s'!\n",
+ 				dev_name(spdif_player->device));
+ 
+ 	/* Get default data */
+@@ -325,8 +318,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_close(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	if (spdif_player->conv_group) {
+ 		snd_stm_conv_release_group(spdif_player->conv_group);
+@@ -347,9 +342,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_hw_free(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!spdif_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	/* This callback may be called more than once... */
+ 
+@@ -390,9 +386,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_hw_params(substream=0x%p,"
+ 			" hw_params=0x%p)\n", substream, hw_params);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!spdif_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	/* This function may be called many times, so let's be prepared... */
+ 	if (snd_stm_buffer_is_allocated(spdif_player->buffer))
+@@ -421,16 +418,20 @@
+ 	snd_stm_printd(1, "FDMA request trigger limit and transfer size set "
+ 			"to %d.\n", transfer_size);
+ 
+-	BUG_ON(buffer_bytes % transfer_bytes != 0);
+-	BUG_ON(transfer_size > spdif_player->fdma_max_transfer_size);
++	if (snd_BUG_ON(buffer_bytes % transfer_bytes != 0))
++		return -EINVAL;
++	if (snd_BUG_ON(transfer_size > spdif_player->fdma_max_transfer_size))
++		return -EINVAL;
+ 	fdma_req_config.count = transfer_size;
+ 
+-	if (spdif_player->ver >= 4) {
++	if (spdif_player->ver >= ver__AUD_SPDIF__65_3_1) {
+ 		/* FDMA request trigger control was introduced in
+ 		 * STx7111... */
+-		BUG_ON(transfer_size != 1 && transfer_size % 2 != 0);
+-		BUG_ON(transfer_size >
+-		       mask__AUD_SPDIF_CONFIG__DMA_REQ_TRIG_LMT(spdif_player));
++		if (snd_BUG_ON(transfer_size != 1 && transfer_size % 2 != 0))
++			return -EINVAL;
++		if (snd_BUG_ON(transfer_size >
++			       mask__AUD_SPDIF_CONFIG__DMA_REQ_TRIG_LMT(spdif_player)))
++		    return -EINVAL;
+ 		set__AUD_SPDIF_CONFIG__DMA_REQ_TRIG_LMT(spdif_player,
+ 				transfer_size);
+ 	}
+@@ -484,16 +485,17 @@
+ 	int oversampling;
+ 	unsigned long status;
+ 	struct snd_aes_iec958 *iec958;
+-	int result;
+ 
+ 	snd_stm_printd(1, "snd_stm_spdif_player_prepare(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
+-	BUG_ON(!runtime);
+-	BUG_ON(runtime->period_size * runtime->channels >=
+-	       MAX_SAMPLES_PER_PERIOD);
++	if (snd_BUG_ON(!spdif_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
++	if (snd_BUG_ON(runtime->period_size * runtime->channels >=
++		       MAX_SAMPLES_PER_PERIOD))
++		return -EINVAL;
+ 
+ 	/* Configure SPDIF-PCM synchronisation */
+ 
+@@ -505,8 +507,9 @@
+ 		unsigned int format = snd_stm_conv_get_format(
+ 				spdif_player->conv_group);
+ 
+-		BUG_ON((format & SND_STM_FORMAT__MASK) !=
+-		       SND_STM_FORMAT__SPDIF);
++		if (snd_BUG_ON((format & SND_STM_FORMAT__MASK) !=
++			       SND_STM_FORMAT__SPDIF))
++			return -EINVAL;
+ 
+ 		oversampling = snd_stm_conv_get_oversampling(
+ 				spdif_player->conv_group);
+@@ -520,29 +523,18 @@
+ 			dev_name(spdif_player->device), runtime->rate,
+ 			oversampling);
+ 
+-	BUG_ON(oversampling <= 0);
++	if (snd_BUG_ON(oversampling <= 0))
++		return -EINVAL;
+ 
+ 	/* Allowed oversampling values (SPDIF subframe is 32 bits long,
+ 	 * so oversampling must be multiple of 128... */
+-	BUG_ON(oversampling % 128 != 0);
++	if (snd_BUG_ON(oversampling % 128 != 0))
++		return -EINVAL;
+ 
+ 	/* Set up frequency synthesizer */
+ 
+-	result = clk_enable(spdif_player->clock);
+-	if (result != 0) {
+-		snd_stm_printe("Can't enable clock for player '%s'!\n",
+-				dev_name(spdif_player->device));
+-		return result;
+-	}
+-
+-	result = clk_set_rate(spdif_player->clock,
+-				runtime->rate * oversampling);
+-	if (result != 0) {
+-		snd_stm_printe("Can't configure clock for player '%s'!\n",
+-				dev_name(spdif_player->device));
+-		clk_disable(spdif_player->clock);
+-		return result;
+-	}
++	snd_stm_fsynth_set_frequency(spdif_player->fsynth_channel,
++			runtime->rate * oversampling);
+ 
+ 	/* Configure SPDIF player frequency divider
+ 	 *
+@@ -634,8 +626,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_start(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	/* Un-reset SPDIF player */
+ 
+@@ -689,8 +683,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_stop(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	/* Mute & shutdown converter */
+ 
+@@ -713,9 +709,8 @@
+ 
+ 	dma_stop_channel(spdif_player->fdma_channel);
+ 
+-	/* Stop the clock and reset SPDIF player */
++	/* Reset SPDIF player */
+ 
+-	clk_disable(spdif_player->clock);
+ 	set__AUD_SPDIF_RST__SRSTP__RESET(spdif_player);
+ 
+ 	return 0;
+@@ -729,8 +724,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_pause(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	/* "Mute" player
+ 	 * Documentation describes this mode in a wrong way - data is _not_
+@@ -753,8 +750,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_release(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	/* "Unmute" player */
+ 
+@@ -799,9 +798,10 @@
+ 	snd_stm_printd(2, "snd_stm_spdif_player_pointer(substream=0x%p)\n",
+ 			substream);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
+-	BUG_ON(!runtime);
++	if (snd_BUG_ON(!spdif_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	residue = get_dma_residue(spdif_player->fdma_channel);
+ 	hwptr = (runtime->dma_bytes - residue) % runtime->dma_bytes;
+@@ -832,8 +832,10 @@
+ {
+ 	unsigned char data;
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return;
+ 
+ 	/* Clean VUC bits */
+ 	*left_subframe &= ~VUC_MASK;
+@@ -881,10 +883,12 @@
+ 			"channel=%d, pos=%lu, buf=0x%p, count=%lu)\n",
+ 			substream, channel, pos, src, count);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
+-	BUG_ON(!runtime);
+-	BUG_ON(channel != -1); /* Interleaved buffer */
++	if (snd_BUG_ON(!spdif_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
++	if (snd_BUG_ON(channel != -1))
++		return -EINVAL; /* Interleaved buffer */
+ 
+ 	if (spdif_player->stream_settings.input_mode ==
+ 			SNDRV_STM_SPDIF_INPUT_MODE_NORMAL) {
+@@ -966,10 +970,12 @@
+ 			"channel=%d, pos=%lu, count=%lu)\n",
+ 			substream, channel, pos, count);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
+-	BUG_ON(!runtime);
+-	BUG_ON(channel != -1); /* Interleaved buffer */
++	if (snd_BUG_ON(!spdif_player || !runtime))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
++	if (snd_BUG_ON(channel != -1))
++		return -EINVAL; /* Interleaved buffer */
+ 
+ 	if (spdif_player->stream_settings.input_mode ==
+ 			SNDRV_STM_SPDIF_INPUT_MODE_NORMAL) {
+@@ -1024,8 +1030,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_default_get("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	ucontrol->value.iec958 = spdif_player->default_settings.iec958;
+@@ -1043,8 +1051,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_default_put("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	if (snd_stm_iec958_cmp(&spdif_player->default_settings.iec958,
+@@ -1070,8 +1080,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_raw_get(kcontrol=0x%p, "
+ 			"ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	ucontrol->value.integer.value[0] =
+@@ -1092,8 +1104,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_raw_put(kcontrol=0x%p, "
+ 			"ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	if (ucontrol->value.integer.value[0])
+ 		input_mode = SNDRV_STM_SPDIF_INPUT_MODE_RAW;
+@@ -1120,8 +1134,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_encoded_get(kcontrol=0x%p, "
+ 			" ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	ucontrol->value.integer.value[0] =
+@@ -1142,8 +1158,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_encoded_put(kcontrol=0x%p,"
+ 			" ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	if (ucontrol->value.integer.value[0])
+ 		encoding_mode = SNDRV_STM_SPDIF_ENCODING_MODE_ENCODED;
+@@ -1179,8 +1197,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_preamble_get(kcontrol=0x%p"
+ 			", ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	memcpy(ucontrol->value.bytes.data,
+@@ -1200,8 +1220,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_preamble_put(kcontrol=0x%p"
+ 			", ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	if (memcmp(spdif_player->default_settings.iec61937_preamble,
+@@ -1233,8 +1255,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_audio_repetition_get("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	ucontrol->value.integer.value[0] =
+@@ -1253,8 +1277,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_audio_repetition_put("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	if (spdif_player->default_settings.iec61937_audio_repetition !=
+@@ -1276,8 +1302,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_pause_repetition_get("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	ucontrol->value.integer.value[0] =
+@@ -1296,8 +1324,10 @@
+ 	snd_stm_printd(1, "snd_stm_spdif_player_ctl_pause_repetition_put("
+ 			"kcontrol=0x%p, ucontrol=0x%p)\n", kcontrol, ucontrol);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	spin_lock(&spdif_player->default_settings_lock);
+ 	if (spdif_player->default_settings.iec61937_pause_repetition !=
+@@ -1383,8 +1413,10 @@
+ {
+ 	struct snd_stm_spdif_player *spdif_player = entry->private_data;
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return;
+ 
+ 	snd_iprintf(buffer, "--- %s ---\n", dev_name(spdif_player->device));
+ 	snd_iprintf(buffer, "base = 0x%p\n", spdif_player->base);
+@@ -1405,7 +1437,7 @@
+ 	DUMP_REGISTER(CL2_CR2_UV);
+ 	DUMP_REGISTER(PAU_LAT);
+ 	DUMP_REGISTER(BST_FL);
+-	if (spdif_player->ver >= 4)
++	if (spdif_player->ver >= ver__AUD_SPDIF__65_3_1)
+ 		DUMP_REGISTER(CONFIG);
+ 
+ 	snd_iprintf(buffer, "\n");
+@@ -1417,17 +1449,23 @@
+ 	struct snd_stm_spdif_player *spdif_player = snd_device->device_data;
+ 	int i;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
++	snd_stm_printd(1, "snd_stm_spdif_player_register(snd_device=0x%p)\n",
++			snd_device);
++
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	snd_stm_printd(0, "--- Registering player '%s'...\n",
++			dev_name(spdif_player->device));
+ 
+ 	/* Initialize hardware (format etc.) */
+ 
+ 	set__AUD_SPDIF_RST__SRSTP__RESET(spdif_player);
+ 
+ 	/* TODO: well, hardcoded - shall anyone use it?
+-	 * and what does it actually mean? */
++	 * And what it actually means? */
+ 	set__AUD_SPDIF_CTRL__RND__NO_ROUNDING(spdif_player);
+ 
+ 	set__AUD_SPDIF_CTRL__IDLE__NORMAL(spdif_player);
+@@ -1438,14 +1476,17 @@
+ 
+ 	/* Get frequency synthesizer channel */
+ 
+-	spdif_player->clock = snd_stm_clk_get(spdif_player->device,
+-			"spdif_player_clk", snd_device->card,
+-			spdif_player->info->card_device);
+-	if (!spdif_player->clock || IS_ERR(spdif_player->clock)) {
+-		snd_stm_printe("Failed to get a clock for '%s'!\n",
+-				dev_name(spdif_player->device));
++	if (snd_BUG_ON(spdif_player->info->fsynth_bus_id == NULL))
++		return -EINVAL;
++	snd_stm_printd(0, "Player connected to %s's output %d.\n",
++			spdif_player->info->fsynth_bus_id,
++			spdif_player->info->fsynth_output);
++
++	spdif_player->fsynth_channel = snd_stm_fsynth_get_channel(
++			spdif_player->info->fsynth_bus_id,
++			spdif_player->info->fsynth_output);
++	if (snd_BUG_ON(spdif_player->fsynth_channel == NULL))
+ 		return -EINVAL;
+-	}
+ 
+ 	/* Registers view in ALSA's procfs */
+ 
+@@ -1453,7 +1494,15 @@
+ 			dev_name(spdif_player->device),
+ 			snd_stm_spdif_player_dump_registers, spdif_player);
+ 
+-	/* Create SPDIF ALSA controls */
++	/* Create ALSA controls */
++
++	result = snd_stm_fsynth_add_adjustement_ctl(
++			spdif_player->fsynth_channel, snd_device->card,
++			spdif_player->info->card_device);
++	if (result < 0) {
++		snd_stm_printe("Failed to add fsynth adjustment control!\n");
++		return result;
++	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(snd_stm_spdif_player_ctls); i++) {
+ 		snd_stm_spdif_player_ctls[i].device =
+@@ -1468,6 +1517,8 @@
+ 		snd_stm_spdif_player_ctls[i].index++;
+ 	}
+ 
++	snd_stm_printd(0, "--- Registered successfully!\n");
++
+ 	return 0;
+ }
+ 
+@@ -1475,12 +1526,13 @@
+ {
+ 	struct snd_stm_spdif_player *spdif_player = snd_device->device_data;
+ 
+-	snd_stm_printd(1, "%s(snd_device=0x%p)\n", __func__, snd_device);
+-
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	snd_stm_printd(1, "snd_stm_spdif_player_disconnect(snd_device=0x%p)\n",
++			snd_device);
+ 
+-	snd_stm_clk_put(spdif_player->clock);
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+ 	snd_stm_info_unregister(spdif_player->proc_entry);
+ 
+@@ -1505,9 +1557,12 @@
+ 	struct snd_card *card = snd_stm_card_get();
+ 	int buffer_bytes_max;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(1, "snd_stm_spdif_player_probe(pdev=%p)\n", pdev);
++
++	snd_stm_printd(0, "Probing device '%s'...\n", dev_name(&pdev->dev));
+ 
+-	BUG_ON(!card);
++	if (snd_BUG_ON(card == NULL))
++		return -EINVAL;
+ 
+ 	spdif_player = kzalloc(sizeof(*spdif_player), GFP_KERNEL);
+ 	if (!spdif_player) {
+@@ -1518,9 +1573,11 @@
+ 	}
+ 	snd_stm_magic_set(spdif_player);
+ 	spdif_player->info = pdev->dev.platform_data;
+-	BUG_ON(!spdif_player->info);
++	if (snd_BUG_ON(spdif_player->info == NULL))
++		return -EINVAL;
+ 	spdif_player->ver = spdif_player->info->ver;
+-	BUG_ON(spdif_player->ver <= 0);
++	if (snd_BUG_ON(spdif_player->ver <= 0))
++		return -EINVAL;
+ 	spdif_player->device = &pdev->dev;
+ 
+ 	spin_lock_init(&spdif_player->default_settings_lock);
+@@ -1556,9 +1613,9 @@
+ 	 * - 6 cells (24 bytes) in STx7100/9 and STx7200 cut 1.0
+ 	 * - 30 cells (120 bytes) in STx7111 and STx7200 cut 2.0. */
+ 
+-	if (spdif_player->ver < 3)
++	if (spdif_player->ver < ver__AUD_SPDIF__65_2_0)
+ 		spdif_player->fdma_max_transfer_size = 2;
+-	else if (spdif_player->ver == 3)
++	else if (spdif_player->ver == ver__AUD_SPDIF__65_2_0)
+ 		spdif_player->fdma_max_transfer_size = 4;
+ 	else
+ 		spdif_player->fdma_max_transfer_size = 20;
+@@ -1614,28 +1671,12 @@
+ 		goto error_conv_register_source;
+ 	}
+ 
+-	/* Claim the pads */
+-
+-	if (spdif_player->info->pad_config) {
+-		spdif_player->pads = stm_pad_claim(
+-				spdif_player->info->pad_config,
+-				dev_name(&pdev->dev));
+-		if (!spdif_player->pads) {
+-			snd_stm_printe("Failed to claimed pads for '%s'!\n",
+-					dev_name(&pdev->dev));
+-			result = -EBUSY;
+-			goto error_pad_claim;
+-		}
+-	}
+-
+ 	/* Done now */
+ 
+ 	platform_set_drvdata(pdev, spdif_player);
+ 
+ 	return 0;
+ 
+-error_pad_claim:
+-	snd_stm_conv_unregister_source(spdif_player->conv_source);
+ error_conv_register_source:
+ 	snd_stm_buffer_dispose(spdif_player->buffer);
+ error_buffer_create:
+@@ -1662,11 +1703,11 @@
+ 
+ 	snd_stm_printd(1, "snd_stm_spdif_player_remove(pdev=%p)\n", pdev);
+ 
+-	BUG_ON(!spdif_player);
+-	BUG_ON(!snd_stm_magic_valid(spdif_player));
++	if (snd_BUG_ON(!spdif_player))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(spdif_player)))
++		return -EINVAL;
+ 
+-	if (spdif_player->pads)
+-		stm_pad_release(spdif_player->pads);
+ 	snd_stm_conv_unregister_source(spdif_player->conv_source);
+ 	snd_stm_buffer_dispose(spdif_player->buffer);
+ 	snd_stm_fdma_release(spdif_player->fdma_channel);
+@@ -1680,7 +1721,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_spdif_player_driver = {
+-	.driver.name = "snd_spdif_player",
++	.driver = {
++		.name = "snd_spdif_player",
++	},
+ 	.probe = snd_stm_spdif_player_probe,
+ 	.remove = snd_stm_spdif_player_remove,
+ };
+@@ -1691,19 +1734,12 @@
+  * Initialization
+  */
+ 
+-static int __init snd_stm_spdif_player_init(void)
++int snd_stm_spdif_player_init(void)
+ {
+ 	return platform_driver_register(&snd_stm_spdif_player_driver);
+ }
+ 
+-static void __exit snd_stm_spdif_player_exit(void)
++void snd_stm_spdif_player_exit(void)
+ {
+ 	platform_driver_unregister(&snd_stm_spdif_player_driver);
+ }
+-
+-MODULE_AUTHOR("Pawel Moll <pawel.moll@st.com>");
+-MODULE_DESCRIPTION("STMicroelectronics SPDIF player driver");
+-MODULE_LICENSE("GPL");
+-
+-module_init(snd_stm_spdif_player_init);
+-module_exit(snd_stm_spdif_player_exit);
+diff -ruN stm.org/stx7105.c stm/stx7105.c
+--- a/drivers/stm/stx7105.c	2014-06-03 12:31:04.000000000 -0700
++++ b/sound/stm/stx7105.c	2012-10-11 11:46:27.000000000 -0700
+@@ -1,7 +1,7 @@
+ /*
+- *   STMicrolectronics STx7105 ans STx7106 audio glue driver
++ *   STMicrolectronics STx7105 audio subsystem driver
+  *
+- *   Copyright (c) 2005-2011 STMicroelectronics Limited
++ *   Copyright (c) 2005-2007 STMicroelectronics Limited
+  *
+  *   Author: Pawel Moll <pawel.moll@st.com>
+  *
+@@ -28,12 +28,23 @@
+ #include <linux/io.h>
+ #include <sound/core.h>
+ 
++#define COMPONENT stx7105
+ #include "common.h"
++#include "reg_7105_audcfg.h"
+ 
+ 
+ 
+-static int snd_stm_debug_level;
+-module_param_named(debug, snd_stm_debug_level, int, S_IRUGO | S_IWUSR);
++/*
++ * ALSA module parameters
++ */
++
++static int index = -1; /* First available index */
++static char *id = "STx7105"; /* Default card ID */
++
++module_param(index, int, 0444);
++MODULE_PARM_DESC(index, "Index value for STx7105 audio subsystem card.");
++module_param(id, charp, 0444);
++MODULE_PARM_DESC(id, "ID string for STx7105 audio subsystem card.");
+ 
+ 
+ 
+@@ -41,22 +52,9 @@
+  * Audio glue driver implementation
+  */
+ 
+-#define IO_CTRL(base)		((base) + 0x00)
+-#define PCM_CLK_EN		0
+-#define PCM_CLK_EN__INPUT	(0 << PCM_CLK_EN)
+-#define PCM_CLK_EN__OUTPUT	(1 << PCM_CLK_EN)
+-#define SPDIFHDMI_EN		3
+-#define SPDIFHDMI_EN__INPUT	(0 << SPDIFHDMI_EN)
+-#define SPDIFHDMI_EN__OUTPUT	(1 << SPDIFHDMI_EN)
+-#define PCMPLHDMI_EN		5
+-#define PCMPLHDMI_EN__INPUT	(0 << PCMPLHDMI_EN)
+-#define PCMPLHDMI_EN__OUTPUT	(1 << PCMPLHDMI_EN)
+-#define CLKREC_SEL		9
+-#define CLKREC_SEL__PCMPLHDMI	(0 << CLKREC_SEL)
+-#define CLKREC_SEL__SPDIFHDMI	(1 << CLKREC_SEL)
+-#define CLKREC_SEL__PCMPL1	(2 << CLKREC_SEL)
+-
+ struct snd_stm_stx7105_glue {
++	int ver;
++
+ 	struct resource *mem_region;
+ 	void *base;
+ 
+@@ -70,23 +68,78 @@
+ {
+ 	struct snd_stm_stx7105_glue *stx7105_glue = entry->private_data;
+ 
+-	BUG_ON(!stx7105_glue);
+-	BUG_ON(!snd_stm_magic_valid(stx7105_glue));
++	if (snd_BUG_ON(!stx7105_glue))
++		return;
++	if (snd_BUG_ON(!snd_stm_magic_valid(stx7105_glue)))
++		return;
+ 
+ 	snd_iprintf(buffer, "--- snd_stx7105_glue ---\n");
+-	snd_iprintf(buffer, "IO_CTRL (0x%p) = 0x%08x\n",
+-			IO_CTRL(stx7105_glue->base),
+-			readl(IO_CTRL(stx7105_glue->base)));
++	snd_iprintf(buffer, "base = 0x%p\n", stx7105_glue->base);
++
++	snd_iprintf(buffer, "AUDCFG_IO_CTRL (offset 0x00) = 0x%08x\n",
++			get__7105_AUDCFG_IO_CTRL(stx7105_glue));
+ 
+ 	snd_iprintf(buffer, "\n");
+ }
+ 
++static int __init snd_stm_stx7105_glue_register(struct snd_device *snd_device)
++{
++	struct snd_stm_stx7105_glue *stx7105_glue = snd_device->device_data;
++
++	if (snd_BUG_ON(!stx7105_glue))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(stx7105_glue)))
++		return -EINVAL;
++
++	/* Enable audio outputs */
++
++	set__7105_AUDCFG_IO_CTRL(stx7105_glue,
++		mask__7105_AUDCFG_IO_CTRL__PCMPLHDMI_EN__OUTPUT(stx7105_glue) |
++		mask__7105_AUDCFG_IO_CTRL__SPDIFHDMI_EN__OUTPUT(stx7105_glue) |
++		mask__7105_AUDCFG_IO_CTRL__PCM_CLK_EN__OUTPUT(stx7105_glue));
++
++	/* Additional procfs info */
++
++	snd_stm_info_register(&stx7105_glue->proc_entry, "stx7105_glue",
++			snd_stm_stx7105_glue_dump_registers, stx7105_glue);
++
++	return 0;
++}
++
++static int __exit snd_stm_stx7105_glue_disconnect(struct snd_device *snd_device)
++{
++	struct snd_stm_stx7105_glue *stx7105_glue = snd_device->device_data;
++
++	if (snd_BUG_ON(!stx7105_glue))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(stx7105_glue)))
++		return -EINVAL;
++
++	/* Remove procfs entry */
++
++	snd_stm_info_unregister(stx7105_glue->proc_entry);
++
++	/* Disable audio outputs */
++
++	set__7105_AUDCFG_IO_CTRL(stx7105_glue,
++		mask__7105_AUDCFG_IO_CTRL__PCMPLHDMI_EN__OUTPUT(stx7105_glue) |
++		mask__7105_AUDCFG_IO_CTRL__SPDIFHDMI_EN__OUTPUT(stx7105_glue) |
++		mask__7105_AUDCFG_IO_CTRL__PCM_CLK_EN__OUTPUT(stx7105_glue));
++
++	return 0;
++}
++
++static struct snd_device_ops snd_stm_stx7105_glue_snd_device_ops = {
++	.dev_register = snd_stm_stx7105_glue_register,
++	.dev_disconnect = snd_stm_stx7105_glue_disconnect,
++};
++
+ static int __init snd_stm_stx7105_glue_probe(struct platform_device *pdev)
+ {
+ 	int result = 0;
+ 	struct snd_stm_stx7105_glue *stx7105_glue;
+ 
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	snd_stm_printd(0, "--- Probing device '%s'...\n", dev_name(&pdev->dev));
+ 
+ 	stx7105_glue = kzalloc(sizeof(*stx7105_glue), GFP_KERNEL);
+ 	if (!stx7105_glue) {
+@@ -104,18 +157,25 @@
+ 		goto error_memory_request;
+ 	}
+ 
+-	/* Enable audio outputs */
+-	writel(PCMPLHDMI_EN__OUTPUT | SPDIFHDMI_EN__OUTPUT |
+-			PCM_CLK_EN__OUTPUT, IO_CTRL(stx7105_glue->base));
++	/* ALSA component */
+ 
+-	/* Additional procfs info */
+-	snd_stm_info_register(&stx7105_glue->proc_entry, "stx7105_glue",
+-			snd_stm_stx7105_glue_dump_registers, stx7105_glue);
++	result = snd_device_new(snd_stm_card_get(), SNDRV_DEV_LOWLEVEL,
++			stx7105_glue, &snd_stm_stx7105_glue_snd_device_ops);
++	if (result < 0) {
++		snd_stm_printe("ALSA low level device creation failed!\n");
++		goto error_device;
++	}
++
++	/* Done now */
+ 
+ 	platform_set_drvdata(pdev, stx7105_glue);
+ 
++	snd_stm_printd(0, "--- Probed successfully!\n");
++
+ 	return result;
+ 
++error_device:
++	snd_stm_memory_release(stx7105_glue->mem_region, stx7105_glue->base);
+ error_memory_request:
+ 	snd_stm_magic_clear(stx7105_glue);
+ 	kfree(stx7105_glue);
+@@ -125,19 +185,13 @@
+ 
+ static int __exit snd_stm_stx7105_glue_remove(struct platform_device *pdev)
+ {
+-	struct snd_stm_stx7105_glue *stx7105_glue = platform_get_drvdata(pdev);
+-
+-	snd_stm_printd(0, "%s('%s')\n", __func__, dev_name(&pdev->dev));
++	struct snd_stm_stx7105_glue *stx7105_glue =
++			platform_get_drvdata(pdev);
+ 
+-	BUG_ON(!stx7105_glue);
+-	BUG_ON(!snd_stm_magic_valid(stx7105_glue));
+-
+-	/* Remove procfs entry */
+-	snd_stm_info_unregister(stx7105_glue->proc_entry);
+-
+-	/* Disable audio outputs */
+-	writel(PCMPLHDMI_EN__INPUT | SPDIFHDMI_EN__INPUT |
+-			PCM_CLK_EN__INPUT, IO_CTRL(stx7105_glue->base));
++	if (snd_BUG_ON(!stx7105_glue))
++		return -EINVAL;
++	if (snd_BUG_ON(!snd_stm_magic_valid(stx7105_glue)))
++		return -EINVAL;
+ 
+ 	snd_stm_memory_release(stx7105_glue->mem_region, stx7105_glue->base);
+ 
+@@ -148,7 +202,9 @@
+ }
+ 
+ static struct platform_driver snd_stm_stx7105_glue_driver = {
+-	.driver.name = "snd_stx7105_glue",
++	.driver = {
++		.name = "snd_stx7105_glue",
++	},
+ 	.probe = snd_stm_stx7105_glue_probe,
+ 	.remove = snd_stm_stx7105_glue_remove,
+ };
+@@ -162,22 +218,40 @@
+ static int __init snd_stm_stx7105_init(void)
+ {
+ 	int result;
++	struct snd_card *card;
+ 
+-	snd_stm_printd(0, "%s()\n", __func__);
++	snd_stm_printd(0, "snd_stm_stx7105_init()\n");
+ 
+-	if (cpu_data->type != CPU_STX7105 && cpu_data->type != CPU_STX7106) {
+-		snd_stm_printe("Not supported (other than STx7105 or STx7106)"
+-				" SOC detected!\n");
++	if (cpu_data->type != CPU_STX7105) {
++		snd_stm_printe("Not supported (other than STx7105) SOC "
++				"detected!\n");
+ 		result = -EINVAL;
+ 		goto error_soc_type;
+ 	}
+ 
++	card = snd_stm_card_new(index, id, THIS_MODULE);
++	if (card == NULL) {
++		snd_stm_printe("ALSA card creation failed!\n");
++		result = -ENOMEM;
++		goto error_card_new;
++	}
++	strcpy(card->driver, "STx7105");
++	strcpy(card->shortname, "STx7105 audio subsystem");
++	snprintf(card->longname, 79, "STMicroelectronics STx7105 cut %d "
++			"SOC audio subsystem", cpu_data->cut_major);
++
+ 	result = platform_driver_register(&snd_stm_stx7105_glue_driver);
+ 	if (result != 0) {
+ 		snd_stm_printe("Failed to register audio glue driver!\n");
+ 		goto error_glue_driver_register;
+ 	}
+ 
++	result = snd_stm_drivers_register();
++	if (result != 0) {
++		snd_stm_printe("Drivers registration failed!\n");
++		goto error_drivers_register;
++	}
++
+ 	result = snd_stm_card_register();
+ 	if (result != 0) {
+ 		snd_stm_printe("Failed to register ALSA cards!\n");
+@@ -187,21 +261,28 @@
+ 	return 0;
+ 
+ error_card_register:
++	snd_stm_drivers_unregister();
++error_drivers_register:
+ 	platform_driver_unregister(&snd_stm_stx7105_glue_driver);
+ error_glue_driver_register:
++	snd_stm_card_free();
++error_card_new:
+ error_soc_type:
+ 	return result;
+ }
+ 
+ static void __exit snd_stm_stx7105_exit(void)
+ {
+-	snd_stm_printd(0, "%s()\n", __func__);
++	snd_stm_printd(0, "snd_stm_stx7105_exit()\n");
++
++	snd_stm_card_free();
+ 
++	snd_stm_drivers_unregister();
+ 	platform_driver_unregister(&snd_stm_stx7105_glue_driver);
+ }
+ 
+ MODULE_AUTHOR("Pawel Moll <pawel.moll@st.com>");
+-MODULE_DESCRIPTION("STMicroelectronics STx7105 and STx7106 audio driver");
++MODULE_DESCRIPTION("STMicroelectronics STx7105 audio driver");
+ MODULE_LICENSE("GPL");
+ 
+ module_init(snd_stm_stx7105_init);

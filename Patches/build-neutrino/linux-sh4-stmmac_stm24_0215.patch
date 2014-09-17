@@ -76,8 +76,8 @@
 +	printk("ETHADDR: %02X:%02X:%02X:%02X:%02X:%02X\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
  }
  
---- ../stmmac/stmmac_main.c	2010-11-05 14:33:04.000000000 +0100
-+++ linux-sh4/drivers/net/stmmac/stmmac_main.c	2011-03-07 11:14:45.916621500 +0100
+--- ../stmmac/stmmac_main.c
++++ linux-sh4/drivers/net/stmmac/stmmac_main.c
 @@ -127,6 +127,8 @@
  module_param(buf_sz, int, S_IRUGO | S_IWUSR);
  MODULE_PARM_DESC(buf_sz, "DMA buffer size");

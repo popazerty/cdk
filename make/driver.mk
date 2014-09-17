@@ -14,10 +14,11 @@ $(D)/driver: $(driverdir)/Makefile $(D)/bootstrap $(D)/linux-kernel.do_compile
 		CONFIG_MODULES_PATH=$(targetprefix) \
 		KERNEL_LOCATION=$(buildprefix)/$(KERNEL_DIR) \
 		DRIVER_TOPDIR=$(driverdir) \
+		$(DRIVER_PLATFORM) \
+		CROSS_COMPILE=$(target)- \
 		BIN_DEST=$(targetprefix)/bin \
 		INSTALL_MOD_PATH=$(targetprefix) \
 		DEPMOD=$(DEPMOD) \
-		$(DRIVER_PLATFORM) \
 		install
 	$(DEPMOD) -ae -b $(targetprefix) -F $(buildprefix)/$(KERNEL_DIR)/System.map -r $(KERNELVERSION)
 	touch $@

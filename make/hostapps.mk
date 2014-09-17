@@ -42,7 +42,7 @@ $(D)/host_mtd_utils: @DEPENDS_host_mtd_utils@
 #
 #
 #
-$(D)/host_glib2_genmarshal: @DEPENDS_host_glib2_genmarshal@ host-filesystem
+$(D)/host_glib2_genmarshal: @DEPENDS_host_glib2_genmarshal@
 	@PREPARE_host_glib2_genmarshal@
 	export PKG_CONFIG=/usr/bin/pkg-config && \
 	cd @DIR_host_glib2_genmarshal@ && \

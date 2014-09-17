@@ -856,7 +856,7 @@ endif
 	[ -e $(targetprefix)/usr/local/bin/restore.sh ] && cp -aR $(targetprefix)/usr/local/bin/restore.sh $(prefix)/release/bin || true
 
 #
-# Delete unnecessary files
+# delete unnecessary files
 #
 	rm -rf $(prefix)/release/lib/autofs
 	rm -f $(prefix)/release/lib/libSegFault*
