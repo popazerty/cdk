@@ -269,11 +269,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/libz @DEPENDS_libpng@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
-<<<<<<< HEAD
-			&& \
-=======
 		&& \
->>>>>>> upstream/master
 		ECHO=echo $(MAKE) all && \
 		@INSTALL_libpng@
 		mv $(targetprefix)/usr/bin/lib{png,png16}-config $(hostprefix)/bin/
@@ -1388,41 +1384,9 @@ $(D)/pycrypto: $(D)/bootstrap $(D)/setuptools @DEPENDS_pycrypto@
 			--prefix=/usr && \
 		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
 		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-<<<<<<< HEAD
 		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
 		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
 	@CLEANUP_pycrypto@
-	touch $@
-
-#
-# pyusb
-#
-$(D)/pyusb: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyusb@
-	@PREPARE_pyusb@
-	cd @DIR_pyusb@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pyusb@
-	touch $@
-
-#
-# pyopenssl
-#
-$(D)/pyopenssl: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyopenssl@
-	@PREPARE_pyopenssl@
-	cd @DIR_pyopenssl@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pyopenssl@
-=======
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pycrypto@
->>>>>>> upstream/master
 	touch $@
 
 #
@@ -1549,8 +1513,6 @@ $(D)/pythonmechanize: $(D)/bootstrap $(D)/setuptools @DEPENDS_pythonmechanize@
 	touch $@
 
 #
-<<<<<<< HEAD
-=======
 # gdata
 #
 $(D)/gdata: $(D)/bootstrap $(D)/setuptools @DEPENDS_gdata@
@@ -1564,7 +1526,6 @@ $(D)/gdata: $(D)/bootstrap $(D)/setuptools @DEPENDS_gdata@
 	touch $@
 
 #
->>>>>>> upstream/master
 # zope_interface
 #
 $(D)/zope_interface: bootstrap python setuptools @DEPENDS_zope_interface@
@@ -1793,7 +1754,6 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-			--enable-orc \
 		&& \
 		$(MAKE) && \
 		@INSTALL_gst_plugin_subsink@

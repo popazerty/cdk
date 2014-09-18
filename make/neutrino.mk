@@ -60,7 +60,7 @@ yaud-neutrino-mp-github: yaud-none lirc \
 #
 # libstb-hal-github
 #
-NEUTRINO_MP_GH_LIBSTB_HAL_GH_PATCHES = $(PATCHES)/libstb-hal-github.patch
+NEUTRINO_MP_GH_LIBSTB_HAL_GH_PATCHES =
 
 $(D)/libstb-hal-github.do_prepare:
 	rm -rf $(sourcedir)/libstb-hal-github
@@ -74,7 +74,7 @@ $(D)/libstb-hal-github.do_prepare:
 	cp -ra $(sourcedir)/libstb-hal-github $(sourcedir)/libstb-hal-github.org
 	for i in $(NEUTRINO_MP_GH_LIBSTB_HAL_GH_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/libstb-hal-github && patch -p1 -i $$i; \
+		cd $(sourcedir)/libstb-hal-github && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -115,7 +115,7 @@ libstb-hal-github-distclean:
 #
 # neutrino-mp-github
 #
-NEUTRINO_MP_GH_PATCHES = $(PATCHES)/neutrino-mp-github.patch
+NEUTRINO_MP_GH_PATCHES =
 
 $(D)/neutrino-mp-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
 	rm -rf $(sourcedir)/neutrino-mp-github
@@ -213,7 +213,7 @@ yaud-neutrino-mp-martii-github: yaud-none lirc \
 #
 # neutrino-mp-martii-github
 #
-NEUTRINO_MP_MARTII_GH_PATCHES = $(PATCHES)/neutrino-mp-martii-github.patch
+NEUTRINO_MP_MARTII_GH_PATCHES =
 
 $(D)/neutrino-mp-martii-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
 	rm -rf $(sourcedir)/neutrino-mp-martii-github
@@ -316,7 +316,7 @@ yaud-neutrino-mp-all: yaud-none lirc \
 #
 # libstb-hal
 #
-NEUTRINO_MP_LIBSTB_HAL_PATCHES = $(PATCHES)/libstb-hal.patch
+NEUTRINO_MP_LIBSTB_HAL_PATCHES =
 
 $(D)/libstb-hal.do_prepare:
 	rm -rf $(sourcedir)/libstb-hal
@@ -369,7 +369,7 @@ libstb-hal-distclean:
 #
 # neutrino-mp
 #
-NEUTRINO_MP_PATCHES = $(PATCHES)/neutrino-mp.patch
+NEUTRINO_MP_PATCHES =
 
 $(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) libstb-hal
 	rm -rf $(sourcedir)/neutrino-mp
@@ -382,7 +382,7 @@ $(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) libstb-hal
 	cp -ra $(sourcedir)/neutrino-mp $(sourcedir)/neutrino-mp.org
 	for i in $(NEUTRINO_MP_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/neutrino-mp && patch -p1 -i $$i; \
+		cd $(sourcedir)/neutrino-mp && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -461,7 +461,7 @@ yaud-neutrino-mp-next-all: yaud-none lirc \
 #
 # libstb-hal-next
 #
-NEUTRINO_LIBSTB_HAL_NEXT_PATCHES = $(PATCHES)/libstb-hal-next.patch
+NEUTRINO_LIBSTB_NEXT_PATCHES =
 
 $(D)/libstb-hal-next.do_prepare:
 	rm -rf $(sourcedir)/libstb-hal-next
@@ -474,9 +474,9 @@ $(D)/libstb-hal-next.do_prepare:
 	cp -ra $(archivedir)/libstb-hal.git $(sourcedir)/libstb-hal-next;\
 	(cd $(sourcedir)/libstb-hal-next; git checkout next; cd "$(buildprefix)";); \
 	cp -ra $(sourcedir)/libstb-hal-next $(sourcedir)/libstb-hal-next.org
-	for i in $(NEUTRINO_LIBSTB_HAL_NEXT_PATCHES); do \
+	for i in $(NEUTRINO_LIBSTB_NEXT_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/libstb-hal-next && patch -p1 -i $$i; \
+		cd $(sourcedir)/libstb-hal-next && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -517,7 +517,7 @@ libstb-hal-next-distclean:
 #
 # neutrino-mp-next
 #
-NEUTRINO_MP_NEXT_PATCHES = $(PATCHES)/neutrino-mp-next.patch
+NEUTRINO_MP_NEXT_PATCHES =
 
 $(D)/neutrino-mp-next.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-next
 	rm -rf $(sourcedir)/neutrino-mp-next
@@ -619,7 +619,7 @@ yaud-neutrino-hd2-exp-plugins: yaud-none lirc \
 #
 # neutrino-hd2-exp
 #
-NEUTRINO_HD2_PATCHES = $(PATCHES)/nhd2-exp.patch
+NEUTRINO_HD2_PATCHES =
 
 $(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) libflac
 	rm -rf $(sourcedir)/nhd2-exp
@@ -704,7 +704,7 @@ yaud-neutrino-mp-tangos-all: yaud-none lirc \
 #
 # neutrino-mp-tangos
 #
-NEUTRINO_MP_TANGOS_PATCHES = $(PATCHES)/neutrino-mp-tangos.patch
+NEUTRINO_MP_TANGOS_PATCHES =
 
 $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
 	rm -rf $(sourcedir)/neutrino-mp-tangos
