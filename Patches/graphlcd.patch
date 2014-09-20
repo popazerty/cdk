@@ -1084,13 +1084,7 @@ diff -Naur graphlcd-base-touchcol.git/graphlcd.conf graphlcd-base-touchcol/graph
 diff -Naur graphlcd-base-touchcol.git/Make.config graphlcd-base-touchcol/Make.config
 --- graphlcd-base-touchcol.git/Make.config	2014-02-03 15:33:45.179140000 +0100
 +++ graphlcd-base-touchcol/Make.config	2014-02-03 15:43:49.947114684 +0100
-@@ -3,17 +3,17 @@
- 
- ### The C compiler and options:
- 
--CC       = gcc
-+CC       = $(target)-gcc
- CFLAGS   = -O2
+@@ -8,7 +8,7 @@
  
  #CXX      = g++
  
@@ -1099,13 +1093,7 @@ diff -Naur graphlcd-base-touchcol.git/Make.config graphlcd-base-touchcol/Make.co
  #CXXFLAGS = -g -ggdb -O0 -Wall -Woverloaded-virtual
  
  # no CXX given at all: force g++
- ifeq (x$(CXX)x,xx)
--  CXX=g++
-+  CXX=$(target)-g++
- endif
- 
- # CXX set to clang++: force clang
-@@ -40,10 +40,11 @@
+@@ -40,14 +40,15 @@
  DESTDIR = /usr/local
  endif
  
@@ -1121,6 +1109,11 @@ diff -Naur graphlcd-base-touchcol.git/Make.config graphlcd-base-touchcol/Make.co
  
  ### Includes and defines
  
+-#INCLUDES += -I
++INCLUDES += -I$(DESTDIR)/usr/include
+ 
+ DEFINES += -D_GNU_SOURCE
+ # define HAVE_DEBUG when invoking "make" if you want to use debugging
 @@ -64,7 +65,7 @@
  HAVE_FREETYPE2=1
  

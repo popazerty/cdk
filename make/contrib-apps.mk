@@ -27,7 +27,7 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 			--enable-pc-files \
 			--without-manpages \
 			--with-fallbacks='linux vt100 xterm' \
-			&& \
+		&& \
 		$(MAKE) libs HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)" && \
@@ -66,7 +66,7 @@ $(D)/grep: $(D)/bootstrap @DEPENDS_grep@
 			--disable-perl-regexp \
 			--libdir=$(targetprefix)/usr/lib \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_grep@
 	@CLEANUP_grep@
@@ -84,7 +84,7 @@ $(D)/console_data: $(D)/bootstrap @DEPENDS_console_data@
 			--host=$(target) \
 			--prefix=$(targetprefix) \
 			--with-main_compressor=gzip \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_console_data@
 	@CLEANUP_console_data@
@@ -116,7 +116,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb @DEPENDS_module_init_tools@
 			--host=$(target) \
 			--disable-builddir \
 			--prefix= \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_module_init_tools@
 	$(call adapted-etc-files,$(MODULE_INIT_TOOLS_ADAPTED_ETC_FILES))
@@ -161,7 +161,7 @@ $(D)/openrdate: $(D)/bootstrap @DEPENDS_openrdate@ $(OPENRDATE_ADAPTED_ETC_FILES
 			--host=$(target) \
 			--target=$(target) \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_openrdate@
 	@CLEANUP_openrdate@
@@ -195,7 +195,7 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/utillinux @DEPENDS_e2fsprogs@
 			--without-libintl-prefix \
 			--without-libiconv-prefix \
 			--with-root-prefix="" \
-			&& \
+		&& \
 		$(MAKE) && \
 		$(MAKE) -C e2fsck e2fsck.static && \
 		@INSTALL_e2fsprogs@
@@ -228,7 +228,7 @@ $(D)/utillinux: $(D)/bootstrap $(D)/libz @DEPENDS_utillinux@
 			--without-python \
 			--disable-makeinstall-chown \
 			--without-systemdsystemunitdir \
-			&& \
+		&& \
 		$(MAKE) ARCH=sh4 && \
 		@INSTALL_utillinux@
 	@CLEANUP_utillinux@
@@ -252,7 +252,7 @@ $(D)/xfsprogs: $(D)/bootstrap $(D)/e2fsprogs $(D)/libreadline @DEPENDS_xfsprogs@
 			--enable-readline=yes \
 			--enable-editline=no \
 			--enable-termcap=yes \
-			&& \
+		&& \
 		$(MAKE) $(MAKE_OPTS) && \
 		export top_builddir=`pwd` && \
 		@INSTALL_xfsprogs@
@@ -273,7 +273,7 @@ $(D)/mc: $(D)/bootstrap $(D)/glib2 @DEPENDS_mc@
 			--without-gpm-mouse \
 			--with-screen=ncurses \
 			--without-x \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_mc@
 	@CLEANUP_mc@
@@ -292,7 +292,7 @@ $(D)/sdparm: $(D)/bootstrap @DEPENDS_sdparm@
 			--prefix= \
 			--exec-prefix=/usr \
 			--mandir=/usr/share/man \
-			&& \
+		&& \
 		$(MAKE) $(MAKE_OPTS) && \
 		@INSTALL_sdparm@
 	@( cd $(prefix)/$*cdkroot/usr/share/man/man8 && gzip -v9 sdparm.8 )
@@ -310,7 +310,7 @@ $(D)/ipkg: $(D)/bootstrap @DEPENDS_ipkg@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_ipkg@
 	ln -sf ipkg-cl $(prefix)/$*cdkroot/usr/bin/ipkg && \
@@ -334,7 +334,7 @@ $(D)/zd1211: $(D)/bootstrap @DEPENDS_zd1211@
 			BIN_DEST=$(targetprefix)/bin \
 			INSTALL_MOD_PATH=$(targetprefix) \
 			install \
-			&& \
+		&& \
 	$(DEPMOD) -ae -b $(targetprefix) -r $(KERNELVERSION)
 	@CLEANUP_zd1211@
 	touch $@
@@ -353,7 +353,7 @@ $(D)/nano: $(D)/bootstrap @DEPENDS_nano@
 			--disable-nls \
 			--enable-tiny \
 			--enable-color \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_nano@
 	@CLEANUP_nano@
@@ -372,7 +372,7 @@ $(D)/rsync: $(D)/bootstrap @DEPENDS_rsync@
 			--prefix=/usr \
 			--disable-debug \
 			--disable-locale \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_rsync@
 	@CLEANUP_rsync@
@@ -420,7 +420,7 @@ $(D)/fuse: $(D)/bootstrap @DEPENDS_fuse@
 			--host=$(target) \
 			--target=$(target) \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_fuse@
 		-rm $(prefix)/$*cdkroot/etc/udev/rules.d/99-fuse.rules
@@ -444,7 +444,7 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/fuse @DEPENDS_curlftpfs@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_curlftpfs@
 	@CLEANUP_curlftpfs@
@@ -475,7 +475,7 @@ $(D)/mplayer: $(D)/bootstrap @DEPENDS_mplayer@
 			--host-cc=gcc \
 			--prefix=/usr \
 			--disable-mencoder \
-			&& \
+		&& \
 		$(MAKE) CC="$(target)-gcc" && \
 		@INSTALL_mplayer@
 	@CLEANUP_mplayer@
@@ -519,7 +519,7 @@ $(D)/mencoder: $(D)/bootstrap @DEPENDS_mencoder@
 			--disable-fbdev \
 			--disable-dvb \
 			--disable-mplayer \
-			&& \
+		&& \
 		$(MAKE) CC="$(target)-gcc" && \
 		@INSTALL_mencoder@
 	@CLEANUP_mencoder@
@@ -538,7 +538,7 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_jfsutils@
 			--target=$(target) \
 			--disable-dependency-tracking \
 			--prefix= \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_jfsutils@
 	@CLEANUP_jfsutils@
@@ -553,7 +553,7 @@ $(D)/dosfstools: $(D)/bootstrap @DEPENDS_dosfstools@
 		$(MAKE) all \
 			CC=$(target)-gcc \
 			OPTFLAGS="$(TARGET_CFLAGS) -fomit-frame-pointer -D_FILE_OFFSET_BITS=64" \
-			&& \
+		&& \
 		@INSTALL_dosfstools@
 	@CLEANUP_dosfstools@
 	touch $@
@@ -570,7 +570,7 @@ $(D)/hddtemp: $(D)/bootstrap @DEPENDS_hddtemp@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix= \
-			&& \
+		&& \
 		$(MAKE) all && \
 		$(MAKE) install DESTDIR=$(targetprefix)
 		$(INSTALL) -d $(targetprefix)/var/tuxbox/config
@@ -601,7 +601,7 @@ $(D)/fdisk: $(D)/bootstrap $(D)/parted @DEPENDS_fdisk@
 		./configure \
 			--host=$(target) \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_fdisk@
 	@CLEANUP_fdisk@
@@ -624,7 +624,7 @@ $(D)/parted: $(D)/bootstrap $(D)/libreadline $(D)/e2fsprogs @DEPENDS_parted@
 			--prefix=$(targetprefix)/usr \
 			--disable-device-mapper \
 			--disable-nls \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_parted@
 	@CLEANUP_parted@
@@ -645,7 +645,7 @@ $(D)/opkg: $(D)/bootstrap @DEPENDS_opkg@
 			--disable-curl \
 			--disable-gpg \
 			--with-opkglibdir=/var \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_opkg@
 	@CLEANUP_opkg@
@@ -663,7 +663,7 @@ $(D)/sysstat: $(D)/bootstrap @DEPENDS_sysstat@
 			--host=$(target) \
 			--prefix=/usr \
 			--disable-documentation \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_sysstat@
 	@CLEANUP_sysstat@
@@ -682,7 +682,7 @@ $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_autofs@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) all CC=$(target)-gcc STRIP=$(target)-strip SUBDIRS="lib daemon modules" && \
 		@INSTALL_autofs@
 	@CLEANUP_autofs@
@@ -716,7 +716,7 @@ $(D)/imagemagick: $(D)/bootstrap @DEPENDS_imagemagick@
 			--enable-shared \
 			--enable-static \
 			--without-x \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_imagemagick@
 	@CLEANUP_imagemagick@
@@ -736,7 +736,7 @@ $(D)/hotplug_e2: $(D)/bootstrap @DEPENDS_hotplug_e2@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_hotplug_e2@
 	@CLEANUP_hotplug_e2@
@@ -750,8 +750,10 @@ $(D)/shairport: $(D)/bootstrap $(D)/libcrypto $(D)/howl $(D)/libalsa @DEPENDS_sh
 	[ -d "$(archivedir)/shairport.git" ] && \
 	(cd $(archivedir)/shairport.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_shairport@ && \
+		sed -i 's|pkg-config|$$PKG_CONFIG|g' configure && \
+		PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 		$(BUILDENV) \
-		$(MAKE) all CC=$(target)-gcc LD=$(target)-ld && \
+		$(MAKE) && \
 		@INSTALL_shairport@
 	@CLEANUP_shairport@
 	touch $@
@@ -779,7 +781,7 @@ $(D)/dbus: $(D)/bootstrap $(D)/libexpat @DEPENDS_dbus@
 			--enable-abstract-sockets \
 			--disable-systemd \
 			--disable-static \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_dbus@
 	@CLEANUP_dbus@
@@ -812,7 +814,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi
 			--disable-nls \
 			--enable-core-docs \
 			--with-distro=none \
-			&& \
+		&& \
 		$(MAKE) all && \
 		@INSTALL_avahi@
 	@CLEANUP_avahi@
@@ -847,7 +849,7 @@ $(D)/wget: $(D)/bootstrap $(D)/libcrypto @DEPENDS_wget@
 			--disable-ipv6 \
 			--disable-debug \
 			--disable-nls \
-			&& \
+		&& \
 		$(MAKE) && \
 		@INSTALL_wget@
 	@CLEANUP_wget@

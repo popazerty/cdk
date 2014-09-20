@@ -29,10 +29,10 @@ cdk-clean:
 # uninstall facilities of the components allow.
 clean-local: mostlyclean-local depsclean
 	-rm -rf $(hostprefix)
+	-rm -rf $(crossprefix)
 	-rm -rf $(prefix)/*cdkroot
 	-rm -rf $(prefix)/*cdkroot-tftpboot
 	-rm -rf $(prefix)/release*
-	-rm -rf BUILD && install -d BUILD
 	-rm -rf $(D)/linux-kernel*
 
 # Be brutal...just nuke it!
@@ -46,12 +46,11 @@ distclean-local:
 	-rm -rf $(D)
 	-rm -rf $(prefix)/*cdkroot/
 	-rm -rf $(prefix)/*cdkroot-tftpboot
+	-rm -rf $(crossprefix)
 	-rm -rf $(hostprefix)
 	-rm -rf $(serversupport)
-	-rm -rf $(appsdir)/enigma2-*
-	-rm -rf $(appsdir)/neutrino-*
-	-rm -rf $(appsdir)/nhd2-*
-	-rm -rf $(appsdir)/libstb-*
+	-rm -rf $(buildtmp)
+	-rm -rf $(sourcedir)
 	-@CLEANUP@
 
 .PHONY: depsclean mostlyclean-local cdk-clean distclean-local list-clean

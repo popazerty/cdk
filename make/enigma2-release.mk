@@ -1045,9 +1045,10 @@ endif
 	fi
 
 #
-# delete unnecessary plugins and files
+# delete unnecessary files
 #
 	rm -rf $(prefix)/release/lib/autofs
+	rm -rf $(prefix)/release/usr/lib/m4-nofpu/
 	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
 	rm -rf $(prefix)/release/usr/lib/gcc
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/DemoPlugins

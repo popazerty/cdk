@@ -16,7 +16,8 @@ $(D)/busybox: $(D)/bootstrap @DEPENDS_busybox@ $(buildprefix)/Patches/busybox.co
 		export CROSS_COMPILE=$(target)- && \
 		$(MAKE) all \
 			CROSS_COMPILE=$(target)- \
-			CONFIG_EXTRA_CFLAGS="$(TARGET_CFLAGS)" && \
+			CONFIG_EXTRA_CFLAGS="$(TARGET_CFLAGS)" \
+		&& \
 		@INSTALL_busybox@
 #	@CLEANUP_busybox@
 	touch $@

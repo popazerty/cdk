@@ -45,39 +45,54 @@ $(archivedir)/stlinux24-sh4-glibc-dev-$(GLIBC_VER).sh4.rpm \
 $(archivedir)/stlinux24-sh4-libgcc-$(LIBGCC_VER).sh4.rpm \
 $(archivedir)/stlinux24-sh4-libstdc++-$(LIBGCC_VER).sh4.rpm \
 $(archivedir)/stlinux24-sh4-libstdc++-dev-$(LIBGCC_VER).sh4.rpm
-	unpack-rpm.sh $(buildprefix)/BUILD $(STM_RELOCATE)/devkit/sh4 $(hostprefix) \
+	unpack-rpm.sh $(buildtmp) $(STM_RELOCATE)/devkit/sh4 $(crossprefix) \
 		$^
 	touch .deps/$@
 
 # install the RPMs
-crosstool: host-filesystem \
+crosstool: directories \
 $(hostprefix)/bin/unpack-rpm.sh \
 crosstool-rpminstall
-	set -e; cd $(hostprefix); ln -sf ../host/target/* $(targetprefix)
-	if [ -e $(hostprefix)/sh4-linux/lib/libstdc++.la ] ; then \
-		sed -i "s,^libdir=.*,libdir='$(hostprefix)/sh4-linux/lib'," $(hostprefix)/sh4-linux/lib/lib{std,sup}c++.la; \
-	fi;
-	sed -i "s,^libdir=.*,libdir='$(targetprefix)/usr/lib'," $(targetprefix)/usr/lib/lib{std,sup}c++.la
+	set -e; cd $(crossprefix); rm -f sh4-linux/sys-root; ln -s ../target sh4-linux/sys-root
+	if test -e $(crossprefix)/$(target)/sys-root/usr/lib/libstdc++.so; then \
+		cp -a $(crossprefix)/$(target)/sys-root/usr/lib/libstdc++.s*[!y] $(targetprefix)/lib; \
+	fi
+	if test -e $(crossprefix)/$(target)/sys-root/lib; then \
+		cp -a $(crossprefix)/$(target)/sys-root/lib/*so* $(targetprefix)/lib; \
+	else \
+		cp -a $(crossprefix)/$(target)/lib/*so* $(targetprefix)/lib; \
+	fi
+	if test -e $(crossprefix)/$(target)/sys-root/sbin/ldconfig; then \
+		cp -a $(crossprefix)/$(target)/sys-root/sbin/ldconfig $(targetprefix)/sbin; \
+		cp -a $(crossprefix)/$(target)/sys-root/etc/ld.so.conf $(targetprefix)/etc; \
+		cp -a $(crossprefix)/$(target)/sys-root/etc/host.conf $(targetprefix)/etc; \
+	elif test -e $(crossprefix)/$(target)/sbin/ldconfig; then \
+		cp -a $(crossprefix)/$(target)/sbin/ldconfig $(targetprefix)/sbin/; \
+		mkdir -p $(targetprefix)/etc; \
+		touch $(targetprefix)/etc/ld.so.conf; \
+	fi
 	touch .deps/$@
 
 #
 # FILESYSTEM
 #
-host-filesystem:
-	$(INSTALL) -d $(prefix)
-	$(INSTALL) -d $(hostprefix)
-	$(INSTALL) -d $(hostprefix)/{bin,doc,etc,include,info,lib,man,share,var}
-	$(INSTALL) -d $(hostprefix)/man/man{1..9}
-	$(INSTALL) -d $(targetprefix)
-	touch .deps/$@
-
 $(D)/directories:
-	$(INSTALL) -d $(targetprefix)/{bin,boot,root,var}
-	$(INSTALL) -d $(targetprefix)/etc/rc.d/{rc0.d,rc1.d,rc2.d,rc3.d,rc4.d,rc5.d,rc6.d,rcS.d}
-	$(INSTALL) -d $(targetprefix)/etc/network
-	$(INSTALL) -d $(targetprefix)/var/etc
-	$(INSTALL) -d $(hostprefix)/$(target)
-	$(INSTALL) -d $(hostprefix)/bin
+	$(INSTALL) -d $(targetprefix)
+	$(INSTALL) -d $(crossprefix)
 	$(INSTALL) -d $(bootprefix)
+	$(INSTALL) -d $(hostprefix)
+	$(INSTALL) -d $(hostprefix)/{bin,lib,share}
+	$(INSTALL) -d $(targetprefix)/{bin,boot,etc,lib,sbin,tmp,usr,var}
+	$(INSTALL) -d $(targetprefix)/etc/{init.d,mdev,network,rc.d}
+	$(INSTALL) -d $(targetprefix)/etc/rc.d/{rc0.d,rc1.d,rc2.d,rc3.d,rc4.d,rc5.d,rc6.d,rcS.d}
+	ln -s ../init.d $(targetprefix)/etc/rc.d/init.d
+	$(INSTALL) -d $(targetprefix)/lib/lsb
+	$(INSTALL) -d $(targetprefix)/usr/{bin,lib,local,sbin,share}
+	$(INSTALL) -d $(targetprefix)/usr/include/linux
+	$(INSTALL) -d $(targetprefix)/usr/include/linux/dvb
+	$(INSTALL) -d $(targetprefix)/usr/local/{bin,include,lib,sbin,share}
+	$(INSTALL) -d $(targetprefix)/var/{etc,lib,run}
+	$(INSTALL) -d $(targetprefix)/var/lib/{misc,nfs}
+	$(INSTALL) -d $(targetprefix)/var/bin
 	touch $@
 

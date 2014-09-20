@@ -1,13 +1,13 @@
 ## Makefile for Tuxbox
 
+# Set up the build environment
+include make/buildenv.mk
+
 # Include yaud targets
 include make/yaud.mk
 
 # Include linux kernel targets
 include make/linux-kernel.mk
-
-# Set up the build environment
-include make/buildenv.mk
 
 # Include bootstrap targets
 include make/bootstrap.mk

@@ -45,7 +45,7 @@ else
 N_CONFIG_OPTS += --enable-libeplayer3
 endif
 
-OBJDIR = $(buildprefix)/BUILD
+OBJDIR = $(buildtmp)
 N_OBJDIR = $(OBJDIR)/neutrino-mp
 LH_OBJDIR = $(OBJDIR)/libstb-hal
 
@@ -60,28 +60,31 @@ yaud-neutrino-mp-github: yaud-none lirc \
 #
 # libstb-hal-github
 #
-NEUTRINO_MP_GH_LIBSTB_HAL_GH_PATCHES = $(PATCHES)/libstb-hal-github.patch
+NEUTRINO_MP_GH_LIBSTB_HAL_GH_PATCHES =
 
 $(D)/libstb-hal-github.do_prepare:
-	rm -rf $(appsdir)/libstb-hal-github
-	rm -rf $(appsdir)/libstb-hal-github.org
+	rm -rf $(sourcedir)/libstb-hal-github
+	rm -rf $(sourcedir)/libstb-hal-github.org
+	rm -rf $(LH_OBJDIR)
 	[ -d "$(archivedir)/libstb-hal-github.git" ] && \
 	(cd $(archivedir)/libstb-hal-github.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/libstb-hal-github.git" ] || \
 	git clone https://github.com/MaxWiesel/libstb-hal.git $(archivedir)/libstb-hal-github.git; \
-	cp -ra $(archivedir)/libstb-hal-github.git $(appsdir)/libstb-hal-github;\
-	cp -ra $(appsdir)/libstb-hal-github $(appsdir)/libstb-hal-github.org
+	cp -ra $(archivedir)/libstb-hal-github.git $(sourcedir)/libstb-hal-github;\
+	cp -ra $(sourcedir)/libstb-hal-github $(sourcedir)/libstb-hal-github.org
 	for i in $(NEUTRINO_MP_GH_LIBSTB_HAL_GH_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/libstb-hal-github && patch -p1 -i $$i; \
+		cd $(sourcedir)/libstb-hal-github && patch -p1 -i $$i; \
 	done;
 	touch $@
 
-$(appsdir)/libstb-hal-github/config.status: | $(NEUTRINO_DEPS)
-	cd $(appsdir)/libstb-hal-github && \
-		./autogen.sh && \
+$(D)/libstb-hal-github.config.status: | $(NEUTRINO_DEPS)
+	rm -rf $(LH_OBJDIR) && \
+	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR) && \
+	cd $(LH_OBJDIR) && \
+		$(sourcedir)/libstb-hal-github/autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		$(sourcedir)/libstb-hal-github/configure \
 			--host=$(target) \
 			--build=$(build) \
 			--prefix= \
@@ -91,50 +94,52 @@ $(appsdir)/libstb-hal-github/config.status: | $(NEUTRINO_DEPS)
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
-$(D)/libstb-hal-github.do_compile: $(appsdir)/libstb-hal-github/config.status
-	cd $(appsdir)/libstb-hal-github && \
-		$(MAKE)
+$(D)/libstb-hal-github.do_compile: libstb-hal-github.config.status
+	cd $(sourcedir)/libstb-hal-github && \
+		$(MAKE) -C $(LH_OBJDIR)
 	touch $@
 
 $(D)/libstb-hal-github: libstb-hal-github.do_prepare libstb-hal-github.do_compile
-	$(MAKE) -C $(appsdir)/libstb-hal-github install DESTDIR=$(targetprefix)
+	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(targetprefix)
 	touch $@
 
 libstb-hal-github-clean:
 	rm -f $(D)/libstb-hal-github
-	cd $(appsdir)/libstb-hal-github && \
-		$(MAKE) distclean
+	cd $(LH_OBJDIR) && \
+		$(MAKE) -C $(LH_OBJDIR) distclean
 
 libstb-hal-github-distclean:
-	rm -f $(D)/libstb-hal-github
-	rm -f $(D)/libstb-hal-github.do_compile
-	rm -f $(D)/libstb-hal-github.do_prepare
+	rm -rf $(LH_OBJDIR)
+	rm -f $(D)/libstb-hal-github*
 
 #
 # neutrino-mp-github
 #
-NEUTRINO_MP_GH_PATCHES = $(PATCHES)/neutrino-mp-github.patch
+NEUTRINO_MP_GH_PATCHES =
 
 $(D)/neutrino-mp-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
-	rm -rf $(appsdir)/neutrino-mp-github
-	rm -rf $(appsdir)/neutrino-mp-github.org
+	rm -rf $(sourcedir)/neutrino-mp-github
+	rm -rf $(sourcedir)/neutrino-mp-github.org
+	rm -rf $(N_OBJDIR)
 	[ -d "$(archivedir)/neutrino-mp-github.git" ] && \
 	(cd $(archivedir)/neutrino-mp-github.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-github.git" ] || \
 	git clone https://github.com/MaxWiesel/neutrino-mp.git $(archivedir)/neutrino-mp-github.git; \
-	cp -ra $(archivedir)/neutrino-mp-github.git $(appsdir)/neutrino-mp-github; \
-	cp -ra $(appsdir)/neutrino-mp-github $(appsdir)/neutrino-mp-github.org
+	cp -ra $(archivedir)/neutrino-mp-github.git $(sourcedir)/neutrino-mp-github; \
+	cp -ra $(sourcedir)/neutrino-mp-github $(sourcedir)/neutrino-mp-github.org
 	for i in $(NEUTRINO_MP_GH_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/neutrino-mp-github && patch -p1 -i $$i; \
+		cd $(sourcedir)/neutrino-mp-github && patch -p1 -i $$i; \
 	done;
 	touch $@
 
-$(appsdir)/neutrino-mp-github/config.status:
-	cd $(appsdir)/neutrino-mp-github && \
-		./autogen.sh && \
+$(D)/neutrino-mp-github.config.status:
+	rm -rf $(N_OBJDIR)
+	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR) && \
+	cd $(N_OBJDIR) && \
+		$(sourcedir)/neutrino-mp-github/autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		$(sourcedir)/neutrino-mp-github/configure \
 			--build=$(build) \
 			--host=$(target) \
 			$(N_CONFIG_OPTS) \
@@ -150,19 +155,35 @@ $(appsdir)/neutrino-mp-github/config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
-			--with-stb-hal-includes=$(appsdir)/libstb-hal-github/include \
-			--with-stb-hal-build=$(appsdir)/libstb-hal-github \
+			--with-stb-hal-includes=$(sourcedir)/libstb-hal-github/include \
+			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
-$(D)/neutrino-mp-github.do_compile: $(appsdir)/neutrino-mp-github/config.status
-	cd $(appsdir)/neutrino-mp-github && \
-		$(MAKE) all
+$(sourcedir)/neutrino-mp-github/src/gui/version.h:
+	@rm -f $@; \
+	echo '#define BUILT_DATE "'`date`'"' > $@
+	@if test -d $(sourcedir)/libstb-hal-github ; then \
+		pushd $(sourcedir)/libstb-hal-github ; \
+		HAL_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		pushd $(sourcedir)/neutrino-mp-github ; \
+		NMP_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		pushd $(buildprefix) ; \
+		DDT_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		echo '#define VCS "DDT-rev'$$DDT_REV'_HAL-rev'$$HAL_REV'_NMP-rev'$$NMP_REV'"' >> $@ ; \
+	fi
+
+$(D)/neutrino-mp-github.do_compile: neutrino-mp-github.config.status $(sourcedir)/neutrino-mp-github/src/gui/version.h
+	cd $(sourcedir)/neutrino-mp-github && \
+		$(MAKE) -C $(N_OBJDIR) all
 	touch $@
 
 $(D)/neutrino-mp-github: neutrino-mp-github.do_prepare neutrino-mp-github.do_compile
-	$(MAKE) -C $(appsdir)/neutrino-mp-github install DESTDIR=$(targetprefix) && \
+	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -173,13 +194,13 @@ $(D)/neutrino-mp-github: neutrino-mp-github.do_prepare neutrino-mp-github.do_com
 
 neutrino-mp-github-clean:
 	rm -f $(D)/neutrino-mp-github
-	cd $(appsdir)/neutrino-mp-github && \
-		$(MAKE) distclean
+	rm -f $(sourcedir)/neutrino-mp-github/src/gui/version.h
+	cd $(N_OBJDIR) && \
+		$(MAKE) -C $(N_OBJDIR) distclean
 
 neutrino-mp-github-distclean:
-	rm -f $(D)/neutrino-mp-github
-	rm -f $(D)/neutrino-mp-github.do_compile
-	rm -f $(D)/neutrino-mp-github.do_prepare
+	rm -rf $(N_OBJDIR)
+	rm -f $(D)/neutrino-mp-github*
 
 ################################################################################
 #
@@ -192,28 +213,31 @@ yaud-neutrino-mp-martii-github: yaud-none lirc \
 #
 # neutrino-mp-martii-github
 #
-NEUTRINO_MP_MARTII_GH_PATCHES = $(PATCHES)/neutrino-mp-martii-github.patch
+NEUTRINO_MP_MARTII_GH_PATCHES =
 
 $(D)/neutrino-mp-martii-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
-	rm -rf $(appsdir)/neutrino-mp-martii-github
-	rm -rf $(appsdir)/neutrino-mp-martii-github.org
+	rm -rf $(sourcedir)/neutrino-mp-martii-github
+	rm -rf $(sourcedir)/neutrino-mp-martii-github.org
+	rm -rf $(N_OBJDIR)
 	[ -d "$(archivedir)/neutrino-mp-martii-github.git" ] && \
 	(cd $(archivedir)/neutrino-mp-martii-github.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-martii-github.git" ] || \
 	git clone https://github.com/MaxWiesel/neutrino-mp-martii.git $(archivedir)/neutrino-mp-martii-github.git; \
-	cp -ra $(archivedir)/neutrino-mp-martii-github.git $(appsdir)/neutrino-mp-martii-github; \
-	cp -ra $(appsdir)/neutrino-mp-martii-github $(appsdir)/neutrino-mp-martii-github.org
+	cp -ra $(archivedir)/neutrino-mp-martii-github.git $(sourcedir)/neutrino-mp-martii-github; \
+	cp -ra $(sourcedir)/neutrino-mp-martii-github $(sourcedir)/neutrino-mp-martii-github.org
 	for i in $(NEUTRINO_MP_MARTII_GH_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/neutrino-mp-martii-github && patch -p1 -i $$i; \
+		cd $(sourcedir)/neutrino-mp-martii-github && patch -p1 -i $$i; \
 	done;
 	touch $@
 
-$(appsdir)/neutrino-mp-martii-github/config.status:
-	cd $(appsdir)/neutrino-mp-martii-github && \
-		./autogen.sh && \
+$(D)/neutrino-mp-martii-github.config.status:
+	rm -rf $(N_OBJDIR)
+	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR) && \
+	cd $(N_OBJDIR) && \
+		$(sourcedir)/neutrino-mp-martii-github/autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		$(sourcedir)/neutrino-mp-martii-github/configure \
 			--build=$(build) \
 			--host=$(target) \
 			$(N_CONFIG_OPTS) \
@@ -226,19 +250,35 @@ $(appsdir)/neutrino-mp-martii-github/config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
-			--with-stb-hal-includes=$(appsdir)/libstb-hal-github/include \
-			--with-stb-hal-build=$(appsdir)/libstb-hal-github \
+			--with-stb-hal-includes=$(sourcedir)/libstb-hal-github/include \
+			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
-$(D)/neutrino-mp-martii-github.do_compile: $(appsdir)/neutrino-mp-martii-github/config.status
-	cd $(appsdir)/neutrino-mp-martii-github && \
-		$(MAKE) all
+$(sourcedir)/neutrino-mp-martii-github/src/gui/version.h:
+	@rm -f $@; \
+	echo '#define BUILT_DATE "'`date`'"' > $@
+	@if test -d $(sourcedir)/libstb-hal-github ; then \
+		pushd $(sourcedir)/libstb-hal-github ; \
+		HAL_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		pushd $(sourcedir)/neutrino-mp-martii-github ; \
+		NMP_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		pushd $(buildprefix) ; \
+		DDT_REV=$$(git log | grep "^commit" | wc -l) ; \
+		popd ; \
+		echo '#define VCS "DDT-rev'$$DDT_REV'_HAL-rev'$$HAL_REV'_NMP-rev'$$NMP_REV'"' >> $@ ; \
+	fi
+
+$(D)/neutrino-mp-martii-github.do_compile: neutrino-mp-martii-github.config.status $(sourcedir)/neutrino-mp-martii-github/src/gui/version.h
+	cd $(sourcedir)/neutrino-mp-martii-github && \
+		$(MAKE) -C $(N_OBJDIR) all
 	touch $@
 
 $(D)/neutrino-mp-martii-github: neutrino-mp-martii-github.do_prepare neutrino-mp-martii-github.do_compile
-	$(MAKE) -C $(appsdir)/neutrino-mp-martii-github install DESTDIR=$(targetprefix) && \
+	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -249,13 +289,13 @@ $(D)/neutrino-mp-martii-github: neutrino-mp-martii-github.do_prepare neutrino-mp
 
 neutrino-mp-martii-github-clean:
 	rm -f $(D)/neutrino-mp-martii-github
-	cd $(appsdir)/neutrino-mp-martii-github && \
-		$(MAKE) distclean
+	rm -f $(sourcedir)/neutrino-mp-martii-github/src/gui/version.h
+	cd $(N_OBJDIR) && \
+		$(MAKE) -C $(N_OBJDIR) distclean
 
 neutrino-mp-martii-github-distclean:
-	rm -f $(D)/neutrino-mp-martii-github
-	rm -f $(D)/neutrino-mp-martii-github.do_compile
-	rm -f $(D)/neutrino-mp-martii-github.do_prepare
+	rm -rf $(N_OBJDIR)
+	rm -f $(D)/neutrino-mp-martii-github*
 
 ################################################################################
 #
@@ -276,25 +316,25 @@ yaud-neutrino-mp-all: yaud-none lirc \
 #
 # libstb-hal
 #
-NEUTRINO_MP_LIBSTB_HAL_PATCHES = $(PATCHES)/libstb-hal.patch
+NEUTRINO_MP_LIBSTB_HAL_PATCHES =
 
 $(D)/libstb-hal.do_prepare:
-	rm -rf $(appsdir)/libstb-hal
-	rm -rf $(appsdir)/libstb-hal.org
+	rm -rf $(sourcedir)/libstb-hal
+	rm -rf $(sourcedir)/libstb-hal.org
 	[ -d "$(archivedir)/libstb-hal.git" ] && \
 	(cd $(archivedir)/libstb-hal.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/libstb-hal.git" ] || \
 	git clone git://gitorious.org/neutrino-hd/max10s-libstb-hal.git $(archivedir)/libstb-hal.git; \
-	cp -ra $(archivedir)/libstb-hal.git $(appsdir)/libstb-hal;\
-	cp -ra $(appsdir)/libstb-hal $(appsdir)/libstb-hal.org
+	cp -ra $(archivedir)/libstb-hal.git $(sourcedir)/libstb-hal;\
+	cp -ra $(sourcedir)/libstb-hal $(sourcedir)/libstb-hal.org
 	for i in $(NEUTRINO_MP_LIBSTB_HAL_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/libstb-hal && patch -p1 -i $$i; \
+		cd $(sourcedir)/libstb-hal && patch -p1 -i $$i; \
 	done;
 	touch $@
 
-$(appsdir)/libstb-hal/config.status: bootstrap
-	cd $(appsdir)/libstb-hal && \
+$(sourcedir)/libstb-hal/config.status: bootstrap
+	cd $(sourcedir)/libstb-hal && \
 		./autogen.sh && \
 		$(BUILDENV) \
 		./configure \
@@ -307,18 +347,18 @@ $(appsdir)/libstb-hal/config.status: bootstrap
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
-$(D)/libstb-hal.do_compile: $(appsdir)/libstb-hal/config.status
-	cd $(appsdir)/libstb-hal && \
+$(D)/libstb-hal.do_compile: $(sourcedir)/libstb-hal/config.status
+	cd $(sourcedir)/libstb-hal && \
 		$(MAKE)
 	touch $@
 
 $(D)/libstb-hal: libstb-hal.do_prepare libstb-hal.do_compile
-	$(MAKE) -C $(appsdir)/libstb-hal install DESTDIR=$(targetprefix)
+	$(MAKE) -C $(sourcedir)/libstb-hal install DESTDIR=$(targetprefix)
 	touch $@
 
 libstb-hal-clean:
 	rm -f $(D)/libstb-hal
-	cd $(appsdir)/libstb-hal && \
+	cd $(sourcedir)/libstb-hal && \
 		$(MAKE) distclean
 
 libstb-hal-distclean:
@@ -329,25 +369,25 @@ libstb-hal-distclean:
 #
 # neutrino-mp
 #
-NEUTRINO_MP_PATCHES = $(PATCHES)/neutrino-mp.patch
+NEUTRINO_MP_PATCHES =
 
 $(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) libstb-hal
-	rm -rf $(appsdir)/neutrino-mp
-	rm -rf $(appsdir)/neutrino-mp.org
+	rm -rf $(sourcedir)/neutrino-mp
+	rm -rf $(sourcedir)/neutrino-mp.org
 	[ -d "$(archivedir)/neutrino-mp.git" ] && \
 	(cd $(archivedir)/neutrino-mp.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp.git" ] || \
 	git clone git://gitorious.org/neutrino-mp/max10s-neutrino-mp.git $(archivedir)/neutrino-mp.git; \
-	cp -ra $(archivedir)/neutrino-mp.git $(appsdir)/neutrino-mp; \
-	cp -ra $(appsdir)/neutrino-mp $(appsdir)/neutrino-mp.org
+	cp -ra $(archivedir)/neutrino-mp.git $(sourcedir)/neutrino-mp; \
+	cp -ra $(sourcedir)/neutrino-mp $(sourcedir)/neutrino-mp.org
 	for i in $(NEUTRINO_MP_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/neutrino-mp && patch -p1 -i $$i; \
+		cd $(sourcedir)/neutrino-mp && patch -p1 -i $$i; \
 	done;
 	touch $@
 
-$(appsdir)/neutrino-mp/config.status:
-	cd $(appsdir)/neutrino-mp && \
+$(sourcedir)/neutrino-mp/config.status:
+	cd $(sourcedir)/neutrino-mp && \
 		./autogen.sh && \
 		$(BUILDENV) \
 		./configure \
@@ -363,19 +403,19 @@ $(appsdir)/neutrino-mp/config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
-			--with-stb-hal-includes=$(appsdir)/libstb-hal/include \
-			--with-stb-hal-build=$(appsdir)/libstb-hal \
+			--with-stb-hal-includes=$(sourcedir)/libstb-hal/include \
+			--with-stb-hal-build=$(sourcedir)/libstb-hal \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
-$(D)/neutrino-mp.do_compile: $(appsdir)/neutrino-mp/config.status
-	cd $(appsdir)/neutrino-mp && \
+$(D)/neutrino-mp.do_compile: $(sourcedir)/neutrino-mp/config.status
+	cd $(sourcedir)/neutrino-mp && \
 		$(MAKE) all
 	touch $@
 
 $(D)/neutrino-mp: neutrino-mp.do_prepare neutrino-mp.do_compile
-	$(MAKE) -C $(appsdir)/neutrino-mp install DESTDIR=$(targetprefix) && \
+	$(MAKE) -C $(sourcedir)/neutrino-mp install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -386,7 +426,7 @@ $(D)/neutrino-mp: neutrino-mp.do_prepare neutrino-mp.do_compile
 
 neutrino-mp-clean:
 	rm -f $(D)/neutrino-mp
-	cd $(appsdir)/neutrino-mp && \
+	cd $(sourcedir)/neutrino-mp && \
 		$(MAKE) distclean
 
 neutrino-mp-distclean:
@@ -421,31 +461,32 @@ yaud-neutrino-mp-next-all: yaud-none lirc \
 #
 # libstb-hal-next
 #
-NEUTRINO_LIBSTB_HAL_NEXT_PATCHES = $(PATCHES)/libstb-hal-next.patch
+NEUTRINO_LIBSTB_NEXT_PATCHES =
 
 $(D)/libstb-hal-next.do_prepare:
-	rm -rf $(appsdir)/libstb-hal-next
-	rm -rf $(appsdir)/libstb-hal-next.org
+	rm -rf $(sourcedir)/libstb-hal-next
+	rm -rf $(sourcedir)/libstb-hal-next.org
 	rm -rf $(LH_OBJDIR)
 	[ -d "$(archivedir)/libstb-hal.git" ] && \
 	(cd $(archivedir)/libstb-hal.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/libstb-hal.git" ] || \
 	git clone git://gitorious.org/neutrino-hd/max10s-libstb-hal.git $(archivedir)/libstb-hal.git; \
-	cp -ra $(archivedir)/libstb-hal.git $(appsdir)/libstb-hal-next;\
-	(cd $(appsdir)/libstb-hal-next; git checkout next; cd "$(buildprefix)";); \
-	cp -ra $(appsdir)/libstb-hal-next $(appsdir)/libstb-hal-next.org
-	for i in $(NEUTRINO_LIBSTB_HAL_NEXT_PATCHES); do \
+	cp -ra $(archivedir)/libstb-hal.git $(sourcedir)/libstb-hal-next;\
+	(cd $(sourcedir)/libstb-hal-next; git checkout next; cd "$(buildprefix)";); \
+	cp -ra $(sourcedir)/libstb-hal-next $(sourcedir)/libstb-hal-next.org
+	for i in $(NEUTRINO_LIBSTB_NEXT_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/libstb-hal-next && patch -p1 -i $$i; \
+		cd $(sourcedir)/libstb-hal-next && patch -p1 -i $$i; \
 	done;
 	touch $@
 
 $(D)/libstb-hal-next.config.status: bootstrap
+	rm -rf $(LH_OBJDIR) && \
 	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR) && \
 	cd $(LH_OBJDIR) && \
-		$(appsdir)/libstb-hal-next/autogen.sh && \
+		$(sourcedir)/libstb-hal-next/autogen.sh && \
 		$(BUILDENV) \
-		$(appsdir)/libstb-hal-next/configure \
+		$(sourcedir)/libstb-hal-next/configure \
 			--host=$(target) \
 			--build=$(build) \
 			--prefix= \
@@ -454,11 +495,11 @@ $(D)/libstb-hal-next.config.status: bootstrap
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CPPFLAGS="$(N_CPPFLAGS)"
-	touch $@
 
 $(D)/libstb-hal-next.do_compile: libstb-hal-next.config.status
-	cd $(appsdir)/libstb-hal-next && \
+	cd $(sourcedir)/libstb-hal-next && \
 		$(MAKE) -C $(LH_OBJDIR)
+	touch $@
 
 $(D)/libstb-hal-next: libstb-hal-next.do_prepare libstb-hal-next.do_compile
 	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(targetprefix)
@@ -476,31 +517,32 @@ libstb-hal-next-distclean:
 #
 # neutrino-mp-next
 #
-NEUTRINO_MP_NEXT_PATCHES = $(PATCHES)/neutrino-mp-next.patch
+NEUTRINO_MP_NEXT_PATCHES =
 
 $(D)/neutrino-mp-next.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-next
-	rm -rf $(appsdir)/neutrino-mp-next
-	rm -rf $(appsdir)/neutrino-mp-next.org
+	rm -rf $(sourcedir)/neutrino-mp-next
+	rm -rf $(sourcedir)/neutrino-mp-next.org
 	rm -rf $(N_OBJDIR)
 	[ -d "$(archivedir)/neutrino-mp.git" ] && \
 	(cd $(archivedir)/neutrino-mp.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp.git" ] || \
 	git clone git://gitorious.org/neutrino-mp/max10s-neutrino-mp.git $(archivedir)/neutrino-mp.git; \
-	cp -ra $(archivedir)/neutrino-mp.git $(appsdir)/neutrino-mp-next; \
-	(cd $(appsdir)/neutrino-mp-next; git checkout next; cd "$(buildprefix)";); \
-	cp -ra $(appsdir)/neutrino-mp-next $(appsdir)/neutrino-mp-next.org
+	cp -ra $(archivedir)/neutrino-mp.git $(sourcedir)/neutrino-mp-next; \
+	(cd $(sourcedir)/neutrino-mp-next; git checkout next; cd "$(buildprefix)";); \
+	cp -ra $(sourcedir)/neutrino-mp-next $(sourcedir)/neutrino-mp-next.org
 	for i in $(NEUTRINO_MP_NEXT_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/neutrino-mp-next && patch -p1 -i $$i; \
+		cd $(sourcedir)/neutrino-mp-next && patch -p1 -i $$i; \
 	done;
 	touch $@
 
 $(D)/neutrino-mp-next.config.status:
+	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR) && \
 	cd $(N_OBJDIR) && \
-		$(appsdir)/neutrino-mp-next/autogen.sh && \
+		$(sourcedir)/neutrino-mp-next/autogen.sh && \
 		$(BUILDENV) \
-		$(appsdir)/neutrino-mp-next/configure \
+		$(sourcedir)/neutrino-mp-next/configure \
 			--build=$(build) \
 			--host=$(target) \
 			$(N_CONFIG_OPTS) \
@@ -514,20 +556,20 @@ $(D)/neutrino-mp-next.config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
-			--with-stb-hal-includes=$(appsdir)/libstb-hal-next/include \
+			--with-stb-hal-includes=$(sourcedir)/libstb-hal-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
-$(appsdir)/neutrino-mp-next/src/gui/version.h:
+$(sourcedir)/neutrino-mp-next/src/gui/version.h:
 	@rm -f $@; \
 	echo '#define BUILT_DATE "'`date`'"' > $@
-	@if test -d $(appsdir)/libstb-hal-next ; then \
-		pushd $(appsdir)/libstb-hal-next ; \
+	@if test -d $(sourcedir)/libstb-hal-next ; then \
+		pushd $(sourcedir)/libstb-hal-next ; \
 		HAL_REV=$$(git log | grep "^commit" | wc -l) ; \
 		popd ; \
-		pushd $(appsdir)/neutrino-mp-next ; \
+		pushd $(sourcedir)/neutrino-mp-next ; \
 		NMP_REV=$$(git log | grep "^commit" | wc -l) ; \
 		popd ; \
 		pushd $(buildprefix) ; \
@@ -537,8 +579,8 @@ $(appsdir)/neutrino-mp-next/src/gui/version.h:
 	fi
 
 
-$(D)/neutrino-mp-next.do_compile: neutrino-mp-next.config.status $(appsdir)/neutrino-mp-next/src/gui/version.h
-	cd $(appsdir)/neutrino-mp-next && \
+$(D)/neutrino-mp-next.do_compile: neutrino-mp-next.config.status $(sourcedir)/neutrino-mp-next/src/gui/version.h
+	cd $(sourcedir)/neutrino-mp-next && \
 		$(MAKE) -C $(N_OBJDIR) all
 	touch $@
 
@@ -554,7 +596,7 @@ $(D)/neutrino-mp-next: neutrino-mp-next.do_prepare neutrino-mp-next.do_compile
 
 neutrino-mp-next-clean:
 	rm -f $(D)/neutrino-mp-next
-	rm -f $(appsdir)/neutrino-mp-next/src/gui/version.h
+	rm -f $(sourcedir)/neutrino-mp-next/src/gui/version.h
 	cd $(N_OBJDIR) && \
 		$(MAKE) -C $(N_OBJDIR) distclean
 
@@ -577,25 +619,25 @@ yaud-neutrino-hd2-exp-plugins: yaud-none lirc \
 #
 # neutrino-hd2-exp
 #
-NEUTRINO_HD2_PATCHES = $(PATCHES)/nhd2-exp.patch
+NEUTRINO_HD2_PATCHES =
 
 $(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) libflac
-	rm -rf $(appsdir)/nhd2-exp
-	rm -rf $(appsdir)/nhd2-exp.org
+	rm -rf $(sourcedir)/nhd2-exp
+	rm -rf $(sourcedir)/nhd2-exp.org
 	[ -d "$(archivedir)/neutrino-hd2-exp.svn" ] && \
 	(cd $(archivedir)/neutrino-hd2-exp.svn; svn up ; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-hd2-exp.svn" ] || \
 	svn co http://neutrinohd2.googlecode.com/svn/branches/nhd2-exp $(archivedir)/neutrino-hd2-exp.svn; \
-	cp -ra $(archivedir)/neutrino-hd2-exp.svn $(appsdir)/nhd2-exp; \
-	cp -ra $(appsdir)/nhd2-exp $(appsdir)/nhd2-exp.org
+	cp -ra $(archivedir)/neutrino-hd2-exp.svn $(sourcedir)/nhd2-exp; \
+	cp -ra $(sourcedir)/nhd2-exp $(sourcedir)/nhd2-exp.org
 	for i in $(NEUTRINO_HD2_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/nhd2-exp && patch -p1 -i $$i; \
+		cd $(sourcedir)/nhd2-exp && patch -p1 -i $$i; \
 	done;
 	touch $@
 
-$(appsdir)/nhd2-exp/config.status:
-	cd $(appsdir)/nhd2-exp && \
+$(sourcedir)/nhd2-exp/config.status:
+	cd $(sourcedir)/nhd2-exp && \
 		./autogen.sh && \
 		$(BUILDENV) \
 		./configure \
@@ -620,7 +662,7 @@ $(appsdir)/nhd2-exp/config.status:
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/neutrino-hd2-exp: neutrino-hd2-exp.do_prepare neutrino-hd2-exp.do_compile
-	$(MAKE) -C $(appsdir)/nhd2-exp install DESTDIR=$(targetprefix) && \
+	$(MAKE) -C $(sourcedir)/nhd2-exp install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -628,14 +670,14 @@ $(D)/neutrino-hd2-exp: neutrino-hd2-exp.do_prepare neutrino-hd2-exp.do_compile
 	$(target)-strip $(targetprefix)/usr/local/bin/sectionsdcontrol
 	touch $@
 
-$(D)/neutrino-hd2-exp.do_compile: $(appsdir)/nhd2-exp/config.status
-	cd $(appsdir)/nhd2-exp && \
+$(D)/neutrino-hd2-exp.do_compile: $(sourcedir)/nhd2-exp/config.status
+	cd $(sourcedir)/nhd2-exp && \
 		$(MAKE) all
 	touch $@
 
 neutrino-hd2-exp-clean:
 	rm -f $(D)/neutrino-hd2-exp
-	cd $(appsdir)/nhd2-exp && \
+	cd $(sourcedir)/nhd2-exp && \
 		$(MAKE) clean
 
 neutrino-hd2-exp-distclean:
@@ -662,31 +704,31 @@ yaud-neutrino-mp-tangos-all: yaud-none lirc \
 #
 # neutrino-mp-tangos
 #
-NEUTRINO_MP_TANGOS_PATCHES = $(PATCHES)/neutrino-mp-tangos.patch
+NEUTRINO_MP_TANGOS_PATCHES =
 
 $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
-	rm -rf $(appsdir)/neutrino-mp-tangos
-	rm -rf $(appsdir)/neutrino-mp-tangos.org
+	rm -rf $(sourcedir)/neutrino-mp-tangos
+	rm -rf $(sourcedir)/neutrino-mp-tangos.org
 	rm -rf $(N_OBJDIR)
 	[ -d "$(archivedir)/neutrino-mp-tangos.git" ] && \
 	(cd $(archivedir)/neutrino-mp-tangos.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-tangos.git" ] || \
 	git clone https://github.com/TangoCash/nmp-tangos.git $(archivedir)/neutrino-mp-tangos.git; \
-	cp -ra $(archivedir)/neutrino-mp-tangos.git $(appsdir)/neutrino-mp-tangos; \
-	(cd $(appsdir)/neutrino-mp-tangos; git checkout next; cd "$(buildprefix)";); \
-	cp -ra $(appsdir)/neutrino-mp-tangos $(appsdir)/neutrino-mp-tangos.org
+	cp -ra $(archivedir)/neutrino-mp-tangos.git $(sourcedir)/neutrino-mp-tangos; \
+	(cd $(sourcedir)/neutrino-mp-tangos; git checkout next; cd "$(buildprefix)";); \
+	cp -ra $(sourcedir)/neutrino-mp-tangos $(sourcedir)/neutrino-mp-tangos.org
 	for i in $(NEUTRINO_MP_TANGOS_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(appsdir)/neutrino-mp-tangos && patch -p1 -i $$i; \
+		cd $(sourcedir)/neutrino-mp-tangos && patch -p1 -i $$i; \
 	done;
 	touch $@
 
 $(D)/neutrino-mp-tangos.config.status:
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR) && \
 	cd $(N_OBJDIR) && \
-		$(appsdir)/neutrino-mp-tangos/autogen.sh && \
+		$(sourcedir)/neutrino-mp-tangos/autogen.sh && \
 		$(BUILDENV) \
-		$(appsdir)/neutrino-mp-tangos/configure \
+		$(sourcedir)/neutrino-mp-tangos/configure \
 			--build=$(build) \
 			--host=$(target) \
 			$(N_CONFIG_OPTS) \
@@ -702,20 +744,20 @@ $(D)/neutrino-mp-tangos.config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
-			--with-stb-hal-includes=$(appsdir)/libstb-hal-github/include \
-			--with-stb-hal-build=$(appsdir)/libstb-hal-github \
+			--with-stb-hal-includes=$(sourcedir)/libstb-hal-github/include \
+			--with-stb-hal-build=$(sourcedir)/libstb-hal-github \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
-$(appsdir)/neutrino-mp-tangos/src/gui/version.h:
+$(sourcedir)/neutrino-mp-tangos/src/gui/version.h:
 	@rm -f $@; \
 	echo '#define BUILT_DATE "'`date`'"' > $@
-	@if test -d $(appsdir)/libstb-hal-github ; then \
-		pushd $(appsdir)/libstb-hal-github ; \
+	@if test -d $(sourcedir)/libstb-hal-github ; then \
+		pushd $(sourcedir)/libstb-hal-github ; \
 		HAL_REV=$$(git log | grep "^commit" | wc -l) ; \
 		popd ; \
-		pushd $(appsdir)/neutrino-mp-tangos ; \
+		pushd $(sourcedir)/neutrino-mp-tangos ; \
 		NMP_REV=$$(git log | grep "^commit" | wc -l) ; \
 		popd ; \
 		pushd $(buildprefix) ; \
@@ -725,8 +767,8 @@ $(appsdir)/neutrino-mp-tangos/src/gui/version.h:
 	fi
 
 
-$(D)/neutrino-mp-tangos.do_compile: neutrino-mp-tangos.config.status $(appsdir)/neutrino-mp-tangos/src/gui/version.h
-	cd $(appsdir)/neutrino-mp-tangos && \
+$(D)/neutrino-mp-tangos.do_compile: neutrino-mp-tangos.config.status $(sourcedir)/neutrino-mp-tangos/src/gui/version.h
+	cd $(sourcedir)/neutrino-mp-tangos && \
 		$(MAKE) -C $(N_OBJDIR) all
 	touch $@
 
@@ -742,7 +784,7 @@ $(D)/neutrino-mp-tangos: neutrino-mp-tangos.do_prepare neutrino-mp-tangos.do_com
 
 neutrino-mp-tangos-clean:
 	rm -f $(D)/neutrino-mp-tangos
-	rm -f $(appsdir)/neutrino-mp-tangos/src/gui/version.h
+	rm -f $(sourcedir)/neutrino-mp-tangos/src/gui/version.h
 	cd $(N_OBJDIR) && \
 		$(MAKE) -C $(N_OBJDIR) distclean
 

@@ -1,5 +1,5 @@
---- linux-sh4/arch/sh/kernel/setup.c.orig	2011-06-13 03:34:27.000000000 -0700
-+++ linux-sh4/arch/sh/kernel/setup.c	2011-06-25 14:15:35.000000000 -0700
+--- linux-sh4/arch/sh/kernel/setup.c.orig
++++ linux-sh4/arch/sh/kernel/setup.c
 @@ -240,45 +240,39 @@
  void __init setup_bootmem_allocator(unsigned long free_pfn)
  {

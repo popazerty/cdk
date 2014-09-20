@@ -25,3 +25,18 @@
  #endif
  #endif
  
+--- libxml2-2.9.0/Makefile.am.org
++++ libxml2-2.9.0/Makefile.am
+@@ -2,9 +2,9 @@
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-SUBDIRS = include . doc example xstc $(PYTHON_SUBDIR)
+-
+-DIST_SUBDIRS = include . doc example python xstc
++SUBDIRS = include . $(PYTHON_SUBDIR)
++
++DIST_SUBDIRS = include . python
+ 
+ AM_CPPFLAGS = -I$(top_builddir)/include -I$(srcdir)/include
+ 
