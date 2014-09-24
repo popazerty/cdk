@@ -1,6 +1,6 @@
 --- neutrino-mp-martii-github.org/acinclude.m4
 +++ neutrino-mp-martii-github/acinclude.m4
-@@ -468,6 +468,14 @@
+@@ -482,6 +482,14 @@
  			BOXTYPE="duckbox"
  			BOXMODEL="$withval"
  			;;
@@ -15,7 +15,7 @@
  		cuberevo*)
  			BOXTYPE="duckbox"
  			BOXMODEL="$withval"
-@@ -484,7 +492,7 @@
+@@ -498,7 +506,7 @@
  	[  --with-boxmodel         valid for coolstream: nevis, apollo
                            valid for dreambox: dm500, dm500plus, dm600pvr, dm56x0, dm7000, dm7020, dm7025
                            valid for ipbox: ip200, ip250, ip350, ip400
@@ -24,7 +24,7 @@
  	[case "${withval}" in
  		nevis|apollo)
  			if test "$BOXTYPE" = "coolstream"; then
-@@ -507,7 +515,7 @@
+@@ -521,7 +529,7 @@
  				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
  			fi
  			;;
@@ -33,7 +33,7 @@
  			if test "$BOXTYPE" = "duckbox"; then
  				BOXMODEL="$withval"
  			else
-@@ -553,10 +561,18 @@
+@@ -567,10 +575,18 @@
  AM_CONDITIONAL(BOXMODEL_UFS912,test "$BOXMODEL" = "ufs912")
  AM_CONDITIONAL(BOXMODEL_UFS913,test "$BOXMODEL" = "ufs913")
  AM_CONDITIONAL(BOXMODEL_UFS922,test "$BOXMODEL" = "ufs922")
@@ -52,7 +52,7 @@
  AM_CONDITIONAL(BOXMODEL_CUBEREVO,test "$BOXMODEL" = "cuberevo")
  AM_CONDITIONAL(BOXMODEL_CUBEREVO_MINI2,test "$BOXMODEL" = "cuberevo_mini2")
  AM_CONDITIONAL(BOXMODEL_CUBEREVO_2000HD,test "$BOXMODEL" = "cuberevo_2000hd")
-@@ -613,6 +629,16 @@
+@@ -627,6 +643,16 @@
  	AC_DEFINE(BOXMODEL_FORTIS_HDBOX, 1, [fortis_hdbox])
  elif test "$BOXMODEL" = "octagon1008"; then
  	AC_DEFINE(BOXMODEL_OCTAGON1008, 1, [octagon1008])
@@ -291,20 +291,21 @@
  
  void CVFD::showServicename(const std::string & name) // UTF-8
  {
-@@ -529,8 +589,23 @@
+@@ -529,8 +589,24 @@
  			if(force || ( switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))) ) {
  				hour = t->tm_hour;
  				minute = t->tm_min;
 -				strftime(timestr, 20, "%H:%M", t);
-+#if !defined (BOXMODEL_HS7810A) && !defined (BOXMODEL_HS7119) && !defined (BOXMODEL_HS7819)
++#if !defined (BOXMODEL_HS7810A) && !defined (BOXMODEL_HS7819)
 +  #if defined (BOXMODEL_OCTAGON1008)
 +				ShowIcon(ICON_COLON2, true);
++  #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119)
 +				strftime(timestr, 5, "%H%M", t);
 +  #else
 +				strftime(timestr, 6, "%H:%M", t);
 +  #endif
  				ShowText(timestr);
-+#else //HS7810A, HS7119 or HS7819, string should not scroll
++#else //HS7810A or HS7819, string should not scroll
 +				strftime(timestr, 6, "%H:%M", t);
 +				struct vfd_ioctl_data data;
 +				memset(data.data, ' ', 6);
@@ -316,7 +317,7 @@
  			}
  		}
  	}
-@@ -580,7 +655,10 @@
+@@ -580,7 +656,10 @@
  void CVFD::showRCLock(int /*duration*/)
  {
  #ifdef HAVE_DUCKBOX_HARDWARE
@@ -328,7 +329,7 @@
  #endif
  }
  
-@@ -604,7 +682,7 @@
+@@ -604,7 +683,7 @@
  		int pp = (int) round((double) vol / (double) 2);
  		if(oldpp != pp)
  		{
@@ -337,7 +338,7 @@
  			int i;
  			unsigned char speaker[5] = {0x1C, 0x1C, 0x1C, 0x3E, 0x7F}; // speaker symbol
  			writeCG(0, speaker);
-@@ -647,19 +725,32 @@
+@@ -647,19 +726,32 @@
  					strncat(VolumeBar, c0, 1);
  			}
  			ShowText(VolumeBar);
@@ -375,7 +376,7 @@
  			oldpp = pp;
  		}
  #else
-@@ -873,6 +964,9 @@
+@@ -873,6 +965,9 @@
  		ShowIcon(FP_ICON_COL1, true);
  		ShowIcon(FP_ICON_COL2, true);
  #endif
@@ -385,7 +386,7 @@
  		showclock = true;
  		showTime(true);      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
  		                 /* "showTime()" clears the whole lcd in MODE_STANDBY                         */
-@@ -916,9 +1010,13 @@
+@@ -916,9 +1011,13 @@
  int CVFD::getBrightness()
  {
  	//FIXME for old neutrino.conf
@@ -400,7 +401,7 @@
  	return g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS];
  }
  
-@@ -933,8 +1031,13 @@
+@@ -933,8 +1032,13 @@
  int CVFD::getBrightnessStandby()
  {
  	//FIXME for old neutrino.conf
@@ -414,7 +415,7 @@
  	return g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS];
  }
  
-@@ -949,8 +1052,13 @@
+@@ -949,8 +1053,13 @@
  int CVFD::getBrightnessDeepStandby()
  {
  	//FIXME for old neutrino.conf
@@ -428,7 +429,7 @@
  	return g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS];
  }
  
-@@ -1015,11 +1123,13 @@
+@@ -1015,11 +1124,13 @@
  	else
  		text[0] = 0;
  #else
@@ -444,7 +445,7 @@
  	ShowText("                ");
  #endif
  #endif
-@@ -1034,13 +1144,20 @@
+@@ -1034,13 +1145,20 @@
  	if(ret < 0)
  		perror(show ? "IOC_FP_SET_ICON" : "IOC_FP_CLEAR_ICON");
  #else
@@ -467,7 +468,7 @@
  	data.data[4] = show;
  	data.length = 5;
  	write_to_vfd(VFDICONDISPLAYONOFF, &data);
-@@ -1051,15 +1168,22 @@
+@@ -1051,15 +1169,22 @@
  #ifdef HAVE_DUCKBOX_HARDWARE
  void CVFD::ClearIcons()
  {
@@ -496,7 +497,7 @@
  			ShowIcon((fp_icon)id, false);
  	}
  	return;
-@@ -1078,10 +1202,10 @@
+@@ -1078,10 +1203,10 @@
  		g_str[63] = '\0';
  		i = 63;
  	}
@@ -509,7 +510,7 @@
  {
  	char flags[2] = { FP_FLAG_ALIGN_LEFT, 0 };
  
-@@ -1426,5 +1550,3 @@
+@@ -1426,5 +1551,3 @@
  }
  /*****************************************************************************************/
  #endif // VFD_UPDATE
@@ -517,7 +518,7 @@
 -
 --- neutrino-mp-martii-github.org/src/neutrino.cpp
 +++ neutrino-mp-martii-github/src/neutrino.cpp
-@@ -4031,6 +4031,9 @@
+@@ -4002,6 +4002,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
  		}
@@ -527,7 +528,7 @@
  #if HAVE_SPARK_HARDWARE
  		CVFD::getInstance()->setledmode(SNeutrinoSettings::LED_MODE_STANDBY, true);
  #endif
-@@ -4066,9 +4069,10 @@
+@@ -4037,9 +4040,10 @@
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
  #if HAVE_SPARK_HARDWARE
  		CVFD::getInstance()->setledmode(SNeutrinoSettings::LED_MODE_STANDBY, false);
@@ -552,7 +553,7 @@
  #endif
  #include <driver/radiotext.h>
  #include <driver/streamts.h>
-@@ -1109,6 +1112,11 @@
+@@ -1112,6 +1115,11 @@
  
  	if(inst->Timeshift())
  		autoshift = false;
@@ -564,7 +565,7 @@
  
  	delete inst;
  }
-@@ -1253,6 +1261,11 @@
+@@ -1256,6 +1264,11 @@
  		std::string tmode = "ptimeshift"; // already recording, pause
  		bool res = true;
  		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
@@ -578,21 +579,7 @@
  			if (!FindTimeshift()) {
 --- neutrino-mp-martii-github.org/src/gui/movieplayer.cpp
 +++ neutrino-mp-martii-github/src/gui/movieplayer.cpp
-#@@ -335,9 +335,13 @@
-# 		else
-# 			CVFD::getInstance()->showServicename(file_name.c_str());
-# 		if(timeshift != TSHIFT_MODE_OFF) {
-#+#if defined(FP_ICON_TIMESHIFT)
-# 			CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
-# 			PlayFile();
-# 			CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, false);
-#+#else
-#+			PlayFile();
-#+#endif
-# 			break;
-# 		}
-# 		do
-@@ -384,25 +388,44 @@
+@@ -386,25 +386,44 @@
  
  	switch (playstate) {
  		case CMoviePlayerGui::PAUSE:
@@ -645,7 +632,7 @@
  		case CMoviePlayerGui::REW:
  			sprintf(tmp, "%dx<< ", abs(speed));
  			lcd = tmp;
-@@ -411,10 +434,21 @@
+@@ -413,10 +432,21 @@
  			sprintf(tmp, "%dx>> ", abs(speed));
  			lcd = tmp;
  			break;
@@ -669,26 +656,26 @@
  			break;
  		default:
  			break;
-@@ -422,7 +456,7 @@
+@@ -424,7 +454,7 @@
  	lcd += name;
- 	CVFD::getInstance()->setMode(LCD_MODE);
+ 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8);
  	CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
 -#endif
 +#endif //!HAVE_SPARK_HARDWARE
  }
  
  void CMoviePlayerGui::fillPids()
-@@ -933,7 +967,9 @@
+@@ -934,7 +964,9 @@
  			CZapit::getInstance()->SetVolumePercent(percent);
  		}
  		playstate = CMoviePlayerGui::PLAY;
 +#if defined(FP_ICON_PLAY)
  		CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
 +#endif
- 		if(timeshift != TSHIFT_MODE_OFF) {
+ 		if (timeshift != TSHIFT_MODE_OFF) {
  			first_start_timeshift = true;
  			startposition = -1;
-@@ -1419,8 +1455,12 @@
+@@ -1447,8 +1479,12 @@
  	}
  
  	FileTime.kill(time_forced);
@@ -698,9 +685,9 @@
 +#if defined(FP_ICON_PAUSE)
  	CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
 +#endif
- 
- 	HideHintBox();
- 
+ #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
+ 	CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
+ 	CVFD::getInstance()->ShowIcon(FP_ICON_FF, false);
 #--- neutrino-mp-martii-github.org/src/system/ytcache.cpp
 #+++ neutrino-mp-martii-github/src/system/ytcache.cpp
 #@@ -185,8 +185,9 @@

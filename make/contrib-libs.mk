@@ -8,7 +8,7 @@ $(D)/libcrypto: $(D)/bootstrap @DEPENDS_libcrypto@
 		./Configure shared linux-sh no-hw no-engine \
 			--prefix=/usr \
 			--openssldir=/.remove \
-		&& \
+			&& \
 		$(MAKE) depend && \
 		$(MAKE) && \
 		@INSTALL_libcrypto@
@@ -28,7 +28,7 @@ $(D)/libbluray: $(D)/bootstrap @DEPENDS_libbluray@
 			--target=$(target) \
 			--prefix=/usr \
 			--without-libxml2 \
-		&& \
+			&& \
 		$(MAKE) && \
 		@INSTALL_libbluray@
 	@CLEANUP_libbluray@
@@ -64,7 +64,7 @@ $(D)/libao: $(D)/bootstrap @DEPENDS_libao@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libao@
 	@CLEANUP_libao@
@@ -81,7 +81,7 @@ $(D)/howl: $(D)/bootstrap @DEPENDS_howl@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_howl@
 	@CLEANUP_howl@
@@ -103,11 +103,11 @@ $(D)/libboost: $(D)/bootstrap @DEPENDS_libboost@
 $(D)/libz: $(D)/bootstrap @DEPENDS_libz@
 	@PREPARE_libz@
 	cd @DIR_libz@ && \
-		CC=$(target)-gcc \
+		$(BUILDENV) \
 		./configure \
 			--prefix=/usr \
 			--shared \
-		&& \
+			&& \
 		$(MAKE) && \
 		@INSTALL_libz@
 	@CLEANUP_libz@
@@ -129,7 +129,7 @@ $(D)/libreadline: $(D)/bootstrap @DEPENDS_libreadline@
 			bash_cv_func_strcoll_broken=no \
 			bash_cv_have_mbstate_t=yes \
 			--prefix=/usr \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libreadline@
 	@CLEANUP_libreadline@
@@ -148,7 +148,7 @@ $(D)/libfreetype: $(D)/bootstrap $(D)/libpng @DEPENDS_libfreetype@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libfreetype@
 		if [ -d $(targetprefix)/usr/include/freetype2/freetype ] ; then \
@@ -180,7 +180,7 @@ $(D)/lirc: $(D)/bootstrap @DEPENDS_lirc@
 			--enable-debug \
 			--with-syslog=LOG_DAEMON \
 			--enable-sandboxed \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_lirc@
 	@CLEANUP_lirc@
@@ -197,7 +197,7 @@ $(D)/libjpeg: $(D)/bootstrap @DEPENDS_libjpeg@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libjpeg@
 	@CLEANUP_libjpeg@
@@ -250,7 +250,7 @@ $(D)/libpng12: $(D)/bootstrap @DEPENDS_libpng12@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
-		&& \
+			&& \
 		ECHO=echo $(MAKE) all && \
 		sed -e 's,^prefix="/usr",prefix="$(targetprefix)/usr",' < libpng-config > $(hostprefix)/bin/libpng-config && \
 		chmod 755 $(hostprefix)/bin/libpng-config && \
@@ -269,7 +269,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/libz @DEPENDS_libpng@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
-		&& \
+			&& \
 		ECHO=echo $(MAKE) all && \
 		@INSTALL_libpng@
 		mv $(targetprefix)/usr/bin/lib{png,png16}-config $(hostprefix)/bin/
@@ -289,7 +289,7 @@ $(D)/libungif: $(D)/bootstrap @DEPENDS_libungif@
 			--prefix=/usr \
 			--bindir=/.remove \
 			--without-x \
-		&& \
+			&& \
 		$(MAKE) && \
 		@INSTALL_libungif@
 	@CLEANUP_libungif@
@@ -306,9 +306,9 @@ $(D)/libgif: $(D)/bootstrap @DEPENDS_libgif@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=/usr \
 			--bindir=/.remove \
-		&& \
+			--prefix=/usr \
+			&& \
 		$(MAKE) && \
 		@INSTALL_libgif@
 	@CLEANUP_libgif@
@@ -326,7 +326,7 @@ $(D)/libgif_e2: $(D)/bootstrap @DEPENDS_libgif_e2@
 			--host=$(target) \
 			--prefix=/usr \
 			--without-x \
-		&& \
+			&& \
 		$(MAKE) && \
 		@INSTALL_libgif_e2@
 	@CLEANUP_libgif_e2@
@@ -354,7 +354,7 @@ $(D)/libcurl: $(D)/bootstrap @DEPENDS_libcurl@
 			--disable-smtp \
 			--without-ssl \
 			--with-random \
-		&& \
+			&& \
 		$(MAKE) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < curl-config > $(hostprefix)/bin/curl-config && \
 		chmod 755 $(hostprefix)/bin/curl-config && \
@@ -376,7 +376,7 @@ $(D)/libfribidi: $(D)/bootstrap @DEPENDS_libfribidi@
 			--disable-shared \
 			--with-glib=no \
 			--prefix=/usr \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libfribidi@
 	@CLEANUP_libfribidi@
@@ -394,7 +394,7 @@ $(D)/libsigc_e2: $(D)/bootstrap @DEPENDS_libsigc_e2@
 			--host=$(target) \
 			--prefix=/usr \
 			--disable-checks \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libsigc_e2@
 	@CLEANUP_libsigc_e2@
@@ -413,7 +413,7 @@ $(D)/libsigc: $(D)/bootstrap @DEPENDS_libsigc@
 			--prefix=/usr \
 			--enable-shared \
 			--disable-documentation \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libsigc@
 		if [ -d $(targetprefix)/usr/include/sigc++-2.0/sigc++ ] ; then \
@@ -441,7 +441,7 @@ $(D)/libmad: $(D)/bootstrap @DEPENDS_libmad@
 			--enable-shared=yes \
 			--enable-speed \
 			--enable-sso \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libmad@
 	@CLEANUP_libmad@
@@ -461,7 +461,7 @@ $(D)/libid3tag: $(D)/bootstrap $(D)/libz @DEPENDS_libid3tag@
 			--host=$(target) \
 			--prefix=/usr \
 			--enable-shared=yes \
-		&& \
+			&& \
 		$(MAKE) all && \
 		@INSTALL_libid3tag@
 	@CLEANUP_libid3tag@
@@ -845,7 +845,13 @@ endif
 $(D)/ffmpeg: $(D)/bootstrap $(D)/libass @DEPENDS_ffmpeg@
 	@PREPARE_ffmpeg@
 	cd @DIR_ffmpeg@ && \
+		$(BUILDENV) \
 		./configure \
+			--disable-static \
+			--enable-shared \
+			--enable-small \
+			--disable-runtime-cpudetect \
+			\
 			--disable-ffserver \
 			--disable-ffplay \
 			--disable-ffprobe \
@@ -938,15 +944,18 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass @DEPENDS_ffmpeg@
 			--disable-indevs \
 			--disable-outdevs \
 			--disable-bsfs \
+			--enable-pthreads \
 			--enable-bzlib \
 			--enable-zlib \
+			\
 			$(FFMPEG_EXTRA) \
+			\
 			--enable-cross-compile \
 			--enable-pthreads \
-			--disable-static \
 			--enable-shared \
 			--enable-small \
 			--enable-stripping \
+			--disable-static \
 			--disable-debug \
 			--disable-runtime-cpudetect \
 			--cross-prefix=$(target)- \
@@ -1230,16 +1239,24 @@ $(D)/libflac: $(D)/bootstrap @DEPENDS_libflac@
 	@CLEANUP_libflac@
 	touch $@
 
+##############################   PYTHON   #####################################
+
+#
+# elementtree
+#
+$(D)/elementtree: $(D)/bootstrap @DEPENDS_elementtree@
+	@PREPARE_elementtree@
+	cd @DIR_elementtree@ && \
+		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
+		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
+		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
+	@CLEANUP_elementtree@
+	touch $@
+
 #
 # libxml2
 #
-if ENABLE_ENIGMA2
-LIBXML2_EXTRA = --with-python=$(hostprefix)/bin/python
-else
-LIBXML2_EXTRA = --without-python
-endif
-
-$(D)/libxml2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2@
+$(D)/libxml2: $(D)/bootstrap @DEPENDS_libxml2@
 	@PREPARE_libxml2@
 	cd @DIR_libxml2@ && \
 		touch NEWS AUTHORS ChangeLog && \
@@ -1249,13 +1266,9 @@ $(D)/libxml2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
-			--enable-shared \
-			--disable-static \
-			--datarootdir=/.remove \
-			$(LIBXML2_EXTRA) \
+			--with-python=$(hostprefix)/bin/python \
 			--without-c14n \
 			--without-debug \
-			--without-docbook \
 			--without-mem-debug \
 		&& \
 		$(MAKE) all && \
@@ -1296,8 +1309,6 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 @DEPENDS_libxslt@
 		sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(targetprefix)/usr/include,g" -i $(targetprefix)/usr/lib/xsltConf.sh
 	@CLEANUP_libxslt@
 	touch $@
-
-##############################   PYTHON   #####################################
 
 #
 # libxmlccwrap
@@ -1390,6 +1401,32 @@ $(D)/pycrypto: $(D)/bootstrap $(D)/setuptools @DEPENDS_pycrypto@
 	touch $@
 
 #
+# pyusb
+#
+$(D)/pyusb: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyusb@
+	@PREPARE_pyusb@
+	cd @DIR_pyusb@ && \
+		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
+		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
+		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
+		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
+	@CLEANUP_pyusb@
+	touch $@
+
+#
+# pyopenssl
+#
+$(D)/pyopenssl: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyopenssl@
+	@PREPARE_pyopenssl@
+	cd @DIR_pyopenssl@ && \
+		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
+		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
+		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
+		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
+	@CLEANUP_pyopenssl@
+	touch $@
+
+#
 # python
 #
 $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/libcrypto $(D)/sqlite $(D)/libreadline $(D)/bzip2 @DEPENDS_python@
@@ -1436,44 +1473,6 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/libcrypto $(D)
 	touch $@
 
 #
-# pyusb
-#
-$(D)/pyusb: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyusb@
-	@PREPARE_pyusb@
-	cd @DIR_pyusb@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pyusb@
-	touch $@
-
-#
-# pyopenssl
-#
-$(D)/pyopenssl: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyopenssl@
-	@PREPARE_pyopenssl@
-	cd @DIR_pyopenssl@ && \
-		$(BUILDENV) CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pyopenssl@
-	touch $@
-
-#
-# elementtree
-#
-$(D)/elementtree: $(D)/bootstrap @DEPENDS_elementtree@
-	@PREPARE_elementtree@
-	cd @DIR_elementtree@ && \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_elementtree@
-	touch $@
-
-#
 # pythonwifi
 #
 $(D)/pythonwifi: $(D)/bootstrap $(D)/setuptools @DEPENDS_pythonwifi@
@@ -1510,19 +1509,6 @@ $(D)/pythonmechanize: $(D)/bootstrap $(D)/setuptools @DEPENDS_pythonmechanize@
 		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
 		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
 	@CLEANUP_pythonmechanize@
-	touch $@
-
-#
-# gdata
-#
-$(D)/gdata: $(D)/bootstrap $(D)/setuptools @DEPENDS_gdata@
-	@PREPARE_gdata@
-	cd @DIR_gdata@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_gdata@
 	touch $@
 
 #
@@ -1754,6 +1740,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
+			--enable-orc \
 		&& \
 		$(MAKE) && \
 		@INSTALL_gst_plugin_subsink@
@@ -1809,7 +1796,9 @@ $(D)/graphlcd: $(D)/bootstrap $(D)/libfreetype $(D)/libusb @DEPENDS_graphlcd@
 	[ -d "$(archivedir)/graphlcd-base-touchcol.git" ] && \
 	(cd $(archivedir)/graphlcd-base-touchcol.git; git pull ; git checkout touchcol; cd "$(buildprefix)";); \
 	cd @DIR_graphlcd@ && \
-		$(MAKE) all CC=$(target)-gcc CXX=$(target)-g++ LDFLAGS="-L$(targetprefix)/usr/lib -Wl,-rpath-link,$(targetprefix)/usr/lib" DESTDIR=$(targetprefix) && \
+		$(BUILDENV) \
+		$(MAKE) all DESTDIR=$(targetprefix)/usr \
+		&& \
 		@INSTALL_graphlcd@
 	@CLEANUP_graphlcd@
 	touch $@
