@@ -535,16 +535,6 @@ else
 	fi
 fi
 
-dircheck="ok"
-AC_MSG_CHECKING([for apps directory])
-if test ! -f "$appsdir/acinclude.m4" ; then
-	AC_MSG_WARN([appsdir $appsdir not found])
-	appsdir="missing_appsdir"
-	dircheck="fail"
-else
-	AC_MSG_RESULT([yes])
-fi
-
 AC_SUBST(appsdir)
 AC_SUBST(driverdir)
 AC_SUBST(sourcedir)
@@ -560,8 +550,8 @@ fi
 if test -z "$TARGET_CFLAGS" -o -z "$TARGET_CXXFLAGS"; then
 	TARGET_CFLAGS="-pipe"
 	if test "$enable_debug" = "yes"; then
-		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g3 -gdwarf-2"
-		TARGET_LDFLAGS=""
+		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g -gdwarf-2 -I$targetprefix/usr/include"
+		TARGET_LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
 	else
 		TARGET_CFLAGS="$TARGET_CFLAGS -Os -I$targetprefix/usr/include"
 		TARGET_LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
@@ -573,6 +563,16 @@ AC_SUBST(TARGET_CFLAGS)
 AC_SUBST(TARGET_CXXFLAGS)
 AC_SUBST(TARGET_LDFLAGS)
 
+
+dircheck="ok"
+AC_MSG_CHECKING([for apps directory])
+if test ! -f "$appsdir/acinclude.m4" ; then
+	AC_MSG_WARN([appsdir $appsdir not found])
+	appsdir="missing_appsdir"
+	dircheck="fail"
+else
+	AC_MSG_RESULT([yes])
+fi
 
 AC_PATH_PROG(M4,m4,no)
 if test "$M4" = "no"; then
@@ -662,14 +662,11 @@ fi
 
 ################################################################
 
-FONTDIR="/share/fonts"
-AC_SUBST(FONTDIR)
-
-CLEANUP="rm -rf"
 AC_SUBST(CLEANUP)
+CLEANUP="rm -rf"
 
-DEPSCLEANUP="rm -f"
 AC_SUBST(DEPSCLEANUP)
+DEPSCLEANUP="rm -f"
 
 #
 # core
@@ -998,10 +995,10 @@ ${srcdir}/rules-archive.pl ${srcdir}/rules-archive > Makefile-archive
 # summary
 #
 AC_MSG_RESULT([
+$ccacheinfo
 summary:
 ----------------------------------------
 ccache support              : $enable_ccache
-$ccacheinfo
 target cpu/boxtype          : $CPU_MODEL / $BOXTYPE
 linux kernel                : ${KERNELVERSION%.*}
 kernelversion               : $KERNELVERSION

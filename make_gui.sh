@@ -1,40 +1,9 @@
 #!/bin/bash
 # based on the original make.sh
 # Author: TangoCash
-# Last modified: 23.03.14
+# Last modified: 15.06.14
+##############################################
 setparameters() {
-CURDIR=`pwd`
-KATIDIR=${CURDIR%/cvs/cdk}
-
-CONFIGPARAM=" \
- --enable-maintainer-mode \
- --prefix=$KATIDIR/tufsbox \
- --with-cvsdir=$KATIDIR/cvs \
- --with-customizationsdir=$KATIDIR/custom \
- --with-flashscriptdir=$KATIDIR/flash \
- --with-archivedir=$HOME/Archive \
- --enable-ccache"
-
-##############################################
-
-# config.guess generates different answers for some packages
-# Ensure that all packages use the same host by explicitly specifying it.
-
-# First obtain the triplet
-AM_VER=`automake --version | awk '{print $NF}' | grep -oEm1 "^[0-9]+.[0-9]+"`
-host_alias=`/usr/share/automake-${AM_VER}/config.guess`
-
-# Then undo Suse specific modifications, no harm to other distribution
-case `echo ${host_alias} | cut -d '-' -f 1` in
-	i?86) VENDOR=pc ;;
-	*   ) VENDOR=unknown ;;
-esac
-host_alias=`echo ${host_alias} | sed -e "s/suse/${VENDOR}/"`
-
-# And add it to the config parameters.
-CONFIGPARAM="${CONFIGPARAM} --host=${host_alias} --build=${host_alias}"
-
-##############################################
 
 DIALOG=${DIALOG:-`which dialog`}
 tempfile=/tmp/test$$
@@ -46,6 +15,8 @@ if [ -z "${DIALOG}" ]; then
 	echo "Please install dialog package." 1>&2
 	exit 1
 fi
+
+MAKEPARAM=""
 }
 ##############################################
 greetings() {
@@ -94,11 +65,11 @@ ${DIALOG} --menu "\n Select Target:\n " $height $width $listheight \
 29	"Kathrein UFC-960" \
 30	"Vitamin HD5000" \
 31	"Atemio530" \
-32	"SagemCom 88 series"
-33	"Ferguson Ariva @Link 200"
-34	"Fortis HS7119 (not finished yet)"
-35	"Fortis HS7819 (not finished yet)"
-36	"Fortis DP7000 (not finished yet)"
+32	"SagemCom 88 series" \
+33	"Ferguson Ariva @Link 200" \
+34	"Fortis HS7119 (not finished yet)" \
+35	"Fortis HS7819 (not finished yet)" \
+36	"Fortis DP7000 (not finished yet)" \
 2> ${tempfile}
 
 opt=${?}
@@ -106,98 +77,16 @@ if [ $opt != 0 ]; then cleanup; exit; fi
 
 REPLY=`cat $tempfile`
 
-case "$REPLY" in
-	 1) TARGET="--enable-ufs910";BOXTYPE="--with-boxtype=ufs910";;
-	 3) TARGET="--enable-ufs912";BOXTYPE="--with-boxtype=ufs912";;
-	 4) TARGET="--enable-ufs922";BOXTYPE="--with-boxtype=ufs922";;
-	 5) TARGET="--enable-tf7700";BOXTYPE="--with-boxtype=tf7700";;
-	 6) TARGET="--enable-fortis_hdbox";BOXTYPE="--with-boxtype=fortis_hdbox";;
-	 7) TARGET="--enable-hl101";BOXTYPE="--with-boxtype=hl101";;
-	 8) TARGET="--enable-vip";BOXTYPE="--with-boxtype=vip";;
-	 9) TARGET="--enable-cuberevo";BOXTYPE="--with-boxtype=cuberevo";;
-	10) TARGET="--enable-cuberevo_mini";BOXTYPE="--with-boxtype=cuberevo_mini";;
-	11) TARGET="--enable-cuberevo_mini2";BOXTYPE="--with-boxtype=cuberevo_mini2";;
-	12) TARGET="--enable-cuberevo_250hd";BOXTYPE="--with-boxtype=cuberevo_250hd";;
-	13) TARGET="--enable-cuberevo_9500hd";BOXTYPE="--with-boxtype=cuberevo_9500hd";;
-	14) TARGET="--enable-cuberevo_2000hd";BOXTYPE="--with-boxtype=cuberevo_2000hd";;
-	15) TARGET="--enable-cuberevo_mini_fta";BOXTYPE="--with-boxtype=cuberevo_mini_fta";;
-	16) TARGET="--enable-homecast5101";BOXTYPE="--with-boxtype=homecast5101";;
-	17) TARGET="--enable-octagon1008";BOXTYPE="--with-boxtype=octagon1008";;
-	18) TARGET="--enable-spark";BOXTYPE="--with-boxtype=spark";;
-	19) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
-	20) TARGET="--enable-spark7162";BOXTYPE="--with-boxtype=spark7162";;
-	21) TARGET="--enable-ipbox9900";BOXTYPE="--with-boxtype=ipbox9900";;
-	22) TARGET="--enable-ipbox99";BOXTYPE="--with-boxtype=ipbox99";;
-	23) TARGET="--enable-ipbox55";BOXTYPE="--with-boxtype=ipbox55";;
-	24) TARGET="--enable-hs7810a";BOXTYPE="--with-boxtype=hs7810a";;
-	25) TARGET="--enable-adb_box";BOXTYPE="--with-boxtype=adb_box";;
-	26) TARGET="--enable-hs7110";BOXTYPE="--with-boxtype=hs7110";;
-	27) TARGET="--enable-atemio520";BOXTYPE="--with-boxtype=atemio520";;
-	28) TARGET="--enable-ufs913";BOXTYPE="--with-boxtype=ufs913";;
-	29) TARGET="--enable-ufc960";BOXTYPE="--with-boxtype=ufc960";;
-	30) TARGET="--enable-vitamin_hd5000";BOXTYPE="--with-boxtype=vitamin_hd5000";;
-	31) TARGET="--enable-atemio530";BOXTYPE="--with-boxtype=atemio530";;
-	32) TARGET="--enable-sagemcom88";BOXTYPE="--with-boxtype=sagemcom88";;
-	33) TARGET="--enable-arivalink200";BOXTYPE="--with-boxtype=arivalink200";;
-	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";;
-	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";;
-	36) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";;
-	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
-esac
-CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
+MAKEPARAM="$MAKEPARAM $REPLY "
 clear
-
-case "$REPLY" in
-	8)	${DIALOG} --menu "\n Select Model: \n " $height $width $listheight \
-		1	"VIP1 v1 [ single tuner + 2 CI + 2 USB ]" \
-		2	"VIP1 v2 [ single tuner + 2 CI + 1 USB + plug & play tuner (dvb-s2/t/c) ]" \
-		3	"VIP2 v1 [ twin tuner ]" \
-		2> ${tempfile}
-
-		opt=${?}
-		if [ $opt != 0 ]; then cleanup; exit; fi
-
-		REPLY=`cat $tempfile`
-
-		case "$REPLY" in
-			1) MODEL="--enable-hl101";;
-			2) MODEL="--enable-vip1_v2";;
-			3) MODEL="--enable-vip2_v1";;
-			*) MODEL="--enable-vip2_v1";;
-		esac
-		CONFIGPARAM="$CONFIGPARAM $MODEL"
-		clear
-		cd ./integrated_firmware
-		if [ -L fdma_STx7100_0.elf ]; then
-			rm fdma_STx7100_0.elf
-		fi
-		ln -s fdma2_7100-v3.1.elf fdma_STx7100_0.elf
-		cd - &>/dev/null
-		;;
-	1|5) # for UFS910 and TF7700 the old fdma version
-		cd ./integrated_firmware
-		if [ -L fdma_STx7100_0.elf ]; then
-			rm fdma_STx7100_0.elf
-		fi
-		ln -s fdma2_7100-v3.0.elf fdma_STx7100_0.elf
-		cd - &>/dev/null
-		;;
-	*)
-		cd ./integrated_firmware
-		if [ -L fdma_STx7100_0.elf ]; then
-			rm fdma_STx7100_0.elf
-		fi
-		ln -s fdma2_7100-v3.1.elf fdma_STx7100_0.elf
-		cd - &>/dev/null
-		;;
-esac
 
 ##############################################
 
 ${DIALOG} --menu "\n Select Kernel: \n " $height $width $listheight \
 1	"STM 24 P0209" \
 2	"STM 24 P0211 (recommended)" \
-3	"STM 24 P0213 (experimental)" \
+3	"STM 24 P0214 (experimental)" \
+4	"STM 24 P0215 (experimental)" \
 2> ${tempfile}
 
 opt=${?}
@@ -205,30 +94,17 @@ if [ $opt != 0 ]; then cleanup; exit; fi
 
 REPLY=`cat $tempfile`
 
-case "$REPLY" in
-	1)  KERNEL="--enable-stm24 --enable-p0209";STMFB="stm24";;
-	2)  KERNEL="--enable-stm24 --enable-p0211";STMFB="stm24";;
-	3)  KERNEL="--enable-stm24 --enable-p0213";STMFB="stm24";;
-	*)  KERNEL="--enable-stm24 --enable-p0211";STMFB="stm24";;
-esac
-CONFIGPARAM="$CONFIGPARAM $KERNEL"
+MAKEPARAM="$MAKEPARAM $REPLY "
 clear
 
 ##############################################
 
 ${DIALOG} --defaultno --yesno "\n Kernel Debug: \n Activate debug (y/N)? \n" 0 0
 REPLY=${?}
-[ "$REPLY" == "0" ] && CONFIGPARAM="$CONFIGPARAM --enable-debug"
+DEBUG="N"
+[ "$REPLY" == "0" ] && DEBUG="Y"
+MAKEPARAM="$MAKEPARAM $DEBUG "
 clear
-
-##############################################
-
-cd ../driver/
-echo "# Automatically generated config: don't edit" > .config
-echo "#" >> .config
-echo "export CONFIG_ZD1211REV_B=y" >> .config
-echo "export CONFIG_ZD1211=n" >> .config
-cd - &>/dev/null
 
 ##############################################
 
@@ -242,98 +118,15 @@ if [ $opt != 0 ]; then cleanup; exit; fi
 
 REPLY=`cat $tempfile`
 
-case "$REPLY" in
-	1) PLAYER="--enable-player191 --enable-multicom324"
-		cd ../driver/include/
-		if [ -L player2 ]; then
-			rm player2
-		fi
-
-		if [ -L stmfb ]; then
-			rm stmfb
-		fi
-
-		if [ -L multicom ]; then
-			rm multicom
-		fi
-
-		ln -s player2_191 player2
-		ln -s stmfb-3.1_stm24_0102 stmfb
-		ln -s ../multicom-3.2.4/include multicom
-		cd - &>/dev/null
-
-		cd ../driver/
-		if [ -L player2 ]; then
-			rm player2
-		fi
-		ln -s player2_191 player2
-		echo "export CONFIG_PLAYER_191=y" >> .config
-		cd - &>/dev/null
-
-		if [ -L multicom ]; then
-			rm multicom
-		fi
-		ln -s multicom-3.2.4 multicom
-		echo "export CONFIG_MULTICOM324=y" >> .config
-		cd - &>/dev/null
-
-		cd ../driver/stgfb
-		if [ -L stmfb ]; then
-			rm stmfb
-		fi
-		ln -s stmfb-3.1_stm24_0102 stmfb
-		cd - &>/dev/null
-	;;
-	2) PLAYER="--enable-player191 --enable-multicom324"
-		cd ../driver/include/
-		if [ -L player2 ]; then
-			rm player2
-		fi
-
-		if [ -L stmfb ]; then
-			rm stmfb
-		fi
-
-		if [ -L multicom ]; then
-			rm multicom
-		fi
-
-		ln -s player2_191 player2
-		ln -s stmfb-3.1_stm24_0104 stmfb
-		ln -s ../multicom-3.2.4/include multicom
-		cd - &>/dev/null
-
-		cd ../driver/
-		if [ -L player2 ]; then
-			rm player2
-		fi
-
-		if [ -L multicom ]; then
-			rm multicom
-		fi
-
-		ln -s player2_191 player2
-		ln -s multicom-3.2.4 multicom
-		echo "export CONFIG_PLAYER_191=y" >> .config
-		echo "export CONFIG_MULTICOM324=y" >> .config
-		cd - &>/dev/null
-
-		cd ../driver/stgfb
-		if [ -L stmfb ]; then
-			rm stmfb
-		fi
-		ln -s stmfb-3.1_stm24_0104 stmfb
-		cd - &>/dev/null
-	;;
-	*) PLAYER="--enable-player191";;
-esac
+MAKEPARAM="$MAKEPARAM $REPLY "
 clear
 ##############################################
 
 ${DIALOG} --menu "\n Select Media Framework: \n " $height $width $listheight \
 1	"eplayer3" \
-2	"gstreamer" \
+2	"gstreamer (E2)" \
 3	"use build-in (NMP / NHD2)" \
+4	"all" \
 2> ${tempfile}
 
 opt=${?}
@@ -341,42 +134,46 @@ if [ $opt != 0 ]; then cleanup; exit; fi
 
 REPLY=`cat $tempfile`
 
-case "$REPLY" in
-	1) MEDIAFW="--enable-eplayer3";;
-	2) MEDIAFW="--enable-mediafwgstreamer";;
-	3) MEDIAFW="--enable-buildinplayer";;
-	*) MEDIAFW="--enable-buildinplayer";;
-esac
+MAKEPARAM="$MAKEPARAM $REPLY "
 clear
 
 ##############################################
 
 ${DIALOG} --defaultno --yesno "\n External LCD support: \n Activate (y/N)? \n" 0 0
 REPLY=${?}
-[ "$REPLY" == "0" ] && EXTERNAL_LCD="--enable-externallcd"
+LCD="1"
+[ "$REPLY" == "0" ] && LCD="2"
+MAKEPARAM="$MAKEPARAM $LCD "
 clear
 
+##############################################
+
+${DIALOG} --menu "\n Select to build: \n " $height $width $listheight \
+1	"Neutrino" \
+2	"Enigma2 + WLAN" \
+2> ${tempfile}
+
+opt=${?}
+if [ $opt != 0 ]; then cleanup; exit; fi
+
+REPLY=`cat $tempfile`
+
+MAKEPARAM="$MAKEPARAM $REPLY "
+clear
 ##############################################
 } #closing bracket configmenu
 ##############################################
 doconfig() {
-# Check this option if you want to use the version of GCC.
-#CONFIGPARAM="$CONFIGPARAM --enable-gcc47"
+##############################################
+
+#${DIALOG} --msgbox "$MAKEPARAM" 0 0
 
 ##############################################
 
-CONFIGPARAM="$CONFIGPARAM $PLAYER $MEDIAFW $EXTERNAL_LCD"
-
-#${DIALOG} --msgbox "$CONFIGPARAM" 0 0
+./make.sh $MAKEPARAM 2>&1 | ${DIALOG} --progressbox "configuring... please wait...." 40 120
 
 ##############################################
 
-./autogen.sh 2>&1 | ${DIALOG} --progressbox "configuring... please wait...." 40 120
-./configure $CONFIGPARAM 2>&1 | ${DIALOG} --progressbox "configuring... please wait...." 40 120
-
-##############################################
-
-echo $CONFIGPARAM >lastChoice
 }
 ##############################################
 mainmenu() {
@@ -399,7 +196,7 @@ ${DIALOG} --cancel-label "Exit" --menu \
 *                                                                                          *\n\
 ********************************************************************************************\n\
                             ----------------------------------------\n\
-                            Your build environment is ready :-)\n\
+                            Your Duckbox Development Toolchain is ready :-)\n\
                             Your next step could be:\n\
                             ----------------------------------------\n" 0 0 0 \
 1	"Build Neutrino-MP" \
@@ -445,24 +242,24 @@ esac
 }
 ##############################################
 makeflash() {
-if [ -d $KATIDIR/tufsbox/release_neutrino ]; then
-	BOXTYPE=`cat $KATIDIR/tufsbox/release_neutrino/var/etc/hostname`
+if [ -d ../tufsbox/release_neutrino ]; then
+	BOXTYPE=`cat ../tufsbox/release_neutrino/var/etc/hostname`
 else
-	BOXTYPE=`cat $KATIDIR/tufsbox/release/etc/hostname`
+	BOXTYPE=`cat ../tufsbox/release/etc/hostname`
 fi
 
 if [ "$BOXTYPE" = "" ]; then
 	${DIALOG} --msgbox "No Target build to create Flashimage" 0 0
 	cleanup
 else
-	if [ -e $KATIDIR/flash/$BOXTYPE/$BOXTYPE.sh ]; then
+	if [ -e ../flash/$BOXTYPE/$BOXTYPE.sh ]; then
 	 ${DIALOG} --insecure --passwordbox "sudo password to run flashscript ?" 0 0 2> $tempfile
-	 cd $KATIDIR/flash/$BOXTYPE
+	 cd ../flash/$BOXTYPE
 	 echo `cat $tempfile` | sudo -S ./$BOXTYPE.sh 2>&1 | ${DIALOG} --programbox "preparing flashimage... please wait...." 40 120
 	fi
-	if [ -e $KATIDIR/flash/$BOXTYPE/make_flash.sh ]; then
+	if [ -e ../flash/$BOXTYPE/make_flash.sh ]; then
 	 ${DIALOG} --insecure --passwordbox "sudo password to run flashscript ?" 0 0 2> $tempfile
-	 cd $KATIDIR/flash/$BOXTYPE
+	 cd ../flash/$BOXTYPE
 	 echo `cat $tempfile` | sudo -S ./make_flash.sh 2>&1 | ${DIALOG} --programbox "preparing flashimage... please wait...." 40 120
 	fi
 	

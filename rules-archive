@@ -186,7 +186,7 @@ gst-plugin-subsink.git;git://git.code.sf.net/p/openpli/gstsubsink;8182abe751364f
 #
 # ENIGMA2
 #
-libtuxtxt.git;git://openpli.git.sourceforge.net/gitroot/openpli/tuxtxt
+libtuxtxt.git;git://git.code.sf.net/p/openpli/tuxtxt
 enigma2-openpli-plugins-enigma2.git;git://git.code.sf.net/p/openpli/plugins-enigma2
 e2openplugin-OpenWebif.git;git://github.com/HDMU/e2openplugin-OpenWebif
 hotplug-e2-helper.git;git://git.code.sf.net/p/openpli/hotplug-e2-helper

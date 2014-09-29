@@ -1084,9 +1084,17 @@ diff -Naur graphlcd-base-touchcol.git/graphlcd.conf graphlcd-base-touchcol/graph
 diff -Naur graphlcd-base-touchcol.git/Make.config graphlcd-base-touchcol/Make.config
 --- graphlcd-base-touchcol.git/Make.config	2014-02-03 15:33:45.179140000 +0100
 +++ graphlcd-base-touchcol/Make.config	2014-02-03 15:43:49.947114684 +0100
-@@ -8,7 +8,7 @@
+@@ -3,12 +3,12 @@
  
- #CXX      = g++
+ ### The C compiler and options:
+ 
+-CC       = gcc
+-CFLAGS   = -O2
++CC       = $(TARGET)gcc
++CFLAGS   = -Os
+ 
+-#CXX      = g++
++CXX      = $(TARGET)g++
  
 -CXXFLAGS = -g -O2 -Wall -Woverloaded-virtual
 +CXXFLAGS = -g -pipe -Os -Wall -Woverloaded-virtual
