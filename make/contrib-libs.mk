@@ -840,12 +840,13 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav @DEPENDS_libdreamdvd@
 #
 if ENABLE_ENIGMA2
 FFMPEG_EXTRA = --enable-librtmp
+LIBRTMPDUMP = librtmpdump
 endif
 
-$(D)/ffmpeg: $(D)/bootstrap $(D)/libass @DEPENDS_ffmpeg@
+$(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 	@PREPARE_ffmpeg@
 	cd @DIR_ffmpeg@ && \
-		$(BUILDENV) \
+		export PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig && \
 		./configure \
 			--disable-static \
 			--enable-shared \

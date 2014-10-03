@@ -1,6 +1,9 @@
 # keeping all patches together in one file
 # uncomment if needed
 #
+# Neutrino MP from github
+NEUTRINO_MP_LIBSTB_GH_PATCHES += 
+NEUTRINO_MP_GH_PATCHES += 
 
 # Neutrino MP
 NEUTRINO_MP_LIBSTB_HAL_PATCHES = $(PATCHES)/libstb-hal.patch

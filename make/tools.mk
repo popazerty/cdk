@@ -4,11 +4,7 @@
 tools-clean:
 	-$(MAKE) -C $(appsdir)/tools distclean
 
-if ENABLE_ENIGMA2
-ENIGMA2_FFMPEG = librtmpdump
-endif
-
-$(appsdir)/tools/config.status: bootstrap driver bzip2 libpng libjpeg $(ENIGMA2_FFMPEG) ffmpeg
+$(appsdir)/tools/config.status: bootstrap driver bzip2 libpng libjpeg ffmpeg
 	cd $(appsdir)/tools && $(CONFIGURE) \
 	$(if $(MULTICOM324), --enable-multicom324) \
 	$(if $(MULTICOM406), --enable-multicom406) \
