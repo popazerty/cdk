@@ -412,7 +412,7 @@ yaud-neutrino-mp-all: yaud-none lirc \
 #
 # libstb-hal
 #
-NEUTRINO_MP_LIBSTB_HAL_PATCHES =
+NEUTRINO_MP_LIBSTB_PATCHES =
 
 $(D)/libstb-hal.do_prepare:
 	rm -rf $(sourcedir)/libstb-hal
@@ -423,7 +423,7 @@ $(D)/libstb-hal.do_prepare:
 	git clone git://gitorious.org/neutrino-hd/max10s-libstb-hal.git $(archivedir)/libstb-hal.git; \
 	cp -ra $(archivedir)/libstb-hal.git $(sourcedir)/libstb-hal;\
 	cp -ra $(sourcedir)/libstb-hal $(sourcedir)/libstb-hal.org
-	for i in $(NEUTRINO_MP_LIBSTB_HAL_PATCHES); do \
+	for i in $(NEUTRINO_MP_LIBSTB_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
 		cd $(sourcedir)/libstb-hal && patch -p1 -i $$i; \
 	done;
@@ -887,5 +887,3 @@ neutrino-mp-tangos-clean:
 neutrino-mp-tangos-distclean:
 	rm -rf $(N_OBJDIR)
 	rm -f $(D)/neutrino-mp-tangos*
-
-
