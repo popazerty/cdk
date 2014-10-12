@@ -217,7 +217,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/data/rc_models/hs9
 +		<button name="FASTFORWARD" pos="88,332" />	<!-- KEY_FASTFORWARD-->
 +		<button name="LAST"        pos="31,350" />	<!-- KEY_PREVIOUS--> 
 +		<button name="RECORD"      pos="69,350" />	<!-- KEY_RECORD-->
-+		<button name="NEXT"        pos="22,350" />	<!-- KEY_NEXT-->
++		<button name="NEXT"        pos="88,350" />	<!-- KEY_NEXT-->
 +		<button name="OPEN"        pos="88,159" />	<!-- KEY_DIRECTORY-->
 +		<button name="PAUSE"       pos="69,332" />	<!-- KEY_PAUSE-->
 +		<button name="STOP"        pos="50,350" />	<!-- KEY_STOP-->
