@@ -105,7 +105,7 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
 		patch -p1 < "../../cdk/Patches/vfd-drivers.patch"; \
 		rm -rf $(targetprefix)/usr/local/share/enigma2/rc_models; \
-		if [ -e $(appsdir)/enigma2-nightly/data/rc_models/rc_models.cfg ]; then \
+		if [ -e $(sourcedir)/enigma2-nightly/data/rc_models/rc_models.cfg ]; then \
 			patch -p1 < "../../cdk/Patches/rc-models.patch"; \
 		else \
 			patch -p1 < "../../cdk/Patches/rc-models_old.patch"; \
