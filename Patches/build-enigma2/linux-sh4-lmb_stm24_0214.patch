@@ -103,7 +103,7 @@
  	setup_bootmem_allocator(start_pfn);
  }
  #else
-@@ -442,7 +413,6 @@
+@@ -444,7 +413,6 @@
  	nodes_clear(node_online_map);
  
  	/* Setup bootmem with available RAM */
