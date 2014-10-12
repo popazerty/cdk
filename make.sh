@@ -92,8 +92,8 @@ case $1 in
 		echo "   31) Atemio AM530"
 		echo "   32) SagemCom 88 series"
 		echo "   33) Ferguson Ariva @Link 200"
-		echo "   34) Fortis HS7119 (not finished yet)"
-		echo "   35) Fortis HS7819 (almost finished)"
+		echo "   34) Fortis HS7119"
+		echo "   35) Fortis HS7819"
 		echo "   36) Fortis DP7000 (not finished yet)"
 		read -p "Select target (1-36)? ";;
 esac
@@ -282,7 +282,7 @@ case $5 in
 	*)	echo -e "\nMedia Framework:"
 		echo "   1) eplayer3"
 		echo "   2) gstreamer"
-		echo "   3) use built-in (recommended for Neutrino)"
+		echo "   3) use built-in (required for Neutrino)"
 		echo "   4) gstreamer+eplayer3 (recommended for OpenPLi)"
 		read -p "Select media framework (1-4)? ";;
 esac
@@ -321,7 +321,13 @@ case $7 in
 esac
 
 case "$REPLY" in
-	2)	CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
+	2)	if [ "$MFWORK" != "built-in" ]; then
+			echo "You did not select built-in as the Media Framework."
+			echo "This is required for Neutrino."
+			echo "Exiting..."
+			exit
+		fi
+		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
 			[1-6])	REPLY=$8;;
 			*)	echo -e "\nWhich neutrino variant do you want to build?"
@@ -342,7 +348,13 @@ case "$REPLY" in
 			*)	IMAGEN="neutrino-mp";;
 		esac
 		NEUTRINO=$REPLY;;
-	*)	CONFIGPARAM="$CONFIGPARAM --enable-enigma2 --enable-wlandriver"
+	*)	if [ "$MFWORK" == "built-in" ]; then
+			echo "You selected built-in as the Media Framework."
+			echo "You cannot build Enigma2 with that."
+			echo "Exiting..."
+			exit
+		fi
+		CONFIGPARAM="$CONFIGPARAM --enable-enigma2 --enable-wlandriver"
 		IMAGEN="enigma2";;
 esac
 
