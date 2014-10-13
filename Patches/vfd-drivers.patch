@@ -2941,7 +2941,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py enigma2-nightly.patched/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly.patched/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py	2013-12-18 20:00:00.000000000 +0100
-@@ -0,0 +1,385 @@
+@@ -0,0 +1,409 @@
 +# -*- coding: utf-8 -*-
 +from Plugins.Plugin import PluginDescriptor
 +from ServiceReference import ServiceReference
@@ -2960,7 +2960,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +from Tools.HardwareInfo import HardwareInfo
 +from Screens.Screen import Screen
 +import gettext
-+#Version 141012.1
++#Version 141013.1
 +stb = HardwareInfo().get_device_name()
 +lang = language.getLanguage()
 +environ['LANGUAGE'] = lang[:2]
@@ -3139,6 +3139,9 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +		print '[VFD-Icons] Start'
 +		self.record = False
 +		self.standby = False
++		self.dolbyAvailable = False
++		self.mp3Available = False
++		self.DTSAvailable = False
 +		self.timer = eTimer()
 +		self.timer.callback.append(self.timerEvent)
 +		self.timer.start(60000, False) # start one minute timer
@@ -3185,6 +3188,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +
 +	def UpdatedInfo(self):
 +		print '[VFD-Icons] __evUpdatedInfo'
++		self.checkAudioTracks()
 +		self.writeName()
 +
 +	def writeName(self):
@@ -3222,6 +3226,25 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +				servicename = servicename.upper()
 +			servicename = servicename.replace('  ', ' ')
 +			evfd.getInstance().vfd_write_string(servicename[0:63])
++
++	def checkAudioTracks(self):
++		self.dolbyAvailable = False
++		self.mp3Available = False
++		self.DTSAvailable = False
++		service = self.session.nav.getCurrentService()
++		if service:
++			audio = service.audioTracks()
++			if audio:
++				n = audio.getNumberOfTracks()
++				for x in range(n):
++					i = audio.getTrackInfo(x)
++					description = i.getDescription();
++					if description.find("AC3") != -1:
++						self.dolbyAvailable = True
++					if description.find("MP3") != -1:
++						self.mp3Available = True
++					if description.find("DTS") != -1:
++						self.DTSAvailable = True
 +
 +	def timerEvent(self):
 +		if (self.record == True and config.plugins.vfdicon.recredled.value != 0):
@@ -3327,6 +3350,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			icon = _("vfddisplay.png"),
 +			fnc = opencfg))
 +	return l
++
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/meta/Makefile.am enigma2-nightly.patched/lib/python/Plugins/Extensions/hs7810aVFD/meta/Makefile.am
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/meta/Makefile.am	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly.patched/lib/python/Plugins/Extensions/hs7810aVFD/meta/Makefile.am	2013-12-18 20:00:00.000000000 +0100
