@@ -47,9 +47,12 @@
  	*cmdline_p = command_line;
 --- linux-sh4/arch/sh/boards/mach-hdk7111/setup.c	2012-03-31 15:26:54.000000000 +0200
 +++ linux-sh4/arch/sh/boards/mach-hdk7111/setup.c.patched	2012-07-08 20:51:17.000000000 +0200
-@@ -29,30 +29,88 @@
+@@ -27,125 +27,154 @@
+ #include <linux/stm/pci-glue.h>
+ #include <linux/mtd/mtd.h>
  #include <linux/mtd/nand.h>
- #include <linux/mtd/physmap.h>
+-#include <linux/mtd/physmap.h>
++#include <linux/i2c.h>
  #include <linux/mtd/partitions.h>
 -#include <linux/spi/spi.h>
 -#include <linux/spi/flash.h>
@@ -66,12 +69,11 @@
  
 -/* The hdk7111 board is populated with NOR, NAND, and Serial Flash.  The setup
 - * below assumes the board is in its default boot-from-NOR configuration.  Other
-+/* The Fortis HS7119 main board is populated with NAND Flash.  The setup below
-+ * assumes the board is in its default boot-from-NAND configuration.  Other
-  * boot configurations are possible but require board-level modifications to be
+- * boot configurations are possible but require board-level modifications to be
 - * made, and equivalent changes to the setup here.  Note, only boot-from-NOR has
 - * been fully tested.
-+ * made, and equivalent changes to the setup here.
++/* The Fortis HS7119 main board is populated with NAND Flash.  The setup
++ * below assumes the board is in its default boot-from-NAND configuration.
   */
  
 +const char *LMI_IO_partalias[] = { "v4l2-coded-video-buffers", "BPA2_Region1", "v4l2-video-buffers",
@@ -137,23 +139,104 @@
  	stx7111_configure_asc(2, &(struct stx7111_asc_config) {
  			.hw_flow_control = 0,
  			.is_console = 1, });
+ 
+-}
 -
+-static struct platform_device hdk7111_leds = {
+-	.name = "leds-gpio",
+-	.id = -1,
+-	.dev.platform_data = &(struct gpio_led_platform_data) {
+-		.num_leds = 1,
+-		.leds = (struct gpio_led[]) {
+-			{
+-				.name = "HB red",
+-				.default_trigger = "heartbeat",
+-				.gpio = stm_gpio(3, 0),
+-			},
+-		},
+-	},
+-};
+-
+-static struct gpio_keys_button hdk7111_buttons[] = {
+-	{
+-		.code = BTN_0,
+-		.gpio = stm_gpio(6, 4),
+-		.desc = "SW1",
+-	},
+-	{
+-		.code = BTN_1,
+-		.gpio = stm_gpio(6, 5),
+-		.desc = "SW2",
+-	},
+-	{
+-		.code = BTN_2,
+-		.gpio = stm_gpio(6, 6),
+-		.desc = "SW3",
+-	},
+-};
+-
+-static struct gpio_keys_platform_data hdk7111_button_data = {
+-	.buttons = hdk7111_buttons,
+-	.nbuttons = ARRAY_SIZE(hdk7111_buttons),
+-};
+-
+-static struct platform_device hdk7111_button_device = {
+-	.name = "gpio-keys",
+-	.id = -1,
+-	.num_resources = 0,
+-	.dev = {
+-		.platform_data = &hdk7111_button_data,
+-	}
+-};
+-
+-static struct platform_device hdk7111_nor_flash = {
+-	.name		= "physmap-flash",
+-	.id		= -1,
+-	.num_resources	= 1,
+-	.resource	= (struct resource[]) {
+-		STM_PLAT_RESOURCE_MEM(0, 32*1024*1024),
+-	},
+-	.dev.platform_data = &(struct physmap_flash_data) {
+-		.width		= 2,
+-		.nr_parts	= 3,
+-		.parts		=  (struct mtd_partition []) {
+-			{
+-				.name = "NOR Flash 1",
+-				.size = 0x00080000,
+-				.offset = 0x00000000,
+-			}, {
+-				.name = "NOR Flash 2",
+-				.size = 0x00200000,
+-				.offset = MTDPART_OFS_NXTBLK,
+-			}, {
+-				.name = "NOR Flash 3",
+-				.size = MTDPART_SIZ_FULL,
+-				.offset = MTDPART_OFS_NXTBLK,
+-			},
+-		},
+-
+-
+-	},
+-};
 +	stx7111_configure_asc(3, &(struct stx7111_asc_config) {
 +			.hw_flow_control = 0,
 +			.is_console = 0, });
 +
 +	bpa2_init(bpa2_parts_table, ARRAY_SIZE(bpa2_parts_table));
- }
- 
- static struct platform_device hdk7111_leds = {
-@@ -127,25 +185,59 @@
- 				.offset = MTDPART_OFS_NXTBLK,
- 			},
- 		},
--
--
- 	},
- };
++}
++
++/* Allegro A8293 LNB power controller & STV0903 tuner */
++static struct i2c_board_info hs7x1x_a8293[] __initdata = {
++	{
++		I2C_BOARD_INFO("hs7x1x_a8293", 0x08),
++	},
++};
++
++static struct i2c_board_info hs7x1x_stv0903 [] __initdata = {
++	{
++		I2C_BOARD_INFO("hs7x1x_stv0903", 0x68),
++	},
++};
  
  struct stm_nand_bank_data hdk7111_nand_flash = {
  	.csn		= 1,
@@ -217,13 +300,10 @@
  	},
  	.timing_data	= &(struct stm_nand_timing_data) {
  		.sig_setup	= 50,		/* times in ns */
-@@ -157,30 +249,6 @@
- 		.rd_on		= 10,
- 		.rd_off		= 40,
- 		.chip_delay	= 30,		/* in us */
--	},
--};
--
+@@ -160,30 +189,6 @@
+ 	},
+ };
+ 
 -static struct spi_board_info hdk7111_serial_flash_board_info =  {
 -	.modalias       = "m25p80",
 -	.bus_num	= 0,
@@ -245,25 +325,90 @@
 -				.offset = MTDPART_OFS_NXTBLK,
 -			},
 -		},
- 	},
+-	},
+-};
+-
+ static int hdk7111_phy_reset(void *bus)
+ {
+ 	gpio_set_value(HDK7111_PIO_PHY_RESET, 0);
+@@ -203,27 +208,6 @@
+ #define HDK7111_PCI_IDSEL stm_gpio(4, 4)
+ #define HDK7111_PCI_SERR_IRQ ILC_EXT_IRQ(1)
+ 
+-static struct stm_plat_pci_config hdk7111_pci_config = {
+-	.pci_irq = {
+-		/* Bizarre irq usage */
+-		[0] = PCI_PIN_UNUSED,
+-		[1] = PCI_PIN_DEFAULT,
+-		[2] = PCI_PIN_DEFAULT,
+-		[3] = PCI_PIN_UNUSED,
+-	},
+-	.serr_irq = HDK7111_PCI_SERR_IRQ,
+-	.idsel_lo = 30, /* Actually unused, connected to PIO */
+-	.idsel_hi = 30,
+-	.req_gnt = {
+-		[0] = PCI_PIN_DEFAULT,
+-		[1] = PCI_PIN_UNUSED,
+-		[2] = PCI_PIN_UNUSED,
+-		[3] = PCI_PIN_UNUSED
+-	},
+-	.pci_clk = 33333333,
+-	.pci_reset_gpio = stm_gpio(3, 7),
+-};
+-
+ int pcibios_map_platform_irq(struct pci_dev *dev, u8 slot, u8 pin)
+ {
+ 	int ret = -EINVAL;
+@@ -240,9 +221,6 @@
+ }
+ 
+ static struct platform_device *hdk7111_devices[] __initdata = {
+-	&hdk7111_leds,
+-	&hdk7111_button_device,
+-	&hdk7111_nor_flash,
  };
  
-@@ -268,14 +336,6 @@
- 		nor_bank_size = emi_bank_base(2) - nor_bank_base;
- 		hdk7111_nand_flash.csn = 0;
- 		break;
--	case 0x2:
--		/* Boot-from-SPI */
--		pr_info("Configuring FLASH for boot-from-SPI\n");
--		/* NOR mapped to EMIB, with physical offset of 0x06000000! */
+ static int __init hdk7111_devices_init(void)
+@@ -254,24 +237,9 @@
+ 	/* Configure Flash according to boot-device */
+ 	sc = sysconf_claim(SYS_STA, 1, 16, 17, "boot_device");
+ 	switch (sysconf_read(sc)) {
+-	case 0x0:
+-		/* Boot-from-NOR: */
+-		pr_info("Configuring FLASH for boot-from-NOR\n");
+-		nor_bank_base = emi_bank_base(0);
+-		nor_bank_size = emi_bank_base(1) - nor_bank_base;
+-		hdk7111_nand_flash.csn = 1;
+-		break;
+ 	case 0x1:
+ 		/* Boot-from-NAND */
+ 		pr_info("Configuring FLASH for boot-from-NAND\n");
 -		nor_bank_base = emi_bank_base(1);
 -		nor_bank_size = emi_bank_base(2) - nor_bank_base;
 -		hdk7111_nand_flash.csn = 0;
 -		break;
- 	default:
- 		BUG();
- 		break;
-@@ -296,27 +356,7 @@
+-	case 0x2:
+-		/* Boot-from-SPI */
+-		pr_info("Configuring FLASH for boot-from-SPI\n");
+-		/* NOR mapped to EMIB, with physical offset of 0x06000000! */
+ 		nor_bank_base = emi_bank_base(1);
+ 		nor_bank_size = emi_bank_base(2) - nor_bank_base;
+ 		hdk7111_nand_flash.csn = 0;
+@@ -282,41 +250,13 @@
+ 	}
+ 	sysconf_release(sc);
+ 
+-	/* Update NOR Flash base address and size: */
+-	/*     - reduce visibility of NOR flash to EMI bank size */
+-	if (hdk7111_nor_flash.resource[0].end > nor_bank_size - 1)
+-		hdk7111_nor_flash.resource[0].end = nor_bank_size - 1;
+-	/*     - update resource parameters */
+-	hdk7111_nor_flash.resource[0].start += nor_bank_base;
+-	hdk7111_nor_flash.resource[0].end += nor_bank_base;
+-
+ 	stx7111_configure_nand(&(struct stm_nand_config) {
+ 			.driver = stm_nand_flex,
+ 			.nr_banks = 1,
  			.banks = &hdk7111_nand_flash,
  			.rbn.flex_connected = 1,});
  
@@ -292,11 +437,12 @@
  	stx7111_configure_ssc_i2c(1, NULL);
  	stx7111_configure_ssc_i2c(2, NULL);
  	stx7111_configure_ssc_i2c(3, NULL);
-@@ -341,7 +381,6 @@
- 				.tx_enabled = 1,
+@@ -342,6 +282,8 @@
  				.tx_od_enabled = 0,
  				});
--
+ 
++	i2c_register_board_info(0, hs7x1x_a8293, ARRAY_SIZE(hs7x1x_a8293));
++	i2c_register_board_info(0, hs7x1x_stv0903, ARRAY_SIZE(hs7x1x_stv0903));
  
  	return platform_add_devices(hdk7111_devices,
  				    ARRAY_SIZE(hdk7111_devices));
