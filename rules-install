@@ -122,8 +122,8 @@ sshfs;make:install:DESTDIR=TARGETS
 tinyxml;make:install:PREFIX=TARGETS/usr
 libnfs;make:install:DESTDIR=TARGETS
 taglib;make:install:DESTDIR=TARGETS
-
 libxml2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libxml2.la;rewrite-dependency:TARGETS/usr/lib/libxml2.la
+libxml2_e2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libxml2.la;rewrite-dependency:TARGETS/usr/lib/libxml2.la
 libxslt;rewrite-pkgconfig:libxslt.pc:libexslt.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libxslt.la:TARGETS/usr/lib/libexslt.la
 
 #

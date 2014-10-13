@@ -804,8 +804,16 @@ endif
 #
 # fonts
 #
-	cp -aR $(targetprefix)/usr/share/fonts/{neutrino,DejaVuLGCSansMono-Bold}.ttf $(prefix)/release/usr/share/fonts
-	ln -s /usr/share/fonts/DejaVuLGCSansMono-Bold.ttf $(prefix)/release/usr/share/fonts/tuxtxt.ttf
+	if [ -e $(targetprefix)/usr/share/fonts/neutrino.ttf ]; then \
+		cp -aR $(targetprefix)/usr/share/fonts/neutrino.ttf $(prefix)/release/usr/share/fonts; \
+	fi
+	if [ -e $(targetprefix)/usr/share/fonts/micron.ttf ]; then \
+		cp -aR $(targetprefix)/usr/share/fonts/micron.ttf $(prefix)/release/usr/share/fonts; \
+	fi
+	if [ -e $(targetprefix)/usr/share/fonts/DejaVuLGCSansMono-Bold.ttf ]; then \
+		cp -aR $(targetprefix)/usr/share/fonts/DejaVuLGCSansMono-Bold.ttf $(prefix)/release/usr/share/fonts; \
+		ln -s /usr/share/fonts/DejaVuLGCSansMono-Bold.ttf $(prefix)/release/usr/share/fonts/tuxtxt.ttf; \
+	fi
 
 #
 # neutrino

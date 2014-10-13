@@ -471,10 +471,6 @@ AC_SUBST(flashscriptdir)
 AC_SUBST(updatehttpprefix)
 AM_CONDITIONAL(DISABLE_UPDATE_HTTP,test "$updatehttpprefix" = "disable")
 
-AC_ARG_WITH(archivedir,
-	[  --with-archivedir=DIR   where to store downloaded files [[Archive/]]],
-	[archivedir="$with_archivedir"],[archivedir="$buildprefix/Archive"])
-
 AC_ARG_WITH(cvsdir,
 	[  --with-cvsdir=DIR       where to find the cvs],
 	[cvsdir="$with_cvsdir"],[cvsdir="NONE"])
@@ -502,6 +498,10 @@ AC_ARG_WITH(gnuserver,
 AC_ARG_WITH(defaultserver,
 	[  --with-defaultserver=ADDRESS   the server that is taken if no server is given/works (without http://)],
 	[defaultserver="$with_defaultserver"],[defaultserver="NONE"])
+
+AC_ARG_WITH(archivedir,
+	[  --with-archivedir=DIR   where to store downloaded files [[Archive/]]],
+	[archivedir="$with_archivedir"],[archivedir="$buildprefix/Archive"])
 
 if test "$defaultserver" = "NONE"; then
 	defaultserver=""
@@ -535,6 +535,7 @@ else
 	fi
 fi
 
+AC_SUBST(cvsdir)
 AC_SUBST(appsdir)
 AC_SUBST(driverdir)
 AC_SUBST(sourcedir)
@@ -847,8 +848,8 @@ TUXBOX_RULES_MAKE(libnfs)
 TUXBOX_RULES_MAKE(taglib)
 TUXBOX_RULES_MAKE(libdaemon)
 TUXBOX_RULES_MAKE(libplist)
-
 TUXBOX_RULES_MAKE(libxml2)
+TUXBOX_RULES_MAKE(libxml2_e2)
 TUXBOX_RULES_MAKE(libxslt)
 
 #

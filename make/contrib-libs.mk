@@ -269,6 +269,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/libz @DEPENDS_libpng@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
+			--mandir=$(targetprefix)/.remove \
 		&& \
 		ECHO=echo $(MAKE) all && \
 		@INSTALL_libpng@
@@ -354,6 +355,7 @@ $(D)/libcurl: $(D)/bootstrap @DEPENDS_libcurl@
 			--disable-smtp \
 			--without-ssl \
 			--with-random \
+			--mandir=/.remove \
 		&& \
 		$(MAKE) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < curl-config > $(hostprefix)/bin/curl-config && \
@@ -478,6 +480,8 @@ $(D)/libvorbis: $(D)/bootstrap $(D)/libogg @DEPENDS_libvorbis@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
+			--disable-docs \
+			--disable-examples \
 		&& \
 		$(MAKE) all && \
 		@INSTALL_libvorbis@
@@ -501,6 +505,7 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg @DEPENDS_libvorbisidec@
 		@INSTALL_libvorbisidec@
 	@CLEANUP_libvorbisidec@
 	touch $@
+
 #
 # libffi
 #
@@ -521,6 +526,9 @@ $(D)/libffi: $(D)/bootstrap @DEPENDS_libffi@
 	@CLEANUP_libffi@
 	touch $@
 
+#
+# orc
+#
 $(D)/orc: $(D)/bootstrap @DEPENDS_orc@
 	@PREPARE_orc@
 	cd @DIR_orc@ && \
@@ -576,6 +584,11 @@ $(D)/libiconv: $(D)/bootstrap @DEPENDS_libiconv@
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
+			--target=$(target) \
+			--enable-static \
+			--disable-shared \
+			--datarootdir=/.remove \
+			--bindir=/.remove \
 		&& \
 		$(MAKE) && \
 		cp ./srcm4/* $(hostprefix)/share/aclocal/ && \
@@ -841,12 +854,15 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav @DEPENDS_libdreamdvd@
 if ENABLE_ENIGMA2
 FFMPEG_EXTRA = --enable-librtmp
 LIBRTMPDUMP = librtmpdump
+else
+FFMPEG_EXTRA = --disable-iconv
+LIBXML2 = libxml2
 endif
 
-$(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
+$(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 	@PREPARE_ffmpeg@
 	cd @DIR_ffmpeg@ && \
-		export PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig && \
+		$(BUILDENV) \
 		./configure \
 			--disable-ffserver \
 			--disable-ffplay \
@@ -877,7 +893,6 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 			--disable-armv6t2 \
 			--disable-vfp \
 			--disable-neon \
-			--disable-vis \
 			--disable-inline-asm \
 			--disable-yasm \
 			--disable-mips32r2 \
@@ -900,6 +915,9 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 			--enable-muxer=mpeg2video \
 			--enable-muxer=ogg \
 			\
+			--enable-parser=mjpeg \
+			--disable-parser=hevc \
+			\
 			--disable-encoders \
 			--enable-encoder=aac \
 			--enable-encoder=h261 \
@@ -913,14 +931,17 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 			\
 			--disable-decoders \
 			--enable-decoder=aac \
+			--enable-decoder=dca \
 			--enable-decoder=dvbsub \
 			--enable-decoder=dvdsub \
 			--enable-decoder=flac \
-			--enable-decoder=h261 \
-			--enable-decoder=h263 \
-			--enable-decoder=h263i \
-			--enable-decoder=h264 \
-			--enable-decoder=iff_byterun1 \
+			--enable-decoder=text \
+			--enable-decoder=srt \
+			--enable-decoder=subrip \
+			--enable-decoder=subviewer \
+			--enable-decoder=subviewer1 \
+			--enable-decoder=xsub \
+			--enable-decoder=pgssub \
 			--enable-decoder=mjpeg \
 			--enable-decoder=mp3 \
 			--enable-decoder=mpeg1video \
@@ -932,14 +953,46 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 			--enable-decoder=pcm_s16le \
 			--enable-decoder=pcm_s16le_planar \
 			\
+			--disable-demuxers \
 			--enable-demuxer=mjpeg \
+			--enable-demuxer=aac \
+			--enable-demuxer=ac3 \
+			--enable-demuxer=avi \
+			--enable-demuxer=mov \
+			--enable-demuxer=vc1 \
+			--enable-demuxer=mpegts \
+			--enable-demuxer=mpegtsraw \
+			--enable-demuxer=mpegps \
+			--enable-demuxer=mpegvideo \
 			--enable-demuxer=wav \
+			--enable-demuxer=mp3 \
+			--enable-demuxer=pcm_s16be \
+			--enable-demuxer=pcm_s16le \
+			--enable-demuxer=matroska \
+			--enable-demuxer=flv \
+			--enable-demuxer=rm \
 			--enable-demuxer=rtsp \
-			--enable-parser=mjpeg \
-			--disable-parser=hevc \
+			--enable-demuxer=hds \
+			--enable-demuxer=hls \
+			--enable-demuxer=dts \
+			--enable-demuxer=wav \
+			--enable-demuxer=ogg \
+			--enable-demuxer=flac \
+			--enable-demuxer=srt \
+			\
+			--disable-protocols \
+			--enable-protocol=file \
+			--enable-protocol=http \
+			--enable-protocol=rtmp \
+			--enable-protocol=rtmpe \
+			--enable-protocol=rtmps \
+			--enable-protocol=rtmpte \
+			--enable-protocol=mmsh \
+			--enable-protocol=mmst \
+			\
+			--enable-bsfs \
 			--disable-indevs \
 			--disable-outdevs \
-			--disable-bsfs \
 			--enable-bzlib \
 			--enable-zlib \
 			$(FFMPEG_EXTRA) \
@@ -985,7 +1038,7 @@ $(D)/libass: $(D)/bootstrap $(D)/libfreetype $(D)/libfribidi @DEPENDS_libass@
 #
 # WebKitDFB
 #
-$(D)/webkitdfb: $(D)/bootstrap $(D)/glib2 $(D)/icu4c $(D)/libxml2 $(D)/enchant $(D)/lite $(D)/libcurl $(D)/fontconfig $(D)/sqlite $(D)/libsoup $(D)/cairo $(D)/libjpeg @DEPENDS_webkitdfb@
+$(D)/webkitdfb: $(D)/bootstrap $(D)/glib2 $(D)/icu4c $(D)/libxml2_e2 $(D)/enchant $(D)/lite $(D)/libcurl $(D)/fontconfig $(D)/sqlite $(D)/libsoup $(D)/cairo $(D)/libjpeg @DEPENDS_webkitdfb@
 	@PREPARE_webkitdfb@
 	cd @DIR_webkitdfb@ && \
 		$(BUILDENV) \
@@ -1191,7 +1244,7 @@ $(D)/libogg: $(D)/bootstrap @DEPENDS_libogg@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--docdir=/usr/share/doc/libogg-1.3.1 \
+			--enable-shared \
 			--disable-static \
 			--prefix=/usr \
 		&& \
@@ -1233,14 +1286,39 @@ $(D)/libflac: $(D)/bootstrap @DEPENDS_libflac@
 	touch $@
 
 #
-# libxml2
+# libxml2_e2
 #
-if ENABLE_ENIGMA2
-LIBXML2_EXTRA = --with-python=$(hostprefix)/bin/python
-else
-LIBXML2_EXTRA = --without-python
-endif
+$(D)/libxml2_e2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2_e2@
+	@PREPARE_libxml2_e2@
+	cd @DIR_libxml2_e2@ && \
+		touch NEWS AUTHORS ChangeLog && \
+		autoreconf -fi && \
+		$(BUILDENV) \
+		./configure \
+			--build=$(build) \
+			--host=$(target) \
+			--prefix=/usr \
+			--enable-shared \
+			--disable-static \
+			--datarootdir=/.remove \
+			--with-python=$(hostprefix)/bin/python \
+			--without-c14n \
+			--without-debug \
+			--without-docbook \
+			--without-mem-debug \
+		&& \
+		$(MAKE) all && \
+		@INSTALL_libxml2_e2@ && \
+		sed -e "s,^prefix=,prefix=$(targetprefix)," < xml2-config > $(hostprefix)/bin/xml2-config && \
+		chmod 755 $(hostprefix)/bin/xml2-config && \
+		sed -e "/^XML2_LIBDIR/ s,/usr/lib,$(targetprefix)/usr/lib,g" -i $(targetprefix)/usr/lib/xml2Conf.sh && \
+		sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(targetprefix)/usr/include,g" -i $(targetprefix)/usr/lib/xml2Conf.sh
+	@CLEANUP_libxml2_e2@
+	touch $@
 
+#
+# libxml2 neutrino
+#
 $(D)/libxml2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2@
 	@PREPARE_libxml2@
 	cd @DIR_libxml2@ && \
@@ -1254,7 +1332,9 @@ $(D)/libxml2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2@
 			--enable-shared \
 			--disable-static \
 			--datarootdir=/.remove \
-			$(LIBXML2_EXTRA) \
+			--without-python \
+			--with-minimum \
+			--without-iconv \
 			--without-c14n \
 			--without-debug \
 			--without-docbook \
@@ -1272,7 +1352,7 @@ $(D)/libxml2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2@
 #
 # libxslt
 #
-$(D)/libxslt: $(D)/bootstrap $(D)/libxml2 @DEPENDS_libxslt@
+$(D)/libxslt: $(D)/bootstrap $(D)/libxml2_e2 @DEPENDS_libxslt@
 	@PREPARE_libxslt@
 	cd @DIR_libxslt@ && \
 		$(BUILDENV) \
@@ -1304,7 +1384,7 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 @DEPENDS_libxslt@
 #
 # libxmlccwrap
 #
-$(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2 $(D)/libxslt @DEPENDS_libxmlccwrap@
+$(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2_e2 $(D)/libxslt @DEPENDS_libxmlccwrap@
 	@PREPARE_libxmlccwrap@
 	cd @DIR_libxmlccwrap@ && \
 		$(BUILDENV) \
@@ -1544,7 +1624,7 @@ $(D)/zope_interface: bootstrap python setuptools @DEPENDS_zope_interface@
 #
 # gstreamer
 #
-$(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2 @DEPENDS_gstreamer@
+$(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
 	@PREPARE_gstreamer@
 	cd @DIR_gstreamer@ && \
 		$(BUILDENV) \
@@ -2072,7 +2152,7 @@ $(D)/libdvbsipp: $(D)/bootstrap @DEPENDS_libdvbsipp@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--prefix=/usr \
+			--prefix=$(targetprefix)/usr \
 		&& \
 		$(MAKE) all && \
 		@INSTALL_libdvbsipp@
