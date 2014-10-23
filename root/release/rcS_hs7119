@@ -48,12 +48,7 @@ fi
 echo "[rcS] Init stmfb (LOAD 9)"
 echo "LD 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7111.ko
-
-if grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
-   insmod $MODDIR/stmfb.ko display0=720x576i-32@50:12m:pal:rgb:rgb; #SCART
-else
-   insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:rgb:rgb; #HDMI
-fi
+insmod $MODDIR/stmfb.ko display0=1280x720-32@50:18m:pal:rgb:rgb; #HDMI
 
 echo "[rcS] Loading modules"
 
@@ -84,7 +79,7 @@ insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "[rcS] Init AVS (LOAD 5)"
 echo "LD 5" > /dev/vfd
-insmod $MODDIR/avs.ko type=avs_pio
+insmod $MODDIR/avs.ko type=avs_none
 
 echo "[rcS] Init player (LOAD 4)"
 echo "LD 4" > /dev/vfd
@@ -252,7 +247,7 @@ do
    echo "[rcS] e2 ended <- return value: " $rtv
    case "$rtv" in
       0) echo "E2 ERROR"
-         echo "E2ER" > /dev/vfd
+         echo "E2Er" > /dev/vfd
          init 6;;
       1) echo "SHUTDOWN"
          echo "Shdn" > /dev/vfd
@@ -270,7 +265,7 @@ do
          fi
          echo -n " ";;
       *) echo "ERROR"
-         echo "ERR " > /dev/vfd
+         echo "Err " > /dev/vfd
          init 6;;
    esac
 done

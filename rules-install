@@ -44,7 +44,7 @@ libgif;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libgif.la
 libungif;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libungif.la
 libjpeg;make:install:prefix=TARGETS/usr;rewrite-libtool:TARGETS/usr/lib/libjpeg.la
 libjpeg_turbo;make:install:prefix=TARGETS/usr;rewrite-libtool:TARGETS/usr/lib/libjpeg.la
-libpng12;rewrite-pkgconfig:libpng12.pc;make:install:prefix=TARGETS/usr;rewrite-libtool:TARGETS/usr/lib/libpng.la:TARGETS/usr/lib/libpng12.la
+#libpng12;rewrite-pkgconfig:libpng12.pc;make:install:prefix=TARGETS/usr;rewrite-libtool:TARGETS/usr/lib/libpng.la:TARGETS/usr/lib/libpng12.la
 libpng;rewrite-pkgconfig:libpng16.pc;make:install:prefix=TARGETS/usr;rewrite-libtool:TARGETS/usr/lib/libpng.la:TARGETS/usr/lib/libpng16.la
 tiff;make:install:prefix=/usr:DESTDIR=TARGETS
 pixman;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libpixman-1.la;rewrite-pkgconfig:TARGETS/usr/lib/pkgconfig/pixman-1.pc

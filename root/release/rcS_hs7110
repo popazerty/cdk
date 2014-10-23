@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 140727.1
+#Version 141014.1
 
 echo "[rcS] Start"
 echo "Fortis HS7110 Enigma2"
@@ -76,7 +76,7 @@ insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "[rcS] Init AVS (LOAD 5)"
-insmod $MODDIR/avs.ko type=avs_pio
+insmod $MODDIR/avs.ko type=avs_none
 
 echo "[rcS] Init player (LOAD 4)"
 insmod $MODDIR/mmelog.ko
