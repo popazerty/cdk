@@ -193,13 +193,37 @@ AC_ARG_ENABLE(hs7819,
 AM_CONDITIONAL(ENABLE_HS7819,test "$enable_hs7819" = "yes")
 AC_SUBST(HS7819)
 
-AC_ARG_ENABLE(fortis_dp7000,
-	AS_HELP_STRING(--enable-fortis_dp7000, enable fortis_dp7000 stuff),
+AC_ARG_ENABLE(dp6010,
+	AS_HELP_STRING(--enable-dp6010, enable fortis dp6010 stuff),
 	[case "${enableval}" in
-		yes) FORTIS_DP7000=fortis_dp7000 ;;
-	esac],[enable_fortis_dp7000=no])
-AM_CONDITIONAL(ENABLE_FORTIS_DP7000,test "$enable_fortis_dp7000" = "yes")
-AC_SUBST(FORTIS_DP7000)
+		yes) DP6010=dp6010 ;;
+	esac],[enable_dp6010=no])
+AM_CONDITIONAL(ENABLE_DP6010,test "$enable_dp6010" = "yes")
+AC_SUBST(DP6010)
+
+AC_ARG_ENABLE(dp7000,
+	AS_HELP_STRING(--enable-dp7000, enable fortis dp7000 stuff),
+	[case "${enableval}" in
+		yes) DP7000=dp7000 ;;
+	esac],[enable_dp7000=no])
+AM_CONDITIONAL(ENABLE_DP7000,test "$enable_dp7000" = "yes")
+AC_SUBST(DP7000)
+
+AC_ARG_ENABLE(dp7001,
+	AS_HELP_STRING(--enable-dp7001, enable fortis dp7001 stuff),
+	[case "${enableval}" in
+		yes) DP7001=dp7001 ;;
+	esac],[enable_dp7001=no])
+AM_CONDITIONAL(ENABLE_DP7001,test "$enable_dp7001" = "yes")
+AC_SUBST(DP7001)
+
+AC_ARG_ENABLE(epp8000,
+	AS_HELP_STRING(--enable-epp8000, enable fortis epp8000 stuff),
+	[case "${enableval}" in
+		yes) EPP8000=epp8000 ;;
+	esac],[enable_epp8000=no])
+AM_CONDITIONAL(ENABLE_EPP8000,test "$enable_epp8000" = "yes")
+AC_SUBST(EPP8000)
 
 AC_ARG_ENABLE(tf7700,
 	AS_HELP_STRING(--enable-tf7700, enable topfield tf7700 stuff),
@@ -1027,7 +1051,7 @@ Multicom324                 : $enable_multicom324
 Multicom406                 : $enable_multicom406
 MediaFw Gstreamer           : $enable_mediafwgstreamer
 MediaFw                     : $MEDIAFW
-MediaFw Dep                 : $MEDIAFW_DEP
+MediaFw dependancy          : $MEDIAFW_DEP
 External LCD                : $enable_externallcd
 External LCD dependancy     : $EXTERNALLCD_DEP
 ----------------------------------------
