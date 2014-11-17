@@ -792,13 +792,10 @@ endif
 # lib usr/lib
 #
 	cp -R $(targetprefix)/lib/* $(prefix)/release/lib/
-	rm -f $(prefix)/release/lib/*.{a,o,la}
 	chmod 755 $(prefix)/release/lib/*
 	ln -s /var/tuxbox/plugins/libfx2.so $(prefix)/release/lib/libfx2.so
 
 	cp -R $(targetprefix)/usr/lib/* $(prefix)/release/usr/lib/
-	rm -rf $(prefix)/release/usr/lib/{engines,enigma2,gconv,ldscripts,libxslt-plugins,pkgconfig,python$(PYTHON_VERSION),sigc++-1.2,X11,lua}
-	rm -f $(prefix)/release/usr/lib/*.{a,o,la}
 	chmod 755 $(prefix)/release/usr/lib/*
 
 #
@@ -862,39 +859,6 @@ endif
 #
 	[ -e $(targetprefix)/usr/local/bin/backup.sh ] && cp -aR $(targetprefix)/usr/local/bin/backup.sh $(prefix)/release/bin || true
 	[ -e $(targetprefix)/usr/local/bin/restore.sh ] && cp -aR $(targetprefix)/usr/local/bin/restore.sh $(prefix)/release/bin || true
-
-#
-# delete unnecessary files
-#
-	rm -rf $(prefix)/release/lib/autofs
-	rm -f $(prefix)/release/lib/libSegFault*
-	rm -f $(prefix)/release/lib/libthread_db*
-	rm -f $(prefix)/release/lib/libanl*
-	rm -rf $(prefix)/release/usr/lib/m4-nofpu/
-	rm -f $(prefix)/release/lib/modules/lzo*.ko
-	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
-	rm -rf $(prefix)/release/usr/lib/alsa-lib
-	rm -rf $(prefix)/release/usr/lib/alsaplayer
-	rm -rf $(prefix)/release/usr/lib/audit
-	rm -rf $(prefix)/release/usr/lib/gcc
-	rm -rf $(prefix)/release/usr/lib/gio
-	rm -rf $(prefix)/release/usr/lib/glib-2.0
-	rm -f $(prefix)/release/usr/lib/libexpat*
-	rm -f $(prefix)/release/usr/lib/libfontconfig*
-	rm -f $(prefix)/release/usr/lib/libtermcap*
-	rm -f $(prefix)/release/usr/lib/libmenu*
-	rm -f $(prefix)/release/usr/lib/libpanel*
-	rm -f $(prefix)/release/usr/lib/libdvdcss*
-	rm -f $(prefix)/release/usr/lib/libdvdnav*
-	rm -f $(prefix)/release/usr/lib/libdvdread*
-	rm -f $(prefix)/release/usr/lib/libncurses*
-	rm -f $(prefix)/release/usr/lib/libthread_db*
-	rm -f $(prefix)/release/usr/lib/libanl*
-	rm -f $(prefix)/release/usr/lib/libopkg*
-	rm -rf $(prefix)/release/usr/lib/sigc++-2.0
-	rm -f $(prefix)/release/bin/gitVCInfo
-	rm -f $(prefix)/release/bin/libstb-hal-test
-	rm -f $(prefix)/release/bin/wdctl
 
 #
 # alsa
@@ -1015,6 +979,13 @@ endif
 	fi
 
 #
+# lua
+#
+	if [ -d $(targetprefix)/usr/share/lua ]; then \
+		cp -aR $(targetprefix)/usr/share/lua $(prefix)/release/usr/share; \
+	fi
+
+#
 # Plugins
 #
 	if [ -e $(targetprefix)/var/tuxbox/plugins/libfx2.so ]; then \
@@ -1054,6 +1025,41 @@ endif
 		cp -f $(targetprefix)/usr/local/bin/eplayer3 $(prefix)/release/bin/; \
 		cp -f $(targetprefix)/usr/local/bin/meta $(prefix)/release/bin/; \
 	fi
+
+#
+# delete unnecessary files
+#
+	rm -f $(prefix)/release/lib/*.{a,o,la}
+	rm -rf $(prefix)/release/usr/lib/{engines,enigma2,gconv,libxslt-plugins,pkgconfig,python$(PYTHON_VERSION),sigc++-2.0}
+	rm -f $(prefix)/release/usr/lib/*.{a,o,la}
+	rm -f $(prefix)/release/usr/lib/lua/5.2/*.la
+	rm -rf $(prefix)/release/lib/autofs
+	rm -f $(prefix)/release/lib/libSegFault*
+	rm -f $(prefix)/release/lib/libthread_db*
+	rm -f $(prefix)/release/lib/libanl*
+	rm -rf $(prefix)/release/usr/lib/m4-nofpu/
+	rm -f $(prefix)/release/lib/modules/lzo*.ko
+	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
+	rm -rf $(prefix)/release/usr/lib/alsa-lib
+	rm -rf $(prefix)/release/usr/lib/alsaplayer
+	rm -rf $(prefix)/release/usr/lib/audit
+	rm -rf $(prefix)/release/usr/lib/glib-2.0
+#	rm -f $(prefix)/release/usr/lib/libexpat*
+	rm -f $(prefix)/release/usr/lib/xml2Conf.sh
+	rm -f $(prefix)/release/usr/lib/libfontconfig*
+	rm -f $(prefix)/release/usr/lib/libtermcap*
+	rm -f $(prefix)/release/usr/lib/libmenu*
+	rm -f $(prefix)/release/usr/lib/libpanel*
+	rm -f $(prefix)/release/usr/lib/libdvdcss*
+	rm -f $(prefix)/release/usr/lib/libdvdnav*
+	rm -f $(prefix)/release/usr/lib/libdvdread*
+	rm -f $(prefix)/release/usr/lib/libncurses*
+	rm -f $(prefix)/release/usr/lib/libthread_db*
+	rm -f $(prefix)/release/usr/lib/libanl*
+	rm -f $(prefix)/release/usr/lib/libopkg*
+	rm -f $(prefix)/release/bin/gitVCInfo
+	rm -f $(prefix)/release/bin/libstb-hal-test
+	rm -f $(prefix)/release/bin/wdctl
 
 #
 # The main target depends on the model.

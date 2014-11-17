@@ -74,7 +74,8 @@ libvorbisidec;make:install:DESTDIR=TARGETS;install:-m644:vorbisidec.pc:TARGETS/u
 # contrib libs
 #
 libcrypto;rewrite-pkgconfig:libcrypto.pc:libssl.pc:openssl.pc;make:install_sw:INSTALL_PREFIX=TARGETS
-liblua;make:install:INSTALL_TOP=TARGETS/usr
+lua;make:install:INSTALL_TOP=TARGETS/usr
+luaexpat;make:install:DESTDIR=TARGETS/usr
 howl;rewrite-pkgconfig:howl.pc;make:install:prefix=TARGETS/usr;rewrite-libtool:TARGETS/usr/lib/libhowl.la:TARGETS/usr/lib/libhowl.la
 libopenthreads;rewrite-pkgconfig:packaging/pkgconfig/openthreads.pc;make:install:DESTDIR=TARGETS/usr
 libboost;remove:TARGETS/include/boost;move:boost:TARGETS/usr/include/boost

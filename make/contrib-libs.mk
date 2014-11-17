@@ -35,22 +35,29 @@ $(D)/libbluray: $(D)/bootstrap @DEPENDS_libbluray@
 	touch $@
 
 #
-# liblua
-#
-$(D)/liblua: $(D)/bootstrap $(D)/libncurses $(archivedir)/luaposix.git @DEPENDS_liblua@
-	@PREPARE_liblua@
-	cd @DIR_liblua@ && \
-		$(BUILDENV) \
+# lua
+# BUILDMODE=dynamic
+$(D)/lua: $(D)/bootstrap $(D)/libncurses $(archivedir)/luaposix.git @DEPENDS_lua@
+	@PREPARE_lua@
+	cd @DIR_lua@ && \
 		cp -r $(archivedir)/luaposix.git .; \
 		cd luaposix.git/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
-		sed -i 's@^#define LUA_ROOT.*@#define LUA_ROOT "/"@' src/luaconf.h; \
-		sed -i '/^#define LUA_USE_READLINE/d' src/luaconf.h; \
-		sed -i 's/ -lreadline//' src/Makefile; \
-		$(MAKE) linux CC='$(target)-gcc' LDFLAGS="-L$(targetprefix)/usr/lib" && \
-		@INSTALL_liblua@
-	@CLEANUP_liblua@
+		$(MAKE) linux CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" PKG_VERSION=5.2.3 && \
+		@INSTALL_lua@
+	@CLEANUP_lua@
+	touch $@
+
+#
+# luaexpat
+#
+$(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/libexpat @DEPENDS_luaexpat@
+	@PREPARE_luaexpat@
+	cd @DIR_luaexpat@ && \
+		$(MAKE) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" PREFIX=$(targetprefix)/usr && \
+		@INSTALL_luaexpat@
+	@CLEANUP_luaexpat@
 	touch $@
 
 #
@@ -138,10 +145,10 @@ $(D)/libreadline: $(D)/bootstrap @DEPENDS_libreadline@
 #
 # libfreetype
 #
-$(D)/libfreetype: $(D)/bootstrap $(D)/libpng @DEPENDS_libfreetype@
+$(D)/libfreetype: $(D)/bootstrap $(D)/libz $(D)/bzip2 $(D)/libpng @DEPENDS_libfreetype@
 	@PREPARE_libfreetype@
 	cd @DIR_libfreetype@ && \
-		sed -i '/#define FT_CONFIG_OPTION_OLD_INTERNALS/d' include/freetype/config/ftoption.h && \
+		sed -i '/#define FT_CONFIG_OPTION_OLD_INTERNALS/d' include/config/ftoption.h && \
 		sed -i '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\)/d' modules.cfg && \
 		$(BUILDENV) \
 		./configure \
@@ -153,7 +160,11 @@ $(D)/libfreetype: $(D)/bootstrap $(D)/libpng @DEPENDS_libfreetype@
 		@INSTALL_libfreetype@
 		if [ -d $(targetprefix)/usr/include/freetype2/freetype ] ; then \
 			ln -sf ./freetype2/freetype $(targetprefix)/usr/include/freetype; \
-		fi;
+		else \
+			if [ ! -e $(targetprefix)/usr/include/freetype ] ; then \
+				ln -sf freetype2 $(targetprefix)/usr/include/freetype; \
+			fi; \
+		fi; \
 		mv $(targetprefix)/usr/bin/freetype-config $(hostprefix)/bin/freetype-config
 	@CLEANUP_libfreetype@
 	touch $@
@@ -935,6 +946,11 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--enable-decoder=dvbsub \
 			--enable-decoder=dvdsub \
 			--enable-decoder=flac \
+			--enable-decoder=h261 \
+			--enable-decoder=h263 \
+			--enable-decoder=h263i \
+			--enable-decoder=h264 \
+			--enable-decoder=iff_byterun1 \
 			--enable-decoder=text \
 			--enable-decoder=srt \
 			--enable-decoder=subrip \
@@ -953,42 +969,10 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--enable-decoder=pcm_s16le \
 			--enable-decoder=pcm_s16le_planar \
 			\
-			--disable-demuxers \
-			--enable-demuxer=mjpeg \
-			--enable-demuxer=aac \
-			--enable-demuxer=ac3 \
-			--enable-demuxer=avi \
-			--enable-demuxer=mov \
-			--enable-demuxer=vc1 \
-			--enable-demuxer=mpegts \
-			--enable-demuxer=mpegtsraw \
-			--enable-demuxer=mpegps \
-			--enable-demuxer=mpegvideo \
-			--enable-demuxer=wav \
-			--enable-demuxer=mp3 \
-			--enable-demuxer=pcm_s16be \
-			--enable-demuxer=pcm_s16le \
-			--enable-demuxer=matroska \
-			--enable-demuxer=flv \
-			--enable-demuxer=rm \
-			--enable-demuxer=rtsp \
 			--enable-demuxer=hds \
-			--enable-demuxer=hls \
-			--enable-demuxer=dts \
+			--enable-demuxer=mjpeg \
 			--enable-demuxer=wav \
-			--enable-demuxer=ogg \
-			--enable-demuxer=flac \
-			--enable-demuxer=srt \
-			\
-			--disable-protocols \
-			--enable-protocol=file \
-			--enable-protocol=http \
-			--enable-protocol=rtmp \
-			--enable-protocol=rtmpe \
-			--enable-protocol=rtmps \
-			--enable-protocol=rtmpte \
-			--enable-protocol=mmsh \
-			--enable-protocol=mmst \
+			--enable-demuxer=rtsp \
 			\
 			--enable-bsfs \
 			--disable-indevs \

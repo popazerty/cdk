@@ -797,7 +797,8 @@ TUXBOX_RULES_MAKE(libvorbisidec)
 # contrib libs
 #
 TUXBOX_RULES_MAKE(libcrypto)
-TUXBOX_RULES_MAKE(liblua)
+TUXBOX_RULES_MAKE(lua)
+TUXBOX_RULES_MAKE(luaexpat)
 TUXBOX_RULES_MAKE(howl)
 TUXBOX_RULES_MAKE(libopenthreads)
 TUXBOX_RULES_MAKE(libboost)

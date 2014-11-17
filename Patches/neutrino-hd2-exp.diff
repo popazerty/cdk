@@ -49,16 +49,3 @@ diff -NEbur '--exclude-from=/home/dbo/DDT/cdk/scripts/diff-exclude' nhd2-exp.org
      printf("\n***\n");
      dump_metadata();
       
-diff -NEbur '--exclude-from=/home/dbo/DDT/cdk/scripts/diff-exclude' nhd2-exp.org/src/Makefile.am nhd2-exp/src/Makefile.am
---- nhd2-exp.org/src/Makefile.am	2014-09-16 09:41:03.522413876 +0200
-+++ nhd2-exp/src/Makefile.am	2014-10-13 12:54:35.247784005 +0200
-@@ -96,7 +96,7 @@
- 
- # graph lcd
- if ENABLE_GRAPHLCD
--neutrino_LDADD += -lglcddrivers -lglcdgraphics -lusb
-+neutrino_LDADD += -lglcddrivers -lglcdgraphics
- endif
- 
- if USE_OPENGL
-

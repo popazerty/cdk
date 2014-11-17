@@ -25,9 +25,9 @@ GLIBC_VER     = 2.14.1-50
 else
 # 4.8.3
 BINUTILS_VER  = 2.24.51.0.3-75
-GCC_VER       = 4.8.3-135
-LIBGCC_VER    = 4.8.3-143
-GLIBC_VER     = 2.14.1-51
+GCC_VER       = 4.8.3-136
+LIBGCC_VER    = 4.8.3-145
+GLIBC_VER     = 2.14.1-53
 endif
 
 $(hostprefix)/bin/unpack-rpm.sh:
@@ -90,7 +90,7 @@ $(D)/directories:
 	$(INSTALL) -d $(targetprefix)/usr/{bin,lib,local,sbin,share}
 	$(INSTALL) -d $(targetprefix)/usr/include/linux
 	$(INSTALL) -d $(targetprefix)/usr/include/linux/dvb
-	$(INSTALL) -d $(targetprefix)/usr/local/{bin,include,lib,sbin,share}
+	$(INSTALL) -d $(targetprefix)/usr/local/{bin,sbin,share}
 	$(INSTALL) -d $(targetprefix)/var/{etc,lib,run}
 	$(INSTALL) -d $(targetprefix)/var/lib/{misc,nfs}
 	$(INSTALL) -d $(targetprefix)/var/bin
