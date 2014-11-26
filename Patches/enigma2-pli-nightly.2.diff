@@ -10508,16 +10508,6 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  		</condition>
 --- enigma2-nightly.org/lib/python/Components/About.py
 +++ enigma2-nightly/lib/python/Components/About.py
-@@ -33,7 +33,7 @@
- 		return _("unknown")
- 
- def getHardwareTypeString():
--	return HardwareInfo().get_device_string()
-+	return HardwareInfo().get_device_string().capitalize() 
- 
- def getImageTypeString():
- 	try:
- 		return _("unknown")
 #diff -Nur --exclude=.git --exclude=tuxtxt driver/frontends/spark7162/spark7162.c driver/frontends/spark7162/spark7162.c
 #--- driver/frontends/spark7162/spark7162.c	2013-12-18 20:00:00.000000000 +0100
 #+++ driver/frontends/spark7162/spark7162.c	2014-02-02 20:03:13.000000000 +0100
@@ -10631,3 +10621,13 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 #+
 # 	return 0;
 # }
+--- /dev/null
++++ ../tufsbox/cdkroot/usr/sbin/time.sh	2014-11-25 16:41:13.000000000 +0100
+@@ -0,0 +1,6 @@
++#!/bin/sh
++sleep 52 
++/bin/fp_control -sst
++sleep 30 
++/bin/fp_control -sst
++exit 0
+
