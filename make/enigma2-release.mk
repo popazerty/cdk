@@ -315,12 +315,13 @@ release_enigma2_spark7162: release_enigma2_common_utils
 	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/share/fonts/
 	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
 	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png; \
-	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD/plugin.py ]; then \
+	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD/plugin.pyo ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD; \
 		sync; \
+	fi
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_spark.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
 
 #
