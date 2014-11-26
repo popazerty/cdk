@@ -140,15 +140,6 @@
  
  static void ShowNormalText(char * str, bool fromScrollThread = false)
  {
-@@ -185,7 +190,7 @@
- 		pthread_join(vfd_scrollText, NULL);
- 
- 		vfd_scrollText = 0;
--		scrollstr="";
-+		scrollstr = (char *)"";
- 	}
- 
- 	//scroll text thread
 @@ -199,36 +204,40 @@
  
  	int i;
