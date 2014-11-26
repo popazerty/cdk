@@ -103,13 +103,6 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		[ "$$REVISION" == "" ] || (cd $(sourcedir)/enigma2-nightly; git checkout "$$REVISION"; cd "$(buildprefix)";); \
 		cp -ra $(sourcedir)/enigma2-nightly $(sourcedir)/enigma2-nightly.org; \
 		cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
-		REPO="https://github.com/littlesat/skin-PLiHD.git"; \
-		[ -d "$(archivedir)/PLi-HD_skin.git" ] && \
-		(cd $(archivedir)/PLi-HD_skin.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
-		[ -d "$(archivedir)/PLi-HD_skin.git" ] || \
-		git clone -b $$HEAD $$REPO $(archivedir)/PLi-HD_skin.git; \
-		cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2; \
-		cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 < "../../../../../../cdk/Patches/PLi-HD_skin.patch"; \
 		cd $(sourcedir)/enigma2-nightly; \
 		patch -p1 < "../../cdk/Patches/vfd-drivers.patch"; \
 		rm -rf $(targetprefix)/usr/local/share/enigma2/rc_models; \
@@ -154,7 +147,15 @@ $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_
 	fi
 	if [ -e $(targetprefix)/usr/local/bin/enigma2 ]; then \
 		$(target)-strip $(targetprefix)/usr/local/bin/enigma2; \
-	fi
+	fi; \
+	echo "Adding PLi-HD skin"; \
+	REPO="https://github.com/littlesat/skin-PLiHD.git"; \
+	[ -d "$(archivedir)/PLi-HD_skin.git" ] && \
+	(cd $(archivedir)/PLi-HD_skin.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
+	[ -d "$(archivedir)/PLi-HD_skin.git" ] || \
+	git clone -b $$HEAD $$REPO $(archivedir)/PLi-HD_skin.git; \
+	cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2; \
+	cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 < "../../../../../../cdk/Patches/PLi-HD_skin.patch"
 	touch $@
 
 enigma2-pli-nightly-clean:
