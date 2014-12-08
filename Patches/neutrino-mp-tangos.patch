@@ -567,7 +567,7 @@
 -
 --- neutrino-mp-tangos.org/src/neutrino.cpp
 +++ neutrino-mp-tangos/src/neutrino.cpp
-@@ -3985,6 +3985,9 @@
+@@ -3983,6 +3983,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
  		}
@@ -577,7 +577,7 @@
  		CVFD::getInstance()->setBacklight(g_settings.backlight_standby);
  
  		InfoClock->enableInfoClock(false);
-@@ -4013,6 +4016,9 @@
+@@ -4011,6 +4014,9 @@
  		// Active standby off
  		powerManager->SetStandby(false, false);
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);

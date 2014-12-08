@@ -110,11 +110,11 @@
  	#define VFDLENGTH 8
 -#elif defined (BOXMODEL_FORTIS_HDBOX)
 +#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
- 	#define VFDLENGTH 12
+	#define VFDLENGTH 12
 -#elif defined (BOXMODEL_ATEVIO7500)
 -	#define VFDLENGTH 12
--#elif defined (BOXMODEL_SPARK)
-+#elif defined (BOXMODEL_SPARK) \
+-#elif defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)
++#elif defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162) \
 +   || defined (BOXMODEL_HS7810A) \
 +   || defined (BOXMODEL_HS7119) \
 +   || defined (BOXMODEL_HS7819)
@@ -344,15 +344,15 @@
  			ShowText(VolumeBar);
 -#elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
 +  #elif defined (BOXMODEL_TF7700)
- 			char vol_chr[64] = "";
- 			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL: %d%%", (int)vol);
- 			ShowText(vol_chr);
--#elif defined (BOXMODEL_SPARK)
+			char vol_chr[64] = "";
+			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL: %d%%", (int)vol);
+			ShowText(vol_chr);
+-#elif defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)
 +  #elif defined (BOXMODEL_OCTAGON1008)
- 			char vol_chr[64] = "";
+			char vol_chr[64] = "";
 -			snprintf(vol_chr, sizeof(vol_chr)-1, "%d", (int)vol);
 +			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL=%3d", (int)vol);
- 			ShowText(vol_chr);
+			ShowText(vol_chr);
 -#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913) || defined (BOXMODEL_CUBEREVO) || defined (BOXMODEL_CUBEREVO_MINI2) || defined (BOXMODEL_CUBEREVO_2000HD)
 +  #elif defined (BOXMODEL_SPARK) \
 +     || defined (BOXMODEL_HS7119) \
@@ -368,13 +368,13 @@
 +     || defined (BOXMODEL_CUBEREVO) \
 +     || defined (BOXMODEL_CUBEREVO_MINI2) \
 +     || defined (BOXMODEL_CUBEREVO_2000HD)
- 			char vol_chr[64] = "";
- 			snprintf(vol_chr, sizeof(vol_chr)-1, "Volume: %d%%", (int)vol);
- 			ShowText(vol_chr);
+			char vol_chr[64] = "";
+			snprintf(vol_chr, sizeof(vol_chr)-1, "Volume: %d%%", (int)vol);
+			ShowText(vol_chr);
 -#endif
 +  #endif
- 			oldpp = pp;
- 		}
+			oldpp = pp;
+		}
  #else
 @@ -881,6 +968,9 @@
  		ShowIcon(FP_ICON_COL1, true);
@@ -429,17 +429,17 @@
  #ifdef HAVE_DUCKBOX_HARDWARE
  void CVFD::ClearIcons()
  {
--#if defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_SPARK)
+-#if defined (BOXMODEL_ATEVIO7500) || (defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162))
 +  #if defined (BOXMODEL_ATEVIO7500) \
 +   || defined (BOXMODEL_HS7110) \
 +   || defined (BOXMODEL_HS7810A) \
 +   || defined (BOXMODEL_HS7119) \
 +   || defined (BOXMODEL_HS7819) \
 +   || defined (BOXMODEL_SPARK)
- 	return;
+	return;
 -#endif
 +  #endif
- 	for (int id = 0x10; id < FP_ICON_MAX; id++) {
+	for (int id = 0x10; id < FP_ICON_MAX; id++) {
 -#if defined (BOXMODEL_OCTAGON1008) || defined(BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_TF7700)
 -		if (id != 0x16)
 -#else
@@ -448,12 +448,12 @@
 +  #elif defined(BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_TF7700)
 +		if (id != FP_ICON_USB)
 +  #else
- 		if (id != 0x10 && id != 0x12)
+		if (id != 0x10 && id != 0x12)
 -#endif
 +  #endif
- 			ShowIcon((fp_icon)id, false);
- 	}
- 	return;
+			ShowIcon((fp_icon)id, false);
+	}
+	return;
 @@ -1434,5 +1540,3 @@
  }
  /*****************************************************************************************/

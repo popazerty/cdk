@@ -251,21 +251,6 @@
  			}
  		}
  	}
-@@ -611,13 +666,13 @@
- 	if ((mode == MODE_TVRADIO) && g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME]) {
- #if HAVE_DUCKBOX_HARDWARE
- 		int pp = (int) round((double) vol / (double) 2);
--		int i;
- 		if(oldpp != pp)
- 		{
- #if defined (BOXMODEL_UFS910) || defined (BOXMODEL_UFS922)
- 			unsigned char speaker[5] = {0x1C, 0x1C, 0x1C, 0x3E, 0x7F}; // speaker symbol
- 			writeCG(0, speaker);
- 
-+			int i;
- 			int j = pp / 5;
- 			// v-lines 0-5 = {0x10,0x11,0x12,0x13,0x14,0x15}
- 			char c0[1] = {0x5F};
 @@ -656,11 +711,15 @@
  					strncat(VolumeBar, c0, 1);
  			}
@@ -414,7 +399,7 @@
  		if (g_settings.temp_timeshift) {
 --- neutrino-mp-github.org/src/neutrino.cpp
 +++ neutrino-mp-github/src/neutrino.cpp
-@@ -3787,6 +3787,7 @@
+@@ -3689,6 +3689,7 @@
  			stop_video();
  
  #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
@@ -422,7 +407,7 @@
  			if (retcode == 1) {
  				CCECSetup cecsetup;
  				cecsetup.setCECSettings(false);
-@@ -3795,6 +3796,9 @@
+@@ -3697,6 +3698,9 @@
  #ifdef ENABLE_GRAPHLCD
  			if (retcode == 1)
  				nGLCD::SetBrightness(0);
@@ -432,7 +417,7 @@
  #endif
  
  			printf("[neutrino] This is the end. exiting with code %d\n", retcode);
-@@ -4002,6 +4006,9 @@
+@@ -3904,6 +3908,9 @@
  			g_Zapit->lockPlayBack();
  		}
  
@@ -442,7 +427,7 @@
  		videoDecoder->Standby(true);
  
  		g_Sectionsd->setServiceChanged(0, false);
-@@ -4051,6 +4058,9 @@
+@@ -3953,6 +3960,9 @@
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
  		CVFD::getInstance()->ShowText("resume");
  		cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
@@ -454,7 +439,7 @@
  		g_RCInput->killTimer(fst_timer);
 --- neutrino-mp-github.org/src/gui/movieplayer.cpp
 +++ neutrino-mp-github/src/gui/movieplayer.cpp
-@@ -386,7 +386,12 @@
+@@ -400,7 +400,12 @@
  
  	switch (playstate) {
  		case CMoviePlayerGui::PAUSE:
@@ -468,7 +453,7 @@
  			lcd = "|| ";
  #else
  			lcd = "";
-@@ -397,14 +402,20 @@
+@@ -411,14 +416,20 @@
  			} else if (speed > 0) {
  				sprintf(tmp, "%dx|> ", abs(speed));
  				lcd = tmp;
@@ -492,7 +477,7 @@
  		case CMoviePlayerGui::REW:
  			sprintf(tmp, "%dx<< ", abs(speed));
  			lcd = tmp;
-@@ -413,8 +424,15 @@
+@@ -427,8 +438,15 @@
  			sprintf(tmp, "%dx>> ", abs(speed));
  			lcd = tmp;
  			break;
