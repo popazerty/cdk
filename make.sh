@@ -9,7 +9,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1/Neutrino=2) (1-2)"
  echo "Parameter 8: Neutrino variant (1-6)"
- echo "Parameter 9: Bootloader version (1-2) (target system 19 only)"
+# echo "Parameter 9: Bootloader version (1-2) (target system 19 only)"
  exit
 fi
 
@@ -155,26 +155,26 @@ case "$REPLY" in
 		esac
 		CONFIGPARAM="$CONFIGPARAM $MODEL"
 		;;
-	19)	if [ "$9" ]; then
-			REPLY=$9
-			else
-			echo -e "\nBuild for boot loader:"
-			echo " 1) Loader 5.0X (obsolete, not recommended)"
-			echo " 2) Loader 6.00"
-		fi
-		case $9 in
-			[1-2]) REPLY=$9;;
-			*)     read -p "\nSelect boot loader version (1-2)? ";;
-		esac
-
-		case "$REPLY" in
-			1) MODEL="--enable-av7500l50x";BLOADER="5.0x";;
-#			2) MODEL="--enable-av7500l600";BLOADER="6.00";;
-			*) MODEL="--enable-av7500l600";BLOADER="6.00";;
-		esac
-		CONFIGPARAM="$CONFIGPARAM $MODEL"
-		;;
-#	*)	;;
+#	19)	if [ "$9" ]; then
+#			REPLY=$9
+#			else
+#			echo -e "\nBuild for boot loader:"
+#			echo " 1) Loader 5.0X (obsolete, not recommended)"
+#			echo " 2) Loader 6.00"
+#		fi
+#		case $9 in
+#			[1-2]) REPLY=$9;;
+#			*)     read -p "\nSelect boot loader version (1-2)? ";;
+#		esac
+#
+#		case "$REPLY" in
+#			1) MODEL="--enable-av7500l50x";BLOADER="5.0x";;
+##			2) MODEL="--enable-av7500l600";BLOADER="6.00";;
+#			*) MODEL="--enable-av7500l600";BLOADER="6.00";;
+#		esac
+#		CONFIGPARAM="$CONFIGPARAM $MODEL"
+#		;;
+##	*)	;;
 esac
 
 ##############################################
@@ -382,9 +382,9 @@ echo "----------------------------------------"
 echo "Your build environment is ready :-)"
 echo
 echo "Selected receiver        : $RECEIVER"
-if [ "$RECEIVER" == "Fortis HS8200" ]; then
-  echo "Boot loader version      : $BLOADER"
-fi
+#if [ "$RECEIVER" == "Fortis HS8200" ]; then
+#  echo "Boot loader version      : $BLOADER"
+#fi
 echo "Selected kernel          : stm24 $KERNELP"
 echo "Debug option             : $DEBUGR"
 echo "Selected player          : $PLAYERR"
