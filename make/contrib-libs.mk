@@ -36,7 +36,7 @@ $(D)/libbluray: $(D)/bootstrap @DEPENDS_libbluray@
 
 #
 # lua
-# BUILDMODE=dynamic
+#
 $(D)/lua: $(D)/bootstrap $(D)/libncurses $(archivedir)/luaposix.git @DEPENDS_lua@
 	@PREPARE_lua@
 	cd @DIR_lua@ && \
@@ -44,9 +44,22 @@ $(D)/lua: $(D)/bootstrap $(D)/libncurses $(archivedir)/luaposix.git @DEPENDS_lua
 		cd luaposix.git/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
-		$(MAKE) linux CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" PKG_VERSION=5.2.3 && \
+		$(MAKE) linux CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" BUILDMODE=dynamic PKG_VERSION=5.2.3 && \
 		@INSTALL_lua@
 	@CLEANUP_lua@
+	touch $@
+
+#
+# luacurl
+#
+$(D)/luacurl: $(D)/bootstrap $(D)/lua @DEPENDS_luacurl@
+	@PREPARE_luacurl@
+	[ -d "$(archivedir)/luacurl.git" ] && \
+	(cd $(archivedir)/luacurl.git; git pull ; cd "$(buildprefix)";); \
+	cd @DIR_luacurl@ && \
+		sed -i -e "s/lua_strlen/lua_rawlen/g" -e "s/luaL_reg/luaL_Reg/g" luacurl.c && \
+		$(target)-gcc -I$(targetprefix)/usr/include -fPIC -shared -s -o $(targetprefix)/usr/lib/lua/5.2/luacurl.so luacurl.c -L$(targetprefix)/usr/lib -lcurl
+	@CLEANUP_luacurl@
 	touch $@
 
 #
@@ -863,8 +876,9 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav @DEPENDS_libdreamdvd@
 # ffmpeg
 #
 if ENABLE_ENIGMA2
-FFMPEG_EXTRA = --enable-librtmp
-LIBRTMPDUMP = librtmpdump
+FFMPEG_EXTRA  = --enable-librtmp
+FFMPEG_EXTRA += --enable-protocol=librtmp --enable-protocol=librtmpe --enable-protocol=librtmps --enable-protocol=librtmpt --enable-protocol=librtmpte
+LIBRTMPDUMP   = librtmpdump
 else
 FFMPEG_EXTRA = --disable-iconv
 LIBXML2 = libxml2
@@ -926,8 +940,21 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--enable-muxer=mpeg2video \
 			--enable-muxer=ogg \
 			\
+			--disable-parsers \
+			--enable-parser=aac \
+			--enable-parser=aac_latm \
+			--enable-parser=ac3 \
+			--enable-parser=dca \
+			--enable-parser=dvbsub \
+			--enable-parser=dvdsub \
+			--enable-parser=flac \
+			--enable-parser=h264 \
 			--enable-parser=mjpeg \
-			--disable-parser=hevc \
+			--enable-parser=mpeg4video \
+			--enable-parser=mpegvideo \
+			--enable-parser=mpegaudio \
+			--enable-parser=vc1 \
+			--enable-parser=vorbis \
 			\
 			--disable-encoders \
 			--enable-encoder=aac \
@@ -950,44 +977,84 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--enable-decoder=h263 \
 			--enable-decoder=h263i \
 			--enable-decoder=h264 \
-			--enable-decoder=iff_byterun1 \
-			--enable-decoder=text \
-			--enable-decoder=srt \
-			--enable-decoder=subrip \
-			--enable-decoder=subviewer \
-			--enable-decoder=subviewer1 \
-			--enable-decoder=xsub \
-			--enable-decoder=pgssub \
 			--enable-decoder=mjpeg \
 			--enable-decoder=mp3 \
 			--enable-decoder=mpeg1video \
 			--enable-decoder=mpeg2video \
+			--enable-decoder=msmpeg4v1 \
+			--enable-decoder=msmpeg4v2 \
+			--enable-decoder=msmpeg4v3 \
+			--enable-decoder=pcm_s16le \
+			--enable-decoder=pcm_s16be \
+			--enable-decoder=pcm_s16le_planar \
+			--enable-decoder=pcm_s16be_planar \
+			--enable-decoder=pgssub \
 			--enable-decoder=png \
+			--enable-decoder=srt \
+			--enable-decoder=subrip \
+			--enable-decoder=subviewer \
+			--enable-decoder=subviewer1 \
+			--enable-decoder=text \
 			--enable-decoder=theora \
 			--enable-decoder=vorbis \
 			--enable-decoder=wmv3 \
-			--enable-decoder=pcm_s16le \
-			--enable-decoder=pcm_s16le_planar \
+			--enable-decoder=xsub \
 			\
+			--disable-demuxers \
+			--enable-demuxer=aac \
+			--enable-demuxer=ac3 \
+			--enable-demuxer=avi \
+			--enable-demuxer=dts \
+			--enable-demuxer=flac \
+			--enable-demuxer=flv \
 			--enable-demuxer=hds \
+			--enable-demuxer=hls \
+			--enable-demuxer=image* \
+			--enable-demuxer=matroska \
 			--enable-demuxer=mjpeg \
-			--enable-demuxer=wav \
+			--enable-demuxer=mov \
+			--enable-demuxer=mp3 \
+			--enable-demuxer=mpegts \
+			--enable-demuxer=mpegtsraw \
+			--enable-demuxer=mpegps \
+			--enable-demuxer=mpegvideo \
+			--enable-demuxer=ogg \
+			--enable-demuxer=pcm_s16be \
+			--enable-demuxer=pcm_s16le \
+			--enable-demuxer=rm \
 			--enable-demuxer=rtsp \
+			--enable-demuxer=srt \
+			--enable-demuxer=vc1 \
+			--enable-demuxer=wav \
 			\
-			--enable-bsfs \
+			--disable-protocols \
+			--enable-protocol=file \
+			--enable-protocol=http \
+			--enable-protocol=mmsh \
+			--enable-protocol=mmst \
+			--enable-protocol=rtmp \
+			--enable-protocol=rtmpe \
+			--enable-protocol=rtmps \
+			--enable-protocol=rtmpt \
+			--enable-protocol=rtmpte \
+			--enable-protocol=rtmpts \
+			\
+			--disable-filters \
+			--enable-filter=scale \
+			\
+			--disable-bsfs \
 			--disable-indevs \
 			--disable-outdevs \
 			--enable-bzlib \
 			--enable-zlib \
 			$(FFMPEG_EXTRA) \
-			--enable-cross-compile \
-			--enable-pthreads \
 			--disable-static \
 			--enable-shared \
 			--enable-small \
 			--enable-stripping \
 			--disable-debug \
 			--disable-runtime-cpudetect \
+			--enable-cross-compile \
 			--cross-prefix=$(target)- \
 			--extra-cflags="-I$(targetprefix)/usr/include" \
 			--extra-ldflags="-L$(targetprefix)/usr/lib" \

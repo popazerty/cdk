@@ -262,3 +262,16 @@ $(D)/xupnpd: $(D)/bootstrap @DEPENDS_xupnpd@
 		@INSTALL_xupnpd@
 	@CLEANUP_xupnpd@
 	touch $@
+
+#
+# udpxy
+#
+$(D)/udpxy: $(D)/bootstrap @DEPENDS_udpxy@
+	@PREPARE_udpxy@
+	cd @DIR_udpxy@ && \
+		$(BUILDENV) \
+		$(MAKE) $(MAKE_OPTS) && \
+		@INSTALL_udpxy@
+	@CLEANUP_udpxy@
+	touch $@
+

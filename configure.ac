@@ -821,6 +821,7 @@ TUXBOX_RULES_MAKE(libvorbisidec)
 #
 TUXBOX_RULES_MAKE(libcrypto)
 TUXBOX_RULES_MAKE(lua)
+TUXBOX_RULES_MAKE(luacurl)
 TUXBOX_RULES_MAKE(luaexpat)
 TUXBOX_RULES_MAKE(howl)
 TUXBOX_RULES_MAKE(libopenthreads)
@@ -991,6 +992,7 @@ TUXBOX_RULES_MAKE(zd1211)
 TUXBOX_RULES_MAKE(wpa_supplicant)
 TUXBOX_RULES_MAKE(ethtool)
 TUXBOX_RULES_MAKE(xupnpd)
+TUXBOX_RULES_MAKE(udpxy)
 
 #
 # localmacros

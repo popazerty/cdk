@@ -1,23 +1,23 @@
 diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
 --- ffmpeg-2.3-original/configure	2014-07-16 03:00:37.000000000 +0200
 +++ ffmpeg-2.3/configure	2014-07-31 17:58:33.782371338 +0200
-@@ -260,6 +260,7 @@
-   --enable-x11grab         enable X11 grabbing [no]
+@@ -269,6 +269,7 @@
+   --enable-x11grab         enable X11 grabbing (legacy) [no]
    --disable-xlib           disable xlib [autodetect]
    --disable-zlib           disable zlib [autodetect]
 +  --disable-xml2           disable XML parsing using the C library libxml2 [autodetect]
  
  Toolchain options:
    --arch=ARCH              select architecture [$arch]
-@@ -1380,6 +1381,7 @@
-     openssl
+@@ -1404,6 +1405,7 @@
+     sdl
      x11grab
      xlib
 +    xml2
      zlib
  "
  
-@@ -2367,6 +2369,7 @@
+@@ -2415,6 +2417,7 @@
  eac3_demuxer_select="ac3_parser"
  f4v_muxer_select="mov_muxer"
  flac_demuxer_select="flac_parser"
@@ -25,9 +25,9 @@ diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
  hds_muxer_select="flv_muxer"
  hls_muxer_select="mpegts_muxer"
  image2_alias_pix_demuxer_select="image2_demuxer"
-@@ -4694,6 +4697,11 @@
- disabled  zlib || check_lib   zlib.h      zlibVersion -lz   || disable  zlib
+@@ -4825,6 +4828,11 @@
  disabled bzlib || check_lib2 bzlib.h BZ2_bzlibVersion -lbz2 || disable bzlib
+ disabled  lzma || check_lib2  lzma.h lzma_version_number -llzma || disable lzma
  
 +disabled xml2 || {
 +    check_pkg_config libxml-2.0 libxml2/libxml/xmlversion.h xmlCheckVersion &&
@@ -40,7 +40,7 @@ diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
 diff -ur --new-file ffmpeg-2.3-original/libavformat/allformats.c ffmpeg-2.3/libavformat/allformats.c
 --- ffmpeg-2.3-original/libavformat/allformats.c	2014-07-16 03:00:38.000000000 +0200
 +++ ffmpeg-2.3/libavformat/allformats.c	2014-07-31 17:58:33.786371338 +0200
-@@ -137,7 +137,7 @@
+@@ -139,7 +139,7 @@
      REGISTER_MUXDEMUX(H261,             h261);
      REGISTER_MUXDEMUX(H263,             h263);
      REGISTER_MUXDEMUX(H264,             h264);
@@ -2716,7 +2716,7 @@ diff -ur --new-file ffmpeg-2.3-original/libavformat/hdsdec.c ffmpeg-2.3/libavfor
 diff -ur --new-file ffmpeg-2.3-original/libavformat/http.c ffmpeg-2.3/libavformat/http.c
 --- ffmpeg-2.3-original/libavformat/http.c	2014-07-16 03:00:38.000000000 +0200
 +++ ffmpeg-2.3/libavformat/http.c	2014-08-30 15:22:01.668646614 +0200
-@@ -501,7 +501,12 @@
+@@ -538,7 +538,12 @@
              if (!s->cookies) {
                  if (!(s->cookies = av_strdup(p)))
                      return AVERROR(ENOMEM);
@@ -2732,7 +2732,7 @@ diff -ur --new-file ffmpeg-2.3-original/libavformat/http.c ffmpeg-2.3/libavforma
 diff -ur --new-file ffmpeg-2.3-original/libavformat/Makefile ffmpeg-2.3/libavformat/Makefile
 --- ffmpeg-2.3-original/libavformat/Makefile	2014-07-16 03:00:38.000000000 +0200
 +++ ffmpeg-2.3/libavformat/Makefile	2014-07-31 17:58:33.794371338 +0200
-@@ -168,6 +168,7 @@
+@@ -173,6 +173,7 @@
  OBJS-$(CONFIG_H263_MUXER)                += rawenc.o
  OBJS-$(CONFIG_H264_DEMUXER)              += h264dec.o rawdec.o
  OBJS-$(CONFIG_H264_MUXER)                += rawenc.o

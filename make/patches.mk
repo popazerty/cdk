@@ -40,4 +40,5 @@ NEUTRINO_MP_TANGOS_PATCHES += $(PATCHES)/neutrino-mp-tangos.patch
 
 # Neutrino HD2
 NEUTRINO_HD2_PATCHES += $(PATCHES)/neutrino-hd2-exp.diff $(PATCHES)/nhd2-exp.patch
+NEUTRINO_HD2_PLUGINS_PATCHES += 
 

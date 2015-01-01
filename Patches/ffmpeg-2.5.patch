@@ -1,56 +1,6 @@
---- a/libavcodec/h264_mp4toannexb_bsf.c
-+++ b/libavcodec/h264_mp4toannexb_bsf.c
-@@ -28,7 +28,6 @@
- typedef struct H264BSFContext {
-     uint8_t  length_size;
-     uint8_t  new_idr;
--    uint8_t  idr_sps_pps_seen;
-     int      extradata_parsed;
- } H264BSFContext;
- 
-@@ -156,7 +155,6 @@
-             return ret;
-         ctx->length_size      = ret;
-         ctx->new_idr          = 1;
--        ctx->idr_sps_pps_seen = 0;
-         ctx->extradata_parsed = 1;
-     }
- 
-@@ -176,17 +174,8 @@
-         if (buf + nal_size > buf_end || nal_size < 0)
-             goto fail;
- 
--        if (unit_type == 7 || unit_type == 8)
--            ctx->idr_sps_pps_seen = 1;
--
--        /* if this is a new IDR picture following an IDR picture, reset the idr flag.
--         * Just check first_mb_in_slice to be 0 as this is the simplest solution.
--         * This could be checking idr_pic_id instead, but would complexify the parsing. */
--        if (!ctx->new_idr && unit_type == 5 && (buf[1] & 0x80))
--            ctx->new_idr = 1;
--
--        /* prepend only to the first type 5 NAL unit of an IDR picture, if no sps/pps are already present */
--        if (ctx->new_idr && unit_type == 5 && !ctx->idr_sps_pps_seen) {
-+        /* prepend only to the first type 5 NAL unit of an IDR picture */
-+        if (ctx->new_idr && (unit_type == 5 || unit_type == 7 || unit_type == 8)) {
-             if ((ret=alloc_and_copy(poutbuf, poutbuf_size,
-                                avctx->extradata, avctx->extradata_size,
-                                buf, nal_size)) < 0)
-@@ -196,10 +185,8 @@
-             if ((ret=alloc_and_copy(poutbuf, poutbuf_size,
-                                NULL, 0, buf, nal_size)) < 0)
-                 goto fail;
--            if (!ctx->new_idr && unit_type == 1) {
-+            if (!ctx->new_idr && unit_type == 1)
-                 ctx->new_idr = 1;
--                ctx->idr_sps_pps_seen = 0;
--            }
-         }
- 
-         buf        += nal_size;
---- a/cmdutils.c.orig	2014-03-23 23:07:47.000000000 +0100
-+++ b/cmdutils.c	2014-03-29 15:06:56.324212030 +0100
-@@ -1074,8 +1074,7 @@
+--- a/cmdutils.c
++++ b/cmdutils.c
+@@ -1075,8 +1075,7 @@
          av_log(NULL, level, " Copyright (c) %d-%d the FFmpeg developers",
                 program_birth_year, CONFIG_THIS_YEAR);
      av_log(NULL, level, "\n");
@@ -60,9 +10,9 @@
  
      av_log(NULL, level, "%sconfiguration: " FFMPEG_CONFIGURATION "\n", indent);
  }
---- a/ffprobe.c.orig	2014-03-29 15:06:56.324212030 +0100
-+++ b/ffprobe.c	2014-03-29 15:11:13.724201206 +0100
-@@ -2519,8 +2519,6 @@
+--- a/ffprobe.c
++++ b/ffprobe.c
+@@ -2556,8 +2556,6 @@
      print_str("version", FFMPEG_VERSION);
      print_fmt("copyright", "Copyright (c) %d-%d the FFmpeg developers",
                program_birth_year, CONFIG_THIS_YEAR);
@@ -71,7 +21,7 @@
      print_str("compiler_ident", CC_IDENT);
      print_str("configuration", FFMPEG_CONFIGURATION);
      writer_print_section_footer(w);
---- a/libavformat/avio.h.orig
+--- a/libavformat/avio.h
 +++ b/libavformat/avio.h
 @@ -147,12 +147,6 @@
       */
@@ -105,7 +55,7 @@
      s->buffer_size = buffer_size;
      s->buf_ptr     = buffer;
      s->opaque      = opaque;
-@@ -443,14 +442,14 @@
+@@ -445,14 +444,14 @@
      }
  
      /* make buffer smaller in case it ended up large after probing */
@@ -124,7 +74,7 @@
      }
  
      if (s->read_packet)
-@@ -809,7 +808,6 @@
+@@ -811,7 +810,6 @@
  
      av_free(s->buffer);
      s->buffer = buffer;

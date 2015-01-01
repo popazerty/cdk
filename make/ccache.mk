@@ -17,7 +17,6 @@ CCACHE_BINDIR = $(hostprefix)/bin
 
 # generate links
 CCACHE_LINKS = \
-	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/cc;\
 	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/gcc;\
 	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/g++; \
 	ln -sfv $(CCACHE_TUXBOX_BIN) $(CCACHE_BINDIR)/$(target)-gcc; \

@@ -1,8 +1,7 @@
 #
 # IMPORTANT: it is expected that only one define is set
 #
-CUBEMOD = $(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)
-MODNAME = $(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(CUBEMOD)$(FORTIS_HDBOX)$(ATEVIO7500)$(OCTAGON1008)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO530)$(ATEMIO520)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(SPARK)$(SPARK7162)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)$(FORTIS_DP7000)
+MODNAME = $(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(FORTIS_HDBOX)$(ATEVIO7500)$(OCTAGON1008)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO530)$(ATEMIO520)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(SPARK)$(SPARK7162)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)$(FORTIS_DP7000)
 DEPMOD = $(hostprefix)/bin/depmod
 
 #
@@ -192,7 +191,38 @@ IPBOX55PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-ipbox_bdinfo_stm24$(PATCH_STR).patch
 
 CUBEREVOPATCHES_24 = $(COMMONPATCHES_24) \
-		linux-sh4-$(CUBEMOD)_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
+
+CUBEREVOMINIPATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-cuberevo_mini_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
+
+CUBEREVOMINI2PATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-cuberevo_mini2_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
+
+CUBEREVOMINIFTAPATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-cuberevo_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
+
+CUBEREVO250HDPATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-cuberevo_250hd_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch \
+		$(if $(P0215),linux-sh4-cuberevo_250hd_sound_stm24$(PATCH_STR).patch)
+
+CUBEREVO2000HDPATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-cuberevo_2000hd_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
+
+CUBEREVO9500HDPATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-cuberevo_9500hd_setup_stm24$(PATCH_STR).patch \
 		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
 		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
 
@@ -241,7 +271,13 @@ KERNELPATCHES_24 = \
 		$(if $(IPBOX9900),$(IPBOX9900PATCHES_24)) \
 		$(if $(IPBOX99),$(IPBOX99PATCHES_24)) \
 		$(if $(IPBOX55),$(IPBOX55PATCHES_24)) \
-		$(if $(CUBEMOD),$(CUBEREVOPATCHES_24)) \
+		$(if $(CUBEREVO),$(CUBEREVOPATCHES_24)) \
+		$(if $(CUBEREVO_MINI),$(CUBEREVOMINIPATCHES_24)) \
+		$(if $(CUBEREVO_MINI2),$(CUBEREVOMINI2PATCHES_24)) \
+		$(if $(CUBEREVO_MINI_FTA),$(CUBEREVOMINIFTAPATCHES_24)) \
+		$(if $(CUBEREVO_250HD),$(CUBEREVO250HDPATCHES_24)) \
+		$(if $(CUBEREVO_2000HD),$(CUBEREVO2000HDPATCHES_24)) \
+		$(if $(CUBEREVO_9500HD),$(CUBEREVO9500HDPATCHES_24)) \
 		$(if $(VITAMIN_HD5000),$(VITAMINHD5000PATCHES_24)) \
 		$(if $(SAGEMCOM88),$(SAGEMCOM88PATCHES_24)) \
 		$(if $(ARIVALINK200),$(ARIVALINK200PATCHES_24)) \
@@ -297,9 +333,9 @@ $(D)/linux-kernel.do_prepare: \
 
 $(D)/linux-kernel.do_compile: $(D)/linux-kernel.do_prepare Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS)
 	cd $(KERNEL_DIR) && \
+		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- mrproper && \
 		@M4@ $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) > .config && \
-		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- uImage modules && \
-		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)-
+		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- uImage modules
 	touch $@
 
 $(D)/linux-kernel: $(D)/bootstrap $(D)/linux-kernel.do_compile
@@ -335,4 +371,3 @@ linux-kernel.%:
 	@echo ""
 	diff $(KERNEL_DIR)/.config.old $(KERNEL_DIR)/.config
 	@echo ""
-

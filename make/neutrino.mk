@@ -13,9 +13,11 @@ $(targetprefix)/var/etc/.version:
 #
 #
 #
-NEUTRINO_DEPS  = bootstrap libcrypto libcurl libid3tag libmad libvorbisidec libpng libjpeg libgif libfreetype
-NEUTRINO_DEPS += ffmpeg lua libdvbsipp libsigc libopenthreads libusb libalsa
+NEUTRINO_DEPS  = bootstrap libcrypto libcurl libpng libjpeg libgif libfreetype
+NEUTRINO_DEPS += ffmpeg lua luaexpat luacurl libdvbsipp libsigc libopenthreads libusb libalsa
 NEUTRINO_DEPS += $(EXTERNALLCD_DEP)
+
+NEUTRINO_DEPS2 = libid3tag libmad libvorbisidec
 
 N_CFLAGS   = -Wall -W -Wshadow -pipe -Os -fno-strict-aliasing -funsigned-char
 N_CFLAGS  += -D__user=
@@ -164,101 +166,6 @@ libstb-hal-github-distclean:
 
 ################################################################################
 #
-# neutrino-mp-github
-#
-yaud-neutrino-mp-github: yaud-none lirc \
-		boot-elf neutrino-mp-github release_neutrino
-	@TUXBOX_YAUD_CUSTOMIZE@
-
-NEUTRINO_MP_GH_PATCHES =
-
-$(D)/neutrino-mp-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
-	rm -rf $(sourcedir)/neutrino-mp-github
-	rm -rf $(sourcedir)/neutrino-mp-github.org
-	rm -rf $(N_OBJDIR)
-	[ -d "$(archivedir)/neutrino-mp-github.git" ] && \
-	(cd $(archivedir)/neutrino-mp-github.git; git pull; cd "$(buildprefix)";); \
-	[ -d "$(archivedir)/neutrino-mp-github.git" ] || \
-	git clone https://github.com/MaxWiesel/neutrino-mp.git $(archivedir)/neutrino-mp-github.git; \
-	cp -ra $(archivedir)/neutrino-mp-github.git $(sourcedir)/neutrino-mp-github; \
-	cp -ra $(sourcedir)/neutrino-mp-github $(sourcedir)/neutrino-mp-github.org
-	for i in $(NEUTRINO_MP_GH_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/neutrino-mp-github && patch -p1 -i $$i; \
-	done;
-	touch $@
-
-$(D)/neutrino-mp-github.config.status:
-	rm -rf $(N_OBJDIR)
-	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR) && \
-	cd $(N_OBJDIR) && \
-		$(sourcedir)/neutrino-mp-github/autogen.sh && \
-		$(BUILDENV) \
-		$(sourcedir)/neutrino-mp-github/configure \
-			--build=$(build) \
-			--host=$(target) \
-			$(N_CONFIG_OPTS) \
-			--with-boxtype=$(BOXTYPE) \
-			--enable-lua \
-			--enable-upnp \
-			--enable-ffmpegdec \
-			--enable-giflib \
-			--with-tremor \
-			--with-libdir=/usr/lib \
-			--with-datadir=/usr/share/tuxbox \
-			--with-fontdir=/usr/share/fonts \
-			--with-configdir=/var/tuxbox/config \
-			--with-gamesdir=/var/tuxbox/games \
-			--with-plugindir=/var/tuxbox/plugins \
-			--with-stb-hal-includes=$(sourcedir)/libstb-hal-github/include \
-			--with-stb-hal-build=$(LH_OBJDIR) \
-			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
-			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
-
-$(sourcedir)/neutrino-mp-github/src/gui/version.h:
-	@rm -f $@; \
-	echo '#define BUILT_DATE "'`date`'"' > $@
-	@if test -d $(sourcedir)/libstb-hal-github ; then \
-		pushd $(sourcedir)/libstb-hal-github ; \
-		HAL_REV=$$(git log | grep "^commit" | wc -l) ; \
-		popd ; \
-		pushd $(sourcedir)/neutrino-mp-github ; \
-		NMP_REV=$$(git log | grep "^commit" | wc -l) ; \
-		popd ; \
-		pushd $(buildprefix) ; \
-		DDT_REV=$$(git log | grep "^commit" | wc -l) ; \
-		popd ; \
-		echo '#define VCS "DDT-rev'$$DDT_REV'_HAL-rev'$$HAL_REV'_NMP-rev'$$NMP_REV'"' >> $@ ; \
-	fi
-
-$(D)/neutrino-mp-github.do_compile: neutrino-mp-github.config.status $(sourcedir)/neutrino-mp-github/src/gui/version.h
-	cd $(sourcedir)/neutrino-mp-github && \
-		$(MAKE) -C $(N_OBJDIR) all
-	touch $@
-
-$(D)/neutrino-mp-github: neutrino-mp-github.do_prepare neutrino-mp-github.do_compile
-	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
-	rm -f $(targetprefix)/var/etc/.version
-	make $(targetprefix)/var/etc/.version
-	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
-	$(target)-strip $(targetprefix)/usr/local/bin/pzapit
-	$(target)-strip $(targetprefix)/usr/local/bin/sectionsdcontrol
-	$(target)-strip $(targetprefix)/usr/local/sbin/udpstreampes
-	touch $@
-
-neutrino-mp-github-clean:
-	rm -f $(D)/neutrino-mp-github
-	rm -f $(sourcedir)/neutrino-mp-github/src/gui/version.h
-	cd $(N_OBJDIR) && \
-		$(MAKE) -C $(N_OBJDIR) distclean
-
-neutrino-mp-github-distclean:
-	rm -rf $(N_OBJDIR)
-	rm -f $(D)/neutrino-mp-github*
-
-################################################################################
-#
 # neutrino-mp-github-next-cst
 #
 yaud-neutrino-mp-github-next-cst: yaud-none lirc \
@@ -368,7 +275,7 @@ yaud-neutrino-mp-martii-github: yaud-none lirc \
 #
 NEUTRINO_MP_MARTII_GH_PATCHES =
 
-$(D)/neutrino-mp-martii-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
+$(D)/neutrino-mp-martii-github.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2) libstb-hal-github
 	rm -rf $(sourcedir)/neutrino-mp-martii-github
 	rm -rf $(sourcedir)/neutrino-mp-martii-github.org
 	rm -rf $(N_OBJDIR)
@@ -524,7 +431,7 @@ libstb-hal-distclean:
 #
 NEUTRINO_MP_PATCHES =
 
-$(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) libstb-hal
+$(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS)  $(NEUTRINO_DEPS2) libstb-hal
 	rm -rf $(sourcedir)/neutrino-mp
 	rm -rf $(sourcedir)/neutrino-mp.org
 	[ -d "$(archivedir)/neutrino-mp.git" ] && \
@@ -765,16 +672,12 @@ yaud-neutrino-hd2-exp: yaud-none lirc \
 		boot-elf neutrino-hd2-exp release_neutrino
 	@TUXBOX_YAUD_CUSTOMIZE@
 
-yaud-neutrino-hd2-exp-plugins: yaud-none lirc \
-		boot-elf neutrino-hd2-exp neutrino-mp-plugins release_neutrino
-	@TUXBOX_YAUD_CUSTOMIZE@
-
 #
 # neutrino-hd2-exp
 #
 NEUTRINO_HD2_PATCHES =
 
-$(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) $(MEDIAFW_DEP) libflac
+$(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2) $(MEDIAFW_DEP) libflac
 	rm -rf $(sourcedir)/nhd2-exp
 	rm -rf $(sourcedir)/nhd2-exp.org
 	[ -d "$(archivedir)/neutrino-hd2-exp.svn" ] && \
@@ -838,58 +741,6 @@ neutrino-hd2-exp-distclean:
 	rm -f $(D)/neutrino-hd2-exp.do_compile
 	rm -f $(D)/neutrino-hd2-exp.do_prepare
 
-#
-# NHD2 plugins
-#
-$(D)/nhd2-plugins.do_prepare:
-	rm -rf $(sourcedir)/nhd2-plugins
-	rm -rf $(sourcedir)/nhd2-plugins.org
-	[ -d "$(archivedir)/nhd2-plugins.svn" ] && \
-	(cd $(archivedir)/nhd2-plugins.svn; svn up ; cd "$(buildprefix)";); \
-	[ -d "$(archivedir)/nhd2-plugins.svn" ] || \
-	svn co http://neutrinohd2.googlecode.com/svn/branches/plugins $(archivedir)/nhd2-plugins.svn; \
-	cp -ra $(archivedir)/nhd2-plugins.svn $(sourcedir)/nhd2-plugins; \
-	cp -ra $(sourcedir)/nhd2-plugins $(sourcedir)/nhd2-plugins.org
-	touch $@
-
-$(sourcedir)/nhd2-plugins/config.status: bootstrap
-	cd $(sourcedir)/nhd2-plugins && \
-		./autogen.sh && \
-		$(BUILDENV) \
-		./configure \
-			--host=$(target) \
-			--build=$(build) \
-			--prefix= \
-			--with-target=cdk \
-			--with-boxtype=$(BOXTYPE) \
-			--with-plugindir=/var/tuxbox/plugins \
-			--with-libdir=/usr/lib \
-			--with-datadir=/usr/share/tuxbox \
-			--with-fontdir=/usr/share/fonts \
-			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
-			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-			CPPFLAGS="$(CPPFLAGS) -I$(driverdir) -I$(buildprefix)/$(KERNEL_DIR)/include -I$(targetprefix)/include" \
-			LDFLAGS="$(TARGET_LDFLAGS)"
-
-$(D)/nhd2-plugins.do_compile: $(sourcedir)/nhd2-plugins/config.status
-	cd $(sourcedir)/nhd2-plugins && \
-	$(MAKE)
-	touch $@
-
-$(D)/nhd2-plugins: nhd2-plugins.do_prepare nhd2-plugins.do_compile
-	rm -rf $(targetprefix)/var/tuxbox/plugins/*
-	$(MAKE) -C $(sourcedir)/nhd2-plugins install DESTDIR=$(targetprefix)
-#	touch $@
-
-nhd2-plugins-clean:
-	rm -f $(D)/nhd2-plugins
-	cd $(sourcedir)/nhd2-plugins && \
-	$(MAKE) clean
-	rm -f $(sourcedir)/nhd2-plugins/config.status
-
-nhd2-plugins-distclean:
-	rm -f $(D)/nhd2-plugins*
-
 ################################################################################
 #
 # yaud-neutrino-mp-tangos
@@ -918,9 +769,8 @@ $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-github
 	[ -d "$(archivedir)/neutrino-mp-tangos.git" ] && \
 	(cd $(archivedir)/neutrino-mp-tangos.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-tangos.git" ] || \
-	git clone https://github.com/TangoCash/nmp-tangos.git $(archivedir)/neutrino-mp-tangos.git; \
+	git clone https://github.com/TangoCash/neutrino-mp-cst-next.git $(archivedir)/neutrino-mp-tangos.git; \
 	cp -ra $(archivedir)/neutrino-mp-tangos.git $(sourcedir)/neutrino-mp-tangos; \
-	(cd $(sourcedir)/neutrino-mp-tangos; git checkout next; cd "$(buildprefix)";); \
 	cp -ra $(sourcedir)/neutrino-mp-tangos $(sourcedir)/neutrino-mp-tangos.org
 	for i in $(NEUTRINO_MP_TANGOS_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
@@ -996,3 +846,4 @@ neutrino-mp-tangos-clean:
 neutrino-mp-tangos-distclean:
 	rm -rf $(N_OBJDIR)
 	rm -f $(D)/neutrino-mp-tangos*
+
