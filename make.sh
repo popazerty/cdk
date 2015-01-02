@@ -9,7 +9,6 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1/Neutrino=2) (1-2)"
  echo "Parameter 8: Neutrino variant (1-6)"
-# echo "Parameter 9: Bootloader version (1-2) (target system 19 only)"
  exit
 fi
 
@@ -155,26 +154,6 @@ case "$REPLY" in
 		esac
 		CONFIGPARAM="$CONFIGPARAM $MODEL"
 		;;
-#	19)	if [ "$9" ]; then
-#			REPLY=$9
-#			else
-#			echo -e "\nBuild for boot loader:"
-#			echo " 1) Loader 5.0X (obsolete, not recommended)"
-#			echo " 2) Loader 6.00"
-#		fi
-#		case $9 in
-#			[1-2]) REPLY=$9;;
-#			*)     read -p "\nSelect boot loader version (1-2)? ";;
-#		esac
-#
-#		case "$REPLY" in
-#			1) MODEL="--enable-av7500l50x";BLOADER="5.0x";;
-##			2) MODEL="--enable-av7500l600";BLOADER="6.00";;
-#			*) MODEL="--enable-av7500l600";BLOADER="6.00";;
-#		esac
-#		CONFIGPARAM="$CONFIGPARAM $MODEL"
-#		;;
-##	*)	;;
 esac
 
 ##############################################
@@ -334,7 +313,7 @@ case "$REPLY" in
 				echo "   1) neutrino-mp"
 				echo "   2) neutrino-mp-next"
 				echo "   3) neutrino-hd2-exp"
-				echo "   4) neutrino-mp-github"
+				echo "   4) neutrino-mp-github-next-cst"
 				echo "   5) neutrino-mp-martii-github"
 				echo "   6) neutrino-mp-tangos"
 				read -p " Select Neutrino variant (1-6)? ";;
@@ -342,7 +321,7 @@ case "$REPLY" in
 		case "$REPLY" in
 			2)	IMAGEN="neutrino-mp-next";;
 			3)	IMAGEN="neutrino-hd2-exp";;
-			4)	IMAGEN="neutrino-mp-github";;
+			4)	IMAGEN="neutrino-mp-github-next-cst";;
 			5)	IMAGEN="neutrino-mp-martii-github";;
 			6)	IMAGEN="neutrino-mp-tangos";;
 			*)	IMAGEN="neutrino-mp";;
@@ -382,9 +361,6 @@ echo "----------------------------------------"
 echo "Your build environment is ready :-)"
 echo
 echo "Selected receiver        : $RECEIVER"
-#if [ "$RECEIVER" == "Fortis HS8200" ]; then
-#  echo "Boot loader version      : $BLOADER"
-#fi
 echo "Selected kernel          : stm24 $KERNELP"
 echo "Debug option             : $DEBUGR"
 echo "Selected player          : $PLAYERR"
@@ -402,7 +378,7 @@ else
     1) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
     2) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
     3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-mp-github" >> $CURDIR/build;;
+    4) echo "make yaud-neutrino-mp-github-next-cst" >> $CURDIR/build;;
     5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
     6) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
     *) exit;;

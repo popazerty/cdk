@@ -41,7 +41,7 @@ libungif-4.1.4.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
 libjpeg-turbo-1.2.1.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.2.1
 libpng-1.2.50.tar.bz2;http://sourceforge.net/projects/libpng/files/libpng12/1.2.50
-libpng-1.6.14.tar.gz;http://sourceforge.net/projects/libpng/files/libpng16/1.6.14
+libpng-1.6.16.tar.gz;http://sourceforge.net/projects/libpng/files/libpng16/1.6.16
 tiff-4.0.3.tar.gz;http://download.osgeo.org/libtiff
 pixman-0.18.0.tar.gz;http://cairographics.org/releases
 
@@ -83,7 +83,7 @@ libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
 libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
 glib-2.28.3.tar.gz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.28
 libffi-3.1.tar.gz;ftp://sourceware.org/pub/libffi
-orc-0.4.18.tar.gz;http://code.entropywave.com/download/orc
+orc-0.4.18.tar.gz;http://gstreamer.freedesktop.org/src/orc
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
 libmng-1.0.10.tar.bz2;http://dfn.dl.sourceforge.net/sourceforge/libmng
 lcms-1.17.tar.gz;http://sourceforge.net/projects/lcms/files/lcms/1.17

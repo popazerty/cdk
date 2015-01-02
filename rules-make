@@ -54,7 +54,7 @@ libungif;4.1.4;libungif-4.1.4;libungif-4.1.4.tar.bz2;extract:libungif-4.1.4.tar.
 libjpeg;8d;jpeg-8d;jpegsrc.v8d.tar.gz:jpeg.patch;extract:jpegsrc.v8d.tar.gz;patch:jpeg.patch
 libjpeg_turbo;1.2.1;libjpeg-turbo-1.2.1;libjpeg-turbo-1.2.1.tar.gz;extract:libjpeg-turbo-1.2.1.tar.gz
 libpng12;1.2.50;libpng-1.2.50;libpng-1.2.50.tar.bz2;extract:libpng-1.2.50.tar.bz2
-libpng;1.6.14;libpng-1.6.14;libpng-1.6.14.tar.gz;extract:libpng-1.6.14.tar.gz;patch:libpng-1.6.14.patch
+libpng;1.6.16;libpng-1.6.16;libpng-1.6.16.tar.gz;extract:libpng-1.6.16.tar.gz;patch:libpng-1.6.16.patch
 libtiff;4.0.3;tiff-4.0.3;tiff-4.0.3.tar.gz;extract:tiff-4.0.3.tar.gz
 pixman;0.18.0;pixman-0.18.0;pixman-0.18.0.tar.gz;extract:pixman-0.18.0.tar.gz
 

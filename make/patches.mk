@@ -15,7 +15,7 @@ libstb-hal-github-old-diff :
 # uncomment if needed
 #
 # Neutrino MP from github
-NEUTRINO_MP_GH_PATCHES += $(PATCHES)/neutrino-mp-github.patch
+#NEUTRINO_MP_GH_PATCHES += $(PATCHES)/neutrino-mp-github.patch
 
 # STB-HAL from github
 NEUTRINO_MP_LIBSTB_GH_OLD_PATCHES += 
