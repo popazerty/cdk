@@ -153,7 +153,7 @@ $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_
 	[ -d "$(archivedir)/PLi-HD_skin.git" ] && \
 	(cd $(archivedir)/PLi-HD_skin.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/PLi-HD_skin.git" ] || \
-	git clone -b $$HEAD $$REPO $(archivedir)/PLi-HD_skin.git; \
+	git clone $$REPO $(archivedir)/PLi-HD_skin.git; \
 	cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2; \
 	cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 < "../../../../../../cdk/Patches/PLi-HD_skin.patch"
 	touch $@
