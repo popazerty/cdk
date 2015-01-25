@@ -797,7 +797,7 @@ release_enigma2_base:
 	cp -dp $(targetprefix)/etc/host.conf $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hostname $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hosts $(prefix)/release/etc/ && \
-	cp $(buildprefix)/root/etc/inetd.conf $(prefix)/release/etc/ && \
+	cp $(buildprefix)/root/root_enigma2/etc/inetd.conf $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/localtime $(prefix)/release/etc/ && \
 	ln -sf /proc/mounts $(prefix)/release/etc/mtab && \
 	cp -dp $(buildprefix)/root/etc/passwd $(prefix)/release/etc/ && \

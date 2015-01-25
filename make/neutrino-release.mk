@@ -590,7 +590,6 @@ release_neutrino_base:
 	$(INSTALL_DIR) $(prefix)/release/etc/{init.d,network,mdev} && \
 	$(INSTALL_DIR) $(prefix)/release/etc/network/{if-down.d,if-post-down.d,if-pre-up.d,if-up.d} && \
 	$(INSTALL_DIR) $(prefix)/release/lib/{modules,udev,firmware} && \
-	$(INSTALL_DIR) $(prefix)/release/hdd/{movie,music,picture} && \
 	$(INSTALL_DIR) $(prefix)/release/media/{dvd,nfs,usb} && \
 	ln -sf /hdd $(prefix)/release/media/hdd && \
 	$(INSTALL_DIR) $(prefix)/release/mnt/{hdd,nfs,usb} && \
@@ -638,7 +637,7 @@ release_neutrino_base:
 	cp -dp $(targetprefix)/etc/host.conf $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hostname $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hosts $(prefix)/release/etc/ && \
-	cp $(buildprefix)/root/etc/inetd.conf $(prefix)/release/etc/ && \
+	cp $(buildprefix)/root/root_neutrino/etc/inetd.conf $(prefix)/release/etc/ && \
 	cp $(buildprefix)/root/etc/modules.available $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/localtime $(prefix)/release/etc/ && \
 	ln -sf /proc/mounts $(prefix)/release/etc/mtab && \
@@ -836,7 +835,7 @@ endif
 # channellist / tuxtxt
 #
 	cp -aR $(targetprefix)/var/tuxbox/config/* $(prefix)/release/var/tuxbox/config
-	cp -aR $(buildprefix)/root/root_neutrino/* $(prefix)/release/
+#	cp -aR $(buildprefix)/root/root_neutrino/* $(prefix)/release/
 
 if !ENABLE_CUBEREVO_MINI2
 if !ENABLE_ATEVIO7500

@@ -1,15 +1,6 @@
 diff -Nur xupnpd.svn/Makefile xupnpd/Makefile
 --- xupnpd.svn/Makefile	2014-01-24 15:08:35.352192000 +0100
 +++ xupnpd/Makefile	2014-01-25 17:39:03.109327833 +0100
-@@ -4,7 +4,7 @@
- 
- CFLAGS  = -fno-exceptions -fno-rtti -O2 -I$(LUA) -L$(LUA)
- SRC     = main.cpp soap.cpp mem.cpp mcast.cpp luaxlib.cpp luaxcore.cpp luajson.cpp luajson_parser.cpp
--STAGING_DIR = /u01/home/shocker/staff/openwrt/staging_dir
-+STAGING_DIR = $(targetprefix)/usr
- LUAMYCFLAGS = -DLUA_USE_LINUX
- 
- ifeq ($(STATIC),true)
 @@ -56,6 +56,22 @@
  dreambox:
  	$(MAKE) embedded TARGET=mipsel_dreambox SDK=/opt/mipsel-unknown-linux-gnu/bin

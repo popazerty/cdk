@@ -19,9 +19,7 @@ NEUTRINO_DEPS += $(EXTERNALLCD_DEP)
 
 NEUTRINO_DEPS2 = libid3tag libmad libvorbisidec
 
-N_CFLAGS   = -Wall -W -Wshadow -pipe -Os -fno-strict-aliasing -funsigned-char
-N_CFLAGS  += -D__user=
-#-rdynamic
+N_CFLAGS  = -Wall -W -Wshadow -g0 -pipe -Os -fno-strict-aliasing -D__KERNEL_STRICT_NAMES -DCPU_FREQ
 
 N_CPPFLAGS = -I$(driverdir)/bpamem
 N_CPPFLAGS += -I$(targetprefix)/usr/include/

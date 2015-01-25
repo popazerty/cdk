@@ -45,7 +45,7 @@ sysvinit;2.88;sysvinit-2.88dsf;sysvinit_2.88dsf.orig.tar.gz;extract:sysvinit_2.8
 #
 # Graphics and Font Libraries
 #
-libfreetype;2.5.3;freetype-2.5.3;freetype-2.5.3.tar.bz2;extract:freetype-2.5.3.tar.bz2;patch:freetype-2.5.3.patch
+libfreetype;2.5.5;freetype-2.5.5;freetype-2.5.5.tar.bz2;extract:freetype-2.5.5.tar.bz2;patch:freetype-2.5.5.patch
 fontconfig;2.8.0;fontconfig-2.8.0;fontconfig-2.8.0.tar.gz;extract:fontconfig-2.8.0.tar.gz;patch:fontconfig-2.8.0.patch
 libfribidi;0.19.6;fribidi-0.19.6;fribidi-0.19.6.tar.bz2;extract:fribidi-0.19.6.tar.bz2;patch:libfribidi-0.19.6.patch
 libgif_e2;4.1.6;giflib-4.1.6;giflib-4.1.6.tar.bz2;extract:giflib-4.1.6.tar.bz2
@@ -217,7 +217,7 @@ libdreamdvd;1.0;libdreamdvd-1.0;libdreamdvd.git:libdreamdvd-1.0-support_sh4.patc
 # EXTERNAL_LCD
 #
 graphlcd;base-touchcol;graphlcd-base-touchcol;graphlcd-base-touchcol.git:graphlcd.patch;extract:graphlcd-base-touchcol.git;patch:graphlcd.patch
-lcd4_linux;;lcd4linux;lcd4linux.svn;extract:lcd4linux.svn;patch:lcd4linux.patch
+lcd4_linux;1.0;lcd4linux-1.0;lcd4linux.svn;extract:lcd4linux.svn;patch:lcd4linux.patch
 libusb;1.0.9;libusb-1.0.9;libusb-1.0.9.tar.bz2;extract:libusb-1.0.9.tar.bz2;patch:libusb-1.0.9.patch
 libusbcompat;0.1.5;libusb-compat-0.1.5;libusb-compat-0.1.5.tar.bz2;extract:libusb-compat-0.1.5.tar.bz2
 libgd2;2.1.0;libgd-2.1.0;libgd-2.1.0.tar.gz;extract:libgd-2.1.0.tar.gz
@@ -244,7 +244,7 @@ xfsprogs;3.1.8;xfsprogs-3.1.8;xfsprogs-3.1.8.tar.gz;extract:xfsprogs-3.1.8.tar.g
 #
 autofs;4.1.4;autofs-4.1.4;autofs-4.1.4.tar.gz;extract:autofs-4.1.4.tar.gz;patch:autofs-4.1.4.patch
 #autofs;5.0.7;autofs-5.0.7;autofs-5.0.7.tar.gz;extract:autofs-5.0.7.tar.gz
-libcurl;7.38.0;curl-7.38.0;curl-7.38.0.tar.bz2;extract:curl-7.38.0.tar.bz2;patch:libcurl-7.38.0.patch
+libcurl;7.40.0;curl-7.40.0;curl-7.40.0.tar.bz2;extract:curl-7.40.0.tar.bz2;patch:libcurl-7.40.0.patch
 portmap;6.0.0;portmap-6.0.0;portmap_6.0.0.orig.tar.gz:portmap_6.0.patch:portmap_6.0.0-2.diff.gz;extract:portmap_6.0.0.orig.tar.gz;patch:portmap_6.0.patch
 nfs_utils;1.3.0;nfs-utils-1.3.0;nfs-utils-1.3.0.tar.bz2;extract:nfs-utils-1.3.0.tar.bz2;patch:nfs-utils-1.2.3.patch
 libevent;2.0.20-stable;libevent-2.0.20-stable;libevent-2.0.20-stable.tar.gz;extract:libevent-2.0.20-stable.tar.gz
@@ -260,7 +260,7 @@ wireless_tools;29;wireless_tools.29;wireless_tools.29.tar.gz;extract:wireless_to
 wpa_supplicant;0.7.3;wpa_supplicant-0.7.3;wpa_supplicant-0.7.3.tar.gz;extract:wpa_supplicant-0.7.3.tar.gz
 #wpa_supplicant;1.0;wpa_supplicant-1.0;wpa_supplicant-1.0.tar.gz;extract:wpa_supplicant-1.0.tar.gz
 ethtool;6;ethtool-6;ethtool-6.tar.gz;extract:ethtool-6.tar.gz
-xupnpd;1.0;xupnpd;xupnpd.svn;extract:xupnpd.svn;patch:xupnpd.patch
+xupnpd;1.0;xupnpd-1.0;xupnpd.svn;extract:xupnpd.svn;patch:xupnpd.patch
 udpxy;1.0.23-0;udpxy-1.0.23-0;udpxy.1.0.23-0-prod.tar.gz;extract:udpxy.1.0.23-0-prod.tar.gz;patch:udpxy-1.0.23-0.patch
 
 

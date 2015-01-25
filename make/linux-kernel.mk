@@ -315,9 +315,7 @@ HOST_KERNEL_PATCHES = $(KERNELPATCHES_24)
 HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,-,$(KERNELVERSION))_$(MODNAME).config$(DEBUG_STR)
 HOST_KERNEL_RPM = $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.rpm
 
-$(D)/linux-kernel.do_prepare: \
-		$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=Patches/$(BUILDCONFIG$)/%)) \
-		$(HOST_KERNEL_RPM)
+$(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) $(HOST_KERNEL_RPM) | $(HOST_U_BOOT_TOOLS)
 	rm -rf linux-sh4*
 	unpack-rpm.sh $(buildtmp) $(STM_RELOCATE)/devkit/sources/kernel $(buildprefix) $(lastword $^)
 	$(if $(HOST_KERNEL_PATCHES),cd $(KERNEL_DIR) && cat $(HOST_KERNEL_PATCHES:%=$(buildprefix)/Patches/$(BUILDCONFIG$)/%) | patch -p1)
@@ -328,24 +326,19 @@ $(D)/linux-kernel.do_prepare: \
 	$(MAKE) -C $(KERNEL_DIR) ARCH=sh oldconfig
 	$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/asm
 	$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/linux/version.h
-	rm $(KERNEL_DIR)/.config
-	touch $@
-
-$(D)/linux-kernel.do_compile: $(D)/linux-kernel.do_prepare Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS)
-	cd $(KERNEL_DIR) && \
-		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- mrproper && \
-		@M4@ $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) > .config && \
-		$(MAKE) ARCH=sh CROSS_COMPILE=$(target)- uImage modules
-	touch $@
-
-$(D)/linux-kernel: $(D)/bootstrap $(D)/linux-kernel.do_compile
+	$(MAKE) -C $(KERNEL_DIR) uImage modules \
+		ARCH=sh \
+		CROSS_COMPILE=$(target)-
+	$(MAKE) -C $(KERNEL_DIR) modules_install \
+		ARCH=sh \
+		CROSS_COMPILE=$(target)- \
+		INSTALL_MOD_PATH=$(targetprefix)
 	$(INSTALL) -d $(prefix)/$*$(notdir $(bootprefix)) && \
 	$(INSTALL) -m644 $(KERNEL_DIR)/arch/sh/boot/uImage $(prefix)/$*$(notdir $(bootprefix))/vmlinux.ub && \
 	$(INSTALL) -m644 $(KERNEL_DIR)/vmlinux $(prefix)/$*cdkroot/boot/vmlinux-sh4-$(KERNELVERSION) && \
 	$(INSTALL) -m644 $(KERNEL_DIR)/System.map $(prefix)/$*cdkroot/boot/System.map-sh4-$(KERNELVERSION) && \
 	$(INSTALL) -m644 $(KERNEL_DIR)/COPYING $(prefix)/$*cdkroot/boot/LICENSE && \
 	cp $(KERNEL_DIR)/arch/sh/boot/uImage $(prefix)/$*cdkroot/boot/ && \
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh INSTALL_MOD_PATH=$(prefix)/$*cdkroot modules_install && \
 	rm $(prefix)/$*cdkroot/lib/modules/$(KERNELVERSION)/build || true && \
 	rm $(prefix)/$*cdkroot/lib/modules/$(KERNELVERSION)/source || true
 	touch $@
@@ -357,8 +350,6 @@ $(D)/tfkernel.do_compile:
 
 linux-kernel-clean:
 	rm -f $(DEPDIR)/linux-kernel
-	rm -f $(DEPDIR)/linux-kernel.do_compile
-	rm -f $(DEPDIR)/linux-kernel.do_prepare
 
 #
 # Helper

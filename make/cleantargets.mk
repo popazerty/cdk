@@ -33,7 +33,7 @@ clean-local: mostlyclean-local depsclean
 	-rm -rf $(prefix)/*cdkroot
 	-rm -rf $(prefix)/*cdkroot-tftpboot
 	-rm -rf $(prefix)/release*
-	-rm -rf $(D)/linux-kernel*
+	-rm -rf $(D)/linux-kernel
 
 # Be brutal...just nuke it!
 distclean-local:
