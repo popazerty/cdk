@@ -41,11 +41,7 @@ libungif-4.1.4.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
 libjpeg-turbo-1.2.1.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.2.1
 libpng-1.2.50.tar.bz2;http://sourceforge.net/projects/libpng/files/libpng12/1.2.50
-<<<<<<< HEAD
 libpng-1.6.16.tar.gz;http://sourceforge.net/projects/libpng/files/libpng16/1.6.16
-=======
-libpng-1.6.14.tar.gz;http://sourceforge.net/projects/libpng/files/libpng16/older-releases
->>>>>>> upstream/master
 tiff-4.0.3.tar.gz;http://download.osgeo.org/libtiff
 pixman-0.18.0.tar.gz;http://cairographics.org/releases
 
