@@ -1,25 +1,25 @@
 #!/bin/sh
-#Version 140727.1
+#Version 150328.1
 
 echo "Spark 7162"
 
 MODDIR=/lib/modules
 
 echo "Init frontpanel"
-insmod $MODDIR/aotom.ko
+insmod $MODDIR/aotom.ko paramDebug=0
 insmod $MODDIR/simu_button.ko
 if [ -e $MODDIR/encrypt.ko ]; then
    insmod $MODDIR/encrypt.ko
 fi
 
 if [ -e /var/etc/.firstboot ]; then
-   echo "Wait 1 min" > /dev/vfd
+   echo "Wait 1 min." > /dev/vfd
    echo "WAIT 1 min"
    rm /var/etc/.firstboot
    sleep 1
    touch /dev/.devfsd
 else
-   echo "LOAD 10" > /dev/vfd
+   echo "Load 10" > /dev/vfd
    echo "LOAD 10"
 fi
 
@@ -69,7 +69,7 @@ else
 fi
 
 echo "Init stmfb (LOAD 9)"
-echo "LOAD 9" > /dev/vfd
+echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
 
 if  grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
@@ -86,7 +86,7 @@ if [ ! -e /boot/audio.elf ]; then
 fi
 
 echo "Load audio firmware (LOAD 8)"
-echo "LOAD 8" > /dev/vfd
+echo "Load 8" > /dev/vfd
 dtsdown=`cat /etc/enigma2/settings | grep systemoptions.dtsdownmix | cut -d "=" -f2`
 if [ ! $dtsdown ] && [ -e /boot/audio_dts.elf ]; then
    /bin/ustslave /dev/st231-1 /boot/audio_dts.elf > /dev/null
@@ -95,24 +95,24 @@ else
 fi
 
 echo "Load video firmware (LOAD 7)"
-echo "LOAD 7" > /dev/vfd
+echo "Load 7" > /dev/vfd
 /bin/ustslave /dev/st231-0 /boot/video.elf > /dev/null
 
 echo "Init embx (LOAD 6)"
-echo "LOAD 6" > /dev/vfd
+echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
 insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
 insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
-echo "LOAD 5" > /dev/vfd
+echo "Load 5" > /dev/vfd
 insmod $MODDIR/avs.ko type=avs_pio
 #insmod $MODDIR/avs.ko type=avs_none #HDMU value
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
 echo "Init player $player (LOAD 4)"
-echo "LOAD 4" > /dev/vfd
+echo "Load 4" > /dev/vfd
 
 insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
@@ -151,8 +151,8 @@ else
    insmod $MODDIR/stm_monitor.ko
 fi
 
-echo "LOAD 3" > /dev/vfd
 echo "LOAD 3"
+echo "Load 3" > /dev/vfd
 #insmod $MODDIR/player2.ko discardlateframe=0
 insmod $MODDIR/player2.ko
 insmod $MODDIR/sth264pp.ko
@@ -172,7 +172,7 @@ showiframe -p /boot/bootlogo.mvi &
 stfbcontrol a 0
 
 echo "Init lircd (LOAD 2)"
-echo "LOAD 2" > /dev/vfd
+echo "Load 2" > /dev/vfd
 /usr/bin/lircd
 rm -rf /dev/rc
 mknod /dev/rc c 147 1 #VFD
@@ -182,25 +182,11 @@ echo "Init smartcard cardreader"
 mknod /dev/sci0 c 169 0
 mknod /dev/sci1 c 169 1
 
-major=$(awk "\$2==\"sparkid\" {print \$1}" /proc/devices)
-rm -f /dev/sparkid
-mknod /dev/sparkid c $major 0
+#major=$(awk "\$2==\"sparkid\" {print \$1}" /proc/devices)
+#rm -f /dev/sparkid
+#mknod /dev/sparkid c $major 0
 
 stfbcontrol a 255
-
-# Why is this done twice?
-#/etc/init.d/mountall start
-#/etc/init.d/hostname start
-#echo -n "Starting telnetd "
-#autologin=`cat /etc/enigma2/settings | grep systemoptions.autologin | cut -d "=" -f2`
-#if [ ! $autologin ]; then
-#   /usr/sbin/telnetd -l /bin/autologin
-##   echo "with autologin"
-#else
-#   /usr/sbin/telnetd -l /bin/login
-##    echo "with normal login"
-#fi
-#end twice
 
 wlan=`cat /etc/enigma2/settings | grep systemoptions.wlan | cut -d "=" -f2`
 if [ ! $wlan ] || [ ! -e $MODDIR/$wlan.ko ]; then
@@ -220,14 +206,14 @@ if [ -e $MODDIR/cifs.ko ]; then
    insmod $MODDIR/cifs.ko
 fi
 
-echo "LOAD 1" > /dev/vfd
 echo "Init FTP (LOAD 1)"
+echo "Load 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
 
-mknod /dev/dvb/adapter0/frontend1 c 212 19  #SAT1
-mknod /dev/dvb/adapter0/frontend2 c 212 35  #SAT2
-mknod /dev/dvb/adapter0/frontend3 c 212 51  #T/C
+#mknod /dev/dvb/adapter0/frontend1 c 212 19  #SAT1
+#mknod /dev/dvb/adapter0/frontend2 c 212 35  #SAT2
+#mknod /dev/dvb/adapter0/frontend3 c 212 51  #T/C
 
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
@@ -257,11 +243,13 @@ if [ -e /etc/ownscript.sh ]; then
 fi
 
 # Try and synchronise time
-inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
-if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
+#inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
+# if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
+if [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
 #   (/sbin/ntpdate pl.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
-   (/sbin/ntpdate ntp.nasa.gov; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
+   /sbin/ntpdate de.pool.ntp.org
+   /bin/fp_control -sst &
 else
    if [ -e /usr/sbin/time.sh ]; then
       echo "Use transponder time"
@@ -275,7 +263,9 @@ echo "Start SH4 Enigma2" > /dev/vfd
 until false
 do
    echo "Entering e2 main loop"
-   showiframe -p /usr/local/share/enigma2/backdrop.mvi &
+   if [ -e /usr/local/share/enigma2/backdrop.mvi ]; then
+      showiframe -p /usr/local/share/enigma2/backdrop.mvi &
+   fi
    /usr/local/bin/enigma2
    rtv=$?
    echo "e2 ended <- RTV: " $rtv
@@ -288,7 +278,9 @@ do
       1)  echo "1"
           echo "SHUTDOWN"
           echo "Shutdown" > /dev/vfd
-#          showiframe -p /usr/local/share/enigma2/shutdown.mvi &
+          if [ -e /usr/local/share/enigma2/shutdown.mvi ]; then
+             showiframe -p /usr/local/share/enigma2/shutdown.mvi &
+          fi
           init 0;;
       2)  echo "2"
           echo "REBOOT"

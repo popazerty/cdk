@@ -608,6 +608,23 @@ $(D)/fdisk: $(D)/bootstrap $(D)/parted @DEPENDS_fdisk@
 	touch $@
 
 #
+# ntpdate
+#
+$(D)/ntpdate: $(D)/bootstrap @DEPENDS_ntpdate@
+	@PREPARE_ntpdate@
+	cd @DIR_ntpdate@ && \
+		$(BUILDENV) \
+		./configure \
+			--build=$(build) \
+			--host=$(target) \
+			--target=$(target) \
+			--prefix=$(targetprefix)/sbin \
+		&& \
+		$(MAKE) && \
+		@INSTALL_ntpdate@
+	@CLEANUP_ntpdate@
+	touch $@
+#
 # parted
 #
 $(D)/parted: $(D)/bootstrap $(D)/libreadline $(D)/e2fsprogs @DEPENDS_parted@

@@ -126,7 +126,8 @@ libxslt-1.1.28.tar.gz;http://xmlsoft.org/sources
 #
 # contrib apps
 #
-ncurses-5.6.tar.gz;http://mirror.anl.gov/pub/gnu/ncurses/
+#ncurses-5.6.tar.gz;http://mirror.anl.gov/pub/gnu/ncurses/
+ncurses-5.6.tar.gz;https://launchpad.net/ncurses/main/5.6/+download/
 bzip2-1.0.6.tar.gz;http://www.bzip.org/1.0.6
 grep-2.5.1.tar.bz2;ftp://mirrors.kernel.org/gnu/grep
 grep_2.5.1.ds2-6.diff.gz;http://64studio.hivelocity.net/apt/pool/main/g/grep
@@ -233,7 +234,7 @@ libevent-2.0.20-stable.tar.gz;http://downloads.sourceforge.net/project/levent/li
 libnfsidmap-0.25.tar.gz;http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap
 libsoup-2.33.90.tar.gz;http://download.gnome.org/sources/libsoup/2.33
 vsftpd-3.0.2.tar.gz;https://security.appspot.com/downloads
-ntp-4.2.6p5.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
+ntp-4.2.8p1.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 samba-3.6.12.tar.gz;http://www.samba.org/samba/ftp/stable
 netio126.zip;http://bnsmb.de/files/public/windows
 lighttpd-1.4.15.tar.gz;http://www.lighttpd.net/download

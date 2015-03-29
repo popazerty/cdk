@@ -7,7 +7,7 @@ config.misc.startCounter=1
 config.misc.showtestcard=true
 config.misc.videowizardenabled=true
 config.av.videoport=HDMI
-config.av.aspect=4_3
+config.av.aspect=16_9
 config.Nims.0.diseqcA=192
 config.Nims.0.diseqcB=235
 config.Nims.0.diseqcC=282
@@ -48,3 +48,4 @@ config.recording.offline_decode_delay=1000
 config.radio.lastroot=1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.radio" ORDER BY bouquet;1:7:2:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.favourites.radio" ORDER BY bouquet;
 config.radio.lastservice=1:0:2:807:449:35:C00000:0:0:0:
 config.audio.volume=100
+

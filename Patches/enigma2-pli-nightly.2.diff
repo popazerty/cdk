@@ -727,7 +727,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp e
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp enigma2-nightly/lib/driver/vfd.cpp
 --- enigma2-nightly.org/lib/driver/vfd.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.cpp	2013-05-11 19:07:01.916432460 +0200
-@@ -0,0 +1,787 @@
+@@ -0,0 +1,770 @@
 +/*
 + * vfd.cpp
 + *
@@ -767,6 +767,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 + *                          display length.
 + * 20140221 Audioniek       Fortis HS7119 and HS7819 added.
 + * 20140527 Audioniek       Spark7162 spins circle on init.
++ * 20150329 Audioniek       Spark7162 circle spin on init uses icon 47.
 + *
 + ****************************************************************************/
 +#include <stdarg.h>
@@ -1030,6 +1031,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +		}
 +	}
 +	#else //modulate brightness 3 times
++	#if defined(PLATFORM_SPARK7162) //spin circle
++	vfd.vfd_set_icon((tvfd_icon)(47), ICON_ON, true);
++	#endif
 +	for (int vloop = 0; vloop < 3*14; vloop++)
 +	{
 +		if (vloop%14 == 0)
@@ -1088,32 +1092,11 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +		{
 +			vfd.vfd_set_brightness(7);
 +		}
-+		#if defined(PLATFORM_SPARK7162) //spin circle 14 times
-+		vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+		vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+		vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+		vfd.vfd_set_icon( (tvfd_icon)(41), ICON_ON, true); //center circle on
-+		if (vloop%3 == 0)
-+		{
-+			vfd.vfd_set_icon((tvfd_icon)(38), ICON_OFF, true);
-+			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+		}
-+		else if (vloop%3 == 1)
-+		{
-+			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(39), ICON_OFF, true);
-+			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+		}
-+		else if (vloop%3 == 2)
-+		{
-+			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(40), ICON_OFF, true);
-+		}
-+		#endif
 +		usleep(75000);
 +	}
++	#if defined(PLATFORM_SPARK7162) //spin circle off
++	vfd.vfd_set_icon((tvfd_icon)(47), ICON_OFF, true);
++	#endif
 +	vfd.vfd_set_brightness(7); // set final brightness
 +	#endif
 +	vfd.vfd_clear_icons();

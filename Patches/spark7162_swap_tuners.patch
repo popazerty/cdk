@@ -1,0 +1,175 @@
+--- ./../../driver/frontends/spark7162/spark7162.c
++++ ./../../driver/spark7162/spark7162.c.swp
+@@ -44,7 +44,7 @@
+ #include "dvb_frontend.h"
+ #include "dvb_demux.h"
+ 
+-#include "dvb_dummy_fe.h"
++//#include "dvb_dummy_fe.h"
+ 
+ 
+ 
+@@ -72,7 +72,7 @@
+ #ifdef YW_GIT_VER
+ #define YWDVB_VERSION YW_GIT_VER
+ #else
+-#define YWDVB_VERSION "Unknow"
++#define YWDVB_VERSION "Unknown"
+ #endif
+ 
+ #define I2C_ADDR_IX7306		(0xc0 >> 1)
+@@ -316,7 +316,9 @@
+ 
+ 	if (spark_dvb_attach_s(dvb_adap, &d3501config, &pFrontend))
+ 	{
+-		pFrontend = dvb_dummy_fe_qpsk_attach();
++//		pFrontend = dvb_dummy_fe_qpsk_attach();
++		i2c_put_adapter(pI2c);
++		return -1;
+ 	}
+ 
+ 	pFrontend->id = tuner_resource;
+@@ -430,7 +432,9 @@
+ 
+ 	if (spark_dvb_attach_t(dvb_adap, *ppI2c, &pFrontend))
+ 	{
+-		pFrontend = dvb_dummy_fe_ofdm_attach();
++//		pFrontend = dvb_dummy_fe_ofdm_attach();
++		i2c_put_adapter(*ppI2c);
++		return -1;
+ 	}
+ 
+ 	pFrontend->id = 3;
+@@ -549,7 +553,9 @@
+ 
+ 	if (spark_dvb_attach_c(dvb_adap, pI2c, &pFrontend))
+ 	{
+-		pFrontend = dvb_dummy_fe_qam_attach();
++//		pFrontend = dvb_dummy_fe_qam_attach();
++		i2c_put_adapter(pI2c);
++		return -1;
+ 	}
+ 
+ 	pFrontend->id = 3;
+@@ -585,6 +591,7 @@
+ 	},
+ };
+ 
++#if 0
+ int spark_dvb_register_dummy_t(struct dvb_adapter *dvb_adap,
+ 								struct dvb_frontend **ppFrontend,
+ 								struct i2c_adapter **ppI2c)
+@@ -632,6 +639,7 @@
+ 
+ 	return 0;
+ }
++#endif
+ 
+ int spark_dvb_AutoRegister_TER(struct dvb_adapter *dvb_adap,
+ 								struct dvb_frontend **ppFrontend,
+@@ -658,13 +666,14 @@
+ 
+ 	}
+ 
++#if 0
+ 	if (MAX_TER_DEMOD_TYPES == i)
+ 	{
+ 		*ppI2c = pI2c;
+ 
+ 		ret = spark_dvb_register_dummy_t(dvb_adap, ppFrontend, ppI2c);
+ 	}
+-
++#endif
+ 	return ret;
+ 
+ }
+@@ -696,14 +705,14 @@
+ 
+ 	}
+ 
+-
++#if 0
+ 	if (MAX_TER_DEMOD_TYPES == i)
+ 	{
+ 		*ppI2c = pI2c;
+ 
+ 		ret = spark_dvb_register_dummy_c(dvb_adap, ppFrontend, ppI2c);
+ 	}
+-
++#endif
+ 	return ret;
+ 
+ }
+@@ -857,10 +866,6 @@
+ 	memset(pDvbAddData, 0, sizeof(struct spark_dvb_adapter_adddata));
+ 
+ 	dvb_adap->priv = (void *)pDvbAddData;
+-
+-	eUnionTunerType = UnionTunerConfig(UnionTunerType);
+-
+-	spark_dvb_register_tc_by_type(dvb_adap, eUnionTunerType);
+ 
+ 	#if 1
+ 	spark_dvb_register_s1(dvb_adap,
+@@ -870,6 +875,11 @@
+ 							&pDvbAddData->pD3501_frontend,
+ 							&pDvbAddData->qpsk_i2c_adap);
+ 	#endif  /* 0 */
++
++	eUnionTunerType = UnionTunerConfig(UnionTunerType);
++
++	spark_dvb_register_tc_by_type(dvb_adap, eUnionTunerType);
++
+ 	return 0;
+ }
+ 
+--- ./../../driver/player2_191/linux/drivers/media/dvb/stm/dvb/st-pti.c
++++ ./../../driver/player2_191/linux/drivers/media/dvb/stm/dvb/st-pti.c.swp
+@@ -398,24 +398,26 @@
+   switch ( source )
+   {
+   case DMX_SOURCE_FRONT0:
+-#if defined(UFS910) || defined(OCTAGON1008) || defined(UFS912) || defined(ADB_BOX) || defined(SPARK) || defined(SPARK7162)
++#if defined(UFS910) || defined(OCTAGON1008) || defined(UFS912) || defined(ADB_BOX) || defined(SPARK)
+     tag = TSIN2;
++#elif defined(SPARK7162)
++    tag = TSIN1;
+ #else
+     tag = TSIN0;
+ #endif
+     break;
+   case DMX_SOURCE_FRONT1:
+ #if defined(ADB_BOX)
+-         if (glowica == SINGLE) {
+-            
+- tag = SWTS0;
+-           
+-         }
+-         else if (glowica == TWIN) {
+- tag = TSIN0;
+-           
+-         }
+-
++    if (glowica == SINGLE)
++    {
++        tag = SWTS0;
++    }
++    else if (glowica == TWIN)
++    {
++        tag = TSIN0;
++    }
++#elif defined(SPARK7162)
++    tag = TSIN0;
+ #elif defined(UFS913)
+     tag = 3;//TSIN2; //TSIN3
+ #else
+@@ -424,7 +426,7 @@
+     break;
+ #if defined(SPARK7162)
+   case DMX_SOURCE_FRONT2:
+-    tag = TSIN0;
++    tag = TSIN2;
+     break;
+   case (dmx_source_t)3: /* for ptiInit() which passes 0,1,2,3 instead of DVR0 */
+ #endif
+
