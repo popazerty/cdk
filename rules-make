@@ -151,7 +151,6 @@ console_data;1.03;console-data-1.03;console-data_1.03.orig.tar.gz;extract:consol
 nano;2.0.6;nano-2.0.6;nano-2.0.6.tar.gz;extract:nano-2.0.6.tar.gz
 rsync;2.6.9;rsync-2.6.9;rsync-2.6.9.tar.gz;extract:rsync-2.6.9.tar.gz
 curlftpfs;0.9.2;curlftpfs-0.9.2;curlftpfs-0.9.2.tar.gz;extract:curlftpfs-0.9.2.tar.gz
-ntpdate;4.2.8p1;ntpdate-4.2.8p1;ntp-4.2.8p1.tar.gz;extract:ntp-4.2.8p1.tar.gz
 pngquant;1.1;pngquant-1.1;pngquant-1.1-src.tgz;extract:pngquant-1.1-src.tgz
 mplayer;1.0;mplayer-export-*;mplayer-export-snapshot.tar.bz2;extract:mplayer-export-snapshot.tar.bz2
 mencoder;1.0;mplayer-export-*;mplayer-export-snapshot.tar.bz2;extract:mplayer-export-snapshot.tar.bz2
