@@ -57,39 +57,6 @@ $(D)/host_glib2_genmarshal: @DEPENDS_host_glib2_genmarshal@
 	touch $@
 
 #
-# host_python
-#
-$(D)/host_python: @DEPENDS_host_python@
-	@PREPARE_host_python@ && \
-	( cd @DIR_host_python@ && \
-		autoconf && \
-		CONFIG_SITE= \
-		OPT="$(HOST_CFLAGS)" \
-		./configure \
-			--without-cxx-main \
-			--without-threads && \
-		$(MAKE) python Parser/pgen && \
-		mv python ./hostpython && \
-		mv Parser/pgen ./hostpgen && \
-		\
-		$(MAKE) distclean && \
-		./configure \
-			--prefix=$(hostprefix) \
-			--sysconfdir=$(hostprefix)/etc \
-			--without-cxx-main \
-			--without-threads && \
-		$(MAKE) \
-			TARGET_OS=$(build) \
-			PYTHON_MODULES_INCLUDE="$(hostprefix)/include" \
-			PYTHON_MODULES_LIB="$(hostprefix)/lib" \
-			HOSTPYTHON=./hostpython \
-			HOSTPGEN=./hostpgen \
-			all install && \
-		cp ./hostpgen $(hostprefix)/bin/pgen ) && \
-	@CLEANUP_host_python@
-	touch $@
-
-#
 # mkcramfs
 #
 mkcramfs: @MKCRAMFS@

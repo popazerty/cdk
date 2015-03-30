@@ -12,7 +12,7 @@ $(D)/bootstrap: \
 $(D)/bare-os: \
 	module_init_tools \
 	busybox \
-	libz \
+	zlib \
 	sysvinit \
 	diverse-tools
 	touch $@

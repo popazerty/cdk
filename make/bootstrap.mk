@@ -35,11 +35,11 @@ GCC_VER       = 4.8.2-131
 LIBGCC_VER    = 4.8.2-138
 GLIBC_VER     = 2.14.1-50
 else
-# 4.6.3
-BINUTILS_VER = 2.22-64
-GCC_VER = 4.6.3-111
-LIBGCC_VER = 4.6.3-111
-GLIBC_VER = 2.10.2-42
+# 4.8.4
+BINUTILS_VER = 2.24.51.0.3-76
+GCC_VER = 4.8.4-139
+LIBGCC_VER = 4.8.4-148
+GLIBC_VER = 2.14.1-56
 endif
 
 $(hostprefix)/bin/unpack-rpm.sh:
@@ -65,6 +65,9 @@ $(archivedir)/stlinux24-sh4-libstdc++-dev-$(LIBGCC_VER).sh4.rpm
 crosstool: directories \
 $(hostprefix)/bin/unpack-rpm.sh \
 crosstool-rpminstall
+	if [ -e $(crossprefix)/target/usr/lib/libstdc++.la ]; then \
+		sed -i "s,^libdir=.*,libdir='$(crossprefix)/target/usr/lib'," $(crossprefix)/target/usr/lib/lib{std,sup}c++.la; \
+	fi
 	if test -e $(crossprefix)/target/usr/lib/libstdc++.so; then \
 		cp -a $(crossprefix)/target/usr/lib/libstdc++.s*[!y] $(targetprefix)/lib; \
 	fi

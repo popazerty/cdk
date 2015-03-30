@@ -334,7 +334,7 @@ diff -ur --new-file ffmpeg-2.3-original/libavformat/amfmetadata.c ffmpeg-2.3/lib
 +        return 0;
 +
 +    in = avio_alloc_context(buffer, buffer_size,
-+            0, NULL, NULL, NULL, NULL);
++        0, NULL, NULL, NULL, NULL);
 +    if(!in)
 +        return AVERROR(ENOMEM);
 +
@@ -2328,7 +2328,7 @@ diff -ur --new-file ffmpeg-2.3-original/libavformat/hdsdec.c ffmpeg-2.3/libavfor
 +		sleep(1);
 +		tries_left--;
 +	    }
-+    	} while (ret < 0 && media->download_data.run && !download_abort_callback_function(media) && tries_left > 0);
++	} while (ret < 0 && media->download_data.run && !download_abort_callback_function(media) && tries_left > 0);
 +
 +	if (opts)
 +	    av_dict_free(&opts);
@@ -2398,7 +2398,7 @@ diff -ur --new-file ffmpeg-2.3-original/libavformat/hdsdec.c ffmpeg-2.3/libavfor
 +    media->download_data.download_abort_callback.opaque = media;
 +    media->download_data.abort_callback = &media->download_data.download_abort_callback;
 +    if (pthread_create(&media->download_data.thread, NULL, download_thread, media))
-+	av_log(NULL, AV_LOG_ERROR, "hds: creating download thread failed\n");
++        av_log(NULL, AV_LOG_ERROR, "hds: creating download thread failed\n");
 +}
 +
 +static void download_thread_stop(HDSMedia *media)

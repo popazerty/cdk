@@ -73,14 +73,14 @@ libvorbisidec;make:install:DESTDIR=TARGETS;install:-m644:vorbisidec.pc:TARGETS/u
 #
 # contrib libs
 #
-libcrypto;rewrite-pkgconfig:libcrypto.pc:libssl.pc:openssl.pc;make:install_sw:INSTALL_PREFIX=TARGETS
+openssl;rewrite-pkgconfig:libcrypto.pc:libssl.pc:openssl.pc;make:install_sw:INSTALL_PREFIX=TARGETS
 lua;make:install:INSTALL_TOP=TARGETS/usr
-luacurl;make:install:DESTDIR=TARGETS/usr
+luacurl;make:install:DESTDIR=TARGETS:LUA_CMOD=/usr/lib/lua/5.2:LUA_LMOD=/usr/share/lua/5.2
 luaexpat;make:install:DESTDIR=TARGETS/usr
 howl;rewrite-pkgconfig:howl.pc;make:install:prefix=TARGETS/usr;rewrite-libtool:TARGETS/usr/lib/libhowl.la:TARGETS/usr/lib/libhowl.la
 libopenthreads;rewrite-pkgconfig:packaging/pkgconfig/openthreads.pc;make:install:DESTDIR=TARGETS/usr
 libboost;remove:TARGETS/include/boost;move:boost:TARGETS/usr/include/boost
-libz;rewrite-pkgconfig:zlib.pc;make:install:prefix=TARGETS/usr
+zlib;rewrite-pkgconfig:zlib.pc;make:install:prefix=TARGETS/usr
 libreadline;make:install:DESTDIR=TARGETS
 librtmpdump;make:install:prefix=/usr:DESTDIR=TARGETS;rewrite-pkgconfig:TARGETS/usr/lib/pkgconfig/librtmp.pc
 lirc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/liblirc_client.la
@@ -104,6 +104,7 @@ cairo;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libcairo.la;r
 libexpat;rewrite-pkgconfig:expat.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libexpat.la
 libxmlccwrap;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libxmlccwrap.la
 ffmpeg;rewrite-pkgconfig:libavcodec/libavcodec.pc:libavdevice/libavdevice.pc:libavfilter/libavfilter.pc:libavformat/libavformat.pc:libavutil/libavutil.pc:libswresample/libswresample.pc:libswscale/libswscale.pc;make:install:DESTDIR=TARGETS
+libfdk_aac;rewrite-pkgconfig:fdk-aac.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libfdk-aac.la
 libcap;make:install:DESTDIR=TARGETS
 evebrowser;make:install:DESTDIR=TARGETS
 brofs;make:install:DESTDIR=TARGETS/usr/bin

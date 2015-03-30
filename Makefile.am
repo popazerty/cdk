@@ -38,6 +38,8 @@ include make/busybox.mk
 
 # Include contrib lib targets
 include make/contrib-libs.mk
+include make/python.mk
+include make/gstreamer.mk
 
 # Include contrib apps
 include make/contrib-apps.mk

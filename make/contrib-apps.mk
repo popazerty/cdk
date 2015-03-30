@@ -208,7 +208,7 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/utillinux @DEPENDS_e2fsprogs@
 #
 # utillinux
 #
-$(D)/utillinux: $(D)/bootstrap $(D)/libz @DEPENDS_utillinux@
+$(D)/utillinux: $(D)/bootstrap $(D)/zlib @DEPENDS_utillinux@
 	@PREPARE_utillinux@
 	cd @DIR_utillinux@ && \
 		autoreconf -fi && \
@@ -453,7 +453,7 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/fuse @DEPENDS_curlftpfs@
 #
 # pngquant
 #
-$(D)/pngquant: $(D)/bootstrap $(D)/libz $(D)/libpng @DEPENDS_pngquant@
+$(D)/pngquant: $(D)/bootstrap $(D)/zlib $(D)/libpng @DEPENDS_pngquant@
 	@PREPARE_pngquant@
 	cd @DIR_pngquant@ && \
 		$(target)-gcc -O3 -Wall -I. -funroll-loops -fomit-frame-pointer -o pngquant pngquant.c rwpng.c -lpng -lz -lm \
@@ -762,7 +762,7 @@ $(D)/hotplug_e2: $(D)/bootstrap @DEPENDS_hotplug_e2@
 #
 # shairport
 #
-$(D)/shairport: $(D)/bootstrap $(D)/libcrypto $(D)/howl $(D)/libalsa @DEPENDS_shairport@
+$(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/libalsa @DEPENDS_shairport@
 	@PREPARE_shairport@
 	[ -d "$(archivedir)/shairport.git" ] && \
 	(cd $(archivedir)/shairport.git; git pull; cd "$(buildprefix)";); \
@@ -840,7 +840,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi
 #
 #
 #
-$(D)/mtd_utils: $(D)/bootstrap $(D)/libz $(D)/lzo $(D)/e2fsprogs @DEPENDS_mtd_utils@
+$(D)/mtd_utils: $(D)/bootstrap $(D)/zlib $(D)/lzo $(D)/e2fsprogs @DEPENDS_mtd_utils@
 	@PREPARE_mtd_utils@
 	cd @DIR_mtd_utils@ && \
 		$(BUILDENV) $(MAKE) PREFIX= CC=${target}-gcc LD=${target}-ld STRIP=${target}-strip `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(targetprefix) install && \
@@ -852,7 +852,7 @@ $(D)/mtd_utils: $(D)/bootstrap $(D)/libz $(D)/lzo $(D)/e2fsprogs @DEPENDS_mtd_ut
 #
 # wget
 #
-$(D)/wget: $(D)/bootstrap $(D)/libcrypto @DEPENDS_wget@
+$(D)/wget: $(D)/bootstrap $(D)/openssl @DEPENDS_wget@
 	@PREPARE_wget@
 	cd @DIR_wget@ && \
 		$(BUILDENV) \

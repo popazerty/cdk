@@ -9,11 +9,11 @@
 
 --- busybox-1.13.2/archival/libarchive/get_header_tar.c.orig	2008-11-09 18:28:02.000000000 +0100
 +++ busybox-1.13.2/archival/libarchive/get_header_tar.c	2009-02-11 22:34:52.000000000 +0100
-@@ -329,6 +329,8 @@
+@@ -331,6 +331,8 @@
  			file_header->name = concat_path_file(tar.prefix, tar.name);
  		} else
  			file_header->name = xstrdup(tar.name);
-+		if (strlen(file_header->name) > 100) 
++		if (strlen(file_header->name) > 100)
 +			file_header->name[100] = 0;
  	}
  
@@ -53,17 +53,6 @@ Index: busybox-1.13.2/Makefile
  endif # KBUILD_EXTMOD
  
  ifeq ($(dot-config),1)
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -256,7 +256,7 @@ ifdef builtin-target
- quiet_cmd_link_o_target = LD      $@
- # If the list of objects to link is empty, just create an empty built-in.o
- cmd_link_o_target = $(if $(strip $(obj-y)),\
--		$(LD) $(ld_flags) -r -o $@ $(filter $(obj-y), $^),\
-+		$(LD) -nostdlib $(ld_flags) -r -o $@ $(filter $(obj-y), $^),\
- 		rm -f $@; $(AR) rcs $@)
- 
- $(builtin-target): $(obj-y) FORCE
 diff -Nur busybox-1.22.1.org/modutils/Config.src busybox-1.22.1/modutils/Config.src
 --- busybox-1.22.1.org/modutils/Config.src	2014-01-09 19:15:44.000000000 +0100
 +++ busybox-1.22.1/modutils/Config.src	2014-01-26 12:22:09.141361394 +0100
@@ -216,45 +205,3 @@ diff -Nur busybox-1.22.1.org/modutils/insmod.c busybox-1.22.1/modutils/insmod.c
  
  	return rc;
  }
-diff -Nur busybox-1.22.1.org/util-linux/swaponoff.c busybox-1.22.1/util-linux/swaponoff.c
---- busybox-1.22.1.org/util-linux/swaponoff.c	2014-01-09 19:15:44.000000000 +0100
-+++ busybox-1.22.1/util-linux/swaponoff.c	2014-01-26 12:22:09.141361394 +0100
-@@ -77,15 +77,36 @@
- 	return 0;
- }
- 
-+// for using with tuxbox it's usefully to have an alternate path in /var/etc, because /etc/ is not writable
-+static const char *getFstab(void)
-+{
-+	const char *var_fstabname = "/var/etc/fstab";
-+	const char *res;
-+	FILE * f= fopen (var_fstabname,"r");
-+	if (!f) {
-+		printf("swapon: using /etc/fstab\n");
-+		res = "/etc/fstab";
-+	}
-+	else {
-+		printf("swapon: using %s\n", var_fstabname);
-+		res =   var_fstabname;
-+		fclose(f);
-+	}
-+	return res;
-+}
-+
- static int do_em_all(void)
- {
- 	struct mntent *m;
-+	const char *fstabname;
- 	FILE *f;
- 	int err;
- 
--	f = setmntent("/etc/fstab", "r");
-+	fstabname = getFstab();
-+
-+	f = setmntent(fstabname, "r");
- 	if (f == NULL)
--		bb_perror_msg_and_die("/etc/fstab");
-+		bb_perror_msg_and_die(fstabname);
- 
- 	err = 0;
- 	while ((m = getmntent(f)) != NULL) {

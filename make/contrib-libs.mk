@@ -1,9 +1,9 @@
 #
-# libcrypto
+# openssl
 #
-$(D)/libcrypto: $(D)/bootstrap @DEPENDS_libcrypto@
-	@PREPARE_libcrypto@
-	cd @DIR_libcrypto@ && \
+$(D)/openssl: $(D)/bootstrap @DEPENDS_openssl@
+	@PREPARE_openssl@
+	cd @DIR_openssl@ && \
 		$(BUILDENV) \
 		./Configure shared linux-sh no-hw no-engine \
 			--prefix=/usr \
@@ -11,8 +11,8 @@ $(D)/libcrypto: $(D)/bootstrap @DEPENDS_libcrypto@
 		&& \
 		$(MAKE) depend && \
 		$(MAKE) && \
-		@INSTALL_libcrypto@
-	@CLEANUP_libcrypto@
+		@INSTALL_openssl@
+	@CLEANUP_openssl@
 	touch $@
 
 #
@@ -52,13 +52,16 @@ $(D)/lua: $(D)/bootstrap $(D)/libncurses $(archivedir)/luaposix.git @DEPENDS_lua
 #
 # luacurl
 #
-$(D)/luacurl: $(D)/bootstrap $(D)/lua @DEPENDS_luacurl@
+$(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua @DEPENDS_luacurl@
 	@PREPARE_luacurl@
 	[ -d "$(archivedir)/luacurl.git" ] && \
-	(cd $(archivedir)/luacurl.git; git pull ; cd "$(buildprefix)";); \
+	(cd $(archivedir)/luacurl.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_luacurl@ && \
-		sed -i -e "s/lua_strlen/lua_rawlen/g" -e "s/luaL_reg/luaL_Reg/g" luacurl.c && \
-		$(target)-gcc -I$(targetprefix)/usr/include -fPIC -shared -s -o $(targetprefix)/usr/lib/lua/5.2/luacurl.so luacurl.c -L$(targetprefix)/usr/lib -lcurl
+		$(MAKE) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" \
+			LIBDIR=$(targetprefix)/usr/lib \
+			LUA_INC=$(targetprefix)/usr/include \
+		&& \
+		@INSTALL_luacurl@
 	@CLEANUP_luacurl@
 	touch $@
 
@@ -118,19 +121,19 @@ $(D)/libboost: $(D)/bootstrap @DEPENDS_libboost@
 	touch $@
 
 #
-# libz
+# zlib
 #
-$(D)/libz: $(D)/bootstrap @DEPENDS_libz@
-	@PREPARE_libz@
-	cd @DIR_libz@ && \
+$(D)/zlib: $(D)/bootstrap @DEPENDS_zlib@
+	@PREPARE_zlib@
+	cd @DIR_zlib@ && \
 		CC=$(target)-gcc \
 		./configure \
 			--prefix=/usr \
 			--shared \
 		&& \
 		$(MAKE) && \
-		@INSTALL_libz@
-	@CLEANUP_libz@
+		@INSTALL_zlib@
+	@CLEANUP_zlib@
 	touch $@
 
 #
@@ -158,7 +161,7 @@ $(D)/libreadline: $(D)/bootstrap @DEPENDS_libreadline@
 #
 # libfreetype
 #
-$(D)/libfreetype: $(D)/bootstrap $(D)/libz $(D)/bzip2 $(D)/libpng @DEPENDS_libfreetype@
+$(D)/libfreetype: $(D)/bootstrap $(D)/zlib $(D)/bzip2 $(D)/libpng @DEPENDS_libfreetype@
 	@PREPARE_libfreetype@
 	cd @DIR_libfreetype@ && \
 		sed -i '/#define FT_CONFIG_OPTION_OLD_INTERNALS/d' include/config/ftoption.h && \
@@ -285,7 +288,7 @@ $(D)/libpng12: $(D)/bootstrap @DEPENDS_libpng12@
 #
 # libpng
 #
-$(D)/libpng: $(D)/bootstrap $(D)/libz @DEPENDS_libpng@
+$(D)/libpng: $(D)/bootstrap $(D)/zlib @DEPENDS_libpng@
 	@PREPARE_libpng@
 	cd @DIR_libpng@ && \
 		$(BUILDENV) \
@@ -476,7 +479,7 @@ $(D)/libmad: $(D)/bootstrap @DEPENDS_libmad@
 #
 # libid3tag
 #
-$(D)/libid3tag: $(D)/bootstrap $(D)/libz @DEPENDS_libid3tag@
+$(D)/libid3tag: $(D)/bootstrap $(D)/zlib @DEPENDS_libid3tag@
 	@PREPARE_libid3tag@
 	cd @DIR_libid3tag@ && \
 		touch NEWS AUTHORS ChangeLog && \
@@ -572,7 +575,7 @@ $(D)/orc: $(D)/bootstrap @DEPENDS_orc@
 # libglib2
 # You need libglib2.0-dev on host system
 #
-$(D)/glib2: $(D)/bootstrap $(D)/host_glib2_genmarshal $(D)/libz $(D)/libffi @DEPENDS_glib2@
+$(D)/glib2: $(D)/bootstrap $(D)/host_glib2_genmarshal $(D)/zlib $(D)/libffi @DEPENDS_glib2@
 	@PREPARE_glib2@
 	echo "glib_cv_va_copy=no" > @DIR_glib2@/config.cache
 	echo "glib_cv___va_copy=yes" >> @DIR_glib2@/config.cache
@@ -854,7 +857,7 @@ $(D)/libdvdread: $(D)/bootstrap @DEPENDS_libdvdread@
 $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav @DEPENDS_libdreamdvd@
 	@PREPARE_libdreamdvd@
 	[ -d "$(archivedir)/libdreamdvd.git" ] && \
-	(cd $(archivedir)/libdreamdvd.git; git pull ; cd "$(buildprefix)";); \
+	(cd $(archivedir)/libdreamdvd.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_libdreamdvd@ && \
 		aclocal && \
 		autoheader && \
@@ -873,6 +876,27 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav @DEPENDS_libdreamdvd@
 	touch $@
 
 #
+# fdk-aac
+#
+$(D)/libfdk_aac: $(D)/bootstrap @DEPENDS_libfdk_aac@
+	@PREPARE_libfdk_aac@
+	[ -d "$(archivedir)/fdk-aac.git" ] && \
+	(cd $(archivedir)/fdk-aac.git; git pull; cd "$(buildprefix)";); \
+	cd @DIR_libfdk_aac@ && \
+		./autogen.sh \
+		$(BUILDENV) \
+		./configure \
+			--build=$(build) \
+			--host=$(target) \
+			--disable-shared \
+			--prefix=/usr \
+		&& \
+		$(MAKE) && \
+		@INSTALL_libfdk_aac@
+	@CLEANUP_libfdk_aac@
+	touch $@
+
+#
 # ffmpeg
 #
 if ENABLE_ENIGMA2
@@ -884,10 +908,9 @@ FFMPEG_EXTRA = --disable-iconv
 LIBXML2 = libxml2
 endif
 
-$(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
+$(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 	@PREPARE_ffmpeg@
 	cd @DIR_ffmpeg@ && \
-		$(BUILDENV) \
 		./configure \
 			--disable-ffserver \
 			--disable-ffplay \
@@ -1022,6 +1045,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--enable-demuxer=pcm_s16be \
 			--enable-demuxer=pcm_s16le \
 			--enable-demuxer=rm \
+			--enable-demuxer=rtp \
 			--enable-demuxer=rtsp \
 			--enable-demuxer=srt \
 			--enable-demuxer=vc1 \
@@ -1042,6 +1066,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--disable-filters \
 			--enable-filter=scale \
 			\
+			--disable-postproc \
 			--disable-bsfs \
 			--disable-indevs \
 			--disable-outdevs \
@@ -1049,6 +1074,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--enable-zlib \
 			$(FFMPEG_EXTRA) \
 			--disable-static \
+			--enable-openssl \
 			--enable-shared \
 			--enable-small \
 			--enable-stripping \
@@ -1056,8 +1082,8 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpe
 			--disable-runtime-cpudetect \
 			--enable-cross-compile \
 			--cross-prefix=$(target)- \
-			--extra-cflags="-I$(targetprefix)/usr/include" \
-			--extra-ldflags="-L$(targetprefix)/usr/lib" \
+			--extra-cflags="-I$(targetprefix)/usr/include -ffunction-sections -fdata-sections" \
+			--extra-ldflags="-L$(targetprefix)/usr/lib -Wl,--gc-sections,-lrt" \
 			--target-os=linux \
 			--arch=sh4 \
 			--prefix=/usr \
@@ -1339,7 +1365,7 @@ $(D)/libflac: $(D)/bootstrap @DEPENDS_libflac@
 #
 # libxml2_e2
 #
-$(D)/libxml2_e2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2_e2@
+$(D)/libxml2_e2: $(D)/bootstrap $(D)/zlib @DEPENDS_libxml2_e2@
 	@PREPARE_libxml2_e2@
 	cd @DIR_libxml2_e2@ && \
 		touch NEWS AUTHORS ChangeLog && \
@@ -1370,7 +1396,7 @@ $(D)/libxml2_e2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2_e2@
 #
 # libxml2 neutrino
 #
-$(D)/libxml2: $(D)/bootstrap $(D)/libz @DEPENDS_libxml2@
+$(D)/libxml2: $(D)/bootstrap $(D)/zlib @DEPENDS_libxml2@
 	@PREPARE_libxml2@
 	cd @DIR_libxml2@ && \
 		touch NEWS AUTHORS ChangeLog && \
@@ -1430,509 +1456,6 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2_e2 @DEPENDS_libxslt@
 	@CLEANUP_libxslt@
 	touch $@
 
-##############################   PYTHON   #####################################
-
-#
-# libxmlccwrap
-#
-$(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2_e2 $(D)/libxslt @DEPENDS_libxmlccwrap@
-	@PREPARE_libxmlccwrap@
-	cd @DIR_libxmlccwrap@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--target=$(target) \
-			--prefix=/usr \
-		&& \
-		$(MAKE) all && \
-		@INSTALL_libxmlccwrap@
-	@CLEANUP_libxmlccwrap@
-	touch $@
-
-#
-# lxml
-#
-$(D)/lxml: $(D)/bootstrap $(D)/python @DEPENDS_lxml@
-	@PREPARE_lxml@
-	cd @DIR_lxml@ && \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py build \
-			--with-xml2-config=$(hostprefix)/bin/xml2-config \
-			--with-xslt-config=$(hostprefix)/bin/xslt-config && \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_lxml@
-	touch $@
-
-#
-# setuptools
-#
-$(D)/setuptools: $(D)/bootstrap $(D)/python @DEPENDS_setuptools@
-	@PREPARE_setuptools@
-	cd @DIR_setuptools@ && \
-		$(hostprefix)/bin/python ./setup.py build install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_setuptools@
-	touch $@
-
-#
-# twisted
-#
-$(D)/twisted: $(D)/bootstrap $(D)/setuptools @DEPENDS_twisted@
-	@PREPARE_twisted@
-	cd @DIR_twisted@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_twisted@
-	touch $@
-
-#
-# pilimaging
-#
-$(D)/pilimaging: $(D)/bootstrap $(D)/libjpeg $(D)/libfreetype $(D)/python $(D)/setuptools @DEPENDS_pilimaging@
-	@PREPARE_pilimaging@
-	cd @DIR_pilimaging@ && \
-		sed -ie "s|"darwin"|"darwinNot"|g" "setup.py"; \
-		sed -ie "s|ZLIB_ROOT = None|ZLIB_ROOT = libinclude(\"${targetprefix}/usr\")|" "setup.py"; \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pilimaging@
-	touch $@
-
-#
-# pycrypto
-#
-$(D)/pycrypto: $(D)/bootstrap $(D)/setuptools @DEPENDS_pycrypto@
-	@PREPARE_pycrypto@
-	cd @DIR_pycrypto@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pycrypto@
-	touch $@
-
-#
-# python
-#
-$(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/libcrypto $(D)/sqlite $(D)/libreadline $(D)/bzip2 @DEPENDS_python@
-	@PREPARE_python@
-	( cd @DIR_python@ && \
-		CONFIG_SITE= \
-		autoreconf --verbose --install --force Modules/_ctypes/libffi && \
-		autoconf && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--target=$(target) \
-			--prefix=/usr \
-			--sysconfdir=/etc \
-			--enable-shared \
-			--enable-ipv6 \
-			--without-cxx-main \
-			--with-threads \
-			--with-pymalloc \
-			--with-signal-module \
-			--with-wctype-functions \
-			HOSTPYTHON=$(hostprefix)/bin/python \
-			OPT="$(TARGET_CFLAGS)" \
-		&& \
-		$(MAKE) $(MAKE_ARGS) \
-			TARGET_OS=$(target) \
-			PYTHON_MODULES_INCLUDE="$(prefix)/$*cdkroot/usr/include" \
-			PYTHON_MODULES_LIB="$(prefix)/$*cdkroot/usr/lib" \
-			CROSS_COMPILE_TARGET=yes \
-			CROSS_COMPILE=$(target) \
-			HOSTARCH=sh4-linux \
-			CFLAGS="$(TARGET_CFLAGS) -fno-inline" \
-			LDFLAGS="$(TARGET_LDFLAGS)" \
-			LD="$(target)-gcc" \
-			HOSTPYTHON=$(hostprefix)/bin/python \
-			HOSTPGEN=$(hostprefix)/bin/pgen \
-			all install DESTDIR=$(prefix)/$*cdkroot ) \
-		&& \
-		@INSTALL_python@
-	$(LN_SF) ../../libpython$(PYTHON_VERSION).so.1.0 $(prefix)/$*cdkroot$(PYTHON_DIR)/config/libpython$(PYTHON_VERSION).so && \
-	$(LN_SF) $(prefix)/$*cdkroot$(PYTHON_INCLUDE_DIR) $(prefix)/$*cdkroot/usr/include/python
-	@CLEANUP_python@
-	touch $@
-
-#
-# pyusb
-#
-$(D)/pyusb: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyusb@
-	@PREPARE_pyusb@
-	cd @DIR_pyusb@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pyusb@
-	touch $@
-
-#
-# pyopenssl
-#
-$(D)/pyopenssl: $(D)/bootstrap $(D)/setuptools @DEPENDS_pyopenssl@
-	@PREPARE_pyopenssl@
-	cd @DIR_pyopenssl@ && \
-		$(BUILDENV) CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pyopenssl@
-	touch $@
-
-#
-# elementtree
-#
-$(D)/elementtree: $(D)/bootstrap @DEPENDS_elementtree@
-	@PREPARE_elementtree@
-	cd @DIR_elementtree@ && \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_elementtree@
-	touch $@
-
-#
-# pythonwifi
-#
-$(D)/pythonwifi: $(D)/bootstrap $(D)/setuptools @DEPENDS_pythonwifi@
-	@PREPARE_pythonwifi@
-	cd @DIR_pythonwifi@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pythonwifi@
-	touch $@
-
-#
-# pythoncheetah
-#
-$(D)/pythoncheetah: $(D)/bootstrap $(D)/setuptools @DEPENDS_pythoncheetah@
-	@PREPARE_pythoncheetah@
-	cd @DIR_pythoncheetah@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pythoncheetah@
-	touch $@
-
-#
-# pythonmechanize
-#
-$(D)/pythonmechanize: $(D)/bootstrap $(D)/setuptools @DEPENDS_pythonmechanize@
-	@PREPARE_pythonmechanize@
-	cd @DIR_pythonmechanize@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_pythonmechanize@
-	touch $@
-
-#
-# gdata
-#
-$(D)/gdata: $(D)/bootstrap $(D)/setuptools @DEPENDS_gdata@
-	@PREPARE_gdata@
-	cd @DIR_gdata@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_gdata@
-	touch $@
-
-#
-# zope_interface
-#
-$(D)/zope_interface: bootstrap python setuptools @DEPENDS_zope_interface@
-	@PREPARE_zope_interface@
-	cd @DIR_zope_interface@ && \
-		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
-		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
-		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
-		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
-	@CLEANUP_zope_interface@
-	touch $@
-
-##############################   GSTREAMER + PLUGINS   #########################
-#
-# gstreamer
-#
-$(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
-	@PREPARE_gstreamer@
-	cd @DIR_gstreamer@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			--disable-dependency-tracking \
-			--disable-check \
-			--disable-gst-debug \
-			--disable-debug \
-			--enable-introspection=no \
-			ac_cv_func_register_printf_function=no \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gstreamer@
-	@CLEANUP_gstreamer@
-	touch $@
-
-#
-# gst_plugins_base
-#
-$(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/libogg $(D)/libalsa @DEPENDS_gst_plugins_base@
-	@PREPARE_gst_plugins_base@
-	cd @DIR_gst_plugins_base@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			--disable-theora \
-			--disable-gnome_vfs \
-			--disable-pango \
-			--disable-x \
-			--disable-examples \
-			--disable-debug \
-			--disable-freetypetest \
-			--enable-orc \
-			--with-audioresample-format=int \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gst_plugins_base@
-	@CLEANUP_gst_plugins_base@
-	touch $@
-
-#
-# gst_plugins_good
-#
-$(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libflac @DEPENDS_gst_plugins_good@
-	@PREPARE_gst_plugins_good@
-	cd @DIR_gst_plugins_good@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			--disable-esd \
-			--disable-esdtest \
-			--disable-aalib \
-			--disable-shout2 \
-			--disable-debug \
-			--disable-x \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gst_plugins_good@
-	@CLEANUP_gst_plugins_good@
-	touch $@
-
-#
-# gst_plugins_bad
-#
-$(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmodplug @DEPENDS_gst_plugins_bad@
-	@PREPARE_gst_plugins_bad@
-	cd @DIR_gst_plugins_bad@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			--disable-sdl \
-			--disable-modplug \
-			--disable-mpeg2enc \
-			--disable-mplex \
-			--disable-vdpau \
-			--disable-apexsink \
-			--disable-cdaudio \
-			--disable-mpeg2enc \
-			--disable-mplex \
-			--disable-librfb \
-			--disable-vdpau \
-			--disable-examples \
-			--disable-sdltest \
-			--disable-curl \
-			--disable-rsvg \
-			--disable-debug \
-			--enable-orc \
-			ac_cv_openssldir=no \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gst_plugins_bad@
-	@CLEANUP_gst_plugins_bad@
-	touch $@
-
-#
-# gst_plugins_ugly
-#
-$(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_ugly@
-	@PREPARE_gst_plugins_ugly@
-	cd @DIR_gst_plugins_ugly@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			--disable-debug \
-			--disable-mpeg2dec \
-			--enable-orc \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gst_plugins_ugly@
-	@CLEANUP_gst_plugins_ugly@
-	touch $@
-
-#
-# gst_ffmpeg
-#
-$(D)/gst_ffmpeg: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_ffmpeg@
-	@PREPARE_gst_ffmpeg@
-	cd @DIR_gst_ffmpeg@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			\
-			--with-ffmpeg-extra-configure=" \
-			--disable-ffserver \
-			--disable-ffplay \
-			--disable-ffmpeg \
-			--disable-ffprobe \
-			--enable-postproc \
-			--enable-gpl \
-			--enable-static \
-			--enable-pic \
-			--disable-protocols \
-			--disable-devices \
-			--disable-network \
-			--disable-hwaccels \
-			--disable-filters \
-			--disable-doc \
-			--enable-optimizations \
-			--enable-cross-compile \
-			--target-os=linux \
-			--arch=sh4 \
-			--cross-prefix=$(target)- \
-			\
-			--disable-muxers \
-			--disable-encoders \
-			--disable-decoders \
-			--enable-decoder=ogg \
-			--enable-decoder=vorbis \
-			--enable-decoder=flac \
-			\
-			--disable-demuxers \
-			--enable-demuxer=ogg \
-			--enable-demuxer=vorbis \
-			--enable-demuxer=flac \
-			--enable-demuxer=mpegts \
-			\
-			--disable-debug \
-			--disable-bsfs \
-			--enable-pthreads \
-			--enable-bzlib"
-		@INSTALL_gst_ffmpeg@
-	@CLEANUP_gst_ffmpeg@
-	touch $@
-
-#
-# gst_plugins_fluendo_mpegdemux
-#
-$(D)/gst_plugins_fluendo_mpegdemux: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_fluendo_mpegdemux@
-	@PREPARE_gst_plugins_fluendo_mpegdemux@
-	cd @DIR_gst_plugins_fluendo_mpegdemux@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			--with-check=no \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gst_plugins_fluendo_mpegdemux@
-	@CLEANUP_gst_plugins_fluendo_mpegdemux@
-	touch $@
-
-#
-# gst_plugin_subsink
-#
-$(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly @DEPENDS_gst_plugin_subsink@
-	@PREPARE_gst_plugin_subsink@
-	cd @DIR_gst_plugin_subsink@ && \
-		aclocal --force -I m4 && \
-		libtoolize --copy --force && \
-		autoconf --force && \
-		autoheader --force && \
-		automake --add-missing --copy --force-missing --foreign && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gst_plugin_subsink@
-	@CLEANUP_gst_plugin_subsink@
-	touch $@
-
-#
-# gmediarender
-#
-$(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp @DEPENDS_gst_gmediarender@
-	@PREPARE_gst_gmediarender@
-	cd @DIR_gst_gmediarender@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-			--with-libupnp=$(targetprefix)/usr \
-		&& \
-		$(MAKE) all && \
-		@INSTALL_gst_gmediarender@
-	@CLEANUP_gst_gmediarender@
-	touch $@
-
-#
-# gst_plugins_dvbmediasink
-#
-$(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink @DEPENDS_gst_plugins_dvbmediasink@
-	@PREPARE_gst_plugins_dvbmediasink@
-	cd @DIR_gst_plugins_dvbmediasink@ && \
-		aclocal --force -I m4 && \
-		libtoolize --copy --force && \
-		autoconf --force && \
-		autoheader --force && \
-		automake --add-missing --copy --force-missing --foreign && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
-			--prefix=/usr \
-		&& \
-		$(MAKE) && \
-		@INSTALL_gst_plugins_dvbmediasink@
-	@CLEANUP_gst_plugins_dvbmediasink@
-	touch $@
-
 ##############################   EXTERNAL_LCD   ################################
 #
 # graphlcd
@@ -1940,7 +1463,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 $(D)/graphlcd: $(D)/bootstrap $(D)/libfreetype $(D)/libusb @DEPENDS_graphlcd@
 	@PREPARE_graphlcd@
 	[ -d "$(archivedir)/graphlcd-base-touchcol.git" ] && \
-	(cd $(archivedir)/graphlcd-base-touchcol.git; git pull ; git checkout touchcol; cd "$(buildprefix)";); \
+	(cd $(archivedir)/graphlcd-base-touchcol.git; git pull; git checkout touchcol; cd "$(buildprefix)";); \
 	cd @DIR_graphlcd@ && \
 		export TARGET=$(target)- && \
 		export LDFLAGS="-L$(targetprefix)/usr/lib -Wl,-rpath-link,$(targetprefix)/usr/lib" && \
@@ -2160,7 +1683,7 @@ $(D)/alsautils: $(D)/bootstrap @DEPENDS_alsautils@
 $(D)/libopenthreads: $(D)/bootstrap @DEPENDS_libopenthreads@
 	@PREPARE_libopenthreads@
 	[ -d "$(archivedir)/cst-public-libraries-openthreads.git" ] && \
-	(cd $(archivedir)/cst-public-libraries-openthreads.git; git pull ; cd "$(buildprefix)";); \
+	(cd $(archivedir)/cst-public-libraries-openthreads.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/cst-public-libraries-openthreads.git" ] || \
 	git clone --recursive git://c00lstreamtech.de/cst-public-libraries-openthreads.git $(archivedir)/cst-public-libraries-openthreads.git; \
 	cp -ra $(archivedir)/cst-public-libraries-openthreads.git $(buildprefix)/openthreads; \
@@ -2182,10 +1705,10 @@ $(D)/libopenthreads: $(D)/bootstrap @DEPENDS_libopenthreads@
 #
 # librtmpdump
 #
-$(D)/librtmpdump: $(D)/bootstrap $(D)/libcrypto $(D)/libz @DEPENDS_librtmpdump@
+$(D)/librtmpdump: $(D)/bootstrap $(D)/openssl $(D)/zlib @DEPENDS_librtmpdump@
 	@PREPARE_librtmpdump@
 	[ -d "$(archivedir)/rtmpdump.git" ] && \
-	(cd $(archivedir)/rtmpdump.git; git pull ; cd "$(buildprefix)";); \
+	(cd $(archivedir)/rtmpdump.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_librtmpdump@ && \
 		$(BUILDENV) \
 		make CROSS_COMPILE=$(target)- && \
@@ -2433,7 +1956,7 @@ $(D)/libexif: $(D)/bootstrap @DEPENDS_libexif@
 #
 # minidlna
 #
-$(D)/minidlna: $(D)/bootstrap $(D)/libz $(D)/sqlite $(D)/libexif $(D)/libjpeg $(D)/libid3tag $(D)/libogg $(D)/libvorbis $(D)/libflac $(D)/ffmpeg @DEPENDS_minidlna@
+$(D)/minidlna: $(D)/bootstrap $(D)/zlib $(D)/sqlite $(D)/libexif $(D)/libjpeg $(D)/libid3tag $(D)/libogg $(D)/libvorbis $(D)/libflac $(D)/ffmpeg @DEPENDS_minidlna@
 	@PREPARE_minidlna@
 	cd @DIR_minidlna@ && \
 		$(BUILDENV) \

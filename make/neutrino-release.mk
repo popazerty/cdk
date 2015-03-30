@@ -590,7 +590,7 @@ release_neutrino_base:
 	$(INSTALL_DIR) $(prefix)/release/etc/{init.d,network,mdev} && \
 	$(INSTALL_DIR) $(prefix)/release/etc/network/{if-down.d,if-post-down.d,if-pre-up.d,if-up.d} && \
 	$(INSTALL_DIR) $(prefix)/release/lib/{modules,udev,firmware} && \
-	$(INSTALL_DIR) $(prefix)/release/media/{dvd,nfs,usb} && \
+	$(INSTALL_DIR) $(prefix)/release/media/{dvd,nfs,usb,sda1,sdb1} && \
 	ln -sf /hdd $(prefix)/release/media/hdd && \
 	$(INSTALL_DIR) $(prefix)/release/mnt/{hdd,nfs,usb} && \
 	$(INSTALL_DIR) $(prefix)/release/usr/{bin,lib,local,share} && \
@@ -667,8 +667,7 @@ release_neutrino_base:
 	cp $(buildprefix)/root/bin/autologin $(prefix)/release/bin/ && \
 	cp $(buildprefix)/root/usr/sbin/fw_printenv $(prefix)/release/usr/sbin/ && \
 	ln -sf ../../usr/sbin/fw_printenv $(prefix)/release/usr/sbin/fw_setenv && \
-	cp -dp $(targetprefix)/bin/hotplug $(prefix)/release/sbin/ && \
-	rm -f $(prefix)/release/bin/hotplug && \
+	cp -dp $(targetprefix)/sbin/hotplug $(prefix)/release/sbin/ && \
 	cp -dp $(targetprefix)/sbin/blkid $(prefix)/release/sbin/ && \
 	cp -p $(targetprefix)/usr/bin/ffmpeg $(prefix)/release/sbin/ && \
 	ln -sf ../../bin/busybox $(prefix)/release/usr/bin/ether-wake && \

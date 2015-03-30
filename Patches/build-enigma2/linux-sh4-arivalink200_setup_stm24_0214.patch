@@ -1,3 +1,103 @@
+*** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 22:22:25.000000000 +0200
+--- linux-sh4/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 23:33:55.732873713 +0200
+***************
+*** 169,174 ****
+--- 169,175 ----
+  	priv->mii = new_bus;
+  
+  	found = 0;
++ 
+  	for (addr = 0; addr < PHY_MAX_ADDR; addr++) {
+  		struct phy_device *phydev = new_bus->phy_map[addr];
+  		if (phydev) {
+***************
+*** 191,202 ****
+  			 * and no PHY number was provided to the MAC,
+  			 * use the one probed here.
+  			 */
+! 			if ((priv->plat->bus_id == mdio_bus_data->bus_id) &&
+! 			    (priv->plat->phy_addr == -1))
+  				priv->plat->phy_addr = addr;
+  
+- 			act = (priv->plat->bus_id == mdio_bus_data->bus_id) &&
+- 				(priv->plat->phy_addr == addr);
+  			switch (phydev->irq) {
+  			case PHY_POLL:
+  				irq_str = "POLL";
+--- 192,214 ----
+  			 * and no PHY number was provided to the MAC,
+  			 * use the one probed here.
+  			 */
+! 
+! 			act = 0;
+! 
+! 			if ((priv->plat->bus_id == mdio_bus_data->bus_id) && (/*(priv->plat->phy_addr == -1) ||*/
+! 					(phydev->phy_id == 0x0181b880) || // Davicom DM9161E
+! 					(phydev->phy_id == 0x0181b8a0) || // Davicom DM9161A
+! 					(phydev->phy_id == 0x00181b80) || // Davicom DM9131
+! 					(phydev->phy_id == 0x1c040011) || // STe100p
+! 					(phydev->phy_id == 0x00061c50) || // STe101p
+! 					(phydev->phy_id == 0x00008201) || // RTL8201CP
+! 					(phydev->phy_id == 0x0007c0f1) || // Pingulux
+! 					(phydev->phy_id == 0x001cc912)))  // RTL821x
+! 			{
+  				priv->plat->phy_addr = addr;
++ 				act=1;
++ 			}
+  
+  			switch (phydev->irq) {
+  			case PHY_POLL:
+  				irq_str = "POLL";
+*** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/net/stmmac/dwmac_lib.c	2011-11-24 22:22:25.000000000 +0200
+--- linux-sh4/drivers/net/stmmac/dwmac_lib.c	2011-11-24 23:33:55.732873713 +0200
+@@ -210,7 +210,7 @@
+ 	}
+ 	/* Optional hardware blocks, interrupts should be disabled */
+ 	if (unlikely(intr_status &
+-		     (DMA_STATUS_GPI | DMA_STATUS_GMI | DMA_STATUS_GLI)))
++		     (DMA_STATUS_GPI | DMA_STATUS_GMI | DMA_STATUS_GLI)) && printk_ratelimit())
+ 		pr_info("%s: unexpected status %08x\n", __func__, intr_status);
+ 	/* Clear the interrupt by writing a logic 1 to the CSR5[15-0] */
+ 	writel((intr_status & 0x1ffff), ioaddr + DMA_STATUS);
+diff -crp linux-sh4/drivers/net/phy/realtek.c linux-sh4/drivers/net/phy/realtek.c
+*** linux-sh4/drivers/net/phy/realtek.c	2009-12-03 04:51:21.000000000 +0100
+--- linux-sh4/drivers/net/phy/realtek.c	2014-07-10 17:43:32.815015201 +0200
+*************** static int rtl821x_config_intr(struct ph
+*** 48,53 ****
+--- 48,65 ----
+  	return err;
+  }
+  
++ /* RTL8201CP */
++ static struct phy_driver rtl8201cp_driver = {
++ 	.phy_id         = 0x00008201,
++ 	.name           = "RTL8201CP Ethernet",
++ 	.phy_id_mask    = 0x0000ffff,
++ 	.features       = PHY_BASIC_FEATURES,
++ 	.flags          = PHY_HAS_INTERRUPT,
++ 	.config_aneg    = &genphy_config_aneg,
++ 	.read_status    = &genphy_read_status,
++ 	.driver         = { .owner = THIS_MODULE,},
++ };
++ 
+  /* RTL8211B */
+  static struct phy_driver rtl821x_driver = {
+  	.phy_id		= 0x001cc912,
+*************** static int __init realtek_init(void)
+*** 66,72 ****
+--- 78,89 ----
+  {
+  	int ret;
+  
++ 	ret = phy_driver_register(&rtl8201cp_driver);
++ 	if (ret < 0)
++ 		return -ENODEV;
+  	ret = phy_driver_register(&rtl821x_driver);
++ 	if (ret < 0)
++ 		return -ENODEV;
+  
+  	return ret;
+  }
 diff -crp linux-sh4/arch/sh/kernel/setup.c linux-sh4/arch/sh/kernel/setup.c
 *** linux-sh4/arch/sh/kernel/setup.c	2012-09-14 12:37:42.000000000 +0200
 --- linux-sh4/arch/sh/kernel/setup.c	2012-09-14 13:22:11.000000000 +0200
@@ -361,3 +461,37 @@ diff -urN linux-sh4-2.6.32.61_stm24_0215.org/drivers/usb/core/hub.c linux-sh4/dr
  		}
  	} else {	/* Self-powered external hub */
  		/* FIXME: What about battery-powered external hubs that
+diff -urN linux-sh4-2.6.32.16_stm24_0205.org/drivers/media/dvb/dvb-core/dvb_ca_en50221.c linux-sh4-2.6.32.16_stm24_0205/drivers/media/dvb/dvb-core/dvb_ca_en50221.c
+--- linux-sh4-2.6.32.16_stm24_0205.org/drivers/media/dvb/dvb-core/dvb_ca_en50221.c	2011-08-28 17:32:52.000000000 +0200
++++ linux-sh4-2.6.32.16_stm24_0205/drivers/media/dvb/dvb-core/dvb_ca_en50221.c	2011-08-28 18:33:15.580391981 +0200
+@@ -2036,13 +2036,13 @@
+ 		atomic_set(&ca->slot_info[i].camchange_count, 0);
+ 		ca->slot_info[i].camchange_type = DVB_CA_EN50221_CAMCHANGE_REMOVED;
+ 		mutex_init(&ca->slot_info[i].slot_lock);
+-
++#if defined(CONFIG_SH_ARIVALINK200)
+ 		/* add a ci device entry */
+ 	        ret = dvb_register_device(dvb_adapter, &ca->dvbdev_ci[i], &dvbdev_ci[i], ca, DVB_DEVICE_CI);
+ 		ca->slot_states[i] = DVB_CA_EN50221_CAMCHANGE_REMOVED;
+ 	        if (ret)
+ 		    printk("error creating ci device for slot %d\n", i);
+-
++#endif
+ 	}
+ 
+ 	if (signal_pending(current)) {
+--- linux-sh4/drivers/stm/stx7100_hispeed.c.orig
++++ linux-sh4/drivers/stm/stx7100_hispeed.c
+@@ -193,6 +193,12 @@
+ 	 */
+ 	stx7100_usb_pwr_gpio = stm_pad_gpio_request_output(state, "PWR", 1);
+ 	BUG_ON(stx7100_usb_pwr_gpio == STM_GPIO_INVALID);
++
++	//freebox - reset usb on boot
++	gpio_set_value(stx7100_usb_pwr_gpio, 0);
++	mdelay(2000);
++	gpio_set_value(stx7100_usb_pwr_gpio, 1);
++	mdelay(600);
+ 
+ 	return 0;
+ }

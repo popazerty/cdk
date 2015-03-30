@@ -23,7 +23,7 @@ u-boot-1.3.1.tar.bz2;http://ftp.denx.de/pub/u-boot
 #
 # root
 #
-busybox-1.22.1.tar.bz2;http://www.busybox.net/downloads
+busybox-1.23.2.tar.bz2;http://www.busybox.net/downloads
 lsb_3.2-20.tar.gz;http://debian.sdinet.de/etch/sdinet/lsb
 ipkg-0.99.163.tar.gz;ftp://ftp.gwdg.de/linux/handhelds/packages/ipkg
 module-init-tools-3.16.tar.bz2;http://ftp.be.debian.org/pub/linux/utils/kernel/module-init-tools
@@ -48,8 +48,8 @@ pixman-0.18.0.tar.gz;http://cairographics.org/releases
 #
 # Multimedia Libraries and Drivers
 #
-alsa-lib-1.0.28.tar.bz2;ftp://ftp.alsa-project.org/pub/lib
-alsa-utils-1.0.28.tar.bz2;ftp://ftp.alsa-project.org/pub/utils
+alsa-lib-1.0.29.tar.bz2;ftp://ftp.alsa-project.org/pub/lib
+alsa-utils-1.0.29.tar.bz2;ftp://ftp.alsa-project.org/pub/utils
 flac-1.3.0.tar.xz;http://downloads.xiph.org/releases/flac
 a52dec-0.7.4.tar.gz;http://liba52.sourceforge.net/files
 libao-1.1.0.tar.gz;http://downloads.xiph.org/releases/ao
@@ -72,7 +72,7 @@ libvorbisidec_1.0.2+svn18153.orig.tar.gz;http://ftp.debian.org/debian/pool/main/
 openssl-0.9.8zc.tar.gz;http://www.openssl.org/source
 lua-5.2.3.tar.gz;http://www.lua.org/ftp
 luaposix.git;git://github.com/luaposix/luaposix.git;release-v31
-luacurl.git;git://github.com/LuaDist/luacurl.git
+luacurl.git;git://github.com/Lua-cURL/Lua-cURLv3.git
 luaexpat-1.3.0.tar.gz;http://matthewwild.co.uk/projects/luaexpat
 howl-1.0.0.tar.gz;http://downloads.sourceforge.net/project/howl/howl/1.0.0
 zlib-1.2.8.tar.gz;http://zlib.net
@@ -83,7 +83,7 @@ libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
 libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
 glib-2.28.3.tar.gz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.28
 libffi-3.1.tar.gz;ftp://sourceware.org/pub/libffi
-orc-0.4.18.tar.gz;http://gstreamer.freedesktop.org/src/orc
+orc-0.4.18.tar.gz;http://code.entropywave.com/download/orc
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
 libmng-1.0.10.tar.bz2;http://dfn.dl.sourceforge.net/sourceforge/libmng
 lcms-1.17.tar.gz;http://sourceforge.net/projects/lcms/files/lcms/1.17
@@ -98,13 +98,14 @@ lite-0.9.0+git0.7982ccc.tar.bz2;http://www.duckbox.info/files/packages
 cairo-1.8.10.tar.gz;http://cairographics.org/releases
 expat-2.1.0.tar.gz;http://prdownloads.sourceforge.net/sourceforge/expat
 ffmpeg-2.5.tar.bz2;http://ffmpeg.org/releases
+fdk-aac.git;git://github.com/mstorsjo/fdk-aac.git
 libcap-2.22.tar.bz2;http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2
 BroFS1.2.tgz;http://www.avalpa.com/assets/freesoft/other
 libdvbsi++-0.3.7.tar.bz2;http://www.saftware.de/libdvbsi++
 libmodplug-0.8.8.4.tar.gz;http://downloads.sourceforge.net/project/modplug-xmms/libmodplug/0.8.8.4
 lzo-2.06.tar.gz;http://www.oberhumer.com/opensource/lzo/download
 yajl.git;git://github.com/lloyd/yajl;f4b2b1af87483caac60e50e5352fc783d9b2de2d
-pcre-8.30.tar.bz2;http://ftp.csx.cam.ac.uk/pub/software/programming/pcre
+pcre-8.30.tar.bz2;http://sourceforge.net/projects/pcre/files/pcre/8.30
 libcdio-0.83.tar.gz;http://ftp.gnu.org/gnu/libcdio
 jasper-1.900.1.zip;http://www.ece.uvic.ca/~frodo/jasper/software
 mysql-5.1.40.tar.gz;http://downloads.mysql.com/archives/mysql-5.1
@@ -127,7 +128,8 @@ libxslt-1.1.28.tar.gz;http://xmlsoft.org/sources
 # contrib apps
 #
 #ncurses-5.6.tar.gz;http://mirror.anl.gov/pub/gnu/ncurses/
-ncurses-5.6.tar.gz;https://launchpad.net/ncurses/main/5.6/+download/
+#ncurses-5.6.tar.gz;https://launchpad.net/ncurses/main/5.6/+download/
+ncurses-5.6.tar.gz;ftp://ftp.gnu.org/gnu/ncurses
 bzip2-1.0.6.tar.gz;http://www.bzip.org/1.0.6
 grep-2.5.1.tar.bz2;ftp://mirrors.kernel.org/gnu/grep
 grep_2.5.1.ds2-6.diff.gz;http://64studio.hivelocity.net/apt/pool/main/g/grep
@@ -142,7 +144,7 @@ boost_1_53_0.tar.bz2;http://prdownloads.sourceforge.net/sourceforge/boost
 pngquant-1.1-src.tgz;ftp://ftp.simplesystems.org/pub/libpng/png/applications/pngquant
 mplayer-export-snapshot.tar.bz2;ftp://ftp.mplayerhq.hu/MPlayer/releases
 opkg-0.2.0.tar.gz;http://opkg.googlecode.com/files
-sysstat-10.0.4.tar.gz;http://pagesperso-orange.fr/sebastien.godard
+sysstat-11.1.2.tar.bz2;http://pagesperso-orange.fr/sebastien.godard
 ImageMagick-6.7.7-7.tar.bz2;ftp://ftp.fifi.org/pub/ImageMagick
 shairport.git;git://github.com/abrasive/shairport;1.0-dev
 wget-1.15.tar.gz;http://ftp.gnu.org/gnu/wget
@@ -229,12 +231,12 @@ autofs-5.0.7.tar.gz;http://kernel.org/pub/linux/daemons/autofs/v5
 curl-7.40.0.tar.bz2;http://curl.haxx.se/download
 portmap_6.0.0.orig.tar.gz;http://ftp.de.debian.org/debian/pool/main/p/portmap
 portmap_6.0.0-2.diff.gz ;http://debian.osuosl.org/debian/pool/main/p/portmap
-nfs-utils-1.3.0.tar.bz2;http://downloads.sourceforge.net/project/nfs/nfs-utils/1.3.0
+nfs-utils-1.3.2.tar.bz2;http://downloads.sourceforge.net/project/nfs/nfs-utils/1.3.2
 libevent-2.0.20-stable.tar.gz;http://downloads.sourceforge.net/project/levent/libevent/libevent-2.0
 libnfsidmap-0.25.tar.gz;http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap
 libsoup-2.33.90.tar.gz;http://download.gnome.org/sources/libsoup/2.33
 vsftpd-3.0.2.tar.gz;https://security.appspot.com/downloads
-ntp-4.2.8p1.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
+ntp-4.2.6p5.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 samba-3.6.12.tar.gz;http://www.samba.org/samba/ftp/stable
 netio126.zip;http://bnsmb.de/files/public/windows
 lighttpd-1.4.15.tar.gz;http://www.lighttpd.net/download

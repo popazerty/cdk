@@ -2,7 +2,7 @@
 
 MODDIR=/lib/modules
 
-#insmod $MODDIR/vfd.ko debug=1
+insmod $MODDIR/vfd.ko
 
 if [ -e /var/etc/.firstboot ]; then
    rm /var/etc/.firstboot
@@ -23,7 +23,7 @@ fi
 
 insmod $MODDIR/e2_proc.ko
 
-#najpierw siec w razie czego jak cos pojdzie nie tak.
+#network first
 /etc/init.d/udhcpc start
 
 echo "starting telnetd"
@@ -31,18 +31,9 @@ echo "starting telnetd"
 /etc/init.d/vsftpd start
 #/usr/sbin/inetd
 
-#swap, przyda nam sie
-/bin/swap
-
-#oraz czyszczenie pamieci po zapelnieniu 80%
-/bin/freememory &
-
-#debug do pliku
-#cat /proc/kmsg >/kmsg.log &
-
 if [ ! -e /var/etc/.firstboot ]; then
 
-   #overclock, dla lekkiego przyspieszenia
+   #overclock, to speedup things
    #wartosci: "7683"=270MHz, "8963"=315MHz, "9475"=333MHz
    insmod $MODDIR/cpu_frequ.ko
    echo "7683" > /proc/cpu_frequ/pll0_ndiv_mdiv
@@ -74,7 +65,7 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/p2div64.ko
    insmod $MODDIR/stm_v4l2.ko
    insmod $MODDIR/pseudocard.ko
-   insmod $MODDIR/cx24116.ko useUnknown=1 debug=0
+   insmod $MODDIR/cx24116.ko useUnknown=1
    insmod $MODDIR/dummy_cic.ko
    insmod $MODDIR/pti.ko
    insmod $MODDIR/stmsysfs.ko
@@ -104,10 +95,7 @@ if [ ! -e /var/etc/.firstboot ]; then
    /usr/bin/lircd
 
    insmod $MODDIR/simu_button.ko
-   /bin/evremote2 &
-
-#   szap.sh
-#   exit 0
+   /bin/evremote2 useLircdName &
   
    stfbcontrol a 255
    until false
