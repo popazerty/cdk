@@ -17,10 +17,11 @@ host_u_boot_tools;1.3.1;host-u-boot-tools-1.3.1;stlinux24-host-u-boot-tools-1.3.
 #
 # core
 #
-linuxp0209;2.6.32.46_stm24_0209;linux-sh4-2.6.32.46_stm24_0209;stlinux24-host-kernel-source-sh4-2.6.32.46_stm24_0209-209.src.rpm
-linuxp0211;2.6.32.59_stm24_0211;linux-sh4-2.6.32.59_stm24_0211;stlinux24-host-kernel-source-sh4-2.6.32.59_stm24_0211-211.src.rpm
-linuxp0214;2.6.32.61_stm24_0214;linux-sh4-2.6.32.61_stm24_0214;stlinux24-host-kernel-source-sh4-2.6.32.61_stm24_0214-214.src.rpm
-linuxp0215;2.6.32.61_stm24_0215;linux-sh4-2.6.32.61_stm24_0215;stlinux24-host-kernel-source-sh4-2.6.32.61_stm24_0215-215.src.rpm
+#linuxp0209;2.6.32.46_stm24_0209;linux-sh4-2.6.32.46_stm24_0209;stlinux24-host-kernel-source-sh4-2.6.32.46_stm24_0209-209.src.rpm
+#linuxp0211;2.6.32.59_stm24_0211;linux-sh4-2.6.32.59_stm24_0211;stlinux24-host-kernel-source-sh4-2.6.32.59_stm24_0211-211.src.rpm
+#linuxp0214;2.6.32.61_stm24_0214;linux-sh4-2.6.32.61_stm24_0214;stlinux24-host-kernel-source-sh4-2.6.32.61_stm24_0214-214.src.rpm
+#linuxp0215;2.6.32.61_stm24_0215;linux-sh4-2.6.32.61_stm24_0215;stlinux24-host-kernel-source-sh4-2.6.32.61_stm24_0215-215.src.rpm
+#linuxp0217;2.6.32.61_stm24_0217;linux-sh4-2.6.32.61_stm24_0217;stlinux24-host-kernel-source-sh4-2.6.32.61_stm24_0217-217.src.rpm
 ccache;3.1.9;ccache-3.1.9;ccache-3.1.9.tar.gz;extract:ccache-3.1.9.tar.gz
 squashfs;3.0;mksquashfs;squashfs3.0.tar.gz:mksquashfs_lzma.patch:lzma442.tar.bz2:mksquashfs_lzma_zlib-stream.patch;dircreate:mksquashfs;extract:lzma442.tar.bz2;patch:mksquashfs_lzma_zlib-stream.patch;extract:squashfs3.0.tar.gz;patch:mksquashfs_lzma.patch
 squashfs;4.0;mksquashfs;squashfs4.0.tar.gz:squashfs-tools-4.0-lzma.patch:lzma465.tar.bz2;dircreate:mksquashfs;extract:lzma465.tar.bz2;extract:squashfs4.0.tar.gz;patch:squashfs-tools-4.0-lzma.patch

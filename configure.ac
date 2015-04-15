@@ -101,6 +101,14 @@ AC_ARG_ENABLE(p0215,
 AM_CONDITIONAL(ENABLE_P0215,test "$enable_p0215" = "yes")
 AC_SUBST(P0215)
 
+AC_ARG_ENABLE(p0217,
+	AS_HELP_STRING(--enable-p0217, set up the CDK to use the STLinux 2.4 with patchlevel 0217),
+	[case "${enableval}" in
+		yes) P0217=p0217 ;;
+	esac], [enable_p0217=no])
+AM_CONDITIONAL(ENABLE_P0217,test "$enable_p0217" = "yes")
+AC_SUBST(P0217)
+
 AC_ARG_WITH(cpu,
 	[  --with-cpu=MODEL    cpu model [[sh4]]],
 	[CPU_MODEL="$withval"],[CPU_MODEL="sh4"])
@@ -703,33 +711,35 @@ AC_SUBST(PATCH_STR)
 AC_SUBST(KERNEL_DIR)
 
 if test "$enable_p0209" == "yes"; then
-	TUXBOX_RULES_MAKE(linuxp0209)
-	KERNELVERSION=${VERSION_linuxp0209}
-	KERNELSTMLABEL="_${VERSION_linuxp0209#*_}"
+	KERNELVERSION="2.6.32.46_stm24_0209"
+	KERNELSTMLABEL="_${KERNELVERION#*_}"
 	KERNELLABEL="209"
 	PATCH_STR="_0209"
-	KERNEL_DIR="linux-sh4-${VERSION_linuxp0209}"
+	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 elif test "$enable_p0211" == "yes"; then
-	TUXBOX_RULES_MAKE(linuxp0211)
-	KERNELVERSION=${VERSION_linuxp0211}
-	KERNELSTMLABEL="_${VERSION_linuxp0211#*_}"
+	KERNELVERSION="2.6.32.59_stm24_0211"
+	KERNELSTMLABEL="_${KERNELVERION#*_}"
 	KERNELLABEL="211"
 	PATCH_STR="_0211"
-	KERNEL_DIR="linux-sh4-${VERSION_linuxp0211}"
+	KERNEL_DIR="linux-sh4-${KERNELVERION}"
 elif test "$enable_p0214" == "yes"; then
-	TUXBOX_RULES_MAKE(linuxp0214)
-	KERNELVERSION=${VERSION_linuxp0214}
-	KERNELSTMLABEL="_${VERSION_linuxp0214#*_}"
+	KERNELVERSION="2.6.32.61_stm24_0214"
+	KERNELSTMLABEL="_${KERNELVERION#*_}"
 	KERNELLABEL="214"
 	PATCH_STR="_0214"
-	KERNEL_DIR="linux-sh4-${VERSION_linuxp0214}"
+	KERNEL_DIR="linux-sh4-${KERNELVERION}"
 elif test "$enable_p0215" == "yes"; then
-	TUXBOX_RULES_MAKE(linuxp0215)
-	KERNELVERSION=${VERSION_linuxp0215}
-	KERNELSTMLABEL="_${VERSION_linuxp0215#*_}"
+	KERNELVERSION="2.6.32.61_stm24_0215"
+	KERNELSTMLABEL="_${KERNELVERSION#*_}"
 	KERNELLABEL="215"
 	PATCH_STR="_0215"
-	KERNEL_DIR="linux-sh4-${VERSION_linuxp0215}"
+	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
+elif test "$enable_p0217" == "yes"; then
+	KERNELVERSION="2.6.32.61_stm24_0217"
+	KERNELSTMLABEL="_${KERNELVERSION#*_}"
+	KERNELLABEL="217"
+	PATCH_STR="_0217"
+	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 fi
 
 AC_SUBST(EXTERNALLCD_DEP)
@@ -1035,6 +1045,7 @@ Patchlevel P0209            : $enable_p0209
 Patchlevel P0211            : $enable_p0211
 Patchlevel P0214            : $enable_p0214
 Patchlevel P0215            : $enable_p0215
+Patchlevel P0217            : $enable_p0217
 DEBUG                       : $enable_debug
 boot prefix                 : $bootprefix
 serversupport               : $serversupport
