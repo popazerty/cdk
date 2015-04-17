@@ -23,7 +23,7 @@ COMMONPATCHES_24 = \
 		linux-tune_stm24.patch \
 		linux-sh4-permit_gcc_command_line_sections_stm24.patch \
 		linux-sh4-mmap_stm24.patch \
-		$(if $(P0215),linux-ratelimit-bug_stm24$(PATCH_STR).patch) \
+		$(if $(P0215)$(P0217),linux-ratelimit-bug_stm24$(PATCH_STR).patch) \
 		$(if $(P0215)$(P0217),linux-patch_swap_notify_core_support_stm24$(PATCH_STR).patch) \
 		$(if $(P0209),linux-sh4-dwmac_stm24_0209.patch) \
 		$(if $(P0209),linux-sh4-directfb_stm24$(PATCH_STR).patch) \
