@@ -1,10 +1,10 @@
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2-nightly/configure.ac
 --- enigma2-nightly.org/configure.ac	2014-06-13 21:45:21.700535793 +0200
 +++ enigma2-nightly/configure.ac	2014-06-21 13:05:30.075088432 +0200
-@@ -34,10 +34,131 @@
- 	AS_HELP_STRING([--with-gstversion],[use gstreamer version (major.minor)]),
+@@ -35,10 +35,131 @@
  	[GST_MAJORMINOR=$withval],[GST_MAJORMINOR=0.10])
  
+ PKG_CHECK_MODULES(GSTREAMER, gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR)
 -PKG_CHECK_MODULES(BASE, [freetype2 fribidi gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
 +AC_ARG_ENABLE(libeplayer3,
 +	[  --enable-libeplayer3          enable TDT libeplayer3 as player engine support],
@@ -134,7 +134,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
  AC_CHECK_LIB([dl], [dlopen], [LIBDL_LIBS="-ldl"], [AC_MSG_ERROR([Could not find libdl])])
  AC_SUBST(LIBDL_LIBS)
  AC_CHECK_LIB([jpeg], [jpeg_set_defaults], [LIBJPEG_LIBS="-ljpeg"], [AC_MSG_ERROR([Could not find libjpeg])])
-@@ -86,6 +207,15 @@
+@@ -87,6 +208,15 @@
  fi
  AM_CONDITIONAL(HAVE_COLORLCD, test x"$withcolorlcd" != xno)
  
@@ -150,14 +150,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
  
  AC_ARG_WITH(oldpvr,
  	AC_HELP_STRING([--with-oldpvr], [use /dev/misc/pvr instead of /dev/dvb/adapterX/dvrX, yes or no]),
-@@ -200,15 +330,12 @@
- lib/python/Plugins/Extensions/MediaPlayer/meta/Makefile
- lib/python/Plugins/Extensions/MediaScanner/Makefile
- lib/python/Plugins/Extensions/MediaScanner/meta/Makefile
--lib/python/Plugins/Extensions/Modem/Makefile
- lib/python/Plugins/Extensions/PicturePlayer/Makefile
- lib/python/Plugins/Extensions/PicturePlayer/meta/Makefile
- lib/python/Plugins/Extensions/PicturePlayer/data/Makefile
+@@ -207,8 +337,6 @@
  lib/python/Plugins/Extensions/SocketMMI/Makefile
  lib/python/Plugins/Extensions/SocketMMI/meta/Makefile
  lib/python/Plugins/Extensions/SocketMMI/src/Makefile
@@ -461,7 +454,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/etpm.cpp e
  	unsigned char buf[4];
  	void *val;
  
-@@ -111,10 +118,14 @@
+@@ -116,10 +123,14 @@
  	}
  
  	return val;
@@ -476,7 +469,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/etpm.cpp e
  	unsigned int i;
  	unsigned int tag;
  	unsigned int len;
-@@ -140,19 +151,23 @@
+@@ -145,19 +156,23 @@
  			break;
  		}
  	}
@@ -500,7 +493,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/etpm.cpp e
  	if (rnd.length() == 8)
  	{
  		if (!send_cmd(TPMD_CMD_COMPUTE_SIGNATURE, rnd.c_str(), 8))
-@@ -169,5 +184,6 @@
+@@ -174,5 +189,6 @@
  		free(val);
  		return ret;
  	}
@@ -526,7 +519,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.c
  //#define SHOW_WRITE_TIME
  
  eFilePushThread::eFilePushThread(int io_prio_class, int io_prio_level, int blocksize, size_t buffersize)
-@@ -57,10 +66,30 @@
+@@ -58,10 +67,30 @@
  	off_t current_span_offset = 0;
  	size_t current_span_remaining = 0;
  
@@ -557,7 +550,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.c
  			m_sg->getNextSourceSpan(m_current_position, bytes_read, current_span_offset, current_span_remaining);
  			ASSERT(!(current_span_remaining % m_blocksize));
  			m_current_position = current_span_offset;
-@@ -127,7 +156,19 @@
+@@ -128,7 +157,19 @@
  				{
  					case 0:
  						eDebug("wait for driver eof timeout");
@@ -577,7 +570,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.c
  					case 1:
  						eDebug("wait for driver eof ok");
  						break;
-@@ -190,12 +231,18 @@
+@@ -191,12 +232,18 @@
  			}
  
  			eofcount = 0;
@@ -726,7 +719,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp e
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp enigma2-nightly/lib/driver/vfd.cpp
 --- enigma2-nightly.org/lib/driver/vfd.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.cpp	2013-05-11 19:07:01.916432460 +0200
-@@ -0,0 +1,786 @@
+@@ -0,0 +1,790 @@
 +/*
 + * vfd.cpp
 + *
@@ -782,7 +775,6 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +#include <lib/base/eerror.h>
 +#include <lib/driver/vfd.h>
 +
-
 +#ifdef PLATFORM_TF7700
 +#include "/../../apps/tools/tffpctl/frontpanel.h"
 +#endif
@@ -1588,36 +1580,37 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
 +#else
  		pes.flags    = 0;
 +#endif
- 		eDebugNoNewLine("DMX_SET_PES_FILTER(0x%02x) - audio - ", pid);
+ 		eDebugNoNewLineStart("[eDVBAudio] DMX_SET_PES_FILTER(0x%02x) - audio%d - ", pid, m_dev);
  		if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
  		{
 @@ -82,6 +86,7 @@
  			return -errno;
  		}
- 		eDebug("ok");
+ 		eDebugNoNewLine("ok\n");
 +#if not defined(__sh__) // already started cause of DMX_IMMEDIATE_START
- 		eDebugNoNewLine("DEMUX_START - audio - ");
+ 		eDebugNoNewLineStart("[eDVBAudio] DEMUX_START - audio%d - ", m_dev);
  		if (::ioctl(m_fd_demux, DMX_START) < 0)
  		{
 @@ -89,6 +94,7 @@
  			return -errno;
  		}
- 		eDebug("ok");
+ 		eDebugNoNewLine("ok\n");
 +#endif
  	}
  
  	if (m_fd >= 0)
+ 
 @@ -128,7 +134,9 @@
- 			eDebug("failed (%m)");
+ 			eDebugNoNewLine("failed (%m)\n");
  		else
- 			eDebug("ok");
+ 			eDebugNoNewLine("ok\n");
 +#if not defined(__sh__) // this is a hack which only matters for dm drivers
  		freeze();  // why freeze here?!? this is a problem when only a pid change is requested... because of the unfreeze logic in Decoder::setState
 +#endif
- 		eDebugNoNewLine("AUDIO_PLAY - ");
+ 		eDebugNoNewLineStart("[eDVBAudio] AUDIO_PLAY - ");
  		if (::ioctl(m_fd, AUDIO_PLAY) < 0)
- 			eDebug("failed (%m)");
-@@ -353,7 +361,11 @@
+ 			eDebugNoNewLine("failed (%m)\n");
+@@ -354,7 +362,11 @@
  			pes.pes_type = DMX_PES_VIDEO3;
  			break;
  		}
@@ -1626,21 +1619,21 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
 +#else
  		pes.flags    = 0;
 +#endif
- 		eDebugNoNewLine("DMX_SET_PES_FILTER(0x%02x) - video - ", pid);
+ 		eDebugNoNewLineStart("DMX_SET_PES_FILTER(0x%02x) - video%d - ", pid, m_dev);
  		if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
  		{
-@@ -361,6 +373,7 @@
+@@ -362,6 +374,7 @@
  			return -errno;
  		}
- 		eDebug("ok");
+ 		eDebugNoNewLine("ok\n");
 +#if not defined(__sh__) // already started cause of DMX_IMMEDIATE_START
- 		eDebugNoNewLine("DEMUX_START - video - ");
+ 		eDebugNoNewLineStart("DEMUX_START - video - ");
  		if (::ioctl(m_fd_demux, DMX_START) < 0)
  		{
-@@ -368,11 +381,14 @@
+@@ -369,11 +382,14 @@
  			return -errno;
  		}
- 		eDebug("ok");
+ 		eDebugNoNewLine("ok\n");
 +#endif
  	}
  
@@ -1649,10 +1642,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
 +#if not defined(__sh__) // this is a hack which only matters for dm drivers
  		freeze();  // why freeze here?!? this is a problem when only a pid change is requested... because of the unfreeze logic in Decoder::setState
 +#endif
- 		eDebugNoNewLine("VIDEO_PLAY - ");
+ 		eDebugNoNewLineStart("VIDEO_PLAY - ");
  		if (::ioctl(m_fd, VIDEO_PLAY) < 0)
- 			eDebug("failed (%m)");
-@@ -657,7 +673,11 @@
+ 			eDebugNoNewLine("failed (%m)\n");
+@@ -660,7 +676,11 @@
  		pes.pes_type = DMX_PES_PCR3;
  		break;
  	}
@@ -1661,26 +1654,26 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
 +#else
  	pes.flags    = 0;
 +#endif
- 	eDebugNoNewLine("DMX_SET_PES_FILTER(0x%02x) - pcr - ", pid);
+ 	eDebugNoNewLineStart("DMX_SET_PES_FILTER(0x%02x) - pcr%d - ", pid, m_dev);
  	if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
  	{
-@@ -665,6 +685,7 @@
+@@ -668,6 +688,7 @@
  		return -errno;
  	}
- 	eDebug("ok");
+ 	eDebugNoNewLine("ok\n");
 +#if not defined(__sh__) // already started cause of DMX_IMMEDIATE_START
- 	eDebugNoNewLine("DEMUX_START - pcr - ");
+ 	eDebugNoNewLineStart("DEMUX_START - pcr - ");
  	if (::ioctl(m_fd_demux, DMX_START) < 0)
  	{
-@@ -672,6 +693,7 @@
+@@ -675,6 +696,7 @@
  		return -errno;
  	}
- 	eDebug("ok");
+ 	eDebugNoNewLine("ok\n");
 +#endif
  	return 0;
  }
  
-@@ -726,7 +748,11 @@
+@@ -729,7 +751,11 @@
  		pes.pes_type = DMX_PES_TELETEXT3;
  		break;
  	}
@@ -1690,25 +1683,25 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
  	pes.flags    = 0;
 +#endif
  
- 	eDebugNoNewLine("DMX_SET_PES_FILTER(0x%02x) - ttx - ", pid);
+ 	eDebugNoNewLineStart("DMX_SET_PES_FILTER(0x%02x) - ttx%d - ", pid, m_dev);
  	if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
-@@ -735,6 +761,7 @@
+@@ -738,6 +764,7 @@
  		return -errno;
  	}
- 	eDebug("ok");
+ 	eDebugNoNewLine("ok\n");
 +#if not defined(__sh__) // already started cause of DMX_IMMEDIATE_START
- 	eDebugNoNewLine("DEMUX_START - ttx - ");
+ 	eDebugNoNewLineStart("DEMUX_START - ttx - ");
  	if (::ioctl(m_fd_demux, DMX_START) < 0)
  	{
-@@ -742,6 +769,7 @@
+@@ -745,6 +772,7 @@
  		return -errno;
  	}
- 	eDebug("ok");
+ 	eDebugNoNewLine("ok\n");
 +#endif
  	return 0;
  }
  
-@@ -877,12 +905,28 @@
+@@ -884,12 +912,28 @@
  		int *s = state_table[m_state];
  		if (changed & (changeState|changeVideo) && m_video)
  		{
@@ -1737,7 +1730,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
  		}
  		if (changed & (changeState|changeAudio) && m_audio)
  		{
-@@ -1183,6 +1227,10 @@
+@@ -1187,6 +1227,10 @@
  		{
  			struct stat s;
  			fstat(f, &s);
@@ -1772,87 +1765,109 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enigma2-nightly/lib/dvb/dvb.cpp
 --- enigma2-nightly.org/lib/dvb/dvb.cpp	2014-06-13 21:45:21.744535791 +0200
 +++ enigma2-nightly/lib/dvb/dvb.cpp	2014-06-21 13:05:30.079088431 +0200
-@@ -115,6 +115,70 @@
- 		m_boxtype = DM800SE;
- 	else if (!strncmp(tmp, "dm7020hd\n", rd))
- 		m_boxtype = DM7020HD;
+@@ -99,7 +99,8 @@
+ 
+ 	m_boxtype = -1;
+ 	int fd = open("/proc/stb/info/model", O_RDONLY);
+-	if (fd >= 0) {
++	if (fd >= 0)
++	{
+ 		char tmp[16];
+ 		int rd = read(fd, tmp, sizeof(tmp));
+ 		close(fd);
+@@ -118,14 +119,80 @@
+ 			m_boxtype = DM800SE;
+ 		else if (!strncmp(tmp, "dm7020hd\n", rd))
+ 			m_boxtype = DM7020HD;
 +#if defined(__sh__)
-+	else if (!strncmp(tmp, "adb_box\n", rd))
-+		m_boxtype = ADB_BOX;
-+	else if (!strncmp(tmp, "ufs910\n", rd))
-+		m_boxtype = UFS910;
-+	else if (!strncmp(tmp, "ufs912\n", rd))
-+		m_boxtype = UFS912;
-+	else if (!strncmp(tmp, "ufs913\n", rd))
-+		m_boxtype = UFS913;
-+	else if (!strncmp(tmp, "ufs922\n", rd))
-+		m_boxtype = UFS922;
-+	else if (!strncmp(tmp, "ufc960\n", rd))
-+		m_boxtype = UFC960;
-+	else if (!strncmp(tmp, "tf7700hdpvr\n", rd))
-+		m_boxtype = TF7700HDPVR;
-+	else if (!strncmp(tmp, "hdbox\n", rd))
-+		m_boxtype = HDBOX;
-+	else if (!strncmp(tmp, "hl101\n", rd))
-+		m_boxtype = HL101;
-+	else if (!strncmp(tmp, "spark\n", rd))
-+		m_boxtype = SPARK;
-+	else if (!strncmp(tmp, "spark7162\n", rd))
-+		m_boxtype = SPARK7162;
-+	else if (!strncmp(tmp, "vip1-v2\n", rd))
-+		m_boxtype = VIP1_V2;
-+	else if (!strncmp(tmp, "vip2-v1\n", rd))
-+		m_boxtype = VIP2_V1;
-+	else if (!strncmp(tmp, "cuberevo\n", rd))
-+		m_boxtype = CUBEREVO;
-+	else if (!strncmp(tmp, "cuberevo-9500hd\n", rd))
-+		m_boxtype = CUBEREVO_9500HD;
-+	else if (!strncmp(tmp, "cuberevo-mini\n", rd))
-+		m_boxtype = CUBEREVO_MINI;
-+	else if (!strncmp(tmp, "cuberevo-mini2\n", rd))
-+		m_boxtype = CUBEREVO_MINI2;
-+	else if (!strncmp(tmp, "cuberevo-2000hd\n", rd))
-+		m_boxtype = CUBEREVO_2000HD;
-+	else if (!strncmp(tmp, "cuberevo-250hd\n", rd))
-+		m_boxtype = CUBEREVO_250HD;
-+	else if (!strncmp(tmp, "cuberevo-mini-fta\n", rd))
-+		m_boxtype = CUBEREVO_MINI_FTA;
-+	else if (!strncmp(tmp, "ipbox9900\n", rd))
-+		m_boxtype = IPBOX9900;
-+	else if (!strncmp(tmp, "ipbox99\n", rd))
-+		m_boxtype = IPBOX99;
-+	else if (!strncmp(tmp, "ipbox55\n", rd))
-+		m_boxtype = IPBOX55;
-+	else if (!strncmp(tmp, "octagon1008\n", rd))
-+		m_boxtype = OCTAGON1008;
-+	else if (!strncmp(tmp, "hs7110\n", rd))
-+		m_boxtype = HS7110;
-+	else if (!strncmp(tmp, "hs7810a\n", rd))
-+		m_boxtype = HS7810A;
-+	else if (!strncmp(tmp, "hs7119\n", rd))
-+		m_boxtype = HS7119;
-+	else if (!strncmp(tmp, "hs7819\n", rd))
-+		m_boxtype = HS7819;
-+	else if (!strncmp(tmp, "atevio7500\n", rd))
-+		m_boxtype = ATEVIO7500;
-+	else if (!strncmp(tmp, "sagemcom88\n", rd))
-+		m_boxtype = SAGEMCOM88;
-+	else if (!strncmp(tmp, "arivalink200\n", rd))
-+		m_boxtype = ARIVALINK200;
++		else if (!strncmp(tmp, "adb_box\n", rd))
++			m_boxtype = ADB_BOX;
++		else if (!strncmp(tmp, "ufs910\n", rd))
++			m_boxtype = UFS910;
++		else if (!strncmp(tmp, "ufs912\n", rd))
++			m_boxtype = UFS912;
++		else if (!strncmp(tmp, "ufs913\n", rd))
++			m_boxtype = UFS913;
++		else if (!strncmp(tmp, "ufs922\n", rd))
++			m_boxtype = UFS922;
++		else if (!strncmp(tmp, "ufc960\n", rd))
++			m_boxtype = UFC960;
++		else if (!strncmp(tmp, "tf7700hdpvr\n", rd))
++			m_boxtype = TF7700HDPVR;
++		else if (!strncmp(tmp, "hdbox\n", rd))
++			m_boxtype = HDBOX;
++		else if (!strncmp(tmp, "hl101\n", rd))
++			m_boxtype = HL101;
++		else if (!strncmp(tmp, "spark\n", rd))
++			m_boxtype = SPARK;
++		else if (!strncmp(tmp, "spark7162\n", rd))
++			m_boxtype = SPARK7162;
++		else if (!strncmp(tmp, "vip1-v2\n", rd))
++			m_boxtype = VIP1_V2;
++		else if (!strncmp(tmp, "vip2-v1\n", rd))
++			m_boxtype = VIP2_V1;
++		else if (!strncmp(tmp, "cuberevo\n", rd))
++			m_boxtype = CUBEREVO;
++		else if (!strncmp(tmp, "cuberevo-9500hd\n", rd))
++			m_boxtype = CUBEREVO_9500HD;
++		else if (!strncmp(tmp, "cuberevo-mini\n", rd))
++			m_boxtype = CUBEREVO_MINI;
++		else if (!strncmp(tmp, "cuberevo-mini2\n", rd))
++			m_boxtype = CUBEREVO_MINI2;
++		else if (!strncmp(tmp, "cuberevo-2000hd\n", rd))
++			m_boxtype = CUBEREVO_2000HD;
++		else if (!strncmp(tmp, "cuberevo-250hd\n", rd))
++			m_boxtype = CUBEREVO_250HD;
++		else if (!strncmp(tmp, "cuberevo-mini-fta\n", rd))
++			m_boxtype = CUBEREVO_MINI_FTA;
++		else if (!strncmp(tmp, "ipbox9900\n", rd))
++			m_boxtype = IPBOX9900;
++		else if (!strncmp(tmp, "ipbox99\n", rd))
++			m_boxtype = IPBOX99;
++		else if (!strncmp(tmp, "ipbox55\n", rd))
++			m_boxtype = IPBOX55;
++		else if (!strncmp(tmp, "octagon1008\n", rd))
++			m_boxtype = OCTAGON1008;
++		else if (!strncmp(tmp, "hs7110\n", rd))
++			m_boxtype = HS7110;
++		else if (!strncmp(tmp, "hs7810a\n", rd))
++			m_boxtype = HS7810A;
++		else if (!strncmp(tmp, "hs7119\n", rd))
++			m_boxtype = HS7119;
++		else if (!strncmp(tmp, "hs7819\n", rd))
++			m_boxtype = HS7819;
++		else if (!strncmp(tmp, "atevio7500\n", rd))
++			m_boxtype = ATEVIO7500;
++		else if (!strncmp(tmp, "sagemcom88\n", rd))
++			m_boxtype = SAGEMCOM88;
++		else if (!strncmp(tmp, "arivalink200\n", rd))
++			m_boxtype = ARIVALINK200;
+ 		else
+ 			eDebug("[eDVBResourceManager] boxtype detection via /proc/stb/info not possible. Use fallback via demux count!");
+ 	}
+-	else {
 +#else
- 	else {
- 		eDebug("boxtype detection via /proc/stb/info not possible... use fallback via demux count!\n");
++	else
++	{
+ 		eDebug("[eDVBResourceManager] cannot open /proc/stb/info. Use fallback via demux count!");
+ 	}
+ 
+-	if (m_boxtype == -1) {
++	if (m_boxtype == -1)
++	{
  		if (m_demux.size() == 3)
-@@ -124,7 +188,7 @@
+ 			m_boxtype = DM800;
+ 		else if (m_demux.size() < 5)
+@@ -133,7 +200,7 @@
  		else
  			m_boxtype = DM8000;
  	}
 -
 +#endif
- 	eDebug("found %zd adapter, %zd frontends(%zd sim) and %zd demux, boxtype %d",
+ 	eDebug("[eDVBResourceManager] found %zd adapter, %zd frontends(%zd sim) and %zd demux, boxtype %d",
  		m_adapter.size(), m_frontend.size(), m_simulate_frontend.size(), m_demux.size(), m_boxtype);
  
-@@ -951,6 +1015,58 @@
+@@ -938,6 +1005,58 @@
  			}
  		}
  	}
@@ -1911,7 +1926,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp eni
  	else
  	{
  		iDVBAdapter *adapter = fe ? fe->m_adapter : m_adapter.begin(); /* look for a demux on the same adapter as the frontend, or the first adapter for dvr playback */
-@@ -2106,6 +2222,12 @@
+@@ -2103,6 +2222,12 @@
  			return -ENODEV;
  		}
  #else
@@ -1924,14 +1939,14 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp eni
  		ePtr<eDVBAllocatedDemux> &demux = m_demux ? m_demux : m_decoder_demux;
  		if (demux)
  		{
-@@ -2122,6 +2244,7 @@
+@@ -2118,6 +2243,7 @@
+ 			eDebug("[eDVBChannel] no demux allocated yet.. so its not possible to open the dvr device!!");
  			return -ENODEV;
  		}
- #endif
 +#endif
+ #endif
  	}
  
- 	m_pvr_thread = new eDVBChannelFilePush(m_source->getPacketSize());
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.h enigma2-nightly/lib/dvb/dvb.h
 --- enigma2-nightly.org/lib/dvb/dvb.h	2014-06-13 21:45:21.744535791 +0200
 +++ enigma2-nightly/lib/dvb/dvb.h	2014-06-21 13:05:30.079088431 +0200
@@ -1960,54 +1975,54 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.h enigm
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cpp enigma2-nightly/lib/dvb/epgcache.cpp
 --- enigma2-nightly.org/lib/dvb/epgcache.cpp	2014-06-13 21:45:21.744535791 +0200
 +++ enigma2-nightly/lib/dvb/epgcache.cpp	2014-06-21 13:05:30.079088431 +0200
-@@ -221,10 +221,22 @@
- 	int tmp = ByteSize - 10;
- 	memcpy(data, EITdata, 10);
- 	unsigned int descriptors_length = 0;
-+#ifndef __sh__
- 	__u32 *p = (__u32*)(EITdata + 10);
-+#else
-+	// Dagobert: fix not aligned access
-+	__u8 *p = (__u8*)(EITdata+10);
-+#endif
- 	while (tmp > 3)
- 	{
-+#ifndef __sh__
- 		descriptorMap::iterator it = descriptors.find(*p++);
-+#else
-+		__u32 index = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
-+		// eDebug("index %d %x, %x %x %x %x\n", index, index, p[0], p[1], p[2], p[3]);
-+		descriptorMap::iterator it = descriptors.find(index);
-+		p += 4;
-+#endif
- 		if (it != descriptors.end())
- 		{
- 			unsigned int b = it->second.second[1] + 2;
-@@ -249,12 +261,23 @@
- 	if ( ByteSize )
- 	{
- 		CacheSize -= ByteSize;
-+#ifndef __sh__
- 		__u32 *d = (__u32*)(EITdata+10);
-+#else	// Dagobert: fix not aligned access
-+		__u8 *d = (__u8*)(EITdata+10);
-+#endif
- 		ByteSize -= 10;
- 		while(ByteSize>3)
- 		{
-+#ifndef __sh__
- 			descriptorMap::iterator it =
- 				descriptors.find(*d++);
-+#else
-+			__u32 index = d[3] << 24 | d[2] << 16 | d[1] << 8 | d[0];
-+			// eDebug("index %d %x, %x %x %x %x\n", index, index, d[0], d[1], d[2], d[3]);
-+			descriptorMap::iterator it = descriptors.find(index);
-+			d += 4;
-+#endif
- 			if ( it != descriptors.end() )
- 			{
- 				descriptorPair &p = it->second;
-@@ -1856,6 +1879,45 @@
+#@@ -221,10 +221,22 @@
+# 	int tmp = ByteSize - 10;
+# 	memcpy(data, EITdata, 10);
+# 	unsigned int descriptors_length = 0;
+#+#ifndef __sh__
+# 	__u32 *p = (__u32*)(EITdata + 10);
+#+#else
+#+	// Dagobert: fix not aligned access
+#+	__u8 *p = (__u8*)(EITdata+10);
+#+#endif
+# 	while (tmp > 3)
+# 	{
+#+#ifndef __sh__
+# 		descriptorMap::iterator it = descriptors.find(*p++);
+#+#else
+#+		__u32 index = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
+#+		// eDebug("index %d %x, %x %x %x %x\n", index, index, p[0], p[1], p[2], p[3]);
+#+		descriptorMap::iterator it = descriptors.find(index);
+#+		p += 4;
+#+#endif
+# 		if (it != descriptors.end())
+# 		{
+# 			unsigned int b = it->second.second[1] + 2;
+#@@ -249,12 +261,23 @@
+# 	if ( ByteSize )
+# 	{
+# 		CacheSize -= ByteSize;
+#+#ifndef __sh__
+# 		__u32 *d = (__u32*)(EITdata+10);
+#+#else	// Dagobert: fix not aligned access
+#+		__u8 *d = (__u8*)(EITdata+10);
+#+#endif
+# 		ByteSize -= 10;
+# 		while(ByteSize>3)
+# 		{
+#+#ifndef __sh__
+# 			descriptorMap::iterator it =
+# 				descriptors.find(*d++);
+#+#else
+#+			__u32 index = d[3] << 24 | d[2] << 16 | d[1] << 8 | d[0];
+#+			// eDebug("index %d %x, %x %x %x %x\n", index, index, d[0], d[1], d[2], d[3]);
+#+			descriptorMap::iterator it = descriptors.find(index);
+#+			d += 4;
+#+#endif
+# 			if ( it != descriptors.end() )
+# 			{
+# 				descriptorPair &p = it->second;
+@@ -1888,6 +1888,45 @@
  {
  	int map;
  	iDVBSectionReader *reader = NULL;
@@ -2053,7 +2068,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cp
  	switch (source)
  	{
  		case NOWNEXT:
-@@ -1980,6 +2042,10 @@
+@@ -2012,6 +2051,10 @@
  			cache->sectionRead(data, source, this);
  		}
  	}
@@ -2064,53 +2079,53 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cp
  }
  
  #if ENABLE_FREESAT
-@@ -3065,11 +3131,20 @@
- 						{
- 							__u8 *data = evData->EITdata;
- 							int tmp = evData->ByteSize-10;
-+#ifndef __sh__
- 							__u32 *p = (__u32*)(data+10);
-+#else	// Dagobert: Alignment fix
-+							__u8 *p = (__u8*)(data+10);
-+#endif
- 							// search short and extended event descriptors
- 							while(tmp>3)
- 							{
-+#ifndef __sh__
- 								__u32 crc = *p++;
-+#else	// Dagobert: Alignment fix
-+								__u32 crc = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
-+								p += 4;
-+#endif
- 								descriptorMap::iterator it =
- 									eventData::descriptors.find(crc);
- 								if (it != eventData::descriptors.end())
-@@ -3248,12 +3323,21 @@
- 				}
- 				__u8 *data = evit->second->EITdata;
- 				int tmp = evit->second->ByteSize-10;
-+#ifndef __sh__
- 				__u32 *p = (__u32*)(data+10);
-+#else	// Dagobert: Alignment fix
-+				__u8 *p = (__u8*)(data+10);
-+#endif
- 				// check if any of our descriptor used by this event
- 				int cnt=-1;
- 				while(tmp>3)
- 				{
-+#ifndef __sh__
- 					__u32 crc32 = *p++;
-+#else	// Dagobert: Alignment fix
-+					__u32 crc32 = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
-+					p += 4;
-+#endif
- 					for ( int i=0; i <= descridx; ++i)
- 					{
- 						if (descr[i] == crc32)  // found...
+#@@ -3065,11 +3131,20 @@
+# 						{
+# 							__u8 *data = evData->EITdata;
+# 							int tmp = evData->ByteSize-10;
+#+#ifndef __sh__
+# 							__u32 *p = (__u32*)(data+10);
+#+#else	// Dagobert: Alignment fix
+#+							__u8 *p = (__u8*)(data+10);
+#+#endif
+# 							// search short and extended event descriptors
+# 							while(tmp>3)
+# 							{
+#+#ifndef __sh__
+# 								__u32 crc = *p++;
+#+#else	// Dagobert: Alignment fix
+#+								__u32 crc = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
+#+								p += 4;
+#+#endif
+# 								descriptorMap::iterator it =
+# 									eventData::descriptors.find(crc);
+# 								if (it != eventData::descriptors.end())
+#@@ -3248,12 +3323,21 @@
+# 				}
+# 				__u8 *data = evit->second->EITdata;
+# 				int tmp = evit->second->ByteSize-10;
+#+#ifndef __sh__
+# 				__u32 *p = (__u32*)(data+10);
+#+#else	// Dagobert: Alignment fix
+#+				__u8 *p = (__u8*)(data+10);
+#+#endif
+# 				// check if any of our descriptor used by this event
+# 				int cnt=-1;
+# 				while(tmp>3)
+# 				{
+#+#ifndef __sh__
+# 					__u32 crc32 = *p++;
+#+#else	// Dagobert: Alignment fix
+#+					__u32 crc32 = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
+#+					p += 4;
+#+#endif
+# 					for ( int i=0; i <= descridx; ++i)
+# 					{
+# 						if (descr[i] == crc32)  // found...
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/pmt.cpp enigma2-nightly/lib/dvb/pmt.cpp
 --- enigma2-nightly.org/lib/dvb/pmt.cpp	2014-06-13 21:45:21.748535791 +0200
 +++ enigma2-nightly/lib/dvb/pmt.cpp	2014-06-21 13:05:30.079088431 +0200
-@@ -785,6 +785,11 @@
+@@ -780,6 +780,11 @@
  			eDVBCIInterfaces::getInstance()->addPMTHandler(this);
  	} else if (!simulate) // no simulation of playback services
  	{
@@ -2135,25 +2150,11 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/volume.cpp 
  }
  
  int eDVBVolumecontrol::openMixer()
-#diff -Naur '--exclude-from=diff-ignore' enigma2-nightly.org/lib/dvb/volume.h enigma2-nightly/lib/dvb/volume.h
-#--- enigma2-nightly.org/lib/dvb/volume.h	2012-12-10 21:35:36.750034539 +0100
-#+++ enigma2-nightly/lib/dvb/volume.h	2012-12-31 15:44:30.756471237 +0100
-#@@ -30,8 +30,8 @@
-# public:
-# 	static eDVBVolumecontrol* getInstance();
-# 
-#-	void volumeUp(int left = 5, int right = 5);
-#+	void volumeUp(int left = 2, int right = 2); //j00zek
-#-	void volumeDown(int left = 5, int right = 5);
-#+	void volumeDown(int left = 2, int right = 2); //j00zek
-# 
-# 	void setVolume(int left, int right);
-# 
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci_appmgr.cpp enigma2-nightly/lib/dvb_ci/dvbci_appmgr.cpp
 --- enigma2-nightly.org/lib/dvb_ci/dvbci_appmgr.cpp	2014-06-13 21:45:21.748535791 +0200
 +++ enigma2-nightly/lib/dvb_ci/dvbci_appmgr.cpp	2014-06-21 13:05:30.083088431 +0200
 @@ -94,6 +94,9 @@
- 	eDebug("in appmanager -> startmmi()");
+ 	eDebug("[CI AM] in appmanager -> startmmi()");
  	const unsigned char tag[3]={0x9F, 0x80, 0x22};  // Tenter_menu
  	sendAPDU(tag);
 +#ifdef __sh__
@@ -2436,7 +2437,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci.cp
 @@ -964,6 +1201,7 @@
  void eDVBCISlot::data(int what)
  {
- 	eDebugCI("CISlot %d what %d\n", getSlotID(), what);
+ 	eDebugCI("[CI] Slot %d what %d\n", getSlotID(), what);
 +#ifndef __sh__
  	if(what == eSocketNotifier::Priority) {
  		if(state != stateRemoved) {
@@ -2621,7 +2622,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci.cp
  //	possible_caids.insert(0x1702);
  //	possible_providers.insert(providerPair("PREMIERE", 0xC00000));
 @@ -1048,10 +1450,24 @@
- 	eDebugCI("CI Slot %d has fd %d", getSlotID(), fd);
+ 	eDebugCI("[CI] Slot %d has fd %d", getSlotID(), fd);
  	state = stateInvalid;
  
 +#ifdef __sh__
@@ -2647,7 +2648,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci.cp
  		perror(filename);
 @@ -1087,6 +1503,13 @@
  {
- 	eDebug("CI Slot %d: reset requested", getSlotID());
+ 	eDebug("[CI] Slot %d: reset requested", getSlotID());
  
 +#ifdef __sh__
 +	state = stateInvalid;
@@ -2792,21 +2793,21 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci_re
 +	eDebug("eDVBCIResourceManagerSession::%s >", __func__);
 +	eDebugNoNewLine("SESSION(%d) %02x %02x %02x (len = %d): ", session_nb, tag[0], tag[1], tag[2], len);
 +#else
- 	eDebugNoNewLine("SESSION(%d) %02x %02x %02x: ", session_nb, tag[0], tag[1], tag[2]);
+ 	eDebugNoNewLineStart("[CI] SESSION(%d) %02x %02x %02x: ", session_nb, tag[0], tag[1], tag[2]);
 +#endif
  	for (int i=0; i<len; i++)
  		eDebugNoNewLine("%02x ", ((const unsigned char*)data)[i]);
- 	eDebug("");
+ 	eDebugNoNewLine("\n");
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci_session.cpp enigma2-nightly/lib/dvb_ci/dvbci_session.cpp
 --- enigma2-nightly.org/lib/dvb_ci/dvbci_session.cpp	2014-06-13 21:45:21.748535791 +0200
 +++ enigma2-nightly/lib/dvb_ci/dvbci_session.cpp	2014-06-21 13:05:30.083088431 +0200
-@@ -257,6 +257,12 @@
+@@ -258,6 +258,12 @@
  		if ((!session_nb) || (session_nb >= SLMS))
  		{
- 			eDebug("PROTOCOL: illegal session number %x", session_nb);
+ 			eDebug("[CI SESS] PROTOCOL: illegal session number %x", session_nb);
 +#ifdef __sh__
-+			//Dagobert during start-up we seems to have some problems
-+			//on some modules which "looses" the connection. So reset it
++			//Dagobert during start-up we seem to have some problems
++			//on some modules which "lose" the connection. So reset it
 +			deleteSessions(slot);
 +			slot->reset();
 +#endif
@@ -2954,7 +2955,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#if not defined(__sh__)
  	if (ioctl(fbFd, FBIOGET_VSCREENINFO, &screeninfo)<0)
  	{
- 		perror("FBIOGET_VSCREENINFO");
+ 		eDebug("[fb] FBIOGET_VSCREENINFO %m");
  		goto nolfb;
  	}
 +#endif
@@ -2973,12 +2974,12 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +	eDebug("%dk usable video mem", available/1024);
 +	lfb=(unsigned char*)mmap(0, available, PROT_WRITE|PROT_READ, MAP_SHARED, fbFd, 1920*1080*4);
 +#else
- 	eDebug("%dk video mem", available/1024);
+ 	eDebug("[fb] %dk video mem", available/1024);
  	lfb=(unsigned char*)mmap(0, available, PROT_WRITE|PROT_READ, MAP_SHARED, fbFd, 0);
 +#endif
  	if (!lfb)
  	{
- 		perror("mmap");
+ 		eDebug("[fb] mmap %m");
 @@ -86,6 +97,7 @@
  
  int fbClass::showConsole(int state)
@@ -3007,7 +3008,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  	screeninfo.xres_virtual=screeninfo.xres=nxRes;
  	screeninfo.yres_virtual=(screeninfo.yres=nyRes)*2;
  	screeninfo.height=0;
-@@ -149,8 +169,14 @@
+@@ -148,8 +168,14 @@
  
  	m_number_of_pages = screeninfo.yres_virtual / nyRes;
  
@@ -3021,8 +3022,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#else
  	if ((screeninfo.xres!=nxRes) && (screeninfo.yres!=nyRes) && (screeninfo.bits_per_pixel!=nbpp))
  	{
- 		eDebug("SetMode failed: wanted: %dx%dx%d, got %dx%dx%d",
-@@ -168,15 +194,22 @@
+ 		eDebug("[fb] SetMode failed: wanted: %dx%dx%d, got %dx%dx%d",
+@@ -166,15 +194,22 @@
  	}
  	stride=fix.line_length;
  	memset(lfb, 0, stride*yRes);
@@ -3045,7 +3046,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  }
  
  int fbClass::setOffset(int off)
-@@ -194,10 +227,93 @@
+@@ -192,10 +225,93 @@
  
  void fbClass::blit()
  {
@@ -3133,13 +3134,13 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#else
  	if (m_manual_blit == 1) {
  		if (ioctl(fbFd, FBIO_BLIT) < 0)
- 			perror("FBIO_BLIT");
+ 			eDebug("[fb] FBIO_BLIT %m");
  	}
 +#endif
  }
  
  fbClass::~fbClass()
-@@ -232,6 +348,26 @@
+@@ -230,6 +346,26 @@
  	}
  	else
  		locked = 1;
@@ -3166,7 +3167,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  	return fbFd;
  }
  
-@@ -242,25 +377,88 @@
+@@ -240,25 +375,88 @@
  	if (locked == 2)  // re-enable manualBlit
  		enableManualBlit();
  	locked=0;
@@ -3199,7 +3200,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#if not defined(__sh__)
  	unsigned char tmp = 1;
  	if (ioctl(fbFd,FBIO_SET_MANUAL_BLIT, &tmp)<0)
- 		perror("FBIO_SET_MANUAL_BLIT");
+ 		eDebug("[fb] FBIO_SET_MANUAL_BLIT %m");
  	else
  		m_manual_blit = 1;
 +#endif
@@ -3210,7 +3211,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#if not defined(__sh__)
  	unsigned char tmp = 0;
  	if (ioctl(fbFd,FBIO_SET_MANUAL_BLIT, &tmp)<0)
- 		perror("FBIO_SET_MANUAL_BLIT");
+ 		eDebug("[fb] FBIO_SET_MANUAL_BLIT %m");
  	else
  		m_manual_blit = 0;
 +#endif
@@ -3354,7 +3355,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/gfbdc.cpp e
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/glcddc.cpp enigma2-nightly/lib/gdi/glcddc.cpp
 --- enigma2-nightly.org/lib/gdi/glcddc.cpp	2014-06-13 21:45:21.752535791 +0200
 +++ enigma2-nightly/lib/gdi/glcddc.cpp	2014-06-21 13:05:30.083088431 +0200
-@@ -5,6 +5,21 @@
+@@ -6,6 +6,21 @@
  
  gLCDDC *gLCDDC::instance;
  
@@ -3375,9 +3376,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/glcddc.cpp 
 +
  gLCDDC::gLCDDC()
  {
- 	lcd = new eDBoxLCD();
-@@ -23,11 +38,18 @@
- 	eDebug("LCD resolution: %d x %d x %d (stride: %d)", surface.x, surface.y, surface.bpp, surface.stride);
+ 	lcd = new eFbLCD();
+@@ -39,13 +54,20 @@
+ 	eDebug("[gLCD] resolution: %d x %d x %d (stride: %d)", surface.x, surface.y, surface.bpp, surface.stride);
  
  	m_pixmap = new gPixmap(&surface);
 +#ifdef HAVE_GRAPHLCD
@@ -3391,11 +3392,13 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/glcddc.cpp 
 +//konfetti: not sure why, but calling the destructor if external lcd (pearl) is selected
 +//e2 crashes. this is also true if the destructor does not contain any code !!!
  	delete lcd;
+ 	if (surface.clut.data)
+ 		delete[] surface.clut.data;
 +#endif
  	instance = 0;
  }
  
-@@ -46,8 +68,16 @@
+@@ -70,7 +92,15 @@
  		break;
  #endif
  	case gOpcode::flush:
@@ -3406,8 +3409,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/glcddc.cpp 
 +			clock_gettime(CLOCK_MONOTONIC, &last_update);
 +		}
 +#else
- //		if (update)
- 			lcd->update();
+		lcd->update();
 +#endif
  	default:
  		gDC::exec(o);
@@ -3453,7 +3455,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/gpixmap.cpp
  
  			col^=0xFF000000;
 @@ -234,6 +239,9 @@
- 			__u32 col;
+ 			uint32_t col;
  
  			col = color.argb();
 +#if defined(__sh__)
@@ -3483,7 +3485,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/gpixmap.cpp
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/lcd.cpp enigma2-nightly/lib/gdi/lcd.cpp
 --- enigma2-nightly.org/lib/gdi/lcd.cpp	2014-06-13 21:45:21.752535791 +0200
 +++ enigma2-nightly/lib/gdi/lcd.cpp	2014-06-21 13:05:30.083088431 +0200
-@@ -60,6 +60,7 @@
+@@ -67,6 +67,7 @@
  }
  #endif
  
@@ -3491,7 +3493,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/lcd.cpp eni
  eDBoxLCD::eDBoxLCD()
  {
  	int xres=132, yres=64, bpp=8;
-@@ -301,3 +302,141 @@
+@@ -303,3 +304,141 @@
  	}
  #endif
  }
@@ -3636,9 +3638,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/lcd.cpp eni
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/lcd.h enigma2-nightly/lib/gdi/lcd.h
 --- enigma2-nightly.org/lib/gdi/lcd.h	2014-06-13 21:45:21.752535791 +0200
 +++ enigma2-nightly/lib/gdi/lcd.h	2014-06-21 13:05:30.087088431 +0200
-@@ -5,6 +5,17 @@
- #include <lib/gdi/esize.h>
+@@ -6,6 +6,17 @@
  #include <lib/gdi/erect.h>
+ #include "gpixmap.h"
  
 +#ifdef HAVE_GRAPHLCD
 +#include <glcdgraphics/bitmap.h>
@@ -3654,10 +3656,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/lcd.h enigm
  #define LCD_CONTRAST_MIN 0
  #define LCD_CONTRAST_MAX 63
  #define LCD_BRIGHTNESS_MIN 0
-@@ -48,6 +59,13 @@
+@@ -58,6 +58,13 @@
+ {
  	unsigned char inverted;
  	bool flipped;
- 	int is_oled;
 +#ifdef HAVE_GRAPHLCD
 +	GLCD::cDriver * lcd;
 +	GLCD::cBitmap * bitmap;
@@ -3671,7 +3673,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/lcd.h enigm
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/Makefile.inc enigma2-nightly/lib/gdi/Makefile.inc
 --- enigma2-nightly.org/lib/gdi/Makefile.inc	2014-06-13 21:45:21.748535791 +0200
 +++ enigma2-nightly/lib/gdi/Makefile.inc	2014-06-21 13:05:30.087088431 +0200
-@@ -19,7 +19,8 @@
+@@ -20,7 +20,8 @@
  	gdi/lcd.cpp \
  	gdi/picexif.cpp \
  	gdi/picload.cpp \
@@ -3799,20 +3801,20 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		else:
  			self.type = self.DEFAULT
  
-@@ -58,6 +65,13 @@
- 			return "%s%d:%02d" % (prefix, hours, minutes)
- 		elif self.type == self.IN_SECONDS:
- 			return prefix+str(tsecs)
+@@ -52,6 +59,13 @@
+ 					return "%s%d:%02d" % (prefix, hours, minutes)
+ 				elif self.type == self.IN_SECONDS:
+ 					return prefix+str(tsecs)
 +#+++>
-+		elif self.type == self.FOLLOW:
-+			if remaining is not None:
-+				return "in %d min" % (remaining / 60)
-+			else:
-+				return "%d min" % (duration / 60)
++				elif self.type == self.FOLLOW:
++					if remaining is not None:
++						return "in %d min" % (remaining / 60)
++					else:
++						return "%d min" % (duration / 60)
 +#+++<
- 		elif self.type == self.DEFAULT:
- 			if remaining <= duration:
- 				prefix = "+"
+ 				elif self.type == self.DEFAULT:
+ 					if remaining <= duration:
+ 						prefix = "+"
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/Harddisk.py enigma2-nightly/lib/python/Components/Harddisk.py
 --- enigma2-nightly.org/lib/python/Components/Harddisk.py	2014-06-13 21:45:21.760535790 +0200
 +++ enigma2-nightly/lib/python/Components/Harddisk.py	2014-06-21 13:05:30.087088431 +0200
@@ -3855,7 +3857,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		if not removable:
  			self.startIdle()
  
-@@ -128,18 +120,19 @@
+@@ -130,18 +122,19 @@
  	def diskSize(self):
  		line = readFile(self.sysfsPath('size'))
  		try:
@@ -3879,7 +3881,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  
  	def model(self):
  		try:
-@@ -214,7 +207,9 @@
+@@ -218,7 +211,9 @@
  
  	def createPartition(self):
  		cmd = 'printf "8,\n;0,0\n;0,0\n;0,0\ny\n" | sfdisk -f -uS ' + self.disk_path
@@ -3889,7 +3891,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		return (res >> 8)
  
  	def mkfs(self):
-@@ -256,6 +251,24 @@
+@@ -260,6 +255,24 @@
  		# No longer supported, use createCheckJob instead
  		return 1
  
@@ -3914,7 +3916,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  	def killPartitionTable(self):
  		zero = 512 * '\0'
  		h = open(self.dev_path, 'wb')
-@@ -263,6 +276,7 @@
+@@ -267,6 +280,7 @@
  		for i in range(9):
  			h.write(zero)
  		h.close()
@@ -3922,7 +3924,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  
  	def killPartition(self, n):
  		zero = 512 * '\0'
-@@ -273,102 +287,176 @@
+@@ -277,102 +291,176 @@
  		h.close()
  
  	def createInitializeJob(self):
@@ -3992,12 +3994,11 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 -			else:
 -				parttype = 'msdos'
 -			task.args += ['-a', alignment, '-s', self.disk_path, 'mklabel', parttype, 'mkpart', 'primary', '0%', '100%']
--		else:
 +			alignment = 'opt'
 +			parttype = 'gpt'
 +			endsize = str(size - 1024)+"MB"
 +			task.args += ['-a',alignment,'-s',self.disk_path,'mklabel',parttype,'mkpart','primary','0%',endsize,'name','1','RECORD','mkpart','primary',endsize,'100%','name','2','SWAPPART']
-+		else:
+ 		else:
 +			task = Task.LoggingTask(job, _("Creating 1 or 2 partition(s)"))
  			task.setTool('sfdisk')
  			task.args.append('-f')
@@ -4145,7 +4146,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		return job
  
  	def initialize(self):
-@@ -400,7 +488,7 @@
+@@ -404,7 +492,7 @@
  
  	def createExt4ConversionJob(self):
  		if not isFileSystemSupported('ext4'):
@@ -4154,7 +4155,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		job = Task.Job(_("Converting ext3 to ext4..."))
  		if not os.path.exists('/sbin/tune2fs'):
  			addInstallTask(job, 'e2fsprogs-tune2fs')
-@@ -411,10 +499,12 @@
+@@ -415,10 +503,12 @@
  		else:
  			# otherwise, assume there is one partition
  			dev = self.partitionPath("1")
@@ -4167,7 +4168,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		task = Task.LoggingTask(job, "tune2fs")
  		task.setTool('tune2fs')
  		task.args.append('-O')
-@@ -422,6 +512,7 @@
+@@ -426,6 +516,7 @@
  		task.args.append('-o')
  		task.args.append('journal_data_writeback')
  		task.args.append(dev)
@@ -4175,7 +4176,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		task = Task.LoggingTask(job, "fsck")
  		task.setTool('fsck.ext4')
  		task.postconditions = [] # ignore result, it will always "fail"
-@@ -429,7 +520,9 @@
+@@ -433,7 +524,9 @@
  		task.args.append('-p')
  		task.args.append('-D')
  		task.args.append(dev)
@@ -4185,31 +4186,66 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		task = Task.ConditionTask(job, _("Waiting for mount"))
  		task.check = self.mountDevice
  		return job
-@@ -563,14 +656,15 @@
+@@ -567,7 +660,8 @@
  		return ''
  
  DEVICEDB =  \
 -	{"dm8000":
--		{
--			# dm8000:
--			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.1/1-1.1:1.0": "Front USB Slot",
--			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.2/1-1.2:1.0": "Back, upper USB Slot",
--			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.3/1-1.3:1.0": "Back, lower USB Slot",
--			"/devices/platform/brcm-ehci-1.1/usb2/2-1/2-1:1.0/host1/target1:0:0/1:0:0:0": "DVD Drive",
--		},
 +	{
-+	"dm8000":
-+	{
-+		# dm8000:
-+		"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.1/1-1.1:1.0": "Front USB Slot",
-+		"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.2/1-1.2:1.0": "Back, upper USB Slot",
-+		"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.3/1-1.3:1.0": "Back, lower USB Slot",
-+		"/devices/platform/brcm-ehci-1.1/usb2/2-1/2-1:1.0/host1/target1:0:0/1:0:0:0": "DVD Drive",
-+	},
- 	"dm800":
- 	{
- 		# dm800:
-@@ -679,6 +773,12 @@
++		"dm8000":
+ 		{
+ 			# dm8000:
+ 			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.1/1-1.1:1.0": "Front USB Slot",
+@@ -575,18 +669,18 @@
+ 			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.3/1-1.3:1.0": "Back, lower USB Slot",
+ 			"/devices/platform/brcm-ehci-1.1/usb2/2-1/2-1:1.0/host1/target1:0:0/1:0:0:0": "DVD Drive",
+ 		},
+-	"dm800":
+-	{
+-		# dm800:
+-		"/devices/platform/brcm-ehci.0/usb1/1-2/1-2:1.0": "Upper USB Slot",
+-		"/devices/platform/brcm-ehci.0/usb1/1-1/1-1:1.0": "Lower USB Slot",
+-	},
+-	"dm7025":
+-	{
+-		# dm7025:
+-		"/devices/pci0000:00/0000:00:14.1/ide1/1.0": "CF Card Slot", #hdc
+-		"/devices/pci0000:00/0000:00:14.1/ide0/0.0": "Internal Harddisk"
+-	}
++		"dm800":
++		{
++			# dm800:
++			"/devices/platform/brcm-ehci.0/usb1/1-2/1-2:1.0": "Upper USB Slot",
++			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1:1.0": "Lower USB Slot",
++		},
++		"dm7025":
++		{
++			# dm7025:
++			"/devices/pci0000:00/0000:00:14.1/ide1/1.0": "CF Card Slot", #hdc
++			"/devices/pci0000:00/0000:00:14.1/ide0/0.0": "Internal Harddisk"
++		}
+ 	}
+ 
+ def addInstallTask(job, package):
+@@ -675,17 +769,26 @@
+ 					self.addHotplugPartition(part)
+ 				self.devices_scanned_on_init.append((blockdev, removable, is_cdrom, medium_found))
+ 
++#	def getAutofsMountpoint(self, device):
++#		r = self.getMountpoint(device)
++#		if r is None:
++#			return "/media/" + device
++#		return r
++
+ 	def getAutofsMountpoint(self, device):
+-		r = self.getMountpoint(device)
+-		if r is None:
+-			return "/media/" + device
+-		return r
++		return "/autofs/%s" % (device)
+ 
+ 	def getMountpoint(self, device):
+ 		dev = "/dev/%s" % device
  		for item in getProcMounts():
  			if item[0] == dev:
  				return item[1]
@@ -4222,7 +4258,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		return None
  
  	def addHotplugPartition(self, device, physdev = None):
-@@ -694,6 +794,10 @@
+@@ -701,6 +804,10 @@
  		error, blacklisted, removable, is_cdrom, partitions, medium_found = self.getBlockDevInfo(device)
  		if not blacklisted and medium_found:
  			description = self.getUserfriendlyDeviceName(device, physdev)
@@ -4233,7 +4269,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  			p = Partition(mountpoint = self.getMountpoint(device), description = description, force_mounted = True, device = device)
  			self.partitions.append(p)
  			if p.mountpoint: # Plugins won't expect unmounted devices
-@@ -767,7 +871,7 @@
+@@ -774,7 +881,7 @@
  		try:
  			description = readFile("/sys" + phys + "/model")
  		except IOError, s:
@@ -4242,7 +4278,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		from Tools.HardwareInfo import HardwareInfo
  		for physdevprefix, pdescription in DEVICEDB.get(HardwareInfo().device_name,{}).items():
  			if phys.startswith(physdevprefix):
-@@ -812,7 +916,7 @@
+@@ -819,7 +926,7 @@
  			dev = self.hdd.disk_path.split('/')[-1]
  			open('/dev/nomount.%s' % dev, "wb").close()
  		except Exception, e:
@@ -4251,7 +4287,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		self.setTool('umount')
  		self.args.append('-f')
  		for dev in self.hdd.enumMountDevices():
-@@ -820,7 +924,7 @@
+@@ -827,7 +934,7 @@
  			self.postconditions.append(Task.ReturncodePostcondition())
  			self.mountpoints.append(dev)
  		if not self.mountpoints:
@@ -4260,7 +4296,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  			self.cmd = 'true'
  			self.args = [self.cmd]
  	def afterRun(self):
-@@ -828,7 +932,7 @@
+@@ -835,7 +942,7 @@
  			try:
  				os.rmdir(path)
  			except Exception, ex:
@@ -4269,7 +4305,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  
  class MountTask(Task.LoggingTask):
  	def __init__(self, job, hdd):
-@@ -839,7 +942,7 @@
+@@ -846,7 +953,7 @@
  			dev = self.hdd.disk_path.split('/')[-1]
  			os.unlink('/dev/nomount.%s' % dev)
  		except Exception, e:
@@ -4278,7 +4314,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		# try mounting through fstab first
  		if self.hdd.mount_device is None:
  			dev = self.hdd.partitionPath("1")
-@@ -868,7 +971,7 @@
+@@ -875,7 +982,7 @@
  	def prepare(self):
  		self.fsck_state = None
  	def processOutput(self, data):
@@ -4314,7 +4350,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/Renderer/Progress.py enigma2-nightly/lib/python/Components/Renderer/Progress.py
 --- enigma2-nightly.org/lib/python/Components/Renderer/Progress.py	2014-06-13 21:45:21.760535790 +0200
 +++ enigma2-nightly/lib/python/Components/Renderer/Progress.py	2014-06-21 13:05:30.087088431 +0200
-@@ -13,25 +13,40 @@
+@@ -13,23 +13,38 @@
  	GUI_WIDGET = eSlider
  
  	def changed(self, what):
@@ -4341,8 +4377,6 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 +		except:
 +			None
 +#+++<
- 
- 	GUI_WIDGET = eSlider
  
  	def postWidgetCreate(self, instance):
 -		instance.setRange(self.__start, self.__end)
@@ -4414,7 +4448,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/UsageConfig.py enigma2-nightly/lib/python/Components/UsageConfig.py
 --- enigma2-nightly.org/lib/python/Components/UsageConfig.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Components/UsageConfig.py	2014-06-21 13:05:30.087088431 +0200
-@@ -188,7 +188,7 @@
+@@ -201,7 +201,7 @@
  	config.usage.recording_frontend_priority = ConfigSelection(default = "-2", choices = nims)
  	config.misc.disable_background_scan = ConfigYesNo(default = False)
  
@@ -4454,7 +4488,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/enigma_python.i enigma2-nightly/lib/python/enigma_python.i
 --- enigma2-nightly.org/lib/python/enigma_python.i	2014-06-13 21:45:21.820535788 +0200
 +++ enigma2-nightly/lib/python/enigma_python.i	2014-06-21 13:05:30.087088431 +0200
-@@ -108,6 +108,7 @@
+@@ -109,6 +109,7 @@
  #include <lib/python/python.h>
  #include <lib/python/python_helpers.h>
  #include <lib/gdi/picload.h>
@@ -4462,7 +4496,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/enigma_p
  %}
  
  %feature("ref")   iObject "$this->AddRef(); /* eDebug(\"AddRef (%s:%d)!\", __FILE__, __LINE__); */ "
-@@ -250,6 +251,7 @@
+@@ -251,6 +252,7 @@
  %include <lib/python/python.h>
  %include <lib/python/pythonconfig.h>
  %include <lib/gdi/picload.h>
@@ -4824,7 +4858,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/
 @@ -1,6 +1,14 @@
  installdir = $(pkglibdir)/python/Plugins/Extensions
  
--SUBDIRS = TuxboxPlugins CutListEditor PicturePlayer MediaScanner MediaPlayer GraphMultiEPG SocketMMI DVDBurn Modem
+-SUBDIRS = TuxboxPlugins CutListEditor PicturePlayer MediaScanner MediaPlayer GraphMultiEPG SocketMMI DVDBurn
 +SUBDIRS = CutListEditor PicturePlayer MediaScanner MediaPlayer GraphMultiEPG SocketMMI DVDBurn
 +
 +if ENABLE_TF7700
@@ -5791,7 +5825,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/ChannelSelection.py enigma2-nightly/lib/python/Screens/ChannelSelection.py
 --- enigma2-nightly.org/lib/python/Components/AVSwitch.py	2014-06-20 15:54:03.944692604 +0200
 +++ enigma2-nightly/lib/python/Components/AVSwitch.py	2014-06-20 15:54:04.080692598 +0200
-@@ -77,11 +77,11 @@
+@@ -76,11 +76,11 @@
  	config.av.colorformat = ConfigSelection(choices=colorformat_choices, default="rgb")
  	config.av.aspectratio = ConfigSelection(choices={
  			"4_3_letterbox": _("4:3 Letterbox"),
@@ -5805,7 +5839,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			"16_9_letterbox": _("16:9 Letterbox")},
  			default = "16_9")
  	config.av.aspect = ConfigSelection(choices={
-@@ -93,10 +93,10 @@
+@@ -92,10 +92,10 @@
  	policy2_choices = {
  	# TRANSLATORS: (aspect ratio policy: black bars on top/bottom) in doubt, keep english term.
  	"letterbox": _("Letterbox"),
@@ -5816,10 +5850,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  	# TRANSLATORS: (aspect ratio policy: display as fullscreen, even if this breaks the aspect)
 -	"scale": _("Just scale")}
 +	"scale": _("Stretch")}
- 	if os.path.exists("/proc/stb/video/policy2_choices") and "auto" in open("/proc/stb/video/policy2_choices").readline():
- 		# TRANSLATORS: (aspect ratio policy: always try to display as fullscreen, when there is no content (black bars) on left/right, even if this breaks the aspect.
- 		policy2_choices.update({"auto": _("Auto")})
-@@ -105,17 +105,17 @@
+ 	try:
+ 		if "auto" in open("/proc/stb/video/policy2_choices").read():
+ 			# TRANSLATORS: (aspect ratio policy: always try to display as fullscreen, when there is no content (black bars) on left/right, even if this breaks the aspect.
+@@ -107,20 +107,20 @@
  	# TRANSLATORS: (aspect ratio policy: black bars on left/right) in doubt, keep english term.
  	"pillarbox": _("Pillarbox"),
  	# TRANSLATORS: (aspect ratio policy: cropped content on left/right) in doubt, keep english term
@@ -5831,10 +5865,13 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  	# TRANSLATORS: (aspect ratio policy: display as fullscreen, even if this breaks the aspect)
 -	"scale": _("Just scale")}
 +	"scale": _("Stretch")}
- 	if os.path.exists("/proc/stb/video/policy_choices") and "auto" in open("/proc/stb/video/policy_choices").readline():
- 		# TRANSLATORS: (aspect ratio policy: always try to display as fullscreen, when there is no content (black bars) on left/right, even if this breaks the aspect.
- 		policy_choices.update({"auto": _("Auto")})
- 	config.av.policy_43 = ConfigSelection(choices=policy_choices, default = "pillarbox")
+ 	try:
+ 		if "auto" in open("/proc/stb/video/policy_choices").read():
+ 			# TRANSLATORS: (aspect ratio policy: always try to display as fullscreen, when there is no content (black bars) on left/right, even if this breaks the aspect.
+ 			policy_choices.update({"auto": _("Auto")})
+ 	except:
+ 		pass
+	config.av.policy_43 = ConfigSelection(choices=policy_choices, default = "pillarbox")
 -	config.av.tvsystem = ConfigSelection(choices = {"pal": _("PAL"), "ntsc": _("NTSC"), "multinorm": _("multinorm")}, default="pal")
 -	config.av.wss = ConfigEnableDisable(default = True)
 +	config.av.tvsystem = ConfigSelection(choices = {"pal": _("PAL"), "ntsc": _("NTSC"), "multinorm": _("Multinorm")}, default="multinorm")
@@ -5857,147 +5894,174 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap
  from Components.MenuList import MenuList
  from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
-@@ -133,20 +138,20 @@
+@@ -149,22 +154,22 @@
  		self.parentalControl = parentalControl
- 		self.parentalControlEnabled = config.ParentalControl.configured.value and config.ParentalControl.servicepinactive.value
+ 		self.parentalControlEnabled = config.ParentalControl.servicepinactive.value
  		if not (current_sel_path or current_sel_flags & (eServiceReference.isDirectory|eServiceReference.isMarker)):
 -			append_when_current_valid(current, menu, (_("show transponder info"), self.showServiceInformations), level=2)
 +			append_when_current_valid(current, menu, (_("Show transponder info"), self.showServiceInformations), level=2)
- 		if csel.bouquet_mark_edit == OFF and not csel.movemode:
+ 		if csel.bouquet_mark_edit == OFF and not csel.entry_marked:
  			if not inBouquetRootList:
  				isPlayable = not (current_sel_flags & (eServiceReference.isMarker|eServiceReference.isDirectory))
  				if isPlayable:
- 					if config.servicelist.startupservice.value == self.csel.getCurrentSelection().toString():
+ 					for p in plugins.getPlugins(PluginDescriptor.WHERE_CHANNEL_CONTEXT_MENU):
+ 						append_when_current_valid(current, menu, (p.name, boundFunction(self.runPlugin, p)), key="bullet")
+ 					if config.servicelist.startupservice.value == current.toString():
 -						append_when_current_valid(current, menu, (_("stop using as startup service"), self.unsetStartupService), level=0)
 +						append_when_current_valid(current, menu, (_("Stop using as startup service"), self.unsetStartupService), level=0)
  					else:
 -						append_when_current_valid(current, menu, (_("set as startup service"), self.setStartupService), level=0)
 +						append_when_current_valid(current, menu, (_("Set as startup service"), self.setStartupService), level=0)
- 					if self.parentalControlEnabled:
+					if self.parentalControlEnabled:
  						if self.parentalControl.getProtectionLevel(csel.getCurrentSelection().toCompareString()) == -1:
--							append_when_current_valid(current, menu, (_("add to parental protection"), boundFunction(self.addParentalProtection, csel.getCurrentSelection())), level=0)
-+							append_when_current_valid(current, menu, (_("Add to parental protection"), boundFunction(self.addParentalProtection, csel.getCurrentSelection())), level=0)
+-							append_when_current_valid(current, menu, (_("add to parental protection"), boundFunction(self.addParentalProtection, current)), level=0)
++							append_when_current_valid(current, menu, (_("Add to parental protection"), boundFunction(self.addParentalProtection, current)), level=0)
  						else:
--							append_when_current_valid(current, menu, (_("remove from parental protection"), boundFunction(self.removeParentalProtection, csel.getCurrentSelection())), level=0)
-+							append_when_current_valid(current, menu, (_("Remove from parental protection"), boundFunction(self.removeParentalProtection, csel.getCurrentSelection())), level=0)
- 					if haveBouquets:
- 						bouquets = self.csel.getBouquetList()
- 						if bouquets is None:
-@@ -154,72 +159,72 @@
+-							append_when_current_valid(current, menu, (_("remove from parental protection"), boundFunction(self.removeParentalProtection, current)), level=0)
++							append_when_current_valid(current, menu, (_("Remove from parental protection"), boundFunction(self.removeParentalProtection, current)), level=0)
+ 						if config.ParentalControl.hideBlacklist.value and not parentalControl.sessionPinCached and config.ParentalControl.storeservicepin.value != "never":
+ 							append_when_current_valid(current, menu, (_("Unhide parental control services"), self.unhideParentalServices), level=0)
+ 					if SystemInfo["3DMode"] and  fileExists("/usr/lib/enigma2/python/Plugins/SystemPlugins/OSD3DSetup/plugin.py"):
+@@ -179,91 +184,91 @@
  						else:
  							bouquetCnt = len(bouquets)
- 						if not inBouquet or bouquetCnt > 1:
--							append_when_current_valid(current, menu, (_("add service to bouquet"), self.addServiceToBouquetSelected), level=0)
-+							append_when_current_valid(current, menu, (_("Add service to bouquet"), self.addServiceToBouquetSelected), level=0)
+ 						if not self.inBouquet or bouquetCnt > 1:
+-							append_when_current_valid(current, menu, (_("add service to bouquet"), self.addServiceToBouquetSelected), level=0, key="5")
++							append_when_current_valid(current, menu, (_("Add service to bouquet"), self.addServiceToBouquetSelected), level=0, key="5")
+ 							self.addFunction = self.addServiceToBouquetSelected
+ 						if not self.inBouquet:
+-							append_when_current_valid(current, menu, (_("remove entry"), self.removeEntry), level = 0, key="8")
++							append_when_current_valid(current, menu, (_("Remove entry"), self.removeEntry), level = 0, key="8")
+ 							self.removeFunction = self.removeSatelliteService
  					else:
- 						if not inBouquet:
--							append_when_current_valid(current, menu, (_("add service to favourites"), self.addServiceToBouquetSelected), level=0)
-+							append_when_current_valid(current, menu, (_("Add service to favourites"), self.addServiceToBouquetSelected), level=0)
- 
+ 						if not self.inBouquet:
+-							append_when_current_valid(current, menu, (_("add service to favourites"), self.addServiceToBouquetSelected), level=0, key="5")
++							append_when_current_valid(current, menu, (_("Add service to favourites"), self.addServiceToBouquetSelected), level=0, key="5")
+ 							self.addFunction = self.addServiceToBouquetSelected
  					if SystemInfo["PIPAvailable"]:
- 						if not self.parentalControlEnabled or self.parentalControl.getProtectionLevel(csel.getCurrentSelection().toCompareString()) == -1:
+ 						if not self.parentalControlEnabled or self.parentalControl.getProtectionLevel(current.toCompareString()) == -1:
  							if self.csel.dopipzap:
 -								append_when_current_valid(current, menu, (_("play in mainwindow"), self.playMain), level=0, key="red")
-+								append_when_current_valid(current, menu, (_("Play in main window"), self.playMain), level=0, key="red")
++								append_when_current_valid(current, menu, (_("Play in mainwindow"), self.playMain), level=0, key="red")
  							else:	
 -								append_when_current_valid(current, menu, (_("play as picture in picture"), self.showServiceInPiP), level=0, key="blue")
 +								append_when_current_valid(current, menu, (_("Play as picture in picture"), self.showServiceInPiP), level=0, key="blue")
+ 					append_when_current_valid(current, menu, (_("find currently played service"), self.findCurrentlyPlayed), level=0, key="3")
  				else:
- 					if 'FROM SATELLITES' in current_root.getPath():
--						append_when_current_valid(current, menu, (_("remove selected satellite"), self.removeSatelliteServices), level=0)
-+						append_when_current_valid(current, menu, (_("Remove selected satellite"), self.removeSatelliteServices), level=0)
+ 					if 'FROM SATELLITES' in current_root.getPath() and current and _("Services") in eServiceCenter.getInstance().info(current).getName(current):
+ 						unsigned_orbpos = current.getUnsignedData(4) >> 16
+ 						if unsigned_orbpos == 0xFFFF:
+-							append_when_current_valid(current, menu, (_("remove cable services"), self.removeSatelliteServices), level = 0)
++							append_when_current_valid(current, menu, (_("Remove cable services"), self.removeSatelliteServices), level = 0)
+ 						elif unsigned_orbpos == 0xEEEE:
+-							append_when_current_valid(current, menu, (_("remove terrestrial services"), self.removeSatelliteServices), level = 0)
++							append_when_current_valid(current, menu, (_("Remove terrestrial services"), self.removeSatelliteServices), level = 0)
+ 						else:
+-							append_when_current_valid(current, menu, (_("remove selected satellite"), self.removeSatelliteServices), level = 0)
++							append_when_current_valid(current, menu, (_("Remove selected satellite"), self.removeSatelliteServices), level = 0)
  					if haveBouquets:
- 						if not inBouquet and not "PROVIDERS" in current_sel_path:
+ 						if not self.inBouquet and not "PROVIDERS" in current_sel_path:
 -							append_when_current_valid(current, menu, (_("copy to bouquets"), self.copyCurrentToBouquetList), level=0)
 +							append_when_current_valid(current, menu, (_("Copy to bouquets"), self.copyCurrentToBouquetList), level=0)
  					if ("flags == %d" %(FLAG_SERVICE_NEW_FOUND)) in current_sel_path:
 -						append_when_current_valid(current, menu, (_("remove all new found flags"), self.removeAllNewFoundFlags), level=0)
 +						append_when_current_valid(current, menu, (_("Remove all new found flags"), self.removeAllNewFoundFlags), level=0)
- 				if inBouquet:
--					append_when_current_valid(current, menu, (_("rename entry"), self.renameEntry), level=0, key="4")
-+					append_when_current_valid(current, menu, (_("Rename entry"), self.renameEntry), level=0, key="4")
+ 				if self.inBouquet:
+-					append_when_current_valid(current, menu, (_("rename entry"), self.renameEntry), level=0, key="2")
++					append_when_current_valid(current, menu, (_("Rename entry"), self.renameEntry), level=0, key="2")
  					if not inAlternativeList:
--						append_when_current_valid(current, menu, (_("remove entry"), self.removeCurrentService), level=0, key="5")
-+						append_when_current_valid(current, menu, (_("Remove entry"), self.removeCurrentService), level=0, key="5")
+-						append_when_current_valid(current, menu, (_("remove entry"), self.removeEntry), level=0, key="8")
++						append_when_current_valid(current, menu, (_("Remove entry"), self.removeEntry), level=0, key="8")
  						self.removeFunction = self.removeCurrentService
  				if current_root and ("flags == %d" %(FLAG_SERVICE_NEW_FOUND)) in current_root.getPath():
 -					append_when_current_valid(current, menu, (_("remove new found flag"), self.removeNewFoundFlag), level=0)
 +					append_when_current_valid(current, menu, (_("Remove new found flag"), self.removeNewFoundFlag), level=0)
  			else:
+ 					if self.parentalControlEnabled:
+ 						if self.parentalControl.getProtectionLevel(current.toCompareString()) == -1:
+-							append_when_current_valid(current, menu, (_("add bouquet to parental protection"), boundFunction(self.addParentalProtection, current)), level=0)
++							append_when_current_valid(current, menu, (_("Add bouquet to parental protection"), boundFunction(self.addParentalProtection, current)), level=0)
+ 						else:
+-							append_when_current_valid(current, menu, (_("remove bouquet from parental protection"), boundFunction(self.removeParentalProtection, current)), level=0)
++							append_when_current_valid(current, menu, (_("Remove bouquet from parental protection"), boundFunction(self.removeParentalProtection, current)), level=0)
 -					menu.append(ChoiceEntryComponent(text=(_("add bouquet"), self.showBouquetInputBox)))
 +					menu.append(ChoiceEntryComponent(text=(_("Add bouquet"), self.showBouquetInputBox)))
--					append_when_current_valid(current, menu, (_("rename entry"), self.renameEntry), level=0, key="4")
-+					append_when_current_valid(current, menu, (_("Rename entry"), self.renameEntry), level=0, key="4")
--					append_when_current_valid(current, menu, (_("remove entry"), self.removeBouquet), level=0, key="5")
-+					append_when_current_valid(current, menu, (_("Remove entry"), self.removeBouquet), level=0, key="5")
+-					append_when_current_valid(current, menu, (_("rename entry"), self.renameEntry), level=0, key="2")
++					append_when_current_valid(current, menu, (_("Rename entry"), self.renameEntry), level=0, key="2")
+-					append_when_current_valid(current, menu, (_("remove entry"), self.removeEntry), level=0, key="8")
++					append_when_current_valid(current, menu, (_("Remove entry"), self.removeEntry), level=0, key="8")
  					self.removeFunction = self.removeBouquet
- 
- 		if inBouquet: # current list is editable?
+ 					if removed_userbouquets_available():
+-						append_when_current_valid(current, menu, (_("purge deleted userbouquets"), self.purgeDeletedBouquets), level=0)
++						append_when_current_valid(current, menu, (_("Purge deleted userbouquets"), self.purgeDeletedBouquets), level=0)
+-						append_when_current_valid(current, menu, (_("restore deleted userbouquets"), self.restoreDeletedBouquets), level=0)
++						append_when_current_valid(current, menu, (_("Restore deleted userbouquets"), self.restoreDeletedBouquets), level=0)
+ 		if self.inBouquet: # current list is editable?
  			if csel.bouquet_mark_edit == OFF:
- 				if not csel.movemode:
+ 				if csel.movemode:
+-					append_when_current_valid(current, menu, (_("disable move mode"), self.toggleMoveMode), level=0, key="6")
++					append_when_current_valid(current, menu, (_("Disable move mode"), self.toggleMoveMode), level=0, key="6")
+ 				else:
 -					append_when_current_valid(current, menu, (_("enable move mode"), self.toggleMoveMode), level=1, key="6")
 +					append_when_current_valid(current, menu, (_("Enable move mode"), self.toggleMoveMode), level=1, key="6")
- 					if not inBouquetRootList and current_root and not (current_root.flags & eServiceReference.isGroup):
- 						if current.type != -1:
--							menu.append(ChoiceEntryComponent(text=(_("add marker"), self.showMarkerInputBox)))
-+							menu.append(ChoiceEntryComponent(text=(_("Add marker"), self.showMarkerInputBox)))
+ 				if not csel.entry_marked and not inBouquetRootList and current_root and not (current_root.flags & eServiceReference.isGroup):
+ 					if current.type != -1:
+-						menu.append(ChoiceEntryComponent(text=(_("add marker"), self.showMarkerInputBox)))
++						menu.append(ChoiceEntryComponent(text=(_("Add marker"), self.showMarkerInputBox)))
+ 					if not csel.movemode:
  						if haveBouquets:
 -							append_when_current_valid(current, menu, (_("enable bouquet edit"), self.bouquetMarkStart), level=0)
 +							append_when_current_valid(current, menu, (_("Enable bouquet edit"), self.bouquetMarkStart), level=0)
  						else:
 -							append_when_current_valid(current, menu, (_("enable favourite edit"), self.bouquetMarkStart), level=0)
 +							append_when_current_valid(current, menu, (_("Enable favourite edit"), self.bouquetMarkStart), level=0)
- 						if current_sel_flags & eServiceReference.isGroup:
--							append_when_current_valid(current, menu, (_("edit alternatives"), self.editAlternativeServices), level=2)
--							append_when_current_valid(current, menu, (_("show alternatives"), self.showAlternativeServices), level=2)
--							append_when_current_valid(current, menu, (_("remove all alternatives"), self.removeAlternativeServices), level=2)
-+							append_when_current_valid(current, menu, (_("Edit alternatives"), self.editAlternativeServices), level=2)
-+							append_when_current_valid(current, menu, (_("Show alternatives"), self.showAlternativeServices), level=2)
-+							append_when_current_valid(current, menu, (_("Remove all alternatives"), self.removeAlternativeServices), level=2)
- 						elif not current_sel_flags & eServiceReference.isMarker:
--							append_when_current_valid(current, menu, (_("add alternatives"), self.addAlternativeServices), level=2)
-+							append_when_current_valid(current, menu, (_("Add alternatives"), self.addAlternativeServices), level=2)
- 				else:
--					append_when_current_valid(current, menu, (_("disable move mode"), self.toggleMoveMode), level=0, key="6")
-+					append_when_current_valid(current, menu, (_("Disable move mode"), self.toggleMoveMode), level=0, key="6")
+ 					if current_sel_flags & eServiceReference.isGroup:
+-						append_when_current_valid(current, menu, (_("edit alternatives"), self.editAlternativeServices), level=2)
+-						append_when_current_valid(current, menu, (_("show alternatives"), self.showAlternativeServices), level=2)
+-						append_when_current_valid(current, menu, (_("remove all alternatives"), self.removeAlternativeServices), level=2)
++						append_when_current_valid(current, menu, (_("Edit alternatives"), self.editAlternativeServices), level=2)
++						append_when_current_valid(current, menu, (_("Show alternatives"), self.showAlternativeServices), level=2)
++						append_when_current_valid(current, menu, (_("Remove all alternatives"), self.removeAlternativeServices), level=2)
+ 					elif not current_sel_flags & eServiceReference.isMarker:
+-						append_when_current_valid(current, menu, (_("add alternatives"), self.addAlternativeServices), level=2)
++						append_when_current_valid(current, menu, (_("Add alternatives"), self.addAlternativeServices), level=2)
  			else:
  				if csel.bouquet_mark_edit == EDIT_BOUQUET:
  					if haveBouquets:
 -						append_when_current_valid(current, menu, (_("end bouquet edit"), self.bouquetMarkEnd), level=0)
-+						append_when_current_valid(current, menu, (_("End bouquet edit"), self.bouquetMarkEnd), level=0)
 -						append_when_current_valid(current, menu, (_("abort bouquet edit"), self.bouquetMarkAbort), level=0)
++						append_when_current_valid(current, menu, (_("End bouquet edit"), self.bouquetMarkEnd), level=0)
 +						append_when_current_valid(current, menu, (_("Abort bouquet edit"), self.bouquetMarkAbort), level=0)
  					else:
 -						append_when_current_valid(current, menu, (_("end favourites edit"), self.bouquetMarkEnd), level=0)
-+						append_when_current_valid(current, menu, (_("End favourites edit"), self.bouquetMarkEnd), level=0)
 -						append_when_current_valid(current, menu, (_("abort favourites edit"), self.bouquetMarkAbort), level=0)
++						append_when_current_valid(current, menu, (_("End favourites edit"), self.bouquetMarkEnd), level=0)
 +						append_when_current_valid(current, menu, (_("Abort favourites edit"), self.bouquetMarkAbort), level=0)
-					if current_sel_flags & eServiceReference.isMarker:
--						append_when_current_valid(current, menu, (_("rename entry"), self.renameEntry), level=0, key="4")
-+						append_when_current_valid(current, menu, (_("Rename entry"), self.renameEntry), level=0, key="4")
--						append_when_current_valid(current, menu, (_("remove entry"), self.removeCurrentService), level=0, key="5")
-+						append_when_current_valid(current, menu, (_("Remove entry"), self.removeCurrentService), level=0, key="5")
+ 					if current_sel_flags & eServiceReference.isMarker:
+-						append_when_current_valid(current, menu, (_("rename entry"), self.renameEntry), level=0, key="2")
+-						append_when_current_valid(current, menu, (_("remove entry"), self.removeEntry), level=0, key="8")
++						append_when_current_valid(current, menu, (_("Rename entry"), self.renameEntry), level=0, key="2")
++						append_when_current_valid(current, menu, (_("Remove entry"), self.removeEntry), level=0, key="8")
  						self.removeFunction = self.removeCurrentService
  				else:
 -					append_when_current_valid(current, menu, (_("end alternatives edit"), self.bouquetMarkEnd), level=0)
-+					append_when_current_valid(current, menu, (_("End alternatives edit"), self.bouquetMarkEnd), level=0)
 -					append_when_current_valid(current, menu, (_("abort alternatives edit"), self.bouquetMarkAbort), level=0)
++					append_when_current_valid(current, menu, (_("End alternatives edit"), self.bouquetMarkEnd), level=0)
 +					append_when_current_valid(current, menu, (_("Abort alternatives edit"), self.bouquetMarkAbort), level=0)
-
-		menu.append(ChoiceEntryComponent("menu", (_("Configuration..."), self.openSetup)))
-		self["menu"] = ChoiceList(menu)
-@@ -511,7 +516,9 @@
+ 
+ 		menu.append(ChoiceEntryComponent("menu", (_("Configuration..."), self.openSetup)))
+ 		self["menu"] = ChoiceList(menu)
+@@ -803,6 +808,9 @@
  		self.saved_title = None
  		self.saved_root = None
  		self.current_ref = None
--
 +#+++>
 +		self["title"] = StaticText()
 +#+++<
- 		class ChannelSelectionEditActionMap(ActionMap):
- 			def __init__(self, csel, contexts=[ ], actions={ }, prio=0):
- 				ActionMap.__init__(self, contexts, actions, prio)
-@@ -617,7 +624,7 @@
+ 		self.editMode = False
+ 		self.confirmRemove = True
+ 
+@@ -912,7 +920,7 @@
  				if mutableAlternatives:
  					mutableAlternatives.setListName(name)
  					if mutableAlternatives.addService(cur_service.ref):
@@ -6006,7 +6070,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  					mutableAlternatives.flushChanges()
  					self.servicelist.addService(new_ref.ref, True)
  					self.servicelist.removeCurrent()
-@@ -628,7 +635,7 @@
+@@ -923,7 +931,7 @@
  					if self.startServiceRef and cur_service.ref == self.startServiceRef:
  						self.startServiceRef = new_ref.ref
  				else:
@@ -6015,7 +6079,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			else:
  				print "add", str, "to", cur_root.getServiceName(), "failed"
  		else:
-@@ -654,10 +661,10 @@
+@@ -949,10 +957,10 @@
  					if services is not None:
  						for service in services:
  							if mutableBouquet.addService(service):
@@ -6028,7 +6092,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  				# do some voodoo to check if current_root is equal to bouquet_root
  				cur_root = self.getRoot();
  				str1 = cur_root and cur_root.toString()
-@@ -667,9 +674,9 @@
+@@ -962,9 +970,9 @@
  					self.servicelist.addService(new_bouquet_ref)
  					self.servicelist.resetRoot()
  			else:
@@ -6041,7 +6105,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  	def copyCurrentToBouquetList(self):
  		provider = ServiceReference(self.getCurrentSelection())
-@@ -695,11 +702,11 @@
+@@ -990,11 +998,11 @@
  					if self.startServiceRef and cur_service.ref == self.startServiceRef:
  						self.startServiceRef = first_in_alternative
  				else:
@@ -6057,7 +6121,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		self.removeBouquet()
  		if not end:
  			self.servicelist.moveUp()
-@@ -743,6 +750,9 @@
+@@ -1076,6 +1084,9 @@
  			else:
  				new_title += ' ' + _("[favourite edit]")
  		self.setTitle(new_title)
@@ -6067,7 +6131,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		self.__marked = self.servicelist.getRootServices()
  		for x in self.__marked:
  			self.servicelist.addMarked(eServiceReference(x))
-@@ -770,6 +780,9 @@
+@@ -1103,6 +1114,9 @@
  		self.bouquet_mark_edit = OFF
  		self.mutableList = None
  		self.setTitle(self.saved_title)
@@ -6077,7 +6141,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		self.saved_title = None
  		# self.servicePath is just a reference to servicePathTv or Radio...
  		# so we never ever do use the asignment operator in self.servicePath
-@@ -828,6 +841,9 @@
+@@ -1179,6 +1193,9 @@
  			self.mutableList.flushChanges() # FIXME add check if changes was made
  			self.mutableList = None
  			self.setTitle(self.saved_title)
@@ -6086,18 +6150,18 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +#+++<
  			self.saved_title = None
  			self.servicelist.resetRoot()
- 		else:
-@@ -837,6 +853,9 @@
+ 			self.servicelist.l.setHideNumberMarker(config.usage.hide_number_markers.value)
+@@ -1190,6 +1207,9 @@
  			self.saved_title = self.getTitle()
  			pos = self.saved_title.find(')')
  			self.setTitle(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:]);
 +#+++>
 +			self["title"].setText(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:])
 +#+++<
+ 			self.servicelist.l.setHideNumberMarker(False)
+ 			self.servicelist.setCurrent(self.servicelist.getCurrent())
  		self["Service"].editmode = True
- 
- 	def handleEditCancel(self):
-@@ -888,6 +907,11 @@
+@@ -1245,6 +1251,11 @@
  		self["list"] = ServiceList(self)
  		self.servicelist = self["list"]
  
@@ -6109,7 +6173,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
  		self.numericalTextInput.setUseableChars(u'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')
  
-@@ -974,6 +998,9 @@
+@@ -1337,6 +1362,9 @@
  			title = title[:pos]
  		title += _(" (TV)")
  		self.setTitle(title)
@@ -6119,7 +6183,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  	def setRadioMode(self):
  		self.mode = MODE_RADIO
-@@ -985,6 +1012,9 @@
+@@ -1348,6 +1376,9 @@
  			title = title[:pos]
  		title += _(" (Radio)")
  		self.setTitle(title)
@@ -6129,7 +6193,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  	def setRoot(self, root, justSet=False):
  		if self.startRoot is None:
-@@ -1039,6 +1069,9 @@
+@@ -1402,6 +1433,9 @@
  					end_ref = None
  				nameStr = self.getServiceName(base_ref)
  				titleStr += ' - ' + nameStr
@@ -6139,7 +6203,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  				if end_ref is not None:
  					if Len > 2:
  						titleStr += '/../'
-@@ -1046,7 +1079,13 @@
+@@ -1409,7 +1443,13 @@
  						titleStr += '/'
  					nameStr = self.getServiceName(end_ref)
  					titleStr += nameStr
@@ -6153,16 +6217,16 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  	def moveUp(self):
  		self.servicelist.moveUp()
-@@ -2030,6 +2069,9 @@
+@@ -2463,6 +2503,9 @@
  
  	def layoutFinished(self):
  		self.setModeTv()
 +#+++>
 +		self["title"].setText(self.title)
 +#+++<
- 
- 	def BouquetNumberActions(self, number):
- 		pass
+ 		if self.currentBouquet:
+ 			ref = Screens.InfoBar.InfoBar.instance.servicelist.getRoot()
+ 			if ref:
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/InfoBarGenerics.py enigma2-nightly/lib/python/Screens/InfoBarGenerics.py
 --- enigma2-nightly.org/lib/python/Screens/InfoBarGenerics.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/InfoBarGenerics.py	2014-06-21 13:05:30.091088431 +0200
@@ -6170,12 +6234,12 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  from Components.PluginComponent import plugins
  from Components.ServiceEventTracker import ServiceEventTracker
  from Components.Sources.Boolean import Boolean
--from Components.config import config, ConfigBoolean, ConfigClock
+-from Components.config import config, ConfigBoolean, ConfigClock, ConfigText
 +from Components.config import config, ConfigBoolean, ConfigClock, ConfigSubsection, ConfigYesNo, ConfigText
  from Components.SystemInfo import SystemInfo
  from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath, ConfigSelection
- from Components.Sources.StaticText import StaticText
-@@ -36,6 +36,7 @@
+ from Components.VolumeControl import VolumeControl
+@@ -37,6 +37,7 @@
  
  from Tools import Notifications, ASCIItranslit
  from Tools.Directories import fileExists, getRecordingFilename, moveFiles
@@ -6183,7 +6247,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, \
  	iPlayableService, eServiceReference, eEPGCache, eActionMap
-@@ -106,7 +107,7 @@
+@@ -105,7 +106,7 @@
  	global resumePointCache, resumePointCacheLast
  	import cPickle
  	try:
@@ -6192,7 +6256,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		cPickle.dump(resumePointCache, f, cPickle.HIGHEST_PROTOCOL)
  	except Exception, ex:
  		print "[InfoBar] Failed to write resumepoints:", ex
-@@ -115,7 +116,7 @@
+@@ -114,7 +115,7 @@
  def loadResumePoints():
  	import cPickle
  	try:
@@ -6201,7 +6265,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  	except Exception, ex:
  		print "[InfoBar] Failed to load resumepoints:", ex
  		return {}
-@@ -223,6 +224,7 @@
+@@ -222,6 +223,7 @@
  	STATE_HIDING = 1
  	STATE_SHOWING = 2
  	STATE_SHOWN = 3
@@ -6209,21 +6273,21 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  	def __init__(self):
  		self["ShowHideActions"] = ActionMap( ["InfobarShowHideActions"] ,
-@@ -326,6 +328,12 @@
+@@ -324,6 +326,12 @@
+ 			self.openServiceList()
  		else:
  			self.toggleShow()
- 
++
 +	def epg(self):
 +		self.__state = self.STATE_EPG
 +		self.hide()
 +		self.hideTimer.stop()
 +		self.openEventView()
-+
+ 
  	def toggleShow(self):
  		if self.__state == self.STATE_HIDDEN:
+@@ -339,7 +347,9 @@
  			self.show()
-@@ -336,7 +344,9 @@
- 		elif self.secondInfoBarScreen and config.usage.show_second_infobar.value and not self.secondInfoBarScreen.shown:
  			self.secondInfoBarScreen.show()
  			self.startHideTimer()
 -		else:
@@ -6233,7 +6297,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			self.hide()
  			self.hideTimer.stop()
  
-@@ -540,6 +550,12 @@
+@@ -579,6 +589,20 @@
  				"historyNext": (self.historyNext, _("Switch to next channel in history")),
  				"keyChannelUp": (self.keyChannelUpCheck, self.getKeyChannelUpHelptext),
  				"keyChannelDown": (self.keyChannelDownCheck, self.getKeyChannelDownHelptext), 	
@@ -6242,11 +6306,19 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				'sleepTimer': (self.sleepTimer, 'Sleeptimer'),
 +				'timer': (self.timer, 'Timer'),
 +				'showFavourites': (self.showFavourites, _('Bouquet list')),
-+				"showSatellites": (self.showSatellites, _('Satellite list'))
++				"showSatellites": (self.showSatellites, _('Satellite list')),
++#				"volumeUp": (self.volumeUp, _("Volume up")),
++#				"volumeDown": (self.volumeDown, _("Volume Down")),
++#compatibility with older keymaps
++				"switchChannelUp": (self.keyUpCheck, self.getKeyUpHelptext),
++				"switchChannelDown": (self.keyDownCheck, self.getKeyDownHelpText),
++				"zapUp": (self.keyChannelDownCheck, self.getKeyChannelDownHelptext),
++				"zapDown": (self.keyChannelUpCheck, self.getKeyChannelUpHelptext),
++				"openServiceList": (self.openServiceList, _("Open service list"))
  			})
  
  	def showTvChannelList(self, zap=False):
-@@ -682,6 +698,36 @@
+@@ -743,6 +767,36 @@
  			self.servicelist.moveUp()
  		self.servicelist.zap(enable_pipzap = True)
  
@@ -6270,20 +6342,20 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +		self.servicelist.showSatellites()
 +		self.session.execDialog(self.servicelist)
 +
-+	def volumeUp(self):
-+		from enigma import eDVBVolumecontrol
-+		from Components.VolumeControl import VolumeControl
-+		VolumeControl.instance.volUp()
++#	def volumeUp(self):
++#		from enigma import eDVBVolumecontrol
++#		from Components.VolumeControl import VolumeControl
++#		VolumeControl.instance.volUp()
 +
-+	def volumeDown(self):
-+		from enigma import eDVBVolumecontrol
-+		from Components.VolumeControl import VolumeControl
-+		VolumeControl.instance.volDown()
++#	def volumeDown(self):
++#		from enigma import eDVBVolumecontrol
++#		from Components.VolumeControl import VolumeControl
++#		VolumeControl.instance.volDown()
 +
  	def zapDown(self):
  		if self.servicelist.inBouquet():
  			prev = self.servicelist.getCurrentSelection()
-@@ -712,7 +758,7 @@
+@@ -777,7 +831,7 @@
  	def __init__(self):
  		self["MenuActions"] = HelpableActionMap(self, "InfobarMenuActions",
  			{
@@ -6292,7 +6364,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			})
  		self.session.infobar = None
  
-@@ -826,11 +872,11 @@
+@@ -889,7 +943,7 @@
  
  		self["EPGActions"] = HelpableActionMap(self, "InfobarEPGActions",
  			{
@@ -6300,54 +6372,26 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				"showEventInfo": (self.showDefaultEPG, _("Show EPG")),
  				"showEventInfoSingleEPG": (self.showSingleEPG, _("Show single service EPG")),
  				"showEventInfoMultiEPG": (self.showMultiEPG, _("Show multi channel EPG")),
--				"showEventInfoPlugin": (self.showEventInfoPlugins, _("List EPG functions...")),
--				"showEventGuidePlugin": (self.showEventGuidePlugins, _("List EPG functions...")),
-+				"showEventInfoPlugin": (self.showEventInfoPlugins, _("List EPG functions")),
-+				"showEventGuidePlugin": (self.showEventGuidePlugins, _("List EPG functions")),
  				"showInfobarOrEpgWhenInfobarAlreadyVisible": self.showEventInfoWhenNotVisible,
- 			})
- 
-@@ -1003,8 +1049,8 @@
+@@ -900,7 +954,7 @@
+ 				if 'selectedevent' not in p.__call__.func_code.co_varnames] or []
+ 		from Components.ServiceEventTracker import InfoBarCount
+ 		if getAll or InfoBarCount == 1:
+-			pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG, "current_channel"))
++			pluginlist.append((_("Show EPG for current channel"), self.openSingleServiceEPG, "current_channel"))
+ 		pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG, "multi_epg"))
+ 		pluginlist.append((_("Current event EPG"), self.openEventView, "event_epg"))
+ 		return pluginlist
+@@ -1043,7 +1097,7 @@
  	def showEventInfoPlugins(self):
  		pluginlist = self.getEPGPluginList()
  		if pluginlist:
--			pluginlist.append((_("Select default EPG type..."), self.SelectDefaultInfoPlugin))
--			self.session.openWithCallback(self.EventInfoPluginChosen, ChoiceBox, title=_("Please choose an extension..."), list = pluginlist, skin_name = "EPGExtensionsList")
-+			pluginlist.append((_("Select default EPG type"), self.SelectDefaultInfoPlugin))
-+			self.session.openWithCallback(self.EventInfoPluginChosen, ChoiceBox, title=_("Please select an extension"), list = pluginlist, skin_name = "EPGExtensionsList")
+-			self.session.openWithCallback(self.EventInfoPluginChosen, ChoiceBox, title=_("Please choose an extension..."), list=pluginlist, skin_name="EPGExtensionsList", reorderConfig="eventinfo_order")
++			self.session.openWithCallback(self.EventInfoPluginChosen, ChoiceBox, title=_("Please choose an extension"), list=pluginlist, skin_name="EPGExtensionsList", reorderConfig="eventinfo_order")
  		else:
  			self.openSingleServiceEPG()
  
-@@ -1013,7 +1059,7 @@
- 			answer[1]()
- 
- 	def SelectDefaultInfoPlugin(self):
--		self.session.openWithCallback(self.DefaultInfoPluginChosen, ChoiceBox, title=_("Please select a default EPG type..."), list = self.getEPGPluginList(True), skin_name = "EPGExtensionsList")
-+		self.session.openWithCallback(self.DefaultInfoPluginChosen, ChoiceBox, title=_("Please select a default EPG type"), list = self.getEPGPluginList(True), skin_name = "EPGExtensionsList")
- 
- 	def DefaultInfoPluginChosen(self, answer):
- 		if answer is not None:
-@@ -1024,8 +1070,8 @@
- 	def showEventGuidePlugins(self):
- 		pluginlist = self.getEPGPluginList()
- 		if pluginlist:
--			pluginlist.append((_("Select default EPG type..."), self.SelectDefaultGuidePlugin))
--			self.session.openWithCallback(self.EventGuidePluginChosen, ChoiceBox, title=_("Please choose an extension..."), list = pluginlist, skin_name = "EPGExtensionsList")
-+			pluginlist.append((_("Select default EPG type"), self.SelectDefaultGuidePlugin))
-+			self.session.openWithCallback(self.EventGuidePluginChosen, ChoiceBox, title=_("Please select an extension"), list = pluginlist, skin_name = "EPGExtensionsList")
- 		else:
- 			self.openSingleServiceEPG()
- 
-@@ -1034,7 +1080,7 @@
- 			answer[1]()
- 
- 	def SelectDefaultGuidePlugin(self):
--		self.session.openWithCallback(self.DefaultGuidePluginChosen, ChoiceBox, title=_("Please select a default EPG type..."), list = self.getEPGPluginList(True), skin_name = "EPGExtensionsList")
-+		self.session.openWithCallback(self.DefaultGuidePluginChosen, ChoiceBox, title=_("Please select a default EPG type"), list = self.getEPGPluginList(True), skin_name = "EPGExtensionsList")
- 
- 	def DefaultGuidePluginChosen(self, answer):
- 		if answer is not None:
-@@ -1118,7 +1164,7 @@
+@@ -1116,7 +1170,7 @@
  				self.eventView = self.session.openWithCallback(self.closed, EventViewEPGSelect, epglist[0], ServiceReference(ref), self.eventViewCallback, self.openSingleServiceEPG, self.openMultiServiceEPG, self.openSimilarList)
  				self.dlg_stack.append(self.eventView)
  		if not epglist:
@@ -6356,7 +6400,16 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			self.openMultiServiceEPG(False)
  
  	def eventViewCallback(self, setEvent, setService, val): #used for now/next displaying
-@@ -1909,7 +1955,7 @@
+@@ -1216,7 +1270,7 @@
+ 
+ 		self["SeekActions"] = InfoBarSeekActionMap(self, actionmap,
+ 			{
+-				"playpauseService": (self.playpauseService, _("Pauze/Continue playback")),
++				"playpauseService": (self.playpauseService, _("Pause/Continue playback")),
+ 				"pauseService": (self.pauseService, _("Pause playback")),
+ 				"unPauseService": (self.unPauseService, _("Continue playback")),
+ 				"okButton": (self.okButton, _("Continue playback")),
+@@ -1960,7 +2014,7 @@
  
  		self["InstantExtensionsActions"] = HelpableActionMap(self, "InfobarExtensions",
  			{
@@ -6365,7 +6418,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			}, 1) # lower priority
  
  	def addExtension(self, extension, key = None, type = EXTENSION_SINGLE):
-@@ -1932,7 +1978,7 @@
+@@ -1983,7 +2037,7 @@
  
  	def updateExtensions(self):
  		self.extensionsList = []
@@ -6374,16 +6427,16 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		self.extensionKeys = {}
  		for x in self.list:
  			if x[0] == self.EXTENSION_SINGLE:
-@@ -1960,7 +2006,7 @@
+@@ -2011,7 +2065,7 @@
  		list.extend([(x[0](), x) for x in extensionsList])
  
  		keys += [""] * len(extensionsList)
--		self.session.openWithCallback(self.extensionCallback, ChoiceBox, title=_("Please choose an extension..."), list = list, keys = keys, skin_name = "ExtensionsList")
-+		self.session.openWithCallback(self.extensionCallback, ChoiceBox, title=_("Please select an extension"), list = list, keys = keys, skin_name = "ExtensionsList")
+-		self.session.openWithCallback(self.extensionCallback, ChoiceBox, title=_("Please choose an extension..."), list=list, keys=keys, skin_name="ExtensionsList", reorderConfig="extension_order")
++		self.session.openWithCallback(self.extensionCallback, ChoiceBox, title=_("Please select an extension"), list=list, keys=keys, skin_name="ExtensionsList", reorderConfig="extension_order") 
  
  	def extensionCallback(self, answer):
  		if answer is not None:
-@@ -2156,11 +2202,11 @@
+@@ -2211,11 +2265,11 @@
  
  class InfoBarInstantRecord:
  	"""Instant Record - handles the instantRecord action in order to
@@ -6395,9 +6448,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 -				"instantRecord": (self.instantRecord, _("Instant recording...")),
 +				"instantRecord": (self.instantRecord, _("Instant recording")),
  			})
+ 		self.SelectedInstantServiceRef = None
  		if isStandardInfoBar(self):
- 			self.recording = []
-@@ -2205,7 +2251,7 @@
+@@ -2298,7 +2352,7 @@
  	def startInstantRecording(self, limitEvent = False):
  		begin = int(time())
  		end = begin + 3600      # dummy
@@ -6406,7 +6459,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		info = { }
  
  		self.getProgramInfoAndEvent(info, name)
-@@ -2387,7 +2433,7 @@
+@@ -2529,7 +2583,7 @@
  	def __init__(self):
  		self["AudioSelectionAction"] = HelpableActionMap(self, "InfobarAudioSelectionActions",
  			{
@@ -6415,7 +6468,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			})
  
  	def audioSelection(self):
-@@ -2401,7 +2447,7 @@
+@@ -2543,7 +2597,7 @@
  	def __init__(self):
  		self["SubserviceSelectionAction"] = HelpableActionMap(self, "InfobarSubserviceSelectionActions",
  			{
@@ -6424,7 +6477,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			})
  
  		self["SubserviceQuickzapAction"] = HelpableActionMap(self, "InfobarSubserviceQuickzapActions",
-@@ -2477,18 +2523,18 @@
+@@ -2619,18 +2673,18 @@
  				idx += 1
  
  			if self.bouquets and len(self.bouquets):
@@ -6436,22 +6489,23 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  				else:
 -					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + tlist
 +					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("Exit", "exit"), ("--", "")] + tlist
--				selection += 3
 +				selection += 4
- 			else:
--				tlist = [(_("Quick zap"), "quickzap", service.subServices()), ("--", "")] + tlist
++			else:
 +				tlist = [(_("Quick zap"), "quickzap", service.subServices()), ("Exit", "exit"), ("--", "")] + tlist
--				keys = ["red", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
 +				keys = ["red", "yellow", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
+ 				selection += 3
+-			else:
+-				tlist = [(_("Quick zap"), "quickzap", service.subServices()), ("--", "")] + tlist
+-				keys = ["red", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
 -				selection += 2
-+				selection += 3
- 
+-
 -			self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a sub service..."), list = tlist, selection = selection, keys = keys, skin_name = "SubserviceSelection")
++
 +			self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a sub service"), list = tlist, selection = selection, keys = keys, skin_name = "SubserviceSelection")
  
  	def subserviceSelected(self, service):
  		del self.bouquets
-@@ -2531,7 +2577,7 @@
+@@ -2673,7 +2727,7 @@
  	def __init__(self):
  		self["RedButtonActions"] = HelpableActionMap(self, "InfobarRedButtonActions",
  			{
@@ -6460,7 +6514,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			})
  		self.onHBBTVActivation = [ ]
  		self.onRedButtonActivation = [ ]
-@@ -2550,7 +2596,7 @@
+@@ -2692,7 +2746,7 @@
  	def __init__(self):
  		self["TimerButtonActions"] = HelpableActionMap(self, "InfobarTimerButtonActions",
  			{
@@ -6469,7 +6523,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			})
  
  	def timerSelection(self):
-@@ -2738,7 +2784,7 @@
+@@ -2880,7 +2934,7 @@
  				elif config.usage.on_movie_start.value == "resume":
  # TRANSLATORS: The string "Resuming playback" flashes for a moment
  # TRANSLATORS: at the start of a movie, when the user has selected
@@ -6478,7 +6532,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  # TRANSLATORS: The purpose is to notify the user that the movie starts
  # TRANSLATORS: in the middle somewhere and not from the beginning.
  # TRANSLATORS: (Some translators seem to have interpreted it as a
-@@ -2956,7 +3002,7 @@
+@@ -3098,7 +3152,7 @@
  		if self.teletext_plugin is not None:
  			self["TeletextActions"] = HelpableActionMap(self, "InfobarTeletextActions",
  				{
@@ -6487,7 +6541,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  				})
  		else:
  			print "no teletext plugin found!"
-@@ -2969,7 +3015,7 @@
+@@ -3111,7 +3165,7 @@
  		object.__init__(self)
  		self["SubtitleSelectionAction"] = HelpableActionMap(self, "InfobarSubtitleSelectionActions",
  			{
@@ -6496,7 +6550,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			})
  
  		self.selected_subtitle = None
-@@ -3072,6 +3118,143 @@
+@@ -3217,6 +3271,143 @@
  				self.closeNotificationInstantiateDialog()
  				if hasattr(self, "dishDialog") and not self.dishDialog.dishState():
  					Notifications.AddPopup(text = error, type = MessageBox.TYPE_ERROR, timeout = 5, id = "ZapError")
@@ -6640,7 +6694,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  class InfoBarPowersaver:
  	def __init__(self):
-@@ -3110,7 +3293,7 @@
+@@ -3259,7 +3450,7 @@
  		if Screens.Standby.inStandby:
  			self.inactivityTimeoutCallback(True)
  		else:
@@ -6649,25 +6703,15 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			self.session.openWithCallback(self.inactivityTimeoutCallback, MessageBox, message, timeout=60, simple=True, default=False, timeout_default=True)
  
  	def inactivityTimeoutCallback(self, answer):
-@@ -3122,7 +3305,7 @@
- 	def setSleepTimer(self, time):
- 		print "[InfoBarPowersaver] set sleeptimer", time
- 		if time:
--			message = _("And will put your receiver in standby over ")
-+			message = _("And will put your receiver in standby in ")
- 			m = abs(time / 60)
- 			message = _("The sleep timer has been activated.") + "\n" + message + ngettext("%d minute", "%d minutes", m) % m
- 			self.sleepTimer.startLongTimer(time)
-@@ -3134,7 +3317,7 @@
- 	def sleepTimerTimeout(self):
- 		if not Screens.Standby.inStandby:
- 			list = [ (_("Yes"), True), (_("Extend sleeptimer 15 minutes"), "extend"), (_("No"), False) ]
--			message = _("Your receiver will got to stand by due to the sleeptimer.")
-+			message = _("Your receiver will go to standby due to the sleeptimer.")
- 			message += "\n" + _("Do you want this?")
- 			self.session.openWithCallback(self.sleepTimerTimeoutCallback, MessageBox, message, timeout=60, simple=True, list=list, default=False, timeout_default=True)
- 
-
+@@ -3277,7 +3468,7 @@
+ 		print "[InfoBarPowersaver] set sleeptimer", sleepTime
+ 		if sleepTime:
+ 			m = abs(sleepTime / 60)
+-			message = _("The sleep timer has been activated.") + "\n" + _("And will put your receiver in standby over ") + ngettext("%d minute", "%d minutes", m) % m
++			message = _("The sleep timer has been activated.") + "\n" + _("And will put your receiver in standby in ") + ngettext("%d minute", "%d minutes", m) % m
+ 			self.sleepTimer.startLongTimer(sleepTime)
+ 			self.sleepStartTime = time() + sleepTime
+ 		else:
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/InfoBar.py enigma2-nightly/lib/python/Screens/InfoBar.py
 --- enigma2-nightly.org/lib/python/Screens/InfoBar.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/InfoBar.py	2014-06-21 13:07:43.075082838 +0200
@@ -6682,24 +6726,24 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  profile("LOAD:InfoBarGenerics")
  from Screens.InfoBarGenerics import InfoBarShowHide, \
 @@ -20,7 +23,7 @@
- 	InfoBarServiceNotifications, InfoBarPVRState, InfoBarCueSheetSupport, \
+ 	InfoBarServiceNotifications, InfoBarPVRState, InfoBarCueSheetSupport, InfoBarBuffer, \
  	InfoBarSummarySupport, InfoBarMoviePlayerSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions, \
  	InfoBarSubtitleSupport, InfoBarPiP, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarPowersaver, \
 -	InfoBarHDMI, setResumePoint, delResumePoint
 +	InfoBarHDMI, InfoBarAspectSelection, InfoBarSleepTimer, setResumePoint, delResumePoint
+ from Screens.Hotkey import InfoBarHotkey
  
  profile("LOAD:InitBar_Components")
- from Components.ActionMap import HelpableActionMap
-@@ -37,7 +40,7 @@
- 	InfoBarSubserviceSelection, InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport,
+@@ -38,7 +41,7 @@
+ 	InfoBarSubserviceSelection, InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport, InfoBarBuffer,
  	InfoBarSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions,
  	InfoBarPiP, InfoBarPlugins, InfoBarSubtitleSupport, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarPowersaver,
--	InfoBarHDMI, Screen):
-+	InfoBarHDMI, InfoBarAspectSelection, InfoBarSleepTimer, Screen):
+-	InfoBarHDMI, InfoBarHotkey, Screen):
++	InfoBarHDMI, InfoBarHotkey, InfoBarAspectSelection, InfoBarSleepTimer, Screen):
  
  	ALLOW_SUSPEND = True
  	instance = None
-@@ -46,9 +49,14 @@
+@@ -47,9 +50,14 @@
  		Screen.__init__(self, session)
  		self["actions"] = HelpableActionMap(self, "InfobarActions",
  			{
@@ -6710,32 +6754,33 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				"showRadio": (self.showRadio, _("Show the radio player")),
 +				"showTv": (self.showTv, _("Show the TV player")),
 +				"toogleTvRadio": (self.toogleTvRadio, _("Toggles between TV and radio")),
-+				"volumeUp": (self._volUp, _("Volume up")),
-+				"volumeDown": (self._volDown, _("Volume Down")),
++#				"volumeUp": (self._volUp, _("Volume up")),
++#				"volumeDown": (self._volDown, _("Volume Down")),
 +				"resolution": (self.resolution, _("Select display resolution")),
 +				"aspect": (self.aspect, _("Select aspect ratio")),
  			}, prio=2)
  
  		self.allowPiP = True
-@@ -60,11 +68,11 @@
- 				InfoBarAdditionalInfo, InfoBarNotifications, InfoBarDish, InfoBarSubserviceSelection, \
+@@ -61,11 +69,11 @@
+ 				InfoBarAdditionalInfo, InfoBarNotifications, InfoBarDish, InfoBarSubserviceSelection, InfoBarBuffer, \
  				InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport, InfoBarSummarySupport, InfoBarTimeshiftState, \
  				InfoBarTeletextPlugin, InfoBarExtensions, InfoBarPiP, InfoBarSubtitleSupport, InfoBarJobman, InfoBarPowersaver, \
--				InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarHDMI:
-+				InfoBarAspectSelection, InfoBarSleepTimer, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarHDMI:
+-				InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarHotkey:
++				InfoBarAspectSelection, InfoBarSleepTimer, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarHotkey:
  			x.__init__(self)
  
 -		self.helpList.append((self["actions"], "InfobarActions", [("showMovies", _("Watch recordings..."))]))
-+		self.helpList.append((self["actions"], "InfobarActions", [("showMovies", _("Watch recordings"))]))
 -		self.helpList.append((self["actions"], "InfobarActions", [("showRadio", _("Listen to the radio..."))]))
++		self.helpList.append((self["actions"], "InfobarActions", [("showMovies", _("Watch recordings"))]))
 +		self.helpList.append((self["actions"], "InfobarActions", [("showRadio", _("Listen to the radio"))]))
  
  		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
  			{
 @@ -75,6 +83,88 @@
+ 		self.current_begin_time=0
  		assert InfoBar.instance is None, "class InfoBar is a singleton class and just one instance of this class is allowed!"
  		InfoBar.instance = self
- 
++
 +	def aspect(self):
 +		selection = 0
 +		tlist = []
@@ -6808,20 +6853,19 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				gMainDC.getInstance().setResolution(-1, -1)
 +		return
 +
-+	def _volUp(self):
-+		print "_volUp"
-+		from Components.VolumeControl import VolumeControl
-+		VolumeControl.instance.volUp()
++#	def _volUp(self):
++#		print "_volUp"
++#		from Components.VolumeControl import VolumeControl
++#		VolumeControl.instance.volUp()
 +
-+	def _volDown(self):
-+		print "_volDown"
-+		from Components.VolumeControl import VolumeControl
-+		VolumeControl.instance.volDown()
-+
++#	def _volDown(self):
++#		print "_volDown"
++#		from Components.VolumeControl import VolumeControl
++#		VolumeControl.instance.volDown()
+ 
  	def __onClose(self):
  		InfoBar.instance = None
- 
-@@ -93,6 +183,22 @@
+@@ -94,6 +184,22 @@
  		self.__serviceStarted(True)
  		self.onExecBegin.remove(self.__checkServiceStarted)
  
@@ -6844,7 +6888,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  	def serviceStarted(self):  #override from InfoBarShowHide
  		new = self.servicelist.newServicePlayed()
  		if self.execing:
-@@ -116,6 +222,19 @@
+@@ -117,6 +223,19 @@
  			from Screens.ChannelSelection import ChannelSelectionRadio
  			self.session.openWithCallback(self.ChannelSelectionRadioClosed, ChannelSelectionRadio, self)
  
@@ -6863,16 +6907,16 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +
  	def ChannelSelectionRadioClosed(self, *arg):
  		self.rds_display.show()  # in InfoBarRdsDecoder
- 
-@@ -135,6 +254,7 @@
+ 		self.servicelist.correctChannelNumber()
+@@ -142,6 +261,7 @@
  class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBarShowMovies, InfoBarInstantRecord,
  		InfoBarAudioSelection, HelpableScreen, InfoBarNotifications, InfoBarServiceNotifications, InfoBarPVRState,
  		InfoBarCueSheetSupport, InfoBarMoviePlayerSummarySupport, InfoBarSubtitleSupport, Screen, InfoBarTeletextPlugin,
 +		InfoBarAspectSelection, InfoBarSubserviceSelection,
- 		InfoBarServiceErrorPopupSupport, InfoBarExtensions, InfoBarPlugins, InfoBarPiP, InfoBarHDMI):
+ 		InfoBarServiceErrorPopupSupport, InfoBarExtensions, InfoBarPlugins, InfoBarPiP, InfoBarHDMI, InfoBarHotkey):
  
  	ENABLE_RESUME_SUPPORT = True
-@@ -143,16 +263,18 @@
+@@ -150,12 +270,14 @@
  	def __init__(self, session, service, slist=None, lastservice=None, infobar=None):
  		Screen.__init__(self, session)
  
@@ -6880,26 +6924,18 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +
  		self["actions"] = HelpableActionMap(self, "MoviePlayerActions",
  			{
--				"InfoButtonPressed": (self.openEventView, _("open Info...")),
-+				"InfoButtonPressed": (self.openEventView, _("Show info")),
--				"EPGButtonPressed": (self.showDefaultEPG,  _("open EPG...")),
-+				"EPGButtonPressed": (self.showDefaultEPG,  _("Open EPG")),
--				"InfoButtonPressedLong": (self.showEventInfoPlugins, _("select Info...")),
-+				"InfoButtonPressedLong": (self.showEventInfoPlugins, _("Select info")),
--				"EPGButtonPressedLong": (self.showEventGuidePlugins,  _("select EPG...")),
-+				"EPGButtonPressedLong": (self.showEventGuidePlugins,  _("Select EPG")),
 -				"leavePlayer": (self.leavePlayer, _("leave movie player...")),
-+				"leavePlayer": (self.leavePlayer, _("Leave movie player")),
 -				"leavePlayerOnExit": (self.leavePlayerOnExit, _("leave movie player...")),
-+				"leavePlayerOnExit": (self.leavePlayerOnExit, _("Leave movie player")),
 -				"channelUp": (self.channelUp, _("when PiPzap enabled zap channel up...")),
-+				"channelUp": (self.channelUp, _("If PiPzap enabled, zap channel up")),
 -				"channelDown": (self.channelDown, _("when PiPzap enabled zap channel down...")),
-+				"channelDown": (self.channelDown, _("If PiPzap enabled, zap channel down")),
++				"leavePlayer": (self.leavePlayer, _("Leave movie player")),
++				"leavePlayerOnExit": (self.leavePlayerOnExit, _("Leave movie player")),
++				"channelUp": (self.channelUp, _("When PiPzap enabled zap channel up")),
++				"channelDown": (self.channelDown, _("When PiPzap enabled zap channel down")),
  			})
  
  		self["DirectionActions"] = HelpableActionMap(self, "DirectionActions",
-@@ -292,6 +414,11 @@
+@@ -303,11 +425,21 @@
  					return
  
  		if answer in ("quit", "quitanddeleteconfirmed"):
@@ -6911,8 +6947,6 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			self.close()
  		elif answer in ("movielist", "deleteandmovielistconfirmed"):
  			ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-@@ -297,6 +424,11 @@
- 			ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
  			self.returning = True
  			self.session.openWithCallback(self.movieSelected, Screens.MovieSelection.MovieSelection, ref)
 +#+++>
@@ -6923,7 +6957,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			self.session.nav.stopService()
  			if not config.movielist.stop_service.value:
  				self.session.nav.playService(self.lastservice)
-@@ -515,3 +647,8 @@
+@@ -528,3 +660,8 @@
  
  	def ref2HumanName(self, ref):
  		return enigma.eServiceCenter.getInstance().info(ref).getName(ref)		
@@ -6935,21 +6969,21 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/ScanSetup.py enigma2-nightly/lib/python/Screens/ScanSetup.py
 --- enigma2-nightly.org/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:30.091088431 +0200
-@@ -741,7 +741,7 @@
- 			self.scan_type = ConfigSelection(default = defaultSatSearchType, choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("single_satellite", _("Single satellite")), ("multisat", _("Multisat")), ("multisat_yes", _("Multisat all select"))])
- 			self.scan_typecable = ConfigSelection(default = "single_transponder", choices = [("single_transponder", _("Single transponder")), ("complete", _("Complete"))])
- 			self.scan_typeterrestrial = ConfigSelection(default = "single_transponder", choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("complete", _("Complete"))])
--			self.scan_input_as = ConfigSelection(default = "channel", choices = [("frequency", _("Frequency")), ("channel", _("Channel"))])
-+			self.scan_input_as = ConfigSelection(default = "frequency", choices = [("frequency", _("Frequency")), ("channel", _("Channel"))])
- 			self.scan_clearallservices = ConfigSelection(default = "no", choices = [("no", _("no")), ("yes", _("yes")), ("yes_hold_feeds", _("yes (keep feeds)"))])
- 			self.scan_onlyfree = ConfigYesNo(default = False)
- 			self.scan_networkScan = ConfigYesNo(default = False)
+@@ -795,7 +795,7 @@
+ 		self.last_scan_typecable = "single_transponder"
+ 		self.cable_toggle = {"single_transponder":"complete", "complete":"single_transponder"}
+ 		self.scan_typeterrestrial = ConfigSelection(default = defaultTerrSearchType, choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("complete", _("Complete"))])
+-		self.scan_input_as = ConfigSelection(default = "channel", choices = [("frequency", _("Frequency")), ("channel", _("Channel"))])
++		self.scan_input_as = ConfigSelection(default = "frequency", choices = [("frequency", _("Frequency")), ("channel", _("Channel"))])
+ 		self.scan_clearallservices = ConfigSelection(default = "no", choices = [("no", _("no")), ("yes", _("yes")), ("yes_hold_feeds", _("yes (keep feeds)"))])
+ 		self.scan_onlyfree = ConfigYesNo(default = False)
+ 		self.scan_networkScan = ConfigYesNo(default = False)
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/Standby.py enigma2-nightly/lib/python/Screens/Standby.py
 --- enigma2-nightly.org/lib/python/Screens/Standby.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/Standby.py	2014-06-21 13:05:30.091088431 +0200
-@@ -8,12 +8,51 @@
+@@ -9,12 +9,51 @@
  import RecordTimer
- from enigma import eDVBVolumecontrol, eTimer
+ from enigma import eDVBVolumecontrol, eTimer, eDVBLocalTimeHandler, eServiceReference
  from time import time, localtime
 +from Tools.HardwareInfo import HardwareInfo
 +pll0 = '/proc/cpu_frequ/pll0_ndiv_mdiv'
@@ -6999,7 +7033,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		#set input to encoder
  		self.avswitch.setInput("ENCODER")
  		#restart last played service
-@@ -56,6 +95,39 @@
+@@ -61,6 +100,40 @@
  		#mute adc
  		self.setMute()
  
@@ -7036,10 +7070,12 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				overclk=4609
 +			print "STBY Clockspeed =", config.plugins.systemoptions.stbyfreq.value, "PLL = ", str(overclk)
 +			open(pll0, 'w').write(str(overclk))
++
  		self.paused_service = None
- 		self.prev_running_service = None
  
-@@ -79,6 +151,9 @@
+ 		self.prev_running_service = self.session.nav.getCurrentlyPlayingServiceOrGroup()
+ 		service = self.prev_running_service and self.prev_running_service.toString()
+@@ -88,6 +161,9 @@
  			self.avswitch.setInput("SCART")
  		else:
  			self.avswitch.setInput("AUX")
@@ -7049,7 +7085,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  		gotoShutdownTime = int(config.usage.standby_to_shutdown_timer.value)
  		if gotoShutdownTime:
-@@ -167,6 +242,7 @@
+@@ -181,6 +257,7 @@
  			3: _("The user interface of your receiver is restarting"),
  			4: _("Your frontprocessor will be upgraded\nPlease wait until your receiver reboots\nThis may take a few minutes"),
  			5: _("The user interface of your receiver is restarting\ndue to an error in mytest.py"),
@@ -7057,7 +7093,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  			42: _("Unattended upgrade in progress\nPlease wait until your receiver reboots\nThis may take a few minutes") }.get(retvalue)
  		self["text"] = Label(text)
  
-@@ -195,6 +271,7 @@
+@@ -209,6 +286,7 @@
  				2: _("Really reboot now?"),
  				3: _("Really restart now?"),
  				4: _("Really upgrade the frontprocessor and reboot now?"),
@@ -7139,7 +7175,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
  	},
  	{
  		KEYIDS["BTN_0"]: ("UP", "fp"),
-@@ -87,49 +90,103 @@
+@@ -87,36 +90,17 @@
  		KEYIDS["KEY_9"]: ("9",),
  		KEYIDS["KEY_EXIT"]: ("EXIT",),
  		KEYIDS["KEY_STOP"]: ("TV", "SHIFT"),
@@ -7148,14 +7184,15 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
 +		KEYIDS["KEY_EPG"]: ("EPG",),
 +		KEYIDS["KEY_REWIND"]: ("REWIND",),
 +		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",)
-	},
+ 	},
 -	{
 -		KEYIDS["BTN_0"]: ("UP", "fp"),
 -		KEYIDS["BTN_1"]: ("DOWN", "fp"),
 -		KEYIDS["KEY_OK"]: ("OK", ""),
 -		KEYIDS["KEY_UP"]: ("UP",),
 -		KEYIDS["KEY_DOWN"]: ("DOWN",),
--		KEYIDS["KEY_POWER"]: ("POWER",),
++	{  # for remotes with ID 2 (based on is spark remote RC12)
+ 		KEYIDS["KEY_POWER"]: ("POWER",),
 -		KEYIDS["KEY_RED"]: ("RED",),
 -		KEYIDS["KEY_BLUE"]: ("BLUE",),
 -		KEYIDS["KEY_GREEN"]: ("GREEN",),
@@ -7177,6 +7214,76 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
 -		KEYIDS["KEY_NEXTSONG"]: ("FASTFORWARD",),
 -		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
 -		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
++		KEYIDS["KEY_V"]: ("V.FORMAT",),
++		KEYIDS["KEY_AUX"]: ("TV/SAT",),
++		KEYIDS["KEY_TIME"]: ("TIME",),
++		KEYIDS["KEY_MUTE"]: ("MUTE",),
+ 		KEYIDS["KEY_0"]: ("0",),
+ 		KEYIDS["KEY_1"]: ("1",),
+ 		KEYIDS["KEY_2"]: ("2",),
+@@ -127,107 +111,82 @@
+ 		KEYIDS["KEY_7"]: ("7",),
+ 		KEYIDS["KEY_8"]: ("8",),
+ 		KEYIDS["KEY_9"]: ("9",),
+-		KEYIDS["KEY_EXIT"]: ("EXIT",),
+-		KEYIDS["KEY_STOP"]: ("STOP",),
+-		KEYIDS["KEY_RECORD"]: ("RECORD",)
+-	},
+-	{       # XP1000
+-		KEYIDS["BTN_0"]: ("UP", "fp"),
+-		KEYIDS["BTN_1"]: ("DOWN", "fp"),
+-		KEYIDS["KEY_OK"]: ("OK", ""),
++		KEYIDS["KEY_TV2"]: ("TV/RADIO",),
++		KEYIDS["KEY_BACK"]: ("RECALL",),
++		KEYIDS["KEY_PAGEUP"]: ("PAGE+",),  # fortis name CHANNELUP
++		KEYIDS["KEY_PAGEDOWN"]: ("PAGE-",), # fortis name CHANNELDOWN
++		KEYIDS["KEY_FIND"]: ("FIND",),
++		KEYIDS["KEY_ARCHIVE"]: ("FOLDER",),
++		KEYIDS["KEY_VOLUMEUP"]: ("VOL+",),
++		KEYIDS["KEY_VOLUMEDOWN"]: ("VOL-",),
++		KEYIDS["KEY_MENU"]: ("MENU",),
++		KEYIDS["KEY_INFO"]: ("INFO",),
+ 		KEYIDS["KEY_UP"]: ("UP",),
+ 		KEYIDS["KEY_DOWN"]: ("DOWN",),
+-		KEYIDS["KEY_POWER"]: ("POWER",),
++		KEYIDS["KEY_LEFT"]: ("LEFT",),
++		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
++		KEYIDS["KEY_OK"]: ("OK", ""),
++		KEYIDS["KEY_HOME"]: ("EXIT",),
++		KEYIDS["KEY_EPG"]: ("EPG",),
++		KEYIDS["KEY_FAVORITES"]: ("FAV",),
++		KEYIDS["KEY_SAT"]: ("SAT",),
+ 		KEYIDS["KEY_RED"]: ("RED",),
+-		KEYIDS["KEY_BLUE"]: ("BLUE",),
+ 		KEYIDS["KEY_GREEN"]: ("GREEN",),
+ 		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
+-		KEYIDS["KEY_MENU"]: ("MENU",),
+-		KEYIDS["KEY_LEFT"]: ("LEFT",),
+-		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
+-		KEYIDS["KEY_VIDEO"]: ("PVR",),
+-		KEYIDS["KEY_INFO"]: ("INFO",),
+-		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
+-		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
+-		KEYIDS["KEY_TV"]: ("TV",),
+-		KEYIDS["KEY_RADIO"]: ("RADIO",),
+-		KEYIDS["KEY_TEXT"]: ("TEXT",),
++		KEYIDS["KEY_BLUE"]: ("BLUE",),
++		KEYIDS["KEY_RECORD"]: ("RECORD",),
++		KEYIDS["KEY_STOP"]: ("STOP",),
++		KEYIDS["KEY_PLAY"]: ("PLAY",),
++		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
++		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
++		KEYIDS["KEY_REWIND"]: ("REWIND",),
++		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
+ 		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
+-		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
+-		KEYIDS["KEY_PREVIOUSSONG"]: ("SKIPBACK",),
+-		KEYIDS["KEY_REWIND"]: ("REWIND",),
+-		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
+-		KEYIDS["KEY_NEXTSONG"]: ("SKIPFORWARD",),
+-		KEYIDS["KEY_PLAYPAUSE"]: ("PLAYPAUSE",),
+-		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
+-		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
 -		KEYIDS["KEY_0"]: ("0",),
 -		KEYIDS["KEY_1"]: ("1",),
 -		KEYIDS["KEY_2"]: ("2",),
@@ -7189,62 +7296,66 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
 -		KEYIDS["KEY_9"]: ("9",),
 -		KEYIDS["KEY_EXIT"]: ("EXIT",),
 -		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",)
-+	{  # for remotes with ID 2 (based on is spark remote RC12)
-+		KEYIDS["KEY_POWER"]: ("POWER",),
-+		KEYIDS["KEY_V"]: ("V.FORMAT",),
-+		KEYIDS["KEY_AUX"]: ("TV/SAT",),
-+		KEYIDS["KEY_TIME"]: ("TIME",),
-+		KEYIDS["KEY_MUTE"]: ("MUTE",),
-+		KEYIDS["KEY_0"]: ("0",),
-+		KEYIDS["KEY_1"]: ("1",),
-+		KEYIDS["KEY_2"]: ("2",),
-+		KEYIDS["KEY_3"]: ("3",),
-+		KEYIDS["KEY_4"]: ("4",),
-+		KEYIDS["KEY_5"]: ("5",),
-+		KEYIDS["KEY_6"]: ("6",),
-+		KEYIDS["KEY_7"]: ("7",),
-+		KEYIDS["KEY_8"]: ("8",),
-+		KEYIDS["KEY_9"]: ("9",),
-+		KEYIDS["KEY_TV2"]: ("TV/RADIO",),
-+		KEYIDS["KEY_BACK"]: ("RECALL",),
-+		KEYIDS["KEY_PAGEUP"]: ("PAGE+",),  # fortis name CHANNELUP
-+		KEYIDS["KEY_PAGEDOWN"]: ("PAGE-",), # fortis name CHANNELDOWN
-+		KEYIDS["KEY_FIND"]: ("FIND",),
-+		KEYIDS["KEY_ARCHIVE"]: ("FOLDER",),
-+		KEYIDS["KEY_VOLUMEUP"]: ("VOL+",),
-+		KEYIDS["KEY_VOLUMEDOWN"]: ("VOL-",),
-+		KEYIDS["KEY_MENU"]: ("MENU",),
-+		KEYIDS["KEY_INFO"]: ("INFO",),
-+		KEYIDS["KEY_UP"]: ("UP",),
-+		KEYIDS["KEY_DOWN"]: ("DOWN",),
-+		KEYIDS["KEY_LEFT"]: ("LEFT",),
-+		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
-+		KEYIDS["KEY_OK"]: ("OK", ""),
-+		KEYIDS["KEY_HOME"]: ("EXIT",),
-+		KEYIDS["KEY_EPG"]: ("EPG",),
-+		KEYIDS["KEY_FAVORITES"]: ("FAV",),
-+		KEYIDS["KEY_SAT"]: ("SAT",),
-+		KEYIDS["KEY_RED"]: ("RED",),
-+		KEYIDS["KEY_GREEN"]: ("GREEN",),
-+		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
-+		KEYIDS["KEY_BLUE"]: ("BLUE",),
-+		KEYIDS["KEY_RECORD"]: ("RECORD",),
-+		KEYIDS["KEY_STOP"]: ("STOP",),
-+		KEYIDS["KEY_PLAY"]: ("PLAY",),
-+		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
-+		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
-+		KEYIDS["KEY_REWIND"]: ("REWIND",),
-+		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
-+		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
+-		KEYIDS["KEY_RECORD"]: ("RECORD",),
+-		KEYIDS["KEY_BOOKMARKS"]: ("PORTAL",),
+-		KEYIDS["KEY_VMODE"]: ("VMODE",),
+-		KEYIDS["KEY_PROGRAM"]: ("TIMER",),
+-		KEYIDS["KEY_SLEEP"]: ("SLEEP",),
+-		KEYIDS["KEY_EPG"]: ("EPG",),
+-	},
+-	{       # Formuler F1
+-		KEYIDS["BTN_0"]: ("UP", "fp"),
+-		KEYIDS["BTN_1"]: ("DOWN", "fp"),
+-		KEYIDS["KEY_OK"]: ("OK", ""),
+-		KEYIDS["KEY_UP"]: ("UP",),
+-		KEYIDS["KEY_DOWN"]: ("DOWN",),
+-		KEYIDS["KEY_POWER"]: ("POWER",),
+-		KEYIDS["KEY_RED"]: ("RED",),
+-		KEYIDS["KEY_BLUE"]: ("BLUE",),
+-		KEYIDS["KEY_GREEN"]: ("GREEN",),
+-		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
+-		KEYIDS["KEY_MENU"]: ("MENU",),
+-		KEYIDS["KEY_LEFT"]: ("LEFT",),
+-		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
+-		KEYIDS["KEY_VIDEO"]: ("PVR",),
+-		KEYIDS["KEY_INFO"]: ("INFO",),
+-		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
+-		KEYIDS["KEY_TV"]: ("TV",),
+-		KEYIDS["KEY_RADIO"]: ("RADIO",),
+-		KEYIDS["KEY_TEXT"]: ("TEXT",),
+-		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
+-		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
+-		KEYIDS["KEY_REWIND"]: ("REWIND",),
+-		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
+-		KEYIDS["KEY_PLAY"]: ("PLAY",),
+-		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
+-		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
+-		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
+-		KEYIDS["KEY_0"]: ("0",),
+-		KEYIDS["KEY_1"]: ("1",),
+-		KEYIDS["KEY_2"]: ("2",),
+-		KEYIDS["KEY_3"]: ("3",),
+-		KEYIDS["KEY_4"]: ("4",),
+-		KEYIDS["KEY_5"]: ("5",),
+-		KEYIDS["KEY_6"]: ("6",),
+-		KEYIDS["KEY_7"]: ("7",),
+-		KEYIDS["KEY_8"]: ("8",),
+-		KEYIDS["KEY_9"]: ("9",),
+-		KEYIDS["KEY_EXIT"]: ("EXIT",),
+-		KEYIDS["KEY_STOP"]: ("STOP",),
+-		KEYIDS["KEY_RECORD"]: ("RECORD",),
 +		KEYIDS["KEY_F"]: ("FAST",),
 +		KEYIDS["KEY_SLOW"]: ("SLOW",),
 +		KEYIDS["KEY_P"]: ("PLAY_MODE",),
 +		KEYIDS["KEY_CLOSE"]: ("USB",),
 +		KEYIDS["KEY_T"]: ("Tms",),
-+		KEYIDS["KEY_F1"]: ("F1",),
-+		KEYIDS["KEY_F2"]: ("F2",),
-+		KEYIDS["KEY_F3"]: ("F3",),
+ 		KEYIDS["KEY_F1"]: ("F1",),
+ 		KEYIDS["KEY_F2"]: ("F2",),
+ 		KEYIDS["KEY_F3"]: ("F3",),
+-		KEYIDS["KEY_BACK"]: ("RECALL",),
+-		KEYIDS["KEY_CONTEXT_MENU"]: ("CONTEXT",),
+-		KEYIDS["KEY_EPG"]: ("EPG",),
+-		KEYIDS["KEY_BOOKMARKS"]: ("PLAYLIST",),
 +		KEYIDS["KEY_F3"]: ("F3",),
 +		KEYIDS["KEY_OPEN"]: ("PORTAL",),
 +		# Fortis keys (evremote2)
@@ -7285,19 +7396,34 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
  	},
  ]
  
+@@ -245,13 +204,7 @@
+ 	if rc_model.rcIsDefault():
+ 		idx = config.misc.rcused.value
+ 	else:
+-		rctype = config.plugins.remotecontroltype.rctype.value
+-		if rctype == 14:	# XP1000
+-			idx = 3
+-		elif rctype == 18:	# F1
+-			idx = 4
+-		else:
+-			idx = 2
++		idx = 2
+ 	if key in keyDescriptions[idx]:
+ 		return keyDescriptions[idx].get(key, [ ])
+ 
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Makefile.am enigma2-nightly/lib/python/Tools/Makefile.am
 --- enigma2-nightly.org/lib/python/Tools/Makefile.am	2014-06-13 21:45:21.820535788 +0200
 +++ enigma2-nightly/lib/python/Tools/Makefile.am	2014-06-21 13:05:30.095088431 +0200
 @@ -5,4 +5,4 @@
- 	KeyBindings.py BoundFunction.py ISO639.py Notifications.py __init__.py \
- 	RedirectOutput.py StbHardware.py Import.py Event.py CList.py \
- 	LoadPixmap.py Profile.py HardwareInfo.py Transponder.py ASCIItranslit.py \
--	Downloader.py Trashcan.py GetEcmInfo.py Alternatives.py
-+	Downloader.py Trashcan.py GetEcmInfo.py Alternatives.py Command.py
+	KeyBindings.py BoundFunction.py ISO639.py Notifications.py __init__.py \
+	RedirectOutput.py StbHardware.py Import.py Event.py CList.py \
+	LoadPixmap.py Profile.py HardwareInfo.py Transponder.py ASCIItranslit.py \
+-	Downloader.py Trashcan.py GetEcmInfo.py Alternatives.py TextBoundary.py
++	Downloader.py Trashcan.py GetEcmInfo.py Alternatives.py TextBoundary.py Command.py
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/listboxservice.cpp enigma2-nightly/lib/service/listboxservice.cpp
 --- enigma2-nightly.org/lib/service/listboxservice.cpp	2014-06-16 15:29:24.267942989 +0200
 +++ enigma2-nightly/lib/service/listboxservice.cpp	2014-06-21 13:05:30.095088431 +0200
-@@ -145,14 +145,14 @@
+@@ -150,14 +150,14 @@
  	{
  		--i;
  		--index;
@@ -7314,7 +7440,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/listbox
  			break;
  	}
  	return cursorResolve(index);
-@@ -168,7 +168,7 @@
+@@ -173,7 +173,7 @@
  	{
  		++i;
  		++index;
@@ -7364,7 +7490,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/Makefil
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicedvb.cpp enigma2-nightly/lib/service/servicedvb.cpp
 --- enigma2-nightly.org/lib/service/servicedvb.cpp	2014-06-13 21:45:21.820535788 +0200
 +++ enigma2-nightly/lib/service/servicedvb.cpp	2014-06-21 13:05:30.095088431 +0200
-@@ -626,6 +626,9 @@
+@@ -641,6 +641,9 @@
  	if (sc)
  	{
  		std::list<std::string> extensions;
@@ -7388,7 +7514,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  DEFINE_REF(eDVBServiceRecord);
  
  eDVBServiceRecord::eDVBServiceRecord(const eServiceReferenceDVB &ref, bool isstreamclient): m_ref(ref)
-@@ -303,9 +307,43 @@
+@@ -272,9 +276,43 @@
  
  	if (!m_record && m_tuned && !m_streaming && !m_simulate)
  	{
@@ -7396,11 +7522,11 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
 +		int flags = O_WRONLY|O_CREAT|O_LARGEFILE;
 +		struct statfs sbuf;
 +#endif
- 		eDebug("Recording to %s...", m_filename.c_str());
+ 		eDebug("eDVBServiceRecord: Recording to %s...", m_filename.c_str());
  		::remove(m_filename.c_str());
 +#if defined(__sh__)
 +		//we must creat a file for statfs
- 		int fd = ::open(m_filename.c_str(), O_WRONLY|O_CREAT|O_LARGEFILE, 0666);
+		int fd = ::open(m_filename.c_str(), O_WRONLY | O_CREAT | O_LARGEFILE | O_CLOEXEC, 0666);
 +		::close(fd);
 +		if (statfs(m_filename.c_str(), &sbuf) < 0)
 +		{
@@ -7431,7 +7557,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
 +#endif
  		if (fd == -1)
  		{
- 			eDebug("eDVBServiceRecord - can't open recording file!");
+ 			eDebug("eDVBServiceRecord: can't open recording file!");
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviceeplayer3.cpp enigma2-nightly/lib/service/serviceeplayer3.cpp
 --- enigma2-nightly.org/lib/service/serviceeplayer3.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/service/serviceeplayer3.cpp	2014-06-21 13:05:30.095088431 +0200
@@ -8999,7 +9125,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  // eServiceMP3
  int eServiceMP3::ac3_delay = 0,
-@@ -381,25 +415,33 @@
+@@ -381,27 +415,37 @@
  {
  	m_subtitle_sync_timer = eTimer::create(eApp);
  	m_streamingsrc_timeout = 0;
@@ -9016,6 +9142,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	m_ignore_buffering_messages = 0;
  	m_is_live = false;
  	m_use_prefillbuffer = false;
++#endif
+ 	m_paused = false;
+ 	m_seek_paused = false;
++#ifdef ENABLE_MEDIAFWGSTREAMER
  	m_extra_headers = "";
  	m_download_buffer_path = "";
 +#endif
@@ -9033,7 +9163,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	CONNECT(m_nownext_timer->timeout, eServiceMP3::updateEpgCacheNowNext);
  	m_aspect = m_width = m_height = m_framerate = m_progressive = -1;
  
-@@ -411,6 +453,7 @@
+@@ -413,6 +457,7 @@
  	if (!ext)
  		ext = filename + strlen(filename);
  
@@ -9041,7 +9171,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	m_sourceinfo.is_video = FALSE;
  	m_sourceinfo.audiotype = atUnknown;
  	if ( (strcasecmp(ext, ".mpeg") && strcasecmp(ext, ".mpg") && strcasecmp(ext, ".vob") && strcasecmp(ext, ".bin") && strcasecmp(ext, ".dat") ) == 0 )
-@@ -592,10 +635,178 @@
+@@ -598,10 +643,178 @@
  		eDebug("eServiceMP3::sorry, can't play: %s",m_errorInfo.error_message.c_str());
  	}
  	g_free(uri);
@@ -9220,7 +9350,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	// disconnect subtitle callback
  	GstElement *subsink = gst_bin_get_by_name(GST_BIN(m_gst_playbin), "subtitle_sink");
  
-@@ -604,10 +815,12 @@
+@@ -610,10 +823,12 @@
  		g_signal_handler_disconnect (subsink, m_subs_to_pull_handler_id);
  		gst_object_unref(subsink);
  	}
@@ -9233,7 +9363,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (m_gst_playbin)
  	{
  		// disconnect sync handler callback
-@@ -619,10 +832,12 @@
+@@ -625,10 +840,12 @@
  #endif
  		gst_object_unref(bus);
  	}
@@ -9246,7 +9376,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (m_stream_tags)
  		gst_tag_list_free(m_stream_tags);
  
-@@ -641,6 +856,7 @@
+@@ -647,6 +864,7 @@
  		gst_object_unref (GST_OBJECT (m_gst_playbin));
  		eDebug("eServiceMP3::destruct!");
  	}
@@ -9254,7 +9384,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  }
  
  void eServiceMP3::updateEpgCacheNowNext()
-@@ -690,25 +906,47 @@
+@@ -696,25 +914,47 @@
  
  DEFINE_REF(eServiceMP3);
  
@@ -9302,12 +9432,12 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	m_event(this, evStart);
  
-@@ -723,13 +961,45 @@
+@@ -729,13 +969,45 @@
  
  RESULT eServiceMP3::stop()
  {
 +#ifdef ENABLE_MEDIAFWGSTREAMER
- 	ASSERT(m_state != stIdle);
+	ASSERT(m_state != stIdle);
 +#else
 +	if (m_state == stIdle)
 +	{
@@ -9321,7 +9451,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	eDebug("eServiceMP3::stop %s", m_ref.path.c_str());
 +#ifdef ENABLE_MEDIAFWGSTREAMER
- 	gst_element_set_state(m_gst_playbin, GST_STATE_NULL);
+	gst_element_set_state(m_gst_playbin, GST_STATE_NULL);
 +#else
 +	if (player && player->playback && player->output)
 +	{
@@ -9347,8 +9477,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
 +#endif
  	m_state = stStopped;
  	m_nownext_timer->stop();
- 
-@@ -747,37 +1017,119 @@
+ 	if (m_streamingsrc_timeout)
+@@ -755,37 +1027,119 @@
  	return 0;
  }
  
@@ -9468,7 +9598,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	return 0;
  }
-@@ -791,6 +1143,7 @@
+@@ -799,6 +1153,7 @@
  
  RESULT eServiceMP3::getLength(pts_t &pts)
  {
@@ -9476,7 +9606,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (!m_gst_playbin)
  		return -1;
  
-@@ -808,11 +1161,23 @@
+@@ -816,11 +1171,23 @@
  		/* len is in nanoseconds. we have 90 000 pts per second. */
  
  	pts = len / 11111LL;
@@ -9500,15 +9630,15 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  		/* convert pts to nanoseconds */
  	gint64 time_nanoseconds = to * 11111LL;
  	if (!gst_element_seek (m_gst_playbin, m_currentTrickRatio, GST_FORMAT_TIME, (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
-@@ -822,6 +1187,7 @@
+@@ -830,6 +1197,7 @@
  		eDebug("eServiceMP3::seekTo failed");
  		return -1;
  	}
 +#endif
  
- 	return 0;
- }
-@@ -830,17 +1196,25 @@
+ 	if (m_paused)
+ 	{
+@@ -844,17 +1212,25 @@
  {
  	RESULT ret = -1;
  
@@ -9534,13 +9664,13 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  RESULT eServiceMP3::trickSeek(gdouble ratio)
  {
  	if (!m_gst_playbin)
-@@ -881,28 +1255,41 @@
+@@ -895,36 +1271,48 @@
  	m_decoder_time_valid_state = 0;
  	return 0;
  }
 +#endif
  
- 
+-
  RESULT eServiceMP3::seekRelative(int direction, pts_t to)
  {
 +#ifdef ENABLE_MEDIAFWGSTREAMER
@@ -9565,10 +9695,18 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  }
  
 +#ifdef ENABLE_MEDIAFWGSTREAMER
+ #if GST_VERSION_MAJOR < 1
  gint eServiceMP3::match_sinktype(GstElement *element, gpointer type)
  {
  	return strcmp(g_type_name(G_OBJECT_TYPE(element)), (const char*)type);
  }
+ #else
+ gint eServiceMP3::match_sinktype(const GValue *velement, const gchar *type)
+ {
+ 	GstElement *element = GST_ELEMENT_CAST(g_value_get_object(velement));
+ 	return strcmp(g_type_name(G_OBJECT_TYPE(element)), type);
+ }
+ #endif
 +#endif
  
  RESULT eServiceMP3::getPlayPosition(pts_t &pts)
@@ -9577,7 +9715,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	gint64 pos;
  	pts = 0;
  
-@@ -932,6 +1319,27 @@
+@@ -954,6 +1342,27 @@
  
  	/* pos is in nanoseconds. we have 90 000 pts per second. */
  	pts = pos / 11111LL;
@@ -9605,7 +9743,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	return 0;
  }
  
-@@ -943,6 +1351,7 @@
+@@ -965,6 +1374,7 @@
  
  RESULT eServiceMP3::isCurrentlySeekable()
  {
@@ -9613,7 +9751,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	int ret = 3; /* just assume that seeking and fast/slow winding are possible */
  
  	if (!m_gst_playbin)
-@@ -951,6 +1360,9 @@
+@@ -973,6 +1383,9 @@
  		return 0;
  
  	return ret;
@@ -9623,7 +9761,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  }
  
  RESULT eServiceMP3::info(ePtr<iServiceInformation>&i)
-@@ -984,7 +1396,9 @@
+@@ -1006,7 +1419,9 @@
  
  int eServiceMP3::getInfo(int w)
  {
@@ -9633,7 +9771,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	switch (w)
  	{
-@@ -1024,7 +1438,9 @@
+@@ -1046,7 +1461,9 @@
  	case sTagKeywords:
  	case sTagChannelMode:
  	case sUser+12:
@@ -9643,7 +9781,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	case sTagTrackGain:
  	case sTagTrackPeak:
  	case sTagAlbumGain:
-@@ -1035,6 +1451,7 @@
+@@ -1057,6 +1474,7 @@
  	case sTagPreviewImage:
  	case sTagAttachment:
  		return resIsPyObject;
@@ -9651,11 +9789,12 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	case sTagTrackNumber:
  		tag = GST_TAG_TRACK_NUMBER;
  		break;
-@@ -1068,16 +1485,19 @@
+@@ -1090,17 +1485,20 @@
  	case sTagCRC:
  		tag = "has-crc";
  		break;
 +#endif
+ 	case sBuffer: return m_bufferInfo.bufferPercent;
  	default:
  		return resNA;
  	}
@@ -9666,12 +9805,12 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	guint value;
  	if (gst_tag_list_get_uint(m_stream_tags, tag, &value))
- 		return (int) value;
+		return (int) value;
 +#endif
  
  	return 0;
  }
-@@ -1102,6 +1522,7 @@
+@@ -1125,6 +1546,7 @@
  		}
  	}
  
@@ -9679,7 +9818,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if ( !m_stream_tags && w < sUser && w > 26 )
  		return "";
  	const gchar *tag = 0;
-@@ -1214,9 +1635,69 @@
+@@ -1252,9 +1674,69 @@
  		g_free(value);
  		return res;
  	}
@@ -9749,7 +9888,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  ePtr<iServiceInfoContainer> eServiceMP3::getInfoObject(int w)
  {
  	eServiceMP3InfoContainer *container = new eServiceMP3InfoContainer;
-@@ -1280,6 +1761,7 @@
+@@ -1318,6 +1800,7 @@
  	}
  	return retval;
  }
@@ -9757,7 +9896,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  RESULT eServiceMP3::audioChannel(ePtr<iAudioChannelSelection> &ptr)
  {
-@@ -1312,13 +1794,16 @@
+@@ -1350,13 +1833,16 @@
  
  int eServiceMP3::getCurrentTrack()
  {
@@ -9774,7 +9913,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	bool validposition = false;
  	pts_t ppos = 0;
  	if (getPlayPosition(ppos) >= 0)
-@@ -1328,8 +1813,10 @@
+@@ -1366,8 +1852,10 @@
  		if (ppos < 0)
  			ppos = 0;
  	}
@@ -9785,7 +9924,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (!ret)
  	{
  		if (validposition)
-@@ -1338,12 +1825,14 @@
+@@ -1376,12 +1864,14 @@
  			seekTo(ppos);
  		}
  	}
@@ -9800,7 +9939,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	int current_audio;
  	g_object_set (G_OBJECT (m_gst_playbin), "current-audio", i, NULL);
  	g_object_get (G_OBJECT (m_gst_playbin), "current-audio", &current_audio, NULL);
-@@ -1354,6 +1843,16 @@
+@@ -1392,6 +1882,16 @@
  		return 0;
  	}
  	return -1;
@@ -9817,7 +9956,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  }
  
  int eServiceMP3::getCurrentChannel()
-@@ -1371,6 +1870,7 @@
+@@ -1409,6 +1909,7 @@
  {
   	if (i >= m_audioStreams.size())
  		return -2;
@@ -9825,7 +9964,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  		info.m_description = m_audioStreams[i].codec;
  /*	if (m_audioStreams[i].type == atMPEG)
  		info.m_description = "MPEG";
-@@ -1390,11 +1890,28 @@
+@@ -1428,11 +1929,28 @@
  		info.m_description = "FLAC";
  	else
  		info.m_description = "???";*/
@@ -9854,7 +9993,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  subtype_t getSubtitleType(GstPad* pad, gchar *g_codec=NULL)
  {
  	subtype_t type = stUnknown;
-@@ -2122,9 +2639,11 @@
+@@ -2185,9 +2703,11 @@
  		}
  	}
  }
@@ -9866,8 +10005,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  void eServiceMP3::gstCBsubtitleAvail(GstElement *subsink, GstBuffer *buffer, gpointer user_data)
  {
  	eServiceMP3 *_this = (eServiceMP3*)user_data;
-@@ -2242,9 +2761,30 @@
- 		}
+@@ -2315,9 +2835,30 @@
+ #endif
  	}
  }
 +#else
@@ -9897,10 +10036,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	pts_t running_pts = 0;
  	int32_t next_timer = 0, decoder_ms, start_ms, end_ms, diff_start_ms, diff_end_ms;
  	subtitle_pages_map_t::iterator current;
-@@ -2347,23 +2887,30 @@
+@@ -2420,23 +2888,30 @@
  	m_subtitle_sync_timer->start(next_timer, true);
  
- 	eDebug("\n\n");
+ 	//eDebug("\n\n");
 +
 +#endif
  }
@@ -9908,8 +10047,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  RESULT eServiceMP3::enableSubtitles(iSubtitleUser *user, struct SubtitleTrack &track)
  {
  	if (m_currentSubtitleStream != track.pid)
--	{
-+	{	
+ 	{
 +#ifdef ENABLE_MEDIAFWGSTREAMER
  		g_object_set (G_OBJECT (m_gst_playbin), "current-text", -1, NULL);
 +#endif
@@ -9929,7 +10067,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  		eDebug ("eServiceMP3::switched to subtitle stream %i", m_currentSubtitleStream);
  
  #ifdef GSTREAMER_SUBTITLE_SYNC_MODE_BUG
-@@ -2373,7 +2920,13 @@
+@@ -2446,7 +2994,13 @@
  		 */
  		seekRelative(-1, 90000);
  #endif
@@ -9943,7 +10081,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	return 0;
  }
-@@ -2381,15 +2934,23 @@
+@@ -2454,15 +3008,23 @@
  RESULT eServiceMP3::disableSubtitles()
  {
  	eDebug("eServiceMP3::disableSubtitles");
@@ -9967,7 +10105,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	return 0;
  }
  
-@@ -2456,7 +3017,9 @@
+@@ -2529,7 +3091,9 @@
  int eServiceMP3::setBufferSize(int size)
  {
  	m_buffer_size = size;
@@ -9977,7 +10115,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	return 0;
  }
  
-@@ -2472,6 +3035,7 @@
+@@ -2545,6 +3109,7 @@
  
  void eServiceMP3::setAC3Delay(int delay)
  {
@@ -9985,7 +10123,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	ac3_delay = delay;
  	if (!m_gst_playbin || m_state != stRunning)
  		return;
-@@ -2499,10 +3063,12 @@
+@@ -2572,10 +3137,12 @@
  			eTSMPEGDecoder::setHwAC3Delay(config_delay_int);
  		}
  	}
@@ -9998,7 +10136,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	pcm_delay = delay;
  	if (!m_gst_playbin || m_state != stRunning)
  		return;
-@@ -2530,4 +3096,5 @@
+@@ -2603,4 +3170,5 @@
  			eTSMPEGDecoder::setHwPCMDelay(config_delay_int);
  		}
  	}
@@ -10125,10 +10263,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	bool m_is_live;
  	bool m_use_prefillbuffer;
 +#endif
+ 	bool m_paused;
+ 	bool m_seek_paused;
  	bufferInfo m_bufferInfo;
- 	errorInfo m_errorInfo;
- 	std::string m_download_buffer_path;
-@@ -256,6 +314,7 @@
+@@ -258,6 +316,7 @@
  		stIdle, stRunning, stStopped,
  	};
  	int m_state;
@@ -10136,9 +10274,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	GstElement *m_gst_playbin, *audioSink, *videoSink;
  	GstTagList *m_stream_tags;
  
-@@ -300,6 +359,22 @@
- 	static void playbinNotifySource(GObject *object, GParamSpec *unused, gpointer user_data);
- 	static gint match_sinktype(GstElement *element, gpointer type);
+@@ -306,6 +365,22 @@
+ 	static gint match_sinktype(const GValue *velement, const gchar *type);
+ #endif
  	static void handleElementAdded(GstBin *bin, GstElement *element, gpointer user_data);
 +#else
 +	Context_t * player;
@@ -10159,7 +10297,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	struct subtitle_page_t
  	{
-@@ -323,17 +398,23 @@
+@@ -329,17 +404,23 @@
  	int m_decoder_time_valid_state;
  
  	void pushSubtitles();
@@ -10233,7 +10371,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigm
  #define INFOFILE "/maintainer.info"
  
  #define RINGBUFFER_SIZE 16384
-@@ -267,7 +270,7 @@
+@@ -237,7 +240,7 @@
  	gPainter p(my_dc);
  	p.resetOffset();
  	p.resetClip(eRect(ePoint(0, 0), my_dc->size()));
@@ -10241,17 +10379,17 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigm
 +	p.setBackgroundColor(gRGB(0x000080));
  	p.setForegroundColor(gRGB(0xFFFFFF));
  
- 	ePtr<gFont> font = new gFont("Regular", 20);
-@@ -281,7 +284,7 @@
+ 	int hd =  my_dc->size().width() == 1920;
+@@ -252,7 +255,7 @@
  	os << "We are really sorry. Your STB encountered "
  		"a software problem, and needs to be restarted.\n"
  		"Please send the logfile " << crashlog_name << " to " << crash_emailaddr << ".\n"
 -		"Your STB restarts in 10 seconds!\n"
-+		"Your STB will restart in 25 seconds...\n"
++		"Your STB will restart in 30 seconds...\n"
  		"Component: " << crash_component;
  
  	p.renderText(usable_area, os.str().c_str(), gPainter::RT_WRAP|gPainter::RT_HALIGN_LEFT);
-@@ -291,7 +294,7 @@
+@@ -262,7 +265,7 @@
  	int i;
  
  	start = std::string::npos + 1;
@@ -10260,25 +10398,25 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigm
  	{
  		start = lines.rfind('\n', start - 1);
  		if (start == std::string::npos)
-@@ -301,12 +304,12 @@
+@@ -272,12 +275,12 @@
  		}
  	}
  
--	font = new gFont("Regular", 14);
-+	font = new gFont("Regular", 12);
+-	font = new gFont("Regular", hd ? 21 : 14);
++	font = new gFont("Regular", hd ? 14 : 10);
  	p.setFont(font);
  
  	p.renderText(usable_area,
  		lines.substr(start), gPainter::RT_HALIGN_LEFT);
 -	sleep(10);
-+	sleep(25);
++	sleep(30);
  
- 	/*
- 	 * When 'component' is NULL, we are called because of a python exception.
+	/*
+	 * When 'component' is NULL, we are called because of a python exception.
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp enigma2-nightly/main/enigma.cpp
 --- enigma2-nightly.org/main/enigma.cpp	2014-06-13 21:45:21.824535788 +0200
 +++ enigma2-nightly/main/enigma.cpp	2014-06-21 13:05:30.099088431 +0200
-@@ -29,10 +29,15 @@
+@@ -30,10 +30,15 @@
  #include <lib/python/python.h>
  #include <lib/python/pythonconfig.h>
  
@@ -10294,7 +10432,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  
  #ifdef OBJECT_DEBUG
  int object_total_remaining;
-@@ -135,7 +140,9 @@
+@@ -136,7 +141,9 @@
  	atexit(object_dump);
  #endif
  
@@ -10304,7 +10442,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  
  	// set pythonpath if unset
  	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
-@@ -168,7 +175,11 @@
+@@ -170,7 +177,11 @@
  	eWidgetDesktop dsk_lcd(my_lcd_dc->size());
  
  	dsk.setStyleID(0);
@@ -10316,7 +10454,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  
  /*	if (double_buffer)
  	{
-@@ -209,7 +230,7 @@
+@@ -211,7 +211,7 @@
  				if (!i)
  					eDebug("failed to load %s! (%m)", rfilename.c_str());
  				else
@@ -10325,7 +10463,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  				break;
  			}
  		}
-@@ -214,9 +235,9 @@
+@@ -216,9 +227,9 @@
  			}
  		}
  		if (i)
@@ -10337,7 +10475,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  	}
  
  	gRC::getInstance()->setSpinnerDC(my_dc);
-@@ -222,6 +243,12 @@
+@@ -224,6 +235,12 @@
  	gRC::getInstance()->setSpinnerDC(my_dc);
  
  	eRCInput::getInstance()->keyEvent.connect(slot(keyEvent));
@@ -10381,7 +10519,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/Makefile.am en
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/mytest.py enigma2-nightly/mytest.py
 --- enigma2-nightly.org/mytest.py	2014-06-13 21:45:21.824535788 +0200
 +++ enigma2-nightly/mytest.py	2014-06-21 13:05:30.099088431 +0200
-@@ -302,6 +302,10 @@
+@@ -282,6 +282,10 @@
  
  		self.pushCurrent()
  		dlg = self.current_dialog = self.instantiateDialog(screen, *arguments, **kwargs)
@@ -10392,7 +10530,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/mytest.py enigma2-n
  		dlg.isTmp = True
  		dlg.callback = None
  		self.execBegin()
-@@ -510,10 +514,10 @@
+@@ -489,10 +493,10 @@
  	if wakeupList:
  		from time import strftime
  		startTime = wakeupList[0]
@@ -10485,7 +10623,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  		</condition>
 --- enigma2-nightly.org/lib/python/Components/About.py
 +++ enigma2-nightly/lib/python/Components/About.py
-@@ -33,7 +33,7 @@
+@@ -42,7 +42,7 @@
  		return _("unknown")
  
  def getHardwareTypeString():
@@ -10608,3 +10746,64 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 #+
 # 	return 0;
 # }
+diff -Nur '--exclude=.git' '--exclude=tuxtxt' enigma2-nightly.org/data/rc_models/rc_models.cfg enigma2-nightly.patched/data/rc_models/rc_models.cfg
+--- enigma2-nightly.org/data/rc_models/rc_models.cfg	2014-04-03 08:38:53.154073324 +0200
++++ enigma2-nightly.patched/data/rc_models/rc_models.cfg	2014-05-28 20:18:22.000000000 +0200
+@@ -19,34 +19,12 @@
+ #
+ # When no entry matches at all, 'default' will be used as remoteName
+ #
+-et10000  et8000
+-et10000.4   dmm
+-et10000.6   dmmadv
+-et4000   et4x00
+-et6500   et6x00
+-et6500.4   dmm
+-et6500.6   dmmadv
+-et8000   et8000
+-et8000.4   dmm
+-et8000.6   dmmadv
+-et9000   et9x00
+-et9000.4   dmm
+-et9000.6   dmmadv
+-et9000.9  et9500
+-et9200   et9x00
+-et9500   et9500
+-vuduo2   vuduo2
+-vuduo    vu
+-vusolo2  vu
+-vusolo   vu
+-vuultimo vuultimo
+-vuuno    vu
+-xp1000   xp1000
+-vusolose vu
+-vuzero   vu
+-formuler1   formuler1
+-et7000 et7x00
+-et7500 et7x00
+-et8500 et8000
+-hd2400	hd2400
+-hd1100	hd1100
++hdbox       fs9000
++octagon1008 hs9510
++atevio7500  fs9000
++hs7110      hs7110
++hs7119      hs7110
++hs7810a     hs9510
++hs7819      hs9510
++spark       spark
++spark7162   spark
++
+diff -Nur '--exclude=.git' '--exclude=tuxtxt' enigma2-nightly.org/data/rc_models/Makefile.am enigma2-nightly.patched/data/rc_models/Makefile.am
+--- enigma2-nightly.org/data/rc_models/Makefile.am	2014-04-03 08:38:53.154073324 +0200
++++ enigma2-nightly.patched/data/rc_models/Makefile.am	2014-05-28 20:18:22.000000000 +0200
+@@ -3,6 +3,8 @@
+ dist_install_DATA = \
+ 	rc_models.cfg \
+	dmmadv.png  et4x00.png  et8000.png  et9x00.png  vu.png        xp1000.png \
++	fs9000.png  hs7110.png  hs9510.png  spark.png \
++	fs9000.xml  hs7110.xml  hs9510.xml  spark.xml \
+ 	dmm.png     et6x00.png  et9500.png  vuduo2.png  vuultimo.png  et7x00.png    formuler1.png \
+ 	hd2400.png  hd1100.png \
+ 	dmmadv.xml  et4x00.xml  et8000.xml  et9x00.xml  vuultimo.xml  xp1000.xml \
+

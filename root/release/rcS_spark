@@ -286,7 +286,7 @@ inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -
 if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
 #   (/sbin/ntpdate pl.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
-   (/sbin/ntpdate ntp.nasa.gov; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
+    /sbin/ntpdate de.pool.ntp.org
 else
    if [ -e /usr/sbin/time.sh ]; then
       echo "Use transponder time"

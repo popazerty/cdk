@@ -1112,16 +1112,6 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/web/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/words/test
 
-#
-# copy SH4 remote control files from .../root/release to /usr/local/share/enigma2/rc_models
-#
-	if [ -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-		cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000.png; \
-		cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510.png; \
-		cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110.png; \
-		cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark.png; \
-	fi
-#
 # delete mips remote control files
 # old rc_models scheme
 	if [ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
@@ -1144,9 +1134,13 @@ endif
 	if [ -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00.*; \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et7x00.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et8000.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9500.*; \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/formuler1.*; \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd1100.*; \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd2400.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu*.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000.*; \
 	fi

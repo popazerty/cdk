@@ -335,9 +335,10 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 	(echo "Updating STlinux kernel source"; cd $(archivedir)/linux-sh4-2.6.32.y; git pull; git checkout HEAD;); \
 	[ -d "$(archivedir)/linux-sh4-2.6.32.y" ] || \
 	(echo "Getting STlinux kernel source"; git clone $$REPO $(archivedir)/linux-sh4-2.6.32.y); \
-	cp -ra $(archivedir)/linux-sh4-2.6.32.y $(buildprefix)/$(KERNEL_DIR); \
+	(echo "Copying kernel source code to build environment"; cp -ra $(archivedir)/linux-sh4-2.6.32.y $(buildprefix)/$(KERNEL_DIR)); \
 	(echo "Applying patch level P0$(KERNELLABEL)"; cd $(KERNEL_DIR); git checkout -q $(HOST_KERNEL_REVISION))
 	$(if $(HOST_KERNEL_PATCHES),cd $(KERNEL_DIR) && cat $(HOST_KERNEL_PATCHES:%=$(buildprefix)/Patches/$(BUILDCONFIG$)/%) | patch -p1)
+#	(echo "Archiving patched kernel source"; tar -cvzf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz $(KERNEL_DIR)/*)
 	$(INSTALL) -m644 Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
 	ln -s $(KERNEL_DIR) $(buildprefix)/linux-sh4
 	-rm $(KERNEL_DIR)/localversion*
