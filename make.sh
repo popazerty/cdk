@@ -8,7 +8,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 5: Media Framework (1-4)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1/Neutrino=2) (1-2)"
- echo "Parameter 8: Neutrino variant (1-6)"
+ echo "Parameter 8: Neutrino variant (1-5)"
  exit
 fi
 
@@ -310,23 +310,21 @@ case "$REPLY" in
 		fi
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
-			[1-6])	REPLY=$8;;
+			[1-5])	REPLY=$8;;
 			*)	echo -e "\nWhich neutrino variant do you want to build?"
-				echo "   1) neutrino-mp"
-				echo "   2) neutrino-mp-next"
+				echo "   1) neutrino-mp-next"
+				echo "   2) neutrino-mp-cst-next"
 				echo "   3) neutrino-hd2-exp"
-				echo "   4) neutrino-mp-github-next-cst"
-				echo "   5) neutrino-mp-martii-github"
-				echo "   6) neutrino-mp-tangos"
-				read -p " Select Neutrino variant (1-6)? ";;
+				echo "   4) neutrino-mp-martii-github"
+				echo "   5) neutrino-mp-tangos"
+				read -p " Select Neutrino variant (1-5)? ";;
 		esac
 		case "$REPLY" in
-			2)	IMAGEN="neutrino-mp-next";;
+			2)	IMAGEN="neutrino-mp-cst-next";;
 			3)	IMAGEN="neutrino-hd2-exp";;
-			4)	IMAGEN="neutrino-mp-github-next-cst";;
-			5)	IMAGEN="neutrino-mp-martii-github";;
-			6)	IMAGEN="neutrino-mp-tangos";;
-			*)	IMAGEN="neutrino-mp";;
+			4)	IMAGEN="neutrino-mp-martii-github";;
+			5)	IMAGEN="neutrino-mp-tangos";;
+			*)	IMAGEN="neutrino-mp-next";;
 		esac
 		NEUTRINO=$REPLY;;
 	*)	if [ "$MFWORK" == "built-in" ]; then
@@ -377,12 +375,11 @@ if [ "$IMAGEN" == "enigma2" ]; then
   echo "make yaud-enigma2-pli-nightly" >> $CURDIR/build
 else
   case "$NEUTRINO" in
-    1) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
-    2) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
+    1) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
+    2) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
     3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-mp-github-next-cst" >> $CURDIR/build;;
-    5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
-    6) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+    4) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
+    5) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
     *) exit;;
   esac
 fi

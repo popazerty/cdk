@@ -357,7 +357,6 @@ neutrino-mp-martii-github-distclean:
 
 ################################################################################
 #
-
 # yaud-neutrino-mp-next
 #
 yaud-neutrino-mp-next: yaud-none lirc \
