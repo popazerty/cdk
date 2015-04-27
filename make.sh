@@ -328,7 +328,7 @@ case "$REPLY" in
 		esac
 		NEUTRINO=$REPLY
 		if [ -e lastChoice ]; then
-			LASTIMAGE=`cat lastChoice | grep enable-enigma`
+			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
 			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
 				make distclean
 			fi
@@ -342,7 +342,7 @@ case "$REPLY" in
 		CONFIGPARAM="$CONFIGPARAM --enable-enigma2 --enable-wlandriver"
 		IMAGEN="enigma2"
 		if [ -e lastChoice ]; then
-			LASTIMAGE=`cat lastChoice | grep enable-neutrino`
+			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
 			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
 				make distclean
 			fi
