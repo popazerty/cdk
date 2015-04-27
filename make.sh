@@ -165,7 +165,7 @@ case $2 in
 		echo "   2) STM 24 P0211 (recommended)"
 		echo "   3) STM 24 P0214 (experimental)"
 		echo "   4) STM 24 P0215 (experimental)"
-		echo "   4) STM 24 P0217 (experimental)"
+		echo "   5) STM 24 P0217 (experimental)"
 		read -p "Select kernel (1-5)? ";;
 esac
 
@@ -326,7 +326,13 @@ case "$REPLY" in
 			5)	IMAGEN="neutrino-mp-tangos";;
 			*)	IMAGEN="neutrino-mp-next";;
 		esac
-		NEUTRINO=$REPLY;;
+		NEUTRINO=$REPLY
+		if [ -e lastChoice ]; then
+			LASTIMAGE=`cat lastChoice | grep enable-enigma`
+			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
+				make distclean
+			fi
+		fi;;
 	*)	if [ "$MFWORK" == "built-in" ]; then
 			echo "You selected built-in as the Media Framework."
 			echo "You cannot build Enigma2 with that."
@@ -334,7 +340,13 @@ case "$REPLY" in
 			exit
 		fi
 		CONFIGPARAM="$CONFIGPARAM --enable-enigma2 --enable-wlandriver"
-		IMAGEN="enigma2";;
+		IMAGEN="enigma2"
+		if [ -e lastChoice ]; then
+			LASTIMAGE=`cat lastChoice | grep enable-neutrino`
+			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
+				make distclean
+			fi
+		fi;;
 esac
 
 ##############################################
