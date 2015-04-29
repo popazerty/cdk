@@ -301,7 +301,7 @@
  };
  
  /* time must be given as follows:
-@@ -341,36 +474,47 @@
+@@ -341,36 +474,46 @@
   * time[3] = min
   * time[4] = sec
   */
@@ -345,7 +345,6 @@
  		struct set_standby_s standby;
  		struct set_time_s time;
 +		struct set_timeformat_s timeformat;
-+		struct set_time_display_s time_display;
  	} u;
  };
 -
