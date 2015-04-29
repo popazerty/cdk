@@ -397,7 +397,7 @@
 -#endif
 -
 -#if defined (PLATFORM_KATHREIN) || defined (PLATFORM_SPARK7162)
-+  #elif defined (PLATFORM_FORTIS_HDBOX)
++  #elif defined (PLATFORM_FORTIS_HDBOX) \
 +     || defined (PLATFORM_OCTAGON1008) \
 +     || defined (PLATFORM_ATEVIO7500) \
 +     || defined (PLATFORM_HS7110) \
