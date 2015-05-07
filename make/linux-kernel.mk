@@ -163,7 +163,7 @@ FORTISPATCHES_24 = $(COMMONPATCHES_24) \
 		$(if $(NEUTRINO),linux-sh4-fortis_hdbox_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-usbwait123_stm24.patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
-		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		$(if $(P0209)$(P0211)$(P0214)$(P0215)$(P0217),linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch) \
 		$(if $(P0209),linux-sh4-fortis_hdbox_i2c_st40_stm24$(PATCH_STR).patch)
 
 ADB_BOXPATCHES_24 = $(COMMONPATCHES_24) \
@@ -330,15 +330,28 @@ HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,-,$(KERNELVERSION))_$(MODNAME).co
 
 $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS)
 	rm -rf linux-sh4*
-	REPO=git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro; \
-	[ -d "$(archivedir)/linux-sh4-2.6.32.y.git" ] && \
-	(echo "Updating STlinux kernel source"; cd $(archivedir)/linux-sh4-2.6.32.y.git; git pull;); \
-	[ -d "$(archivedir)/linux-sh4-2.6.32.y.git" ] || \
-	(echo "Getting STlinux kernel source"; git clone $$REPO $(archivedir)/linux-sh4-2.6.32.y.git); \
-	(echo "Copying kernel source code to build environment"; cp -ra $(archivedir)/linux-sh4-2.6.32.y.git $(buildprefix)/$(KERNEL_DIR)); \
-	(echo "Applying patch level P0$(KERNELLABEL)"; cd $(KERNEL_DIR); git checkout -q $(HOST_KERNEL_REVISION))
+	if [ -e $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz ]; then \
+		mkdir $(buildprefix)/$(KERNEL_DIR); \
+		echo "Getting archived P0$(KERNELLABEL) kernel source"; \
+		tar -xf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz -C $(buildprefix)/$(KERNEL_DIR); \
+	else \
+		if [ -d $(archivedir)/linux-sh4-2.6.32.y.git ]; then \
+			echo "Updating STlinux kernel source"; \
+			cd $(archivedir)/linux-sh4-2.6.32.y.git; git pull; \
+		else \
+			echo "Getting STlinux kernel source"; \
+			REPO=git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro; \
+			git clone $$REPO $(archivedir)/linux-sh4-2.6.32.y.git; \
+		fi; \
+		echo "Copying kernel source code to build environment"; \
+		cp -ra $(archivedir)/linux-sh4-2.6.32.y.git $(buildprefix)/$(KERNEL_DIR); \
+		echo "Applying patch level P0$(KERNELLABEL)"; \
+		cd $(buildprefix)/$(KERNEL_DIR); \
+		git checkout -q $(HOST_KERNEL_REVISION); \
+		echo "Archiving patched kernel source"; \
+		tar --exclude=.git -czf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz .; \
+	fi
 	$(if $(HOST_KERNEL_PATCHES),cd $(KERNEL_DIR) && cat $(HOST_KERNEL_PATCHES:%=$(buildprefix)/Patches/$(BUILDCONFIG$)/%) | patch -p1)
-#	(echo "Archiving patched kernel source"; tar -czf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz $(KERNEL_DIR)/*)
 	$(INSTALL) -m644 Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
 	ln -s $(KERNEL_DIR) $(buildprefix)/linux-sh4
 	-rm $(KERNEL_DIR)/localversion*
