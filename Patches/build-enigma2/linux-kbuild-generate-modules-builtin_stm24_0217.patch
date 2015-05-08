@@ -92,12 +92,13 @@ diff --git a/Makefile b/Makefile
  	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
  
  # This depmod is only for convenience to give the initial
-@@ -1249,7 +1254,7 @@
+@@ -1249,7 +1254,8 @@
  		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
  		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
  		-o -name '*.symtypes' -o -name 'modules.order' \
 -		-o -name 'Module.markers' -o -name '.tmp_*.o.*' \
-+		-o -name 'Module.markers' -o modules.order -o -name '.tmp_*.o.*' \
++		-o -name 'modules.builtin' -o -name 'Module.markers' \
++		-o -name '.tmp_*.o.*' \
  		-o -name '*.gcno' \) -type f -print | xargs rm -f
  
  # mrproper - Delete all generated files, including .config
@@ -111,23 +112,21 @@ diff --git a/Makefile b/Makefile
  clean: $(clean-dirs)
  	$(call cmd,rmdirs)
  	$(call cmd,rmfiles)
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
 --- a/scripts/Kbuild.include
 +++ b/scripts/Kbuild.include
-@@ -154,6 +154,12 @@
+@@ -153,6 +153,12 @@
+ # Usage:
  # $(Q)$(MAKE) $(build)=dir
  build := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.build obj
- 
++
 +###
 +# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.modbuiltin obj=
 +# Usage:
 +# $(Q)$(MAKE) $(modbuiltin)=dir
 +modbuiltin := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.modbuiltin obj
-+
+ 
  # Prefix -I with $(srctree) if it is not an absolute path.
  # skip if -I has no parameter
- addtree = $(if $(patsubst -I%,%,$(1)), \
-diff --git a/scripts/Makefile.modbuiltin b/scripts/Makefile.modbuiltin
 --- /dev/null
 +++ b/scripts/Makefile.modbuiltin
 @@ -0,0 +1,55 @@
@@ -186,7 +185,6 @@ diff --git a/scripts/Makefile.modbuiltin b/scripts/Makefile.modbuiltin
 +# information in a variable se we can use it in if_changed and friends.
 +
 +.PHONY: $(PHONY)
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
 --- a/scripts/kconfig/confdata.c
 +++ b/scripts/kconfig/confdata.c
 @@ -677,7 +677,7 @@
@@ -198,16 +196,17 @@ diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
  	time_t now;
  	int i, l;
  
-@@ -692,9 +692,16 @@
+@@ -691,10 +691,17 @@
+ 	out = fopen(".tmpconfig", "w");
  	if (!out)
  		return 1;
- 
++
 +	tristate = fopen(".tmpconfig_tristate", "w");
 +	if (!tristate) {
 +		fclose(out);
 +		return 1;
 +	}
-+
+ 
  	out_h = fopen(".tmpconfig.h", "w");
  	if (!out_h) {
  		fclose(out);
@@ -240,7 +239,7 @@ diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
  				fprintf(out_h, "#define CONFIG_%s 1\n", sym->name);
  				break;
  			}
-@@ -772,6 +786,7 @@
+@@ -772,12 +786,18 @@
  		}
  	}
  	fclose(out);
@@ -248,16 +247,15 @@ diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
  	fclose(out_h);
  
  	name = getenv("KCONFIG_AUTOHEADER");
-@@ -779,6 +794,11 @@
+ 	if (!name)
  		name = "include/linux/autoconf.h";
  	if (rename(".tmpconfig.h", name))
- 		return 1;
++		return 1;
 +	name = getenv("KCONFIG_TRISTATE");
 +	if (!name)
 +		name = "include/config/tristate.conf";
 +	if (rename(".tmpconfig_tristate", name))
-+		return 1;
+ 		return 1;
  	name = conf_get_autoconfig_name();
  	/*
- 	 * This must be the last step, kbuild has a dependency on auto.conf
 

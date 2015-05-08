@@ -7,7 +7,7 @@ MODDIR=/lib/modules
 
 echo "Init frontpanel"
 insmod $MODDIR/aotom.ko paramDebug=0
-insmod $MODDIR/simu_button.ko
+#insmod $MODDIR/simu_button.ko
 if [ -e $MODDIR/encrypt.ko ]; then
    insmod $MODDIR/encrypt.ko
 fi
@@ -270,8 +270,8 @@ else
    fi
 fi
 
-echo "Start Enigma2"
-echo "Start Enigma2" > /dev/vfd
+echo "Start Neutrino"
+echo "Start Neutrino" > /dev/vfd
 
 until false
 do
@@ -281,53 +281,17 @@ do
    fi
    /usr/local/bin/enigma2
    rtv=$?
-   echo "e2 ended <- RTV: " $rtv
+   echo "Neutrino ended <- RTV: " $rtv
    /bin/fp_control -i 46 0
    case "$rtv" in
       0)  echo "0"
-          echo "E2 ERROR"
-          echo "E2 Error" > /dev/vfd
-          init 6;;
-      1)  echo "1"
           echo "SHUTDOWN"
           echo "Shutdown" > /dev/vfd
-          if [ -e /usr/local/share/enigma2/shutdown.mvi ]; then
-             showiframe -p /usr/local/share/enigma2/shutdown.mvi &
           fi
           init 0;;
-      2)  echo "2"
+      1)  echo "1"
           echo "REBOOT"
           echo "Reboot" > /dev/vfd
-          init 6;;
-      3)  echo "3"
-          echo "E2 RESTART"
-          echo "Restart GUI" > /dev/vfd
-          echo "0" > /proc/progress
-          if [ -e /usr/local/share/enigma2/backdrop.mvi ]; then
-             showiframe -p /usr/local/share/enigma2/backdrop.mvi &
-          else
-             showiframe -p /boot/bootlogo.mvi &
-          fi;;
-      10) echo "10"
-          echo "SPARK RESTART"
-          echo "SPARK Restart" > /dev/vfd
-          insmod $MODDIR/i2s.ko
-          if [ ! -f /etc/fw_env.config ]; then
-             echo "fw_env.config not found - will create it"
-             echo '/dev/mtd7 0x000A0000 0x00020000 0x20000' > /etc/fw_env.config
-          fi
-          var=`fw_printenv | grep 'bootargs_spark='` ; fw_setenv bootargs ${var#*=}
-          var=`fw_printenv | grep 'bootcmd_spark='` ; fw_setenv bootcmd ${var#*=}
-          var=`fw_printenv | grep 'boot_system_spark='` ; fw_setenv boot_system ${var#*=}
-          var=`fw_printenv | grep 'userfs_base_spark='` ; fw_setenv userfs_base ${var#*=}
-          var=`fw_printenv | grep 'userfs_len_spark='` ; fw_setenv userfs_len ${var#*=}
-          var=`fw_printenv | grep 'kernel_base_spark='` ; fw_setenv kernel_base ${var#*=}
-          var=`fw_printenv | grep 'kernel_name_spark='` ; fw_setenv kernel_name ${var#*=}
-          var=`fw_printenv | grep 'userfs_name_spark='` ; fw_setenv userfs_name ${var#*=} 
-          var=`fw_printenv | grep 'loadu_userfs_spark='` ; fw_setenv loadu_userfs ${var#*=}
-          var=`fw_printenv | grep 'loadu_kernel_spark='` ; fw_setenv loadu_kernel ${var#*=}
-          var=`fw_printenv | grep 'kernel_len_spark='` ; fw_setenv kernel_len ${var#*=}
-          sync
           init 6;;
       *)  echo "*"
           echo "ERROR"

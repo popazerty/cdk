@@ -114,8 +114,8 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb @DEPENDS_module_init_tools@
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
-			--disable-builddir \
 			--prefix= \
+			--disable-builddir \
 		&& \
 		$(MAKE) && \
 		@INSTALL_module_init_tools@

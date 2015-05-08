@@ -184,6 +184,11 @@ $(D)/ntp: $(D)/bootstrap @DEPENDS_ntp@
 			--host=$(target) \
 			--target=$(target) \
 			--prefix=/usr \
+			--disable-tick \
+			--disable-tickadj \
+			--with-yielding-select=yes \
+			--without-ntpsnmpd \
+			--disable-debugging \
 		&& \
 		$(MAKE) && \
 		@INSTALL_ntp@
@@ -233,6 +238,22 @@ $(D)/wireless_tools: $(D)/bootstrap @DEPENDS_wireless_tools@
 		$(MAKE) $(MAKE_OPTS) && \
 		@INSTALL_wireless_tools@
 	@CLEANUP_wireless_tools@
+	touch $@
+
+#
+# libnl
+#
+$(D)/libnl: $(D)/bootstrap $(D)/openssl @DEPENDS_libnl@
+	@PREPARE_libnl@
+	cd @DIR_libnl@ && \
+		$(BUILDENV) \
+		./configure \
+			--build=$(build) \
+			--host=$(target) \
+			--prefix=/usr \
+		$(MAKE) && \
+		@INSTALL_libnl@
+	@CLEANUP_libnl@
 	touch $@
 
 #

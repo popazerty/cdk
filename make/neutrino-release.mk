@@ -602,8 +602,8 @@ release_neutrino_base:
 	ln -sf /usr/share $(prefix)/release/share && \
 	$(INSTALL_DIR) $(prefix)/release/var/{bin,boot,etc,httpd,lib,tuxbox,update} && \
 	$(INSTALL_DIR) $(prefix)/release/var/lib/nfs && \
-	$(INSTALL_DIR) $(prefix)/release/var/tuxbox/{config,plugins} && \
-	$(INSTALL_DIR) $(prefix)/release/var/tuxbox/config/{locale,zapit} && \
+	$(INSTALL_DIR) $(prefix)/release/var/tuxbox/{config,locale,plugins,themes} && \
+	$(INSTALL_DIR) $(prefix)/release/var/tuxbox/config/zapit && \
 	ln -sf /usr/share/tuxbox/neutrino/icons/logo $(prefix)/release/var/httpd/logos && \
 	touch $(prefix)/release/var/etc/.firstboot && \
 	cp -a $(targetprefix)/bin/* $(prefix)/release/bin/ && \
@@ -641,6 +641,7 @@ release_neutrino_base:
 	cp $(buildprefix)/root/etc/modules.available $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/localtime $(prefix)/release/etc/ && \
 	ln -sf /proc/mounts $(prefix)/release/etc/mtab && \
+	cp -dp $(buildprefix)/root/etc/nsswitch.conf $(prefix)/release/etc/ && \
 	cp -dp $(buildprefix)/root/etc/passwd $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/profile $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/protocols $(prefix)/release/etc/ && \

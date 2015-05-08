@@ -173,7 +173,7 @@
  	gpio_set_value(HDK7105_PIO_PHY_RESET, 1);
  
  	return 1;
-@@ -212,8 +230,11 @@
+@@ -212,8 +251,11 @@
  struct stm_nand_bank_data hdk7105_nand_flash = {
  	.csn		= 1,
  	.options	= NAND_NO_AUTOINCR | NAND_USE_FLASH_BBT,
@@ -221,13 +221,13 @@
 +	},
 +
 +    {
-+		.name	= "kernel",
++		.name	= "E2 kernel",
 +		.offset	= 0x18000000,
 +		.size	= 0x00800000 //8M
 +	},
 +
 +    {
-+		.name	= "rootfs",
++		.name	= "E2 Userfs",
 +		.offset	= 0x18800000,
 +		.size	= 0x07700000 //119M	cc changed reserved 1024KB for u-boot bbt
 +	},
@@ -278,6 +278,7 @@
  
  static struct platform_device *hdk7105_devices[] __initdata = {
 -	&hdk7105_leds,
++	//&hdk7105_leds,
  	&hdk7105_front_panel,
 -	&hdk7105_nor_flash,
 +	//&hdk7105_nor_flash,
@@ -659,8 +660,13 @@
  	flash->spi = spi;
  	mutex_init(&flash->lock);
  	dev_set_drvdata(&spi->dev, flash);
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/mtd/nand/nand_base.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/mtd/nand/nand_base.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/mtd/nand/nand_base.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/mtd/nand/nand_base.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -1386,20 +1386,15 @@
  
  			/* Now read the page into the buffer */
@@ -696,8 +702,13 @@
  		return ERR_PTR(-EINVAL);
  	}
  
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/mtd/nand/nand_ecc.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/mtd/nand/nand_ecc.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/mtd/nand/nand_ecc.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/mtd/nand/nand_ecc.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -492,12 +492,12 @@
  	}
  	/* count nr of bits; use table lookup, faster than calculating it */
@@ -714,8 +725,13 @@
  	return -1;
  }
  EXPORT_SYMBOL(__nand_correct_data);
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/mtd/nand/stm_nand_flex.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/mtd/nand/stm_nand_flex.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/mtd/nand/stm_nand_flex.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/mtd/nand/stm_nand_flex.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -1449,7 +1449,16 @@
  	platform_driver_unregister(&stm_nand_flex_driver);
  }
@@ -733,8 +749,13 @@
  module_exit(stm_nand_flex_exit);
  
  MODULE_LICENSE("GPL");
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/net/phy/phy_device.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/net/phy/phy_device.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/net/phy/phy_device.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/net/phy/phy_device.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -1104,7 +1104,7 @@
  		return retval;
  	}
@@ -744,8 +765,13 @@
  
  	return 0;
  }
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/net/stmmac/stmmac_mdio.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/net/stmmac/stmmac_mdio.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/net/stmmac/stmmac_mdio.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/net/stmmac/stmmac_mdio.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -170,6 +170,7 @@
  	priv->mii = new_bus;
  
@@ -781,8 +807,13 @@
  			switch (phydev->irq) {
  			case PHY_POLL:
  				irq_str = "POLL";
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/spi/spi_stm.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/spi/spi_stm.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/spi/spi_stm.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/spi/spi_stm.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -338,7 +338,7 @@
  
  }
@@ -792,8 +823,13 @@
  {
  	struct stm_plat_ssc_data *plat_data = pdev->dev.platform_data;
  	struct spi_master *master;
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/stm/gpio.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/stm/gpio.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/stm/gpio.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/stm/gpio.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -28,12 +28,17 @@
  #include <linux/stm/pad.h>
  #include <linux/stm/pio.h>
@@ -994,8 +1030,13 @@
  	ret = platform_driver_register(&stm_gpio_driver);
  	if (ret)
  		return ret;
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/stm/miphy365x.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/stm/miphy365x.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/stm/miphy365x.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/stm/miphy365x.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -99,6 +99,7 @@
  
  static void miphy365x_tap_start_port0(const struct stm_miphy_device *miphy_dev)
@@ -1021,8 +1062,13 @@
  
  	/* Enable macro1 to use rx_lspd  & tx_lspd from link interface */
  	reg_write(0, 0x10, 0x00);
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/drivers/stm/stx7105_comms.c	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/drivers/stm/stx7105_comms.c	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/drivers/stm/stx7105_comms.c	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/drivers/stm/stx7105_comms.c	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -344,11 +344,27 @@
  			/* .pad_config_* set in stx7105_configure_ssc_*() */
  		},
@@ -1260,8 +1306,13 @@
  	case 2:
  		pad_config = stm_pad_config_alloc(3, 2);
  
+<<<<<<< HEAD
 --- linux-sh4-2.6.32.61_stm24_0217.org/include/linux/stm/stx7105.h	2014-03-05 08:32:56.000000000 +0100
 +++ linux-sh4-2.6.32.61_stm24_0217/include/linux/stm/stx7105.h	2014-03-05 08:53:35.000000000 +0100
+=======
+--- linux-sh4-2.6.32.61_stm24_0212.org/include/linux/stm/stx7105.h	2014-03-05 08:32:56.000000000 +0100
++++ linux-sh4-2.6.32.61_stm24_0212/include/linux/stm/stx7105.h	2014-03-05 08:53:35.000000000 +0100
+>>>>>>> upstream/master
 @@ -113,6 +113,7 @@
  };
  /* SSC configure functions return I2C/SPI bus number */

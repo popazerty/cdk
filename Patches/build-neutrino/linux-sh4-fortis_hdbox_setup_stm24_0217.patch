@@ -77,7 +77,7 @@
  {
 -	printk("STMicroelectronics STb7109E Reference board initialisation\n");
 +	printk("Fortis FS9000/9200 main board initialisation\n");
-
+ 
  	stx7100_early_device_init();
  
  	stx7100_configure_asc(2, &(struct stx7100_asc_config) {
@@ -266,3 +266,4 @@
  		},
  	},
  	[2] = {
+

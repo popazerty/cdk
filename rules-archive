@@ -39,7 +39,7 @@ giflib-4.1.6.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
 giflib-5.0.6.tar.bz2;http://downloads.sourceforge.net/project/giflib
 libungif-4.1.4.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
-libjpeg-turbo-1.2.1.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.2.1
+libjpeg-turbo-1.4.0.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.4.0
 libpng-1.2.50.tar.bz2;http://sourceforge.net/projects/libpng/files/libpng12/1.2.50
 libpng-1.6.16.tar.gz;http://sourceforge.net/projects/libpng/files/libpng16/1.6.16
 tiff-4.0.3.tar.gz;http://download.osgeo.org/libtiff
@@ -119,10 +119,10 @@ sshfs-fuse-2.4.tar.bz2;http://fossies.org/linux/misc
 tinyxml_2_6_2.tar.gz;http://ignum.dl.sourceforge.net/project/tinyxml/tinyxml/2.6.2
 taglib-1.8.tar.gz;https://github.com/downloads/taglib/taglib
 libnfs.git;git://github.com/sahlberg/libnfs.git
-
 libxml2-2.8.0.tar.gz;http://xmlsoft.org/sources
 libxml2-2.9.0.tar.gz;http://xmlsoft.org/sources
 libxslt-1.1.28.tar.gz;http://xmlsoft.org/sources
+pugixml-1.6.tar.gz;http://github.com/zeux/pugixml/releases/download/v1.6
 
 #
 # contrib apps
@@ -236,12 +236,13 @@ libevent-2.0.20-stable.tar.gz;http://downloads.sourceforge.net/project/levent/li
 libnfsidmap-0.25.tar.gz;http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap
 libsoup-2.33.90.tar.gz;http://download.gnome.org/sources/libsoup/2.33
 vsftpd-3.0.2.tar.gz;https://security.appspot.com/downloads
-ntp-4.2.6p5.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
+ntp-4.2.8.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 samba-3.6.12.tar.gz;http://www.samba.org/samba/ftp/stable
 netio126.zip;http://bnsmb.de/files/public/windows
 lighttpd-1.4.15.tar.gz;http://www.lighttpd.net/download
 zd1211lnxdrv_2_15_0_0.tar.gz;http://www.lutec.eu/treiber
 wireless_tools.29.tar.gz;http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux
+libnl-2.0.tar.gz;http://www.carisma.slowglass.com/~tgr/libnl/files
 wpa_supplicant-0.7.3.tar.gz;http://hostap.epitest.fi/releases
 wpa_supplicant-1.0.tar.gz;http://hostap.epitest.fi/releases
 wpa_supplicant-2.1.tar.gz;http://hostap.epitest.fi/releases

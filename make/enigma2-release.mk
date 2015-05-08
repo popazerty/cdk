@@ -805,6 +805,7 @@ release_enigma2_base:
 	cp $(buildprefix)/root/root_enigma2/etc/inetd.conf $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/localtime $(prefix)/release/etc/ && \
 	ln -sf /proc/mounts $(prefix)/release/etc/mtab && \
+	cp -dp $(buildprefix)/root/etc/nsswitch.conf $(prefix)/release/etc/ && \
 	cp -dp $(buildprefix)/root/etc/passwd $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/profile $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/protocols $(prefix)/release/etc/ && \

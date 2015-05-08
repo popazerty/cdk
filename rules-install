@@ -128,6 +128,7 @@ taglib;make:install:DESTDIR=TARGETS
 libxml2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libxml2.la;rewrite-dependency:TARGETS/usr/lib/libxml2.la
 libxml2_e2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libxml2.la;rewrite-dependency:TARGETS/usr/lib/libxml2.la
 libxslt;rewrite-pkgconfig:libxslt.pc:libexslt.pc;make:install:DESTDIR=TARGETS;rewrite-libtool:TARGETS/usr/lib/libxslt.la:TARGETS/usr/lib/libexslt.la
+pugixml;make:install:DESTDIR=TARGETS
 
 #
 # contrib apps
@@ -232,6 +233,7 @@ samba;make:install:DESTDIR=TARGETS
 netio;install:-m755:netio:TARGETS/usr/bin;install:-m755:bin/linux-i386:HOST/bin/netio
 lighttpd;make:install:DESTDIR=TARGETS
 wireless_tools;make:install:INSTALL_MAN=TARGETS/usr/share/man:PREFIX=TARGETS/usr
+libnl;make:install:DESTDIR=TARGETS
 wpa_supplicant;make:install:DESTDIR=TARGETS
 ethtool;make:install:DESTDIR=TARGETS
 xupnpd;make:install:DESTDIR=TARGETS

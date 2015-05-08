@@ -71,7 +71,6 @@ fi
 echo "Init stmfb (LOAD 9)"
 echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
-
 if  grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
   insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb; #SCART
 else

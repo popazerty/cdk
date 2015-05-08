@@ -213,6 +213,10 @@ $(D)/neutrino-mp-cst-next.config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
+			--with-iconsdir=/usr/share/tuxbox/neutrino/icons \
+			--with-localedir=/usr/share/tuxbox/neutrino/locale \
+			--with-private_httpddir=/usr/share/tuxbox/neutrino/httpd \
+			--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 			--with-stb-hal-includes=$(sourcedir)/libstb-hal-cst-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
@@ -271,6 +275,8 @@ yaud-neutrino-mp-martii-github: yaud-none lirc \
 #
 # neutrino-mp-martii-github
 #
+#	git clone https://github.com/MaxWiesel/neutrino-mp-martii.git $(archivedir)/neutrino-mp-martii-github.git;
+
 NEUTRINO_MP_MARTII_GH_PATCHES =
 
 $(D)/neutrino-mp-martii-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-cst-next
@@ -280,7 +286,7 @@ $(D)/neutrino-mp-martii-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-cst-nex
 	[ -d "$(archivedir)/neutrino-mp-martii-github.git" ] && \
 	(cd $(archivedir)/neutrino-mp-martii-github.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-martii-github.git" ] || \
-	git clone https://github.com/MaxWiesel/neutrino-mp-martii.git $(archivedir)/neutrino-mp-martii-github.git; \
+	git clone git@github.com/MaxWiesel/martiis-neutrino-mp $(archivedir)/neutrino-mp-martii-github.git; \
 	cp -ra $(archivedir)/neutrino-mp-martii-github.git $(sourcedir)/neutrino-mp-martii-github; \
 	cp -ra $(sourcedir)/neutrino-mp-martii-github $(sourcedir)/neutrino-mp-martii-github.org
 	for i in $(NEUTRINO_MP_MARTII_GH_PATCHES); do \
@@ -651,6 +657,10 @@ $(D)/neutrino-mp-tangos.config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
+			--with-iconsdir=/usr/share/tuxbox/neutrino/icons \
+			--with-localedir=/usr/share/tuxbox/neutrino/locale \
+			--with-private_httpddir=/usr/share/tuxbox/neutrino/httpd \
+			--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 			--with-stb-hal-includes=$(sourcedir)/libstb-hal-cst-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
