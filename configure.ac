@@ -757,7 +757,7 @@ if test "$enable_mediafwgstreamer" == "yes"; then
 	MEDIAFW="gstreamer"
 	MEDIAFW_DEP="gst_plugins_dvbmediasink"
 elif test "$enable_buildinplayer" == "yes"; then
-	MEDIAFW="build-in player"
+	MEDIAFW="built-in player"
 	MEDIAFW_DEP="ffmpeg"
 else
 	MEDIAFW="eplayer3"
@@ -1038,29 +1038,25 @@ AC_MSG_RESULT([
 $ccacheinfo
 summary:
 ----------------------------------------
-ccache support              : $enable_ccache
-target cpu/boxtype          : $CPU_MODEL / $BOXTYPE
-linux kernel                : ${KERNELVERSION%.*}
-kernelversion               : $KERNELVERSION
-localversion                : $KERNELSTMLABEL
-Patchlevel P0209            : $enable_p0209
-Patchlevel P0211            : $enable_p0211
-Patchlevel P0214            : $enable_p0214
-Patchlevel P0215            : $enable_p0215
-Patchlevel P0217            : $enable_p0217
+Ccache support              : $enable_ccache
+Target CPU/boxtype          : $CPU_MODEL / $BOXTYPE
+Linux kernel                : ${KERNELVERSION%.*}
+Kernelversion               : $KERNELVERSION
+Localversion                : $KERNELSTMLABEL
+Patchlevel                  : P0$KERNELLABEL
 DEBUG                       : $enable_debug
-boot prefix                 : $bootprefix
-serversupport               : $serversupport
-host prefix                 : $hostprefix
-cross prefix                : $crossprefix
-target prefix               : $targetprefix
-build prefix                : $buildprefix
-target apps directory       : $appsdir
-driver directory            : $driverdir
-source directory            : $sourcedir
-buildtmp directory          : $buildtmp
-customization directory     : $customizationsdir
-archive directory           : $archivedir
+Boot prefix                 : $bootprefix
+Serversupport               : $serversupport
+Host prefix                 : $hostprefix
+Cross prefix                : $crossprefix
+Target prefix               : $targetprefix
+Build prefix                : $buildprefix
+Target apps directory       : $appsdir
+Driver directory            : $driverdir
+Source directory            : $sourcedir
+Buildtmp directory          : $buildtmp
+Customization directory     : $customizationsdir
+Archive directory           : $archivedir
 Player191                   : $enable_player191
 Multicom324                 : $enable_multicom324
 Multicom406                 : $enable_multicom406
