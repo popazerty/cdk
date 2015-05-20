@@ -159,7 +159,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
  lib/python/Plugins/PLi/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
-@@ -245,6 +342,44 @@
+@@ -245,6 +342,45 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
@@ -194,6 +194,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
 +lib/python/Plugins/Extensions/sparkVFD/locale/Makefile
 +lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile
 +lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/Makefile
++lib/python/Plugins/Extensions/spark7162VFD/Makefile
 +lib/python/Plugins/Extensions/spark7162VFD/meta/Makefile
 +lib/python/Plugins/Extensions/spark7162VFD/locale/Makefile
 +lib/python/Plugins/Extensions/spark7162VFD/locale/nl/Makefile
@@ -6969,7 +6970,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/ScanSetup.py enigma2-nightly/lib/python/Screens/ScanSetup.py
 --- enigma2-nightly.org/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:30.091088431 +0200
-@@ -795,7 +795,7 @@
+@@ -787,7 +787,7 @@
  		self.last_scan_typecable = "single_transponder"
  		self.cable_toggle = {"single_transponder":"complete", "complete":"single_transponder"}
  		self.scan_typeterrestrial = ConfigSelection(default = defaultTerrSearchType, choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("complete", _("Complete"))])

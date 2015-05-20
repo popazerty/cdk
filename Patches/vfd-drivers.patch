@@ -3512,25 +3512,22 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +
 +msgid "LED display configuration for Fortis HS7119/HS7810A/HS7819"
 +msgstr "LED displayinstellingen voor Fortis HS7119/HS7810A/HS7819"
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/__init__.py enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/__init__.py
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/__init__.py	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/__init__.py	2012-03-08 20:35:00.000000000 +0100
 @@ -0,0 +1,2 @@
 +
 +
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/vfddisplay.png enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/vfddisplay.png
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/vfddisplay.png	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/vfddisplay.png	2012-03-08 20:35:00.000000000 +0100
 @@ -0,0 +1,2 @@
 +
 +
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/Makefile.am	2013-12-18 20:00:00.000000000 +0100
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,10 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/spark7162VFD
 +
-+#SUBDIRS = locale meta
++SUBDIRS = locale meta
 +
 +install_PYTHON = \
 +	__init__.py \
@@ -3538,7 +3535,6 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +
 +dist_install_DATA = \
 +	vfddisplay.png
-+
 --- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/plugin.py	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,821 @@
@@ -4363,15 +4359,13 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			icon = _("vfddisplay.png"),
 +			fnc = opencfg))
 +	return l
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/meta/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/meta/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/meta/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/meta/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,3 @@
 +installdir = $(datadir)/meta
 +
 +dist_install_DATA = plugin_vfd-icons.xml
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/meta/plugin_vfd-icons.xml enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/meta/plugin_vfd-icons.xml
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/meta/plugin_vfd-icons.xml	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/meta/plugin_vfd-icons.xml	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,20 @@
 +<default>
@@ -4394,22 +4388,19 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +	</files>
 +
 +</default>
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/locale/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/locale/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,3 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/spark7162VFD/locale
 +
 +SUBDIRS = nl
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/locale/nl/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,3 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/spark7162VFD/locale/nl
 +
 +SUBDIRS = LC_MESSAGES
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/spark/locale/nl/LC_MESSAGES/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,10 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES
@@ -4422,8 +4413,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +dist_install_DATA = \
 +	VFD-Icons.po \
 +	VFD-Icons.mo
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/VFD-Icons.po enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/VFD-Icons.po
---- enigma2-nightly.org/lib/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES/VFD-Icons.po	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES/VFD-Icons.po	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,133 @@
 +msgid ""
@@ -4559,20 +4549,17 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +
 +msgid "VFD display configuration for Spark 7162"
 +msgstr "VFD displayinstellingen voor Spark 7162"
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/__init__.py enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/__init__.py
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/__init__.py	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/__init__.py	2012-03-08 20:35:00.000000000 +0100
 @@ -0,0 +1,2 @@
 +
 +
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/vfddisplay.png enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/vfddisplay.png
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/vfddisplay.png	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/vfddisplay.png	2012-03-08 20:35:00.000000000 +0100
 @@ -0,0 +1,2 @@
 +
 +
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,10 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/sparkVFD
@@ -4977,15 +4964,13 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			icon = _("vfddisplay.png"),
 +			fnc = opencfg))
 +	return l
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/meta/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/meta/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/meta/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/meta/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,3 @@
 +installdir = $(datadir)/meta
 +
 +dist_install_DATA = plugin_vfd-icons.xml
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/meta/plugin_vfd-icons.xml enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/meta/plugin_vfd-icons.xml
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/meta/plugin_vfd-icons.xml	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/meta/plugin_vfd-icons.xml	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,20 @@
 +<default>
@@ -5008,22 +4993,19 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +	</files>
 +
 +</default>
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,3 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/sparkVFD/locale
 +
 +SUBDIRS = nl
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,3 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/sparkVFD/locale/nl
 +
 +SUBDIRS = LC_MESSAGES
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/spark/locale/nl/LC_MESSAGES/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/Makefile.am
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/Makefile.am	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,10 @@
 +installdir = $(pkglibdir)/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES
@@ -5036,8 +5018,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +dist_install_DATA = \
 +	VFD-Icons.po \
 +	VFD-Icons.mo
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/VFD-Icons.po enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/VFD-Icons.po
---- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/VFD-Icons.po	1970-01-01 01:00:00.000000000 +0100
+--- /dev/null
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/VFD-Icons.po	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,106 @@
 +msgid ""
