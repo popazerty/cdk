@@ -218,45 +218,11 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
  lib/python/Plugins/PLi/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
-@@ -245,6 +342,44 @@
+@@ -245,6 +342,10 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
 +lib/python/Plugins/Extensions/CuberevoVFD/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/meta/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/locale/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/meta/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/locale/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/meta/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/locale/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES/Makefile
 +lib/python/Plugins/Extensions/TopfieldVFD/Makefile
 +lib/python/Plugins/SystemPlugins/VFD-Icons/Makefile
 +lib/python/Plugins/SystemPlugins/VFD-Icons/meta/Makefile
@@ -635,7 +601,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp e
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp enigma2-nightly/lib/driver/vfd.cpp
 --- enigma2-nightly.org/lib/driver/vfd.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.cpp	2013-05-11 19:07:01.916432460 +0200
-@@ -0,0 +1,786 @@
+@@ -0,0 +1,790 @@
 +/*
 + * vfd.cpp
 + *
@@ -3601,7 +3567,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/picload.cpp
  
  #include <lib/gdi/picload.h>
  #include <lib/gdi/picexif.h>
-+#include "../../tools/libmmeimage/libmmeimage.h"
++#include "../../../../apps/tools/libmmeimage/libmmeimage.h"
  
  extern "C" {
  #include <jpeglib.h>

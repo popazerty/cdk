@@ -159,46 +159,11 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
  lib/python/Plugins/PLi/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
-@@ -245,6 +342,45 @@
+@@ -245,6 +342,10 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
 +lib/python/Plugins/Extensions/CuberevoVFD/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/meta/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/locale/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/fs9000VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs7110VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs7810aVFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs8200VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/meta/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/locale/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/hs9510VFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/meta/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/locale/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/sparkVFD/locale/nl/LC_MESSAGES/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/meta/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/locale/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/locale/nl/Makefile
-+lib/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES/Makefile
 +lib/python/Plugins/Extensions/TopfieldVFD/Makefile
 +lib/python/Plugins/SystemPlugins/VFD-Icons/Makefile
 +lib/python/Plugins/SystemPlugins/VFD-Icons/meta/Makefile
@@ -554,7 +519,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.c
 @@ -128,7 +157,19 @@
  				{
  					case 0:
- 						eDebug("wait for driver eof timeout");
+ 						eDebug("[eFilePushThread] wait for driver eof timeout");
 +#if defined(__sh__) // Fix to ensure that event evtEOF is called at end of playbackl part 2/3
 +						if (already_empty)
 +						{
@@ -569,7 +534,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.c
  						continue;
 +#endif
  					case 1:
- 						eDebug("wait for driver eof ok");
+ 						eDebug("[eFilePushThread] wait for driver eof ok");
  						break;
 @@ -191,12 +232,18 @@
  			}
@@ -707,7 +672,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/Makefile
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp enigma2-nightly/lib/driver/rc.cpp
 --- enigma2-nightly.org/lib/driver/rc.cpp	2014-06-13 21:45:21.740535791 +0200
 +++ enigma2-nightly/lib/driver/rc.cpp	2014-06-21 13:05:30.079088431 +0200
-@@ -151,6 +151,9 @@
+@@ -164,6 +164,9 @@
  #ifdef VUPLUS_RC_WORKAROUND
  	return(false);
  #else
@@ -1084,30 +1049,30 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +		{
 +			vfd.vfd_set_brightness(7);
 +		}
-+		#if defined(PLATFORM_SPARK7162) //spin circle 14 times
-+		vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+		vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+		vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+		vfd.vfd_set_icon( (tvfd_icon)(41), ICON_ON, true); //center circle on
-+		if (vloop%3 == 0)
-+		{
-+			vfd.vfd_set_icon((tvfd_icon)(38), ICON_OFF, true);
-+			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+		}
-+		else if (vloop%3 == 1)
-+		{
-+			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(39), ICON_OFF, true);
-+			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+		}
-+		else if (vloop%3 == 2)
-+		{
-+			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+			vfd.vfd_set_icon((tvfd_icon)(40), ICON_OFF, true);
-+		}
-+		#endif
++//		#if defined(PLATFORM_SPARK7162) //spin circle 14 times
++//		vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
++//		vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
++//		vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
++//		vfd.vfd_set_icon( (tvfd_icon)(41), ICON_ON, true); //center circle on
++//		if (vloop%3 == 0)
++//		{
++//			vfd.vfd_set_icon((tvfd_icon)(38), ICON_OFF, true);
++//			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
++//			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
++//		}
++//		else if (vloop%3 == 1)
++//		{
++//			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
++//			vfd.vfd_set_icon((tvfd_icon)(39), ICON_OFF, true);
++//			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
++//		}
++//		else if (vloop%3 == 2)
++//		{
++//			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
++//			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
++//			vfd.vfd_set_icon((tvfd_icon)(40), ICON_OFF, true);
++//		}
++//		#endif
 +		usleep(75000);
 +	}
 +	vfd.vfd_set_brightness(7); // set final brightness
@@ -1581,17 +1546,17 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp
 +#else
  		pes.flags    = 0;
 +#endif
- 		eDebugNoNewLineStart("[eDVBAudio] DMX_SET_PES_FILTER(0x%02x) - audio%d - ", pid, m_dev);
- 		if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
- 		{
+		eDebugNoNewLineStart("[eDVBAudio%d] DMX_SET_PES_FILTER pid=0x%04x ", m_dev, pid);
+		if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
+		{
 @@ -82,6 +86,7 @@
  			return -errno;
  		}
  		eDebugNoNewLine("ok\n");
 +#if not defined(__sh__) // already started cause of DMX_IMMEDIATE_START
- 		eDebugNoNewLineStart("[eDVBAudio] DEMUX_START - audio%d - ", m_dev);
- 		if (::ioctl(m_fd_demux, DMX_START) < 0)
- 		{
+		eDebugNoNewLineStart("[eDVBAudio%d] DEMUX_START ", m_dev);
+		if (::ioctl(m_fd_demux, DMX_START) < 0)
+		{
 @@ -89,6 +94,7 @@
  			return -errno;
  		}
@@ -1976,53 +1941,6 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.h enigm
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cpp enigma2-nightly/lib/dvb/epgcache.cpp
 --- enigma2-nightly.org/lib/dvb/epgcache.cpp	2014-06-13 21:45:21.744535791 +0200
 +++ enigma2-nightly/lib/dvb/epgcache.cpp	2014-06-21 13:05:30.079088431 +0200
-#@@ -221,10 +221,22 @@
-# 	int tmp = ByteSize - 10;
-# 	memcpy(data, EITdata, 10);
-# 	unsigned int descriptors_length = 0;
-#+#ifndef __sh__
-# 	__u32 *p = (__u32*)(EITdata + 10);
-#+#else
-#+	// Dagobert: fix not aligned access
-#+	__u8 *p = (__u8*)(EITdata+10);
-#+#endif
-# 	while (tmp > 3)
-# 	{
-#+#ifndef __sh__
-# 		descriptorMap::iterator it = descriptors.find(*p++);
-#+#else
-#+		__u32 index = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
-#+		// eDebug("index %d %x, %x %x %x %x\n", index, index, p[0], p[1], p[2], p[3]);
-#+		descriptorMap::iterator it = descriptors.find(index);
-#+		p += 4;
-#+#endif
-# 		if (it != descriptors.end())
-# 		{
-# 			unsigned int b = it->second.second[1] + 2;
-#@@ -249,12 +261,23 @@
-# 	if ( ByteSize )
-# 	{
-# 		CacheSize -= ByteSize;
-#+#ifndef __sh__
-# 		__u32 *d = (__u32*)(EITdata+10);
-#+#else	// Dagobert: fix not aligned access
-#+		__u8 *d = (__u8*)(EITdata+10);
-#+#endif
-# 		ByteSize -= 10;
-# 		while(ByteSize>3)
-# 		{
-#+#ifndef __sh__
-# 			descriptorMap::iterator it =
-# 				descriptors.find(*d++);
-#+#else
-#+			__u32 index = d[3] << 24 | d[2] << 16 | d[1] << 8 | d[0];
-#+			// eDebug("index %d %x, %x %x %x %x\n", index, index, d[0], d[1], d[2], d[3]);
-#+			descriptorMap::iterator it = descriptors.find(index);
-#+			d += 4;
-#+#endif
-# 			if ( it != descriptors.end() )
-# 			{
-# 				descriptorPair &p = it->second;
 @@ -1888,6 +1888,45 @@
  {
  	int map;
@@ -2080,53 +1998,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cp
  }
  
  #if ENABLE_FREESAT
-#@@ -3065,11 +3131,20 @@
-# 						{
-# 							__u8 *data = evData->EITdata;
-# 							int tmp = evData->ByteSize-10;
-#+#ifndef __sh__
-# 							__u32 *p = (__u32*)(data+10);
-#+#else	// Dagobert: Alignment fix
-#+							__u8 *p = (__u8*)(data+10);
-#+#endif
-# 							// search short and extended event descriptors
-# 							while(tmp>3)
-# 							{
-#+#ifndef __sh__
-# 								__u32 crc = *p++;
-#+#else	// Dagobert: Alignment fix
-#+								__u32 crc = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
-#+								p += 4;
-#+#endif
-# 								descriptorMap::iterator it =
-# 									eventData::descriptors.find(crc);
-# 								if (it != eventData::descriptors.end())
-#@@ -3248,12 +3323,21 @@
-# 				}
-# 				__u8 *data = evit->second->EITdata;
-# 				int tmp = evit->second->ByteSize-10;
-#+#ifndef __sh__
-# 				__u32 *p = (__u32*)(data+10);
-#+#else	// Dagobert: Alignment fix
-#+				__u8 *p = (__u8*)(data+10);
-#+#endif
-# 				// check if any of our descriptor used by this event
-# 				int cnt=-1;
-# 				while(tmp>3)
-# 				{
-#+#ifndef __sh__
-# 					__u32 crc32 = *p++;
-#+#else	// Dagobert: Alignment fix
-#+					__u32 crc32 = p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
-#+					p += 4;
-#+#endif
-# 					for ( int i=0; i <= descridx; ++i)
-# 					{
-# 						if (descr[i] == crc32)  // found...
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/pmt.cpp enigma2-nightly/lib/dvb/pmt.cpp
 --- enigma2-nightly.org/lib/dvb/pmt.cpp	2014-06-13 21:45:21.748535791 +0200
 +++ enigma2-nightly/lib/dvb/pmt.cpp	2014-06-21 13:05:30.079088431 +0200
-@@ -780,6 +780,11 @@
+@@ -799,6 +799,11 @@
  			eDVBCIInterfaces::getInstance()->addPMTHandler(this);
  	} else if (!simulate) // no simulation of playback services
  	{
@@ -2794,7 +2669,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci_re
 +	eDebug("eDVBCIResourceManagerSession::%s >", __func__);
 +	eDebugNoNewLine("SESSION(%d) %02x %02x %02x (len = %d): ", session_nb, tag[0], tag[1], tag[2], len);
 +#else
- 	eDebugNoNewLineStart("[CI] SESSION(%d) %02x %02x %02x: ", session_nb, tag[0], tag[1], tag[2]);
+ 	eDebugNoNewLineStart("[CI RM] SESSION(%d) %02x %02x %02x: ", session_nb, tag[0], tag[1], tag[2]);
 +#endif
  	for (int i=0; i<len; i++)
  		eDebugNoNewLine("%02x ", ((const unsigned char*)data)[i]);
@@ -2941,10 +2816,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/accel.cpp e
 -	int phys_addr = surface->data_phys;
 -	if (phys_addr != 0)
 +	if(surface != 0 && surface->data_phys != 0)
- 	{
+	{
 +		int phys_addr = surface->data_phys;
  #ifdef ACCEL_DEBUG
- 		eDebug("[%s] %p->%x %dx%d:%d", __func__, surface, surface->data_phys, surface->x, surface->y, surface->bpp);
+ 		eDebug("[gAccel] [%s] %p->%x %dx%d:%d", __func__, surface, surface->data_phys, surface->x, surface->y, surface->bpp);
  #endif
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigma2-nightly/lib/gdi/fb.cpp
 --- enigma2-nightly.org/lib/gdi/fb.cpp	2014-06-13 21:45:21.752535791 +0200
@@ -2956,7 +2831,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#if not defined(__sh__)
  	if (ioctl(fbFd, FBIOGET_VSCREENINFO, &screeninfo)<0)
  	{
- 		eDebug("[fb] FBIOGET_VSCREENINFO %m");
+ 		eDebug("[fb] FBIOGET_VSCREENINFO: %m");
  		goto nolfb;
  	}
 +#endif
@@ -2980,7 +2855,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#endif
  	if (!lfb)
  	{
- 		eDebug("[fb] mmap %m");
+ 		eDebug("[fb] mmap: %m");
 @@ -86,6 +97,7 @@
  
  int fbClass::showConsole(int state)
@@ -2989,7 +2864,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  	int fd=open("/dev/tty0", O_RDWR);
  	if(fd>=0)
  	{
-@@ -95,11 +107,19 @@
+@@ -95,11 +105,19 @@
  		}
  		close(fd);
  	}
@@ -3006,10 +2881,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +	m_number_of_pages = 1;
 +	topDiff=bottomDiff=leftDiff=rightDiff = 0;
 +#else
+ 	if (fbFd < 0) return -1;
  	screeninfo.xres_virtual=screeninfo.xres=nxRes;
  	screeninfo.yres_virtual=(screeninfo.yres=nyRes)*2;
- 	screeninfo.height=0;
-@@ -148,8 +168,14 @@
+@@ -149,8 +169,14 @@
  
  	m_number_of_pages = screeninfo.yres_virtual / nyRes;
  
@@ -3024,7 +2899,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  	if ((screeninfo.xres!=nxRes) && (screeninfo.yres!=nyRes) && (screeninfo.bits_per_pixel!=nbpp))
  	{
  		eDebug("[fb] SetMode failed: wanted: %dx%dx%d, got %dx%dx%d",
-@@ -166,15 +194,22 @@
+@@ -167,15 +193,22 @@
  	}
  	stride=fix.line_length;
  	memset(lfb, 0, stride*yRes);
@@ -3047,10 +2922,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  }
  
  int fbClass::setOffset(int off)
-@@ -192,10 +225,93 @@
- 
+@@ -196,10 +225,93 @@
  void fbClass::blit()
  {
+ 	if (fbFd < 0) return;
 +#if defined(__sh__)
 +	int modefd=open("/proc/stb/video/3d_mode", O_RDWR);
 +	char buf[16] = "off";
@@ -3135,13 +3010,13 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +#else
  	if (m_manual_blit == 1) {
  		if (ioctl(fbFd, FBIO_BLIT) < 0)
- 			eDebug("[fb] FBIO_BLIT %m");
+ 			eDebug("[fb] FBIO_BLIT: %m");
  	}
 +#endif
  }
  
  fbClass::~fbClass()
-@@ -230,6 +346,26 @@
+@@ -235,6 +351,26 @@
  	}
  	else
  		locked = 1;
@@ -3168,7 +3043,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  	return fbFd;
  }
  
-@@ -240,25 +375,88 @@
+@@ -245,27 +375,90 @@
  	if (locked == 2)  // re-enable manualBlit
  		enableManualBlit();
  	locked=0;
@@ -3200,8 +3075,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  {
 +#if not defined(__sh__)
  	unsigned char tmp = 1;
+ 	if (fbFd < 0) return;
  	if (ioctl(fbFd,FBIO_SET_MANUAL_BLIT, &tmp)<0)
- 		eDebug("[fb] FBIO_SET_MANUAL_BLIT %m");
+ 		eDebug("[fb] enable FBIO_SET_MANUAL_BLIT: %m");
  	else
  		m_manual_blit = 1;
 +#endif
@@ -3211,8 +3087,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  {
 +#if not defined(__sh__)
  	unsigned char tmp = 0;
+ 	if (fbFd < 0) return;
  	if (ioctl(fbFd,FBIO_SET_MANUAL_BLIT, &tmp)<0)
- 		eDebug("[fb] FBIO_SET_MANUAL_BLIT %m");
+ 		eDebug("[fb] disable FBIO_SET_MANUAL_BLIT: %m");
  	else
  		m_manual_blit = 0;
 +#endif
@@ -3379,7 +3256,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/glcddc.cpp 
  {
  	lcd = new eFbLCD();
 @@ -39,13 +54,20 @@
- 	eDebug("[gLCD] resolution: %d x %d x %d (stride: %d)", surface.x, surface.y, surface.bpp, surface.stride);
+ 	eDebug("[gLCDDC] resolution: %dx%dx%d stride=%d", surface.x, surface.y, surface.bpp, surface.stride);
  
  	m_pixmap = new gPixmap(&surface);
 +#ifdef HAVE_GRAPHLCD
@@ -3474,7 +3351,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/gpixmap.cpp
 +					(!gAccel::getInstance()->blit(surface, src.surface, area, srcarea, flag))) {
  #ifdef GPIXMAP_DEBUG
  				s.stop();
- 				eDebug("[BLITBENCH] accel blit took %u us", s.elapsed_us());
+ 				eDebug("[gPixmap] [BLITBENCH] accel blit took %u us", s.elapsed_us());
 @@ -807,6 +816,7 @@
  	}
  
@@ -3494,7 +3371,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/lcd.cpp eni
  eDBoxLCD::eDBoxLCD()
  {
  	int xres=132, yres=64, bpp=8;
-@@ -303,3 +304,141 @@
+@@ -302,3 +303,141 @@
  	}
  #endif
  }
@@ -3816,9 +3693,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  				elif self.type == self.DEFAULT:
  					if remaining <= duration:
  						prefix = "+"
-diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/Harddisk.py enigma2-nightly/lib/python/Components/Harddisk.py
---- enigma2-nightly.org/lib/python/Components/Harddisk.py	2014-06-13 21:45:21.760535790 +0200
-+++ enigma2-nightly/lib/python/Components/Harddisk.py	2014-06-21 13:05:30.087088431 +0200
+--- enigma2-nightly.org/lib/python/Components/Harddisk.py
++++ enigma2-nightly/lib/python/Components/Harddisk.py
 @@ -4,6 +4,8 @@
  from SystemInfo import SystemInfo
  from Components.Console import Console
@@ -3858,7 +3734,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		if not removable:
  			self.startIdle()
  
-@@ -130,18 +122,19 @@
+@@ -130,18 +122,18 @@
  	def diskSize(self):
  		line = readFile(self.sysfsPath('size'))
  		try:
@@ -3875,24 +3751,24 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		if cap == 0:
  			return ""
  		if cap < 1000:
- 			return "%03d MB" % cap
+-			return "%03d MB" % cap
 -		return "%d.%03d GB" % (cap/1000, cap%1000)
-+#		return "%d.03%d GB" % (cap/1000, cap%1000)
-+		return "%d GB" % (cap/1000) # audioniek: whole Gbytes is enough; as we do whole Mbytes too?
++			return "%3d MB" % cap
++		return "%3d GB" % (cap/1000)
  
  	def model(self):
  		try:
-@@ -218,7 +211,9 @@
+@@ -218,7 +210,9 @@
  
  	def createPartition(self):
  		cmd = 'printf "8,\n;0,0\n;0,0\n;0,0\ny\n" | sfdisk -f -uS ' + self.disk_path
-+		print "[Harddisk] Creating partition with", cmd
++		print "[Harddisk] Creating partition with ", cmd
  		res = os.system(cmd)
-+		print "[Harddisk] Creating partition completed with result", res
++		print "[Harddisk] Creating partition completed with result ", res
  		return (res >> 8)
  
  	def mkfs(self):
-@@ -260,6 +255,24 @@
+@@ -260,6 +254,24 @@
  		# No longer supported, use createCheckJob instead
  		return 1
  
@@ -3917,34 +3793,38 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  	def killPartitionTable(self):
  		zero = 512 * '\0'
  		h = open(self.dev_path, 'wb')
-@@ -267,6 +280,7 @@
+@@ -267,6 +279,7 @@
  		for i in range(9):
  			h.write(zero)
  		h.close()
-+		print "[Harddisk] Killed partition table on", self.dev_path
++		print "[Harddisk] Killed partition table on ", self.dev_path
  
  	def killPartition(self, n):
  		zero = 512 * '\0'
-@@ -277,102 +291,176 @@
+@@ -277,102 +290,176 @@
  		h.close()
  
  	def createInitializeJob(self):
 -		job = Task.Job(_("Initializing storage device..."))
-+		job = Task.Job(_("Initialize harddisk"))
++		job = Task.Job(_("Initialize hard disk"))
  		size = self.diskSize()
 -		print "[HD] size: %s MB" % size
+-
+-		task = UnmountTask(job, self)
+-
+-		task = Task.PythonTask(job, _("Removing partition table"))
 +		sectors = ((size*1000/512)*1000)
 +		print "[Harddisk] Create initialize job, consisting of:"
 +		print "[Harddisk init] Initializing device, size is: %s MB" % size
 +		print "                (Equals %s sectors)" % sectors
- 
- 		task = UnmountTask(job, self)
++
++		task = UnmountTask(job, _("Unmount hard disk"))
 +		print "[Harddisk init] Unmount", self.disk_path
- 
- 		task = Task.PythonTask(job, _("Removing partition table"))
++
++		task = Task.PythonTask(job, _("Removing current partition table"))
  		task.work = self.killPartitionTable
  		task.weighting = 1
-+		print "[Harddisk init] Killing partition table on", self.disk_path
++		print "[Harddisk init] Killing partition table on ", self.disk_path
  
  		task = Task.LoggingTask(job, _("Rereading partition table"))
  		task.weighting = 1
@@ -3955,16 +3835,16 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 -		task = Task.ConditionTask(job, _("Waiting for partition"), timeoutCount=20)
 +		print "[Harddisk init] Rereading partition table on", self.disk_path
 +
-+		task = Task.ConditionTask(job, _("Waiting for killing partition table"), timeoutCount=20)
++		task = Task.ConditionTask(job, _("Waiting for kill of partition table"), timeoutCount=20)
  		task.check = lambda: not os.path.exists(self.partitionPath("1"))
  		task.weighting = 1
-+		print "[Harddisk init] Wait for finish of killing partition table on", self.disk_path
++		print "[Harddisk init] Wait for finish of killing partition table on ", self.disk_path
  
  		if os.path.exists('/usr/sbin/parted'):
  			use_parted = True
  		else:
 -			if size > 2097151:
-+			if size > 2097151: #2 Tbyte
++			if size > 2097151: # 2 Tbyte
  				addInstallTask(job, 'parted')
  				use_parted = True
  			else:
@@ -3982,7 +3862,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 +# create a second partition SWAPPART of 1 GB
  		task.weighting = 5
  		if use_parted:
-+			task = Task.LoggingTask(job, _("Creating 2 partitions"))
++			task = Task.LoggingTask(job, _("Creating 2 partitions: RECORD and SWAPPART"))
  			task.setTool('parted')
 -			if size < 1024:
 -				# On very small devices, align to block only
@@ -4009,7 +3889,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  				# Start at sector 8 to better support 4k aligned disks
 -				print "[HD] Detected >128GB disk, using 4k alignment"
 -				task.initial_input = "8,\n;0,0\n;0,0\n;0,0\ny\n"
-+				print "[Harddisk init] Note: Detected disk >128GB, using 4k alignment"
++				print "[Harddisk init] Note: Detected disk is >128GB, using 4k alignment"
 +				start_sect = 8
  			else:
  				# Smaller disks (CF cards, sticks etc) don't need that
@@ -4026,9 +3906,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 +				task.initial_input = str(start_sect)+","+str(end_sect1)+"\n"+str(start_sect2)+"\n0,0\n0,0\ny\n"
 +			else:
 +				task.initial_input = "0\n\n\n\ny\n"
-+		print "[Harddisk init] Creating partition(s) with command", task.args
++		print "[Harddisk init] Creating partition(s) with command ", task.args
 +		if task.initial_input:
-+			print "[Harddisk init] using input", task.initial_input
++			print "[Harddisk init] using input ", task.initial_input
 +# added by audioniek
 +# execute a dummy fdisk -l to force read the harddisk's new content
 +		task = Task.LoggingTask(job, _("Dummy command fdisk -l"))
@@ -4043,13 +3923,13 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 +# audioniek: used to hang here
 +# fix1: added timeout so the job always finishes instead of never ending
 +# fix2: dummy fdisk -l (previous step)
-+		task = Task.ConditionTask(job, _("Waiting for partition 1 creation"), timeoutCount=5)
++		task = Task.ConditionTask(job, _("Waiting for creation of RECORD partition"), timeoutCount=5)
 +		print "[Harddisk init] self.partitionPath(1) =", self.partitionPath("1")
 +		task.check = lambda: not os.path.exists(self.partitionPath("1"))
 +		task.weighting = 1
-+		print "[Harddisk init] Wait for", self.partitionPath("1"), "to exist"
++		print "[Harddisk init] Wait for ", self.partitionPath("1"), " to exist"
 +
-+		task = MkfsTask(job, _("Creating filesystem on partition 1"))
++		task = MkfsTask(job, _("Creating filesystem on RECORD partition"))
  		if isFileSystemSupported("ext4"):
  			task.setTool("mkfs.ext4")
 -			if size > 20000:
@@ -4089,10 +3969,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 +# audioniek: wrong path!
 +#		task.args += ["-m0", "-O", "dir_index", self.partitionPath("1")]
 +		task.args += ["-L", "RECORD", "-m0", "-O", "dir_index", self.disk_path+"1"]
-+		print "[Harddisk init] Make fs on 1st partition using ", task.args
++		print "[Harddisk init] Make fs on RECORD partition using ", task.args
 +
 +		if size > 20000:
-+			task = MkfsTask(job, _("Creating filesystem on partition 2"))
++			task = MkfsTask(job, _("Creating filesystem on SWAPPART partition"))
 +			if isFileSystemSupported("ext4"):
 +				task.setTool("mkfs.ext4")
 +			else:
@@ -4147,7 +4027,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		return job
  
  	def initialize(self):
-@@ -404,7 +492,7 @@
+@@ -404,7 +491,7 @@
  
  	def createExt4ConversionJob(self):
  		if not isFileSystemSupported('ext4'):
@@ -4156,7 +4036,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		job = Task.Job(_("Converting ext3 to ext4..."))
  		if not os.path.exists('/sbin/tune2fs'):
  			addInstallTask(job, 'e2fsprogs-tune2fs')
-@@ -415,10 +503,12 @@
+@@ -415,10 +502,12 @@
  		else:
  			# otherwise, assume there is one partition
  			dev = self.partitionPath("1")
@@ -4169,7 +4049,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		task = Task.LoggingTask(job, "tune2fs")
  		task.setTool('tune2fs')
  		task.args.append('-O')
-@@ -426,6 +516,7 @@
+@@ -426,6 +515,7 @@
  		task.args.append('-o')
  		task.args.append('journal_data_writeback')
  		task.args.append(dev)
@@ -4177,7 +4057,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		task = Task.LoggingTask(job, "fsck")
  		task.setTool('fsck.ext4')
  		task.postconditions = [] # ignore result, it will always "fail"
-@@ -433,7 +524,9 @@
+@@ -433,7 +523,9 @@
  		task.args.append('-p')
  		task.args.append('-D')
  		task.args.append(dev)
@@ -4187,7 +4067,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		task = Task.ConditionTask(job, _("Waiting for mount"))
  		task.check = self.mountDevice
  		return job
-@@ -567,7 +660,8 @@
+@@ -567,7 +659,8 @@
  		return ''
  
  DEVICEDB =  \
@@ -4197,7 +4077,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		{
  			# dm8000:
  			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.1/1-1.1:1.0": "Front USB Slot",
-@@ -575,18 +669,18 @@
+@@ -575,18 +668,18 @@
  			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.3/1-1.3:1.0": "Back, lower USB Slot",
  			"/devices/platform/brcm-ehci-1.1/usb2/2-1/2-1:1.0/host1/target1:0:0/1:0:0:0": "DVD Drive",
  		},
@@ -4228,7 +4108,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  	}
  
  def addInstallTask(job, package):
-@@ -675,17 +769,26 @@
+@@ -675,17 +768,26 @@
  					self.addHotplugPartition(part)
  				self.devices_scanned_on_init.append((blockdev, removable, is_cdrom, medium_found))
  
@@ -4259,7 +4139,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		return None
  
  	def addHotplugPartition(self, device, physdev = None):
-@@ -701,6 +804,10 @@
+@@ -701,6 +803,10 @@
  		error, blacklisted, removable, is_cdrom, partitions, medium_found = self.getBlockDevInfo(device)
  		if not blacklisted and medium_found:
  			description = self.getUserfriendlyDeviceName(device, physdev)
@@ -4270,7 +4150,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  			p = Partition(mountpoint = self.getMountpoint(device), description = description, force_mounted = True, device = device)
  			self.partitions.append(p)
  			if p.mountpoint: # Plugins won't expect unmounted devices
-@@ -774,7 +881,7 @@
+@@ -774,7 +880,7 @@
  		try:
  			description = readFile("/sys" + phys + "/model")
  		except IOError, s:
@@ -4279,7 +4159,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		from Tools.HardwareInfo import HardwareInfo
  		for physdevprefix, pdescription in DEVICEDB.get(HardwareInfo().device_name,{}).items():
  			if phys.startswith(physdevprefix):
-@@ -819,7 +926,7 @@
+@@ -819,7 +925,7 @@
  			dev = self.hdd.disk_path.split('/')[-1]
  			open('/dev/nomount.%s' % dev, "wb").close()
  		except Exception, e:
@@ -4288,7 +4168,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		self.setTool('umount')
  		self.args.append('-f')
  		for dev in self.hdd.enumMountDevices():
-@@ -827,7 +934,7 @@
+@@ -827,7 +933,7 @@
  			self.postconditions.append(Task.ReturncodePostcondition())
  			self.mountpoints.append(dev)
  		if not self.mountpoints:
@@ -4297,7 +4177,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  			self.cmd = 'true'
  			self.args = [self.cmd]
  	def afterRun(self):
-@@ -835,7 +942,7 @@
+@@ -835,7 +941,7 @@
  			try:
  				os.rmdir(path)
  			except Exception, ex:
@@ -4306,7 +4186,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  
  class MountTask(Task.LoggingTask):
  	def __init__(self, job, hdd):
-@@ -846,7 +953,7 @@
+@@ -846,7 +952,7 @@
  			dev = self.hdd.disk_path.split('/')[-1]
  			os.unlink('/dev/nomount.%s' % dev)
  		except Exception, e:
@@ -4315,7 +4195,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
  		# try mounting through fstab first
  		if self.hdd.mount_device is None:
  			dev = self.hdd.partitionPath("1")
-@@ -875,7 +982,7 @@
+@@ -875,7 +981,7 @@
  	def prepare(self):
  		self.fsck_state = None
  	def processOutput(self, data):
@@ -6970,7 +6850,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/ScanSetup.py enigma2-nightly/lib/python/Screens/ScanSetup.py
 --- enigma2-nightly.org/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:30.091088431 +0200
-@@ -787,7 +787,7 @@
+@@ -795,7 +795,7 @@
  		self.last_scan_typecable = "single_transponder"
  		self.cable_toggle = {"single_transponder":"complete", "complete":"single_transponder"}
  		self.scan_typeterrestrial = ConfigSelection(default = defaultTerrSearchType, choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("complete", _("Complete"))])
@@ -7523,7 +7403,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
 +		int flags = O_WRONLY|O_CREAT|O_LARGEFILE;
 +		struct statfs sbuf;
 +#endif
- 		eDebug("eDVBServiceRecord: Recording to %s...", m_filename.c_str());
+ 		eDebug("[eDVBServiceRecord] Recording to %s...", m_filename.c_str());
  		::remove(m_filename.c_str());
 +#if defined(__sh__)
 +		//we must creat a file for statfs
@@ -7556,9 +7436,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
 +#else
 +		int fd = ::open(m_filename.c_str(), O_WRONLY|O_CREAT|O_LARGEFILE, 0644);
 +#endif
- 		if (fd == -1)
- 		{
- 			eDebug("eDVBServiceRecord: can't open recording file!");
+		if (fd == -1)
+		{
+			eDebug("[eDVBServiceRecord] can't open recording file: %m");
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviceeplayer3.cpp enigma2-nightly/lib/service/serviceeplayer3.cpp
 --- enigma2-nightly.org/lib/service/serviceeplayer3.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/service/serviceeplayer3.cpp	2014-06-21 13:05:30.095088431 +0200
@@ -9039,7 +8919,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  #include <sys/stat.h>
  
  #define HTTP_TIMEOUT 30
-@@ -61,6 +63,11 @@
+@@ -69,6 +71,11 @@
  #define GSTREAMER_SUBTITLE_SYNC_MODE_BUG
  /**/
  
@@ -9051,7 +8931,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  eServiceFactoryMP3::eServiceFactoryMP3()
  {
  	ePtr<eServiceCenter> sc;
-@@ -75,24 +82,49 @@
+@@ -83,24 +90,49 @@
  		extensions.push_back("ogg");
  		extensions.push_back("ogm");
  		extensions.push_back("ogv");
@@ -9110,7 +8990,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  		extensions.push_back("wma");
  		sc->addServiceFactory(eServiceFactoryMP3::id, this, extensions);
  	}
-@@ -319,6 +351,7 @@
+@@ -327,6 +359,7 @@
  	return bufferSize;
  }
  
@@ -9118,7 +8998,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  DEFINE_REF(eServiceMP3InfoContainer);
  
  eServiceMP3InfoContainer::eServiceMP3InfoContainer()
-@@ -369,6 +402,7 @@
+@@ -377,6 +410,7 @@
  	bufferSize = map.size;
  #endif
  }
@@ -9126,7 +9006,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  // eServiceMP3
  int eServiceMP3::ac3_delay = 0,
-@@ -381,27 +415,37 @@
+@@ -389,27 +423,37 @@
  {
  	m_subtitle_sync_timer = eTimer::create(eApp);
  	m_streamingsrc_timeout = 0;
@@ -9164,7 +9044,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	CONNECT(m_nownext_timer->timeout, eServiceMP3::updateEpgCacheNowNext);
  	m_aspect = m_width = m_height = m_framerate = m_progressive = -1;
  
-@@ -413,6 +457,7 @@
+@@ -421,6 +465,7 @@
  	if (!ext)
  		ext = filename + strlen(filename);
  
@@ -9172,8 +9052,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	m_sourceinfo.is_video = FALSE;
  	m_sourceinfo.audiotype = atUnknown;
  	if ( (strcasecmp(ext, ".mpeg") && strcasecmp(ext, ".mpg") && strcasecmp(ext, ".vob") && strcasecmp(ext, ".bin") && strcasecmp(ext, ".dat") ) == 0 )
-@@ -598,10 +643,178 @@
- 		eDebug("eServiceMP3::sorry, can't play: %s",m_errorInfo.error_message.c_str());
+@@ -607,10 +652,178 @@
+ 		eDebug("[eServiceMP3] sorry, can't play: %s",m_errorInfo.error_message.c_str());
  	}
  	g_free(uri);
 +#else
@@ -9351,7 +9231,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	// disconnect subtitle callback
  	GstElement *subsink = gst_bin_get_by_name(GST_BIN(m_gst_playbin), "subtitle_sink");
  
-@@ -610,10 +823,12 @@
+@@ -619,10 +832,12 @@
  		g_signal_handler_disconnect (subsink, m_subs_to_pull_handler_id);
  		gst_object_unref(subsink);
  	}
@@ -9364,7 +9244,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (m_gst_playbin)
  	{
  		// disconnect sync handler callback
-@@ -625,10 +840,12 @@
+@@ -634,10 +849,12 @@
  #endif
  		gst_object_unref(bus);
  	}
@@ -9377,15 +9257,15 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (m_stream_tags)
  		gst_tag_list_free(m_stream_tags);
  
-@@ -647,6 +864,7 @@
+@@ -656,6 +873,7 @@
  		gst_object_unref (GST_OBJECT (m_gst_playbin));
- 		eDebug("eServiceMP3::destruct!");
+ 		eDebug("[eServiceMP3] destruct!");
  	}
 +#endif
  }
  
  void eServiceMP3::updateEpgCacheNowNext()
-@@ -696,25 +914,47 @@
+@@ -705,25 +923,47 @@
  
  DEFINE_REF(eServiceMP3);
  
@@ -9419,7 +9299,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
 +#ifdef ENABLE_MEDIAFWGSTREAMER
  	if (m_gst_playbin)
  	{
- 		eDebug("eServiceMP3::starting pipeline");
+ 		eDebug("[eServiceMP3] starting pipeline");
  		gst_element_set_state (m_gst_playbin, GST_STATE_PLAYING);
  		updateEpgCacheNowNext();
  	}
@@ -9433,12 +9313,12 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	m_event(this, evStart);
  
-@@ -729,13 +969,45 @@
+@@ -738,13 +978,45 @@
  
  RESULT eServiceMP3::stop()
  {
 +#ifdef ENABLE_MEDIAFWGSTREAMER
-	ASSERT(m_state != stIdle);
+ 	ASSERT(m_state != stIdle);
 +#else
 +	if (m_state == stIdle)
 +	{
@@ -9450,9 +9330,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (m_state == stStopped)
  		return -1;
  
- 	eDebug("eServiceMP3::stop %s", m_ref.path.c_str());
 +#ifdef ENABLE_MEDIAFWGSTREAMER
-	gst_element_set_state(m_gst_playbin, GST_STATE_NULL);
+ 	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
+ 	gst_element_set_state(m_gst_playbin, GST_STATE_NULL);
 +#else
 +	if (player && player->playback && player->output)
 +	{
@@ -9479,7 +9359,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	m_state = stStopped;
  	m_nownext_timer->stop();
  	if (m_streamingsrc_timeout)
-@@ -755,37 +1027,119 @@
+@@ -764,37 +1026,119 @@
  	return 0;
  }
  
@@ -9523,7 +9403,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
 +#ifdef ENABLE_MEDIAFWGSTREAMER
  	if (!ratio)
  		return 0;
- 	eDebug("eServiceMP3::setSlowMotion ratio=%f",1.0/(gdouble)ratio);
+ 	eDebug("[eServiceMP3] setSlowMotion ratio=%f",1.0/(gdouble)ratio);
  	return trickSeek(1.0/(gdouble)ratio);
 +#else
 +// konfetti: in libeplayer3 we changed this because I dont like application specific stuff in a library
@@ -9544,7 +9424,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  RESULT eServiceMP3::setFastForward(int ratio)
  {
 +#ifdef ENABLE_MEDIAFWGSTREAMER
- 	eDebug("eServiceMP3::setFastForward ratio=%i",ratio);
+ 	eDebug("[eServiceMP3] setFastForward ratio=%i",ratio);
  	return trickSeek(ratio);
 +#else
 +// konfetti: in libeplayer3 we changed this because I dont like application specific stuff in a library
@@ -9599,7 +9479,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	return 0;
  }
-@@ -799,6 +1153,7 @@
+@@ -808,6 +1044,7 @@
  
  RESULT eServiceMP3::getLength(pts_t &pts)
  {
@@ -9607,7 +9487,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (!m_gst_playbin)
  		return -1;
  
-@@ -816,11 +1171,23 @@
+@@ -825,11 +1070,23 @@
  		/* len is in nanoseconds. we have 90 000 pts per second. */
  
  	pts = len / 11111LL;
@@ -9631,15 +9511,15 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  		/* convert pts to nanoseconds */
  	gint64 time_nanoseconds = to * 11111LL;
  	if (!gst_element_seek (m_gst_playbin, m_currentTrickRatio, GST_FORMAT_TIME, (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
-@@ -830,6 +1197,7 @@
- 		eDebug("eServiceMP3::seekTo failed");
+@@ -838,6 +1085,7 @@
+ 	{
+ 		eDebug("[eServiceMP3] seekTo failed");
  		return -1;
- 	}
 +#endif
+ 	}
  
  	if (m_paused)
- 	{
-@@ -844,17 +1212,25 @@
+@@ -853,17 +1144,25 @@
  {
  	RESULT ret = -1;
  
@@ -9665,11 +9545,11 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  RESULT eServiceMP3::trickSeek(gdouble ratio)
  {
  	if (!m_gst_playbin)
-@@ -895,36 +1271,48 @@
+@@ -904,36 +1206,48 @@
  	m_decoder_time_valid_state = 0;
  	return 0;
- }
 +#endif
+ }
  
 -
  RESULT eServiceMP3::seekRelative(int direction, pts_t to)
@@ -9716,7 +9596,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	gint64 pos;
  	pts = 0;
  
-@@ -954,6 +1342,27 @@
+@@ -963,6 +1247,27 @@
  
  	/* pos is in nanoseconds. we have 90 000 pts per second. */
  	pts = pos / 11111LL;
@@ -9744,7 +9624,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	return 0;
  }
  
-@@ -965,6 +1374,7 @@
+@@ -974,6 +1383,7 @@
+#21
  
  RESULT eServiceMP3::isCurrentlySeekable()
  {
@@ -9752,7 +9633,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	int ret = 3; /* just assume that seeking and fast/slow winding are possible */
  
  	if (!m_gst_playbin)
-@@ -973,6 +1383,9 @@
+@@ -982,6 +1392,9 @@
+#22
  		return 0;
  
  	return ret;
@@ -9762,7 +9644,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  }
  
  RESULT eServiceMP3::info(ePtr<iServiceInformation>&i)
-@@ -1006,7 +1419,9 @@
+@@ -1015,7 +1428,9 @@
+#23
  
  int eServiceMP3::getInfo(int w)
  {
@@ -9772,7 +9655,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	switch (w)
  	{
-@@ -1046,7 +1461,9 @@
+@@ -1055,7 +1470,9 @@
+#24
  	case sTagKeywords:
  	case sTagChannelMode:
  	case sUser+12:
@@ -9782,7 +9666,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	case sTagTrackGain:
  	case sTagTrackPeak:
  	case sTagAlbumGain:
-@@ -1057,6 +1474,7 @@
+@@ -1066,6 +1483,7 @@
+#25
  	case sTagPreviewImage:
  	case sTagAttachment:
  		return resIsPyObject;
@@ -9790,7 +9675,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	case sTagTrackNumber:
  		tag = GST_TAG_TRACK_NUMBER;
  		break;
-@@ -1090,17 +1485,20 @@
+@@ -1099,17 +1517,20 @@
  	case sTagCRC:
  		tag = "has-crc";
  		break;
@@ -9811,7 +9696,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	return 0;
  }
-@@ -1125,6 +1546,7 @@
+@@ -1134,6 +1555,7 @@
  		}
  	}
  
@@ -9819,7 +9704,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if ( !m_stream_tags && w < sUser && w > 26 )
  		return "";
  	const gchar *tag = 0;
-@@ -1252,9 +1674,69 @@
+@@ -1261,9 +1683,69 @@
  		g_free(value);
  		return res;
  	}
@@ -9889,7 +9774,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  ePtr<iServiceInfoContainer> eServiceMP3::getInfoObject(int w)
  {
  	eServiceMP3InfoContainer *container = new eServiceMP3InfoContainer;
-@@ -1318,6 +1800,7 @@
+@@ -1327,6 +1809,7 @@
  	}
  	return retval;
  }
@@ -9897,7 +9782,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  RESULT eServiceMP3::audioChannel(ePtr<iAudioChannelSelection> &ptr)
  {
-@@ -1350,13 +1833,16 @@
+@@ -1359,13 +1842,16 @@
  
  int eServiceMP3::getCurrentTrack()
  {
@@ -9914,7 +9799,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	bool validposition = false;
  	pts_t ppos = 0;
  	if (getPlayPosition(ppos) >= 0)
-@@ -1366,8 +1852,10 @@
+@@ -1375,8 +1861,10 @@
  		if (ppos < 0)
  			ppos = 0;
  	}
@@ -9925,7 +9810,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	if (!ret)
  	{
  		if (validposition)
-@@ -1376,12 +1864,14 @@
+@@ -1385,12 +1873,14 @@
  			seekTo(ppos);
  		}
  	}
@@ -9940,7 +9825,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	int current_audio;
  	g_object_set (G_OBJECT (m_gst_playbin), "current-audio", i, NULL);
  	g_object_get (G_OBJECT (m_gst_playbin), "current-audio", &current_audio, NULL);
-@@ -1392,6 +1882,16 @@
+@@ -1401,6 +1891,16 @@
  		return 0;
  	}
  	return -1;
@@ -9957,7 +9842,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  }
  
  int eServiceMP3::getCurrentChannel()
-@@ -1409,6 +1909,7 @@
+@@ -1418,6 +1918,7 @@
  {
   	if (i >= m_audioStreams.size())
  		return -2;
@@ -9965,7 +9850,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  		info.m_description = m_audioStreams[i].codec;
  /*	if (m_audioStreams[i].type == atMPEG)
  		info.m_description = "MPEG";
-@@ -1428,11 +1929,28 @@
+@@ -1437,11 +1938,28 @@
  		info.m_description = "FLAC";
  	else
  		info.m_description = "???";*/
@@ -9994,7 +9879,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  subtype_t getSubtitleType(GstPad* pad, gchar *g_codec=NULL)
  {
  	subtype_t type = stUnknown;
-@@ -2185,9 +2703,11 @@
+@@ -2194,9 +2712,11 @@
  		}
  	}
  }
@@ -10006,7 +9891,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  void eServiceMP3::gstCBsubtitleAvail(GstElement *subsink, GstBuffer *buffer, gpointer user_data)
  {
  	eServiceMP3 *_this = (eServiceMP3*)user_data;
-@@ -2315,9 +2835,30 @@
+@@ -2324,9 +2844,30 @@
  #endif
  	}
  }
@@ -10037,11 +9922,9 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	pts_t running_pts = 0;
  	int32_t next_timer = 0, decoder_ms, start_ms, end_ms, diff_start_ms, diff_end_ms;
  	subtitle_pages_map_t::iterator current;
-@@ -2420,23 +2888,30 @@
+@@ -2428,22 +2896,28 @@
  	m_subtitle_sync_timer->start(next_timer, true);
  
- 	//eDebug("\n\n");
-+
 +#endif
  }
  
@@ -10065,10 +9948,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  		m_subtitle_widget = user;
  
 +#ifdef ENABLE_MEDIAFWGSTREAMER
- 		eDebug ("eServiceMP3::switched to subtitle stream %i", m_currentSubtitleStream);
+ 		eDebug ("[eServiceMP3] switched to subtitle stream %i", m_currentSubtitleStream);
  
  #ifdef GSTREAMER_SUBTITLE_SYNC_MODE_BUG
-@@ -2446,7 +2994,13 @@
+@@ -2453,7 +2994,13 @@
  		 */
  		seekRelative(-1, 90000);
  #endif
@@ -10082,10 +9965,10 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  
  	return 0;
  }
-@@ -2454,15 +3008,23 @@
+@@ -2461,15 +3008,23 @@
  RESULT eServiceMP3::disableSubtitles()
  {
- 	eDebug("eServiceMP3::disableSubtitles");
+ 	eDebug("[eServiceMP3] disableSubtitles");
 +#ifdef ENABLE_MEDIAFWGSTREAMER
  	m_currentSubtitleStream = -1;
  	m_cachedSubtitleStream = m_currentSubtitleStream;
@@ -10106,7 +9989,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	return 0;
  }
  
-@@ -2529,7 +3091,9 @@
+@@ -2536,7 +3083,9 @@
  int eServiceMP3::setBufferSize(int size)
  {
  	m_buffer_size = size;
@@ -10116,7 +9999,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	return 0;
  }
  
-@@ -2545,6 +3109,7 @@
+@@ -2552,6 +3101,7 @@
  
  void eServiceMP3::setAC3Delay(int delay)
  {
@@ -10124,7 +10007,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	ac3_delay = delay;
  	if (!m_gst_playbin || m_state != stRunning)
  		return;
-@@ -2572,10 +3137,12 @@
+@@ -2579,10 +3129,12 @@
  			eTSMPEGDecoder::setHwAC3Delay(config_delay_int);
  		}
  	}
@@ -10137,7 +10020,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/service
  	pcm_delay = delay;
  	if (!m_gst_playbin || m_state != stRunning)
  		return;
-@@ -2603,4 +3170,5 @@
+@@ -2610,4 +3162,5 @@
  			eTSMPEGDecoder::setHwPCMDelay(config_delay_int);
  		}
  	}
@@ -10433,7 +10316,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  
  #ifdef OBJECT_DEBUG
  int object_total_remaining;
-@@ -136,7 +141,9 @@
+@@ -178,7 +183,9 @@
  	atexit(object_dump);
  #endif
  
@@ -10443,7 +10326,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  
  	// set pythonpath if unset
  	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
-@@ -170,7 +177,11 @@
+@@ -212,7 +219,11 @@
  	eWidgetDesktop dsk_lcd(my_lcd_dc->size());
  
  	dsk.setStyleID(0);
@@ -10455,16 +10338,16 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  
  /*	if (double_buffer)
  	{
-@@ -211,7 +211,7 @@
+@@ -253,7 +264,7 @@
  				if (!i)
- 					eDebug("failed to load %s! (%m)", rfilename.c_str());
+ 					eDebug("[MAIN] failed to load %s: %m", rfilename.c_str());
  				else
--					eDebug("found %d spinner!\n", i);
-+					eDebug("found %d spinners.\n", i);
+-					eDebug("[MAIN] found %d spinner!\n", i);
++					eDebug("[MAIN] found %d spinners!\n", i);
  				break;
  			}
  		}
-@@ -216,9 +227,9 @@
+@@ -258,9 +269,9 @@
  			}
  		}
  		if (i)
@@ -10476,7 +10359,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
  	}
  
  	gRC::getInstance()->setSpinnerDC(my_dc);
-@@ -224,6 +235,12 @@
+@@ -266,6 +277,12 @@
  	gRC::getInstance()->setSpinnerDC(my_dc);
  
  	eRCInput::getInstance()->keyEvent.connect(slot(keyEvent));
@@ -10487,7 +10370,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp eni
 +	delete vfd;
 +#endif
  
- 	printf("executing main\n");
+ 	printf("[MAIN] executing main\n");
  
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/main/Makefile.am enigma2-nightly/main/Makefile.am
 --- enigma2-nightly.org/main/Makefile.am	2014-06-13 21:45:21.824535788 +0200
