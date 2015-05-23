@@ -267,7 +267,7 @@
  			{
  				.name = "Serial Flash 1",
  				.size = 0x00080000,
-@@ -248,16 +326,42 @@
+@@ -248,16 +326,43 @@
  				.size = MTDPART_SIZ_FULL,
  				.offset = MTDPART_OFS_NXTBLK,
  			},

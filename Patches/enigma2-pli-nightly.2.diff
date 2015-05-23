@@ -3897,16 +3897,14 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Componen
 +		job = Task.Job(_("Initialize hard disk"))
  		size = self.diskSize()
 -		print "[HD] size: %s MB" % size
--
--		task = UnmountTask(job, self)
--
--		task = Task.PythonTask(job, _("Removing partition table"))
 +		sectors = ((size*1000/512)*1000)
 +		print "[Harddisk] Create initialize job, consisting of:"
 +		print "[Harddisk init] Initializing device, size is: %s MB" % size
 +		print "                (Equals %s sectors)" % sectors
-+
-+		task = UnmountTask(job, _("Unmount hard disk"))
+ 
+ 		task = UnmountTask(job, self)
+-
+-		task = Task.PythonTask(job, _("Removing partition table"))
 +		print "[Harddisk init] Unmount", self.disk_path
 +
 +		task = Task.PythonTask(job, _("Removing current partition table"))

@@ -31,11 +31,7 @@ RPMS/
 SRPMS/
 SPECS/
 own_build/
-linux-sh4
-linux-sh4-2.6.32.46_stm24_0209/
-linux-sh4-2.6.32.59_stm24_0211/
-linux-sh4-2.6.32.61_stm24_0214/
-linux-sh4-2.6.32.61_stm24_0215/
+linux-sh4*
 busybox-*
 custom/yaud-neutrino-*
 custom/yaud-enigma2-*
