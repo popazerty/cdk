@@ -9,7 +9,8 @@ $(D)/host_python: @DEPENDS_host_python@
 		OPT="$(HOST_CFLAGS)" \
 		./configure \
 			--without-cxx-main \
-			--without-threads && \
+			--without-threads \
+		&& \
 		$(MAKE) python Parser/pgen && \
 		mv python ./hostpython && \
 		mv Parser/pgen ./hostpgen && \
@@ -19,7 +20,8 @@ $(D)/host_python: @DEPENDS_host_python@
 			--prefix=$(hostprefix) \
 			--sysconfdir=$(hostprefix)/etc \
 			--without-cxx-main \
-			--without-threads && \
+			--without-threads \
+		&& \
 		$(MAKE) \
 			TARGET_OS=$(build) \
 			PYTHON_MODULES_INCLUDE="$(hostprefix)/include" \
@@ -37,10 +39,7 @@ $(D)/host_python: @DEPENDS_host_python@
 $(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2_e2 $(D)/libxslt @DEPENDS_libxmlccwrap@
 	@PREPARE_libxmlccwrap@
 	cd @DIR_libxmlccwrap@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--target=$(target) \
 			--prefix=/usr \
 		&& \
@@ -109,10 +108,7 @@ $(D)/pilimaging: $(D)/bootstrap $(D)/libjpeg $(D)/libfreetype $(D)/python $(D)/s
 $(D)/pycrypto: $(D)/bootstrap $(D)/setuptools @DEPENDS_pycrypto@
 	@PREPARE_pycrypto@
 	cd @DIR_pycrypto@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr && \
 		CC='$(target)-gcc' LDSHARED='$(target)-gcc -shared' \
 		CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
@@ -130,8 +126,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/openssl $(D)/s
 		CONFIG_SITE= \
 		autoreconf --verbose --install --force Modules/_ctypes/libffi && \
 		autoconf && \
-		$(BUILDENV) \
-		./configure \
+		$(CONFIGURE) \
 			--build=$(build) \
 			--host=$(target) \
 			--target=$(target) \
@@ -147,10 +142,10 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/openssl $(D)/s
 			HOSTPYTHON=$(hostprefix)/bin/python \
 			OPT="$(TARGET_CFLAGS)" \
 		&& \
-		$(MAKE) $(MAKE_ARGS) \
+		$(MAKE) $(MAKE_OPTS) \
 			TARGET_OS=$(target) \
-			PYTHON_MODULES_INCLUDE="$(prefix)/$*cdkroot/usr/include" \
-			PYTHON_MODULES_LIB="$(prefix)/$*cdkroot/usr/lib" \
+			PYTHON_MODULES_INCLUDE="$(targetprefix)/usr/include" \
+			PYTHON_MODULES_LIB="$(targetprefix)/usr/lib $(targetprefix)/lib" \
 			CROSS_COMPILE_TARGET=yes \
 			CROSS_COMPILE=$(target) \
 			HOSTARCH=sh4-linux \
@@ -159,11 +154,11 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/openssl $(D)/s
 			LD="$(target)-gcc" \
 			HOSTPYTHON=$(hostprefix)/bin/python \
 			HOSTPGEN=$(hostprefix)/bin/pgen \
-			all install DESTDIR=$(prefix)/$*cdkroot ) \
-		&& \
+			all install DESTDIR=$(targetprefix) \
+		) && \
 		@INSTALL_python@
-	$(LN_SF) ../../libpython$(PYTHON_VERSION).so.1.0 $(prefix)/$*cdkroot$(PYTHON_DIR)/config/libpython$(PYTHON_VERSION).so && \
-	$(LN_SF) $(prefix)/$*cdkroot$(PYTHON_INCLUDE_DIR) $(prefix)/$*cdkroot/usr/include/python
+	$(LN_SF) ../../libpython$(PYTHON_VERSION).so.1.0 $(targetprefix)/$(PYTHON_DIR)/config/libpython$(PYTHON_VERSION).so && \
+	$(LN_SF) $(targetprefix)/$(PYTHON_INCLUDE_DIR) $(targetprefix)/usr/include/python
 	@CLEANUP_python@
 	touch $@
 

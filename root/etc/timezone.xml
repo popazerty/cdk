@@ -3,7 +3,7 @@
 <timezone>
 	<zone name="(GMT-12:00) International Date Line West" zone="Kwajalein" />
 	<zone name="(GMT-11:00) Midway Island, Samoa" zone="Midway" />
-	<zone name="(GMT-10:00) Hawaii" zone="Honululu" />
+	<zone name="(GMT-10:00) Hawaii" zone="Honolulu" />
 	<zone name="(GMT-09:00) Alaska" zone="Anchorage" />
 	<zone name="(GMT-08:00) Pacific Time (US and Canada), Tijuana" zone="Tijuana" />
 	<zone name="(GMT-07:00) Arizona" zone="MST7MDT" />
@@ -50,7 +50,7 @@
 	<zone name="(GMT+05:00) Ekaterinburg" zone="Omsk" />
 	<zone name="(GMT+05:00) Islamabad, Karachi, Tashkent" zone="Tashkent" />
 	<zone name="(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi" zone="Calcutta" />
-	<zone name="(GMT+05:45) Kathmandu" zone="Katmandu" />
+	<zone name="(GMT+05:45) Kathmandu" zone="Kathmandu" />
 	<zone name="(GMT+06:00) Almaty, Novosibirsk" zone="Almaty" />
 	<zone name="(GMT+06:00) Astana, Dhaka" zone="Dhaka" />
 	<zone name="(GMT+06:00) Sri Jayawardenepura" zone="Colombo" />
@@ -67,7 +67,7 @@
 	<zone name="(GMT+09:00) Yakutsk" zone="Yakutsk" />
 	<zone name="(GMT+09:30) Adelaide" zone="Adelaide" />
 	<zone name="(GMT+09:30) Darwin" zone="Darwin" />
-	<zone name="(GMT+10:00) Brisbane" zone="Bisbane" />
+	<zone name="(GMT+10:00) Brisbane" zone="Brisbane" />
 	<zone name="(GMT+10:00) Canberra, Melbourne, Sydney" zone="Sydney" />
 	<zone name="(GMT+10:00) Guam, Port Moresby" zone="Guam" />
 	<zone name="(GMT+10:00) Hobart" zone="Hobart" />

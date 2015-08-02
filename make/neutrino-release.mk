@@ -637,8 +637,6 @@ release_neutrino_base:
 	cp -dp $(targetprefix)/etc/host.conf $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hostname $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hosts $(prefix)/release/etc/ && \
-	cp $(buildprefix)/root/root_neutrino/etc/inetd.conf $(prefix)/release/etc/ && \
-	cp $(buildprefix)/root/etc/modules.available $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/localtime $(prefix)/release/etc/ && \
 	ln -sf /proc/mounts $(prefix)/release/etc/mtab && \
 	cp -dp $(buildprefix)/root/etc/nsswitch.conf $(prefix)/release/etc/ && \
@@ -689,9 +687,10 @@ endif
 #
 # Player
 #
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stm_v4l2.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmvbi.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmvout.ko $(prefix)/release/lib/modules/
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stm_v4l2.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stm_v4l2.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmvbi.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmvbi.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmvout.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmvout.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmfb.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmfb.ko $(prefix)/release/lib/modules/ || true
 	cd $(targetprefix)/lib/modules/$(KERNELVERSION)/extra && \
 	for mod in \
 		sound/pseudocard/pseudocard.ko \
@@ -749,7 +748,6 @@ endif
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/src/mme/mme_user.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/src/mme/mme_user.ko $(prefix)/release/lib/modules || true
 
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/simu_button/simu_button.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmfb.ko $(prefix)/release/lib/modules/
 if !ENABLE_VIP2_V1
 if !ENABLE_SPARK
 if !ENABLE_SPARK7162
@@ -764,27 +762,28 @@ endif
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/pti/pti.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/pti/pti.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/pti_np/pti.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/pti_np/pti.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/smartcard/smartcard.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/smartcard/smartcard.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/fs/autofs4/autofs4.ko ] && cp $(kernelprefix)/linux-sh4/fs/autofs4/autofs4.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/drivers/net/tun.ko ] && cp $(kernelprefix)/linux-sh4/drivers/net/tun.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/drivers/usb/serial/ftdi_sio.ko ] && cp $(kernelprefix)/linux-sh4/drivers/usb/serial/ftdi_sio.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/drivers/usb/serial/pl2303.ko ] && cp $(kernelprefix)/linux-sh4/drivers/usb/serial/pl2303.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/drivers/usb/serial/usbserial.ko ] && cp $(kernelprefix)/linux-sh4/drivers/usb/serial/usbserial.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/fs/fuse/fuse.ko ] && cp $(kernelprefix)/linux-sh4/fs/fuse/fuse.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/fs/ntfs/ntfs.ko ] && cp $(kernelprefix)/linux-sh4/fs/ntfs/ntfs.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/fs/cifs/cifs.ko ] && cp $(kernelprefix)/linux-sh4/fs/cifs/cifs.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/autofs4/autofs4.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/autofs4/autofs4.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/net/tun.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/net/tun.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/usb/serial/ftdi_sio.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/usb/serial/ftdi_sio.ko $(prefix)/release/lib/modules/ftdi_sio.ko || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/usb/serial/pl2303.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/usb/serial/pl2303.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/usb/serial/usbserial.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/drivers/usb/serial/usbserial.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/fuse/fuse.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/fuse/fuse.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/ntfs/ntfs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/ntfs/ntfs.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/cifs/cifs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/cifs/cifs.ko $(prefix)/release/lib/modules || true
 if !ENABLE_UFS910
-	[ -e $(kernelprefix)/linux-sh4/fs/jfs/jfs.ko ] && cp $(kernelprefix)/linux-sh4/fs/jfs/jfs.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/jfs/jfs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/jfs/jfs.ko $(prefix)/release/lib/modules || true
 endif
-	[ -e $(kernelprefix)/linux-sh4/fs/nfsd/nfsd.ko ] && cp $(kernelprefix)/linux-sh4/fs/nfsd/nfsd.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/fs/exportfs/exportfs.ko ] && cp $(kernelprefix)/linux-sh4/fs/exportfs/exportfs.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/fs/nfs_common/nfs_acl.ko ] && cp $(kernelprefix)/linux-sh4/fs/nfs_common/nfs_acl.ko $(prefix)/release/lib/modules || true
-	[ -e $(kernelprefix)/linux-sh4/fs/nfs/nfs.ko ] && cp $(kernelprefix)/linux-sh4/fs/nfs/nfs.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/nfsd/nfsd.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/nfsd/nfsd.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/exportfs/exportfs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/exportfs/exportfs.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/nfs_common/nfs_acl.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/nfs_common/nfs_acl.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/nfs/nfs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/nfs/nfs.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rt2870sta/rt2870sta.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rt2870sta/rt2870sta.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rt3070sta/rt3070sta.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rt3070sta/rt3070sta.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rt5370sta/rt5370sta.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rt5370sta/rt5370sta.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl871x/8712u.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl871x/8712u.ko $(prefix)/release/lib/modules || true
-	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/sata_switch/sata.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/sata_switch/sata.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8188eu/8188eu.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8188eu/8188eu.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8192cu/8192cu.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8192cu/8192cu.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/sata_switch/sata.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/sata_switch/sata.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/mini_fo/mini_fo.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/fs/mini_fo/mini_fo.ko $(prefix)/release/lib/modules || true
 
 #
@@ -835,7 +834,11 @@ endif
 # channellist / tuxtxt
 #
 	cp -aR $(targetprefix)/var/tuxbox/config/* $(prefix)/release/var/tuxbox/config
-#	cp -aR $(buildprefix)/root/root_neutrino/* $(prefix)/release/
+
+#
+# copy root_neutrino
+#
+	cp -aR $(buildprefix)/root/root_neutrino/* $(prefix)/release/
 
 if !ENABLE_CUBEREVO_MINI2
 if !ENABLE_ATEVIO7500
@@ -861,6 +864,22 @@ endif
 #
 	[ -e $(targetprefix)/usr/local/bin/backup.sh ] && cp -aR $(targetprefix)/usr/local/bin/backup.sh $(prefix)/release/bin || true
 	[ -e $(targetprefix)/usr/local/bin/restore.sh ] && cp -aR $(targetprefix)/usr/local/bin/restore.sh $(prefix)/release/bin || true
+
+#
+# WLAN
+#
+	if [ -e $(targetprefix)/usr/sbin/ifrename ]; then \
+		cp -dp $(targetprefix)/usr/sbin/ifrename $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwconfig $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwevent $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwgetid $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwlist $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwpriv $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/iwspy $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/wpa_cli $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/wpa_passphrase $(prefix)/release/usr/sbin/; \
+		cp -dp $(targetprefix)/usr/sbin/wpa_supplicant $(prefix)/release/usr/sbin/; \
+	fi
 
 #
 # alsa
@@ -986,6 +1005,7 @@ endif
 	if [ -e $(targetprefix)/usr/bin/xupnpd ]; then \
 		cp -f $(targetprefix)/usr/bin/xupnpd $(prefix)/release/usr/bin; \
 		cp -aR $(targetprefix)/usr/share/xupnpd $(prefix)/release/usr/share; \
+		mkdir -p $(prefix)/release/usr/share/xupnpd/playlists; \
 	fi
 
 #
@@ -1086,6 +1106,7 @@ $(D)/%release_neutrino: release_neutrino_base release_neutrino_$(TF7700)$(HL101)
 	find $(buildprefix)/own_build/neutrino-hd/ -mindepth 1 -maxdepth 1 -exec cp -at$(prefix)/release/ -- {} +
 #	receiver specific (only if directory exist)
 	[ -d "$(buildprefix)/own_build/neutrino-hd.$(BOXTYPE)" ] && find $(buildprefix)/own_build/neutrino-hd.$(BOXTYPE)/ -mindepth 1 -maxdepth 1 -exec cp -at$(prefix)/release/ -- {} + || true
+	echo $(BOXTYPE) > $(prefix)/release/etc/model
 	rm -f $(prefix)/release/for_your_own_changes
 
 # nicht die feine Art, aber funktioniert ;)
@@ -1117,12 +1138,7 @@ $(D)/%release_neutrino: release_neutrino_base release_neutrino_$(TF7700)$(HL101)
 
 	rm -f $(prefix)/release/bin/pic2m2v
 	rm -f $(prefix)/release/usr/lib/*.py
-	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v1.jpg
-	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v2.jpg
-	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v3.jpg
-	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v4.jpg
-	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v5.jpg
-	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v6.jpg
+	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v?.*
 if !ENABLE_SPARK
 if !ENABLE_SPARK7162
 	rm -f $(prefix)/release/usr/share/tuxbox/neutrino/httpd/images/rc_spark_new.jpg

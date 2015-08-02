@@ -24,8 +24,7 @@ $(D)/net-utils: \
 	portmap \
 	nfs_utils \
 	vsftpd \
-	autofs \
-	ntp
+	autofs
 	touch $@
 
 #

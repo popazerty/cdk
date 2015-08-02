@@ -59,6 +59,9 @@ include make/neutrino.mk
 # Include neutrino-plugins targets
 include make/neutrino-plugins.mk
 
+# Include tvheadend targets
+include make/tvheadend.mk
+
 # A number of cleaning targets
 include make/cleantargets.mk
 
@@ -72,6 +75,8 @@ include make/disttargets.mk
 include make/enigma2-release.mk
 
 include make/neutrino-release.mk
+
+include make/tvheadend-release.mk
 
 #keeping all patches in one file
 include make/patches.mk

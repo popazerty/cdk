@@ -5,10 +5,7 @@
 $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
 	@PREPARE_gstreamer@
 	cd @DIR_gstreamer@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-dependency-tracking \
 			--disable-check \
@@ -28,10 +25,7 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
 $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/libogg $(D)/libalsa @DEPENDS_gst_plugins_base@
 	@PREPARE_gst_plugins_base@
 	cd @DIR_gst_plugins_base@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-theora \
 			--disable-gnome_vfs \
@@ -54,10 +48,7 @@ $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/li
 $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libflac @DEPENDS_gst_plugins_good@
 	@PREPARE_gst_plugins_good@
 	cd @DIR_gst_plugins_good@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-esd \
 			--disable-esdtest \
@@ -77,10 +68,7 @@ $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/
 $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmodplug @DEPENDS_gst_plugins_bad@
 	@PREPARE_gst_plugins_bad@
 	cd @DIR_gst_plugins_bad@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-sdl \
 			--disable-modplug \
@@ -112,10 +100,7 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmod
 $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_ugly@
 	@PREPARE_gst_plugins_ugly@
 	cd @DIR_gst_plugins_ugly@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-debug \
 			--disable-mpeg2dec \
@@ -132,10 +117,7 @@ $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPE
 $(D)/gst_ffmpeg: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_ffmpeg@
 	@PREPARE_gst_ffmpeg@
 	cd @DIR_gst_ffmpeg@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			\
 			--with-ffmpeg-extra-configure=" \
@@ -186,10 +168,7 @@ $(D)/gst_ffmpeg: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gs
 $(D)/gst_plugins_fluendo_mpegdemux: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_fluendo_mpegdemux@
 	@PREPARE_gst_plugins_fluendo_mpegdemux@
 	cd @DIR_gst_plugins_fluendo_mpegdemux@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-check=no \
 		&& \
@@ -209,10 +188,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 		autoconf --force && \
 		autoheader --force && \
 		automake --add-missing --copy --force-missing --foreign && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
 		$(MAKE) && \
@@ -226,10 +202,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 $(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp @DEPENDS_gst_gmediarender@
 	@PREPARE_gst_gmediarender@
 	cd @DIR_gst_gmediarender@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-libupnp=$(targetprefix)/usr \
 		&& \
@@ -249,10 +222,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 		autoconf --force && \
 		autoheader --force && \
 		automake --add-missing --copy --force-missing --foreign && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
 		$(MAKE) && \

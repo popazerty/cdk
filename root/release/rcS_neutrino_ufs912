@@ -1,7 +1,7 @@
 #!/bin/sh
 
-   MODDIR=/lib/modules
-   insmod $MODDIR/micom.ko
+MODDIR=/lib/modules
+insmod $MODDIR/micom.ko
 
 if [ -e /var/etc/.firstboot ]; then
    #fp_control does not work here
@@ -11,13 +11,13 @@ if [ -e /var/etc/.firstboot ]; then
    touch /dev/.devfsd
 fi
 
-   /etc/init.d/mountvirtfs start
+/etc/init.d/mountvirtfs start
 
-   /etc/init.d/portmap start
+/etc/init.d/portmap start
 
-   insmod $MODDIR/e2_proc.ko
+insmod $MODDIR/e2_proc.ko
 
-   /etc/init.d/autofs start
+/etc/init.d/autofs start
 
 if [ ! -e /var/etc/.firstboot ]; then
 
@@ -68,8 +68,6 @@ if [ ! -e /var/etc/.firstboot ]; then
 
    echo "init player"
    insmod $MODDIR/mmelog.ko
-   #there is no mpeg2hw on ufs912, will be handled by fw & copos
-   #insmod $MODDIR/mpeg2hw.ko mmeName=MPEG2_TRANSFORMER0;
    insmod $MODDIR/ksound.ko
    insmod $MODDIR/p2div64.ko
    insmod $MODDIR/stm_v4l2.ko
@@ -80,7 +78,6 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/stv090x.ko
    insmod $MODDIR/ufs912_cic.ko
    insmod $MODDIR/pti.ko
-
    insmod $MODDIR/stm_monitor.ko
    insmod $MODDIR/stmsysfs.ko
    insmod $MODDIR/stmdvb.ko
@@ -91,9 +88,6 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/silencegen.ko
    insmod $MODDIR/bpamem.ko
 
-   #showiframe -p /var/boot/bootlogo.mvi &
-   #stfbcontrol a 0
-
    echo "init frontpanel"
    insmod $MODDIR/simu_button.ko
 
@@ -101,6 +95,9 @@ if [ ! -e /var/etc/.firstboot ]; then
    #period
    #delay
    /bin/evremote2 10 120 &
+
+# Module aus modules.extra laden
+   [ -f /var/etc/modules.extra ] && eval `sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/insmod \0;/' < /var/etc/modules.extra`
 
    #timefix
    date -s "200901011200"

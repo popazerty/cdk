@@ -77,9 +77,3 @@ $(archivedir)/lcd4linux.svn:
 	svn co https://ssl.bulix.org/svn/lcd4linux/trunk $(archivedir)/lcd4linux.svn || \
 	false )
 	@touch $@
-
-$(archivedir)/xupnpd.svn:
-	false || mkdir -p $(archivedir) && ( \
-	svn co http://tsdemuxer.googlecode.com/svn/trunk/xupnpd/src $(archivedir)/xupnpd.svn || \
-	false )
-	@touch $@

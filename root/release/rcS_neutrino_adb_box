@@ -120,6 +120,9 @@ if [ ! -e /var/etc/.firstboot ]; then
 
    /bin/evremote2 &
 
+# Module aus modules.extra laden
+   [ -f /var/etc/modules.extra ] && eval `sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/insmod \0;/' < /var/etc/modules.extra`
+
 #   /etc/init.d/vsftpd start
    /usr/sbin/inetd
 

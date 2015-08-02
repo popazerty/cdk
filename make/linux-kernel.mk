@@ -23,6 +23,8 @@ COMMONPATCHES_24 = \
 		linux-tune_stm24.patch \
 		linux-sh4-permit_gcc_command_line_sections_stm24.patch \
 		linux-sh4-mmap_stm24.patch \
+		$(if $(P0217),linux-defined_is_deprecated_timeconst.pl_stm24$(PATCH_STR).patch) \
+		$(if $(P0217),linux-perf-warning-fix_stm24$(PATCH_STR).patch) \
 		$(if $(P0215)$(P0217),linux-ratelimit-bug_stm24$(PATCH_STR).patch) \
 		$(if $(P0215)$(P0217),linux-patch_swap_notify_core_support_stm24$(PATCH_STR).patch) \
 		$(if $(P0209),linux-sh4-dwmac_stm24_0209.patch) \
@@ -148,8 +150,6 @@ SPARK_PATCHES_24 = $(COMMONPATCHES_24) \
 		$(if $(P0209),linux-sh4-linux_yaffs2_stm24_0209.patch) \
 		$(if $(P0209),linux-sh4-lirc_stm.patch) \
 		$(if $(P0211)$(P0214)$(P0215)$(P0217),linux-sh4-lirc_stm_stm24$(PATCH_STR).patch)
-#		$(if $(P0211)$(P0214)$(P0215)$(P0217),linux-sh4-spark-af901x-NXP-TDA18218.patch)
-#		linux-sh4-spark-dvb-as102.patch
 
 SPARK7162_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
@@ -162,7 +162,7 @@ FORTIS_HDBOX_PATCHES_24 = $(COMMONPATCHES_24) \
 		$(if $(NEUTRINO),linux-sh4-fortis_hdbox_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-usbwait123_stm24.patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
-		$(if $(P0209)$(P0211)$(P0214)$(P0215)$(P0217),linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch) \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
 		$(if $(P0209),linux-sh4-fortis_hdbox_i2c_st40_stm24$(PATCH_STR).patch)
 
 ADB_BOX_PATCHES_24 = $(COMMONPATCHES_24) \
@@ -325,7 +325,8 @@ endif
 HOST_KERNEL_PATCHES = $(KERNELPATCHES_24)
 HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,_,$(KERNELVERSION))_$(MODNAME).config$(DEBUG_STR)
 
-$(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS)
+$(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS) \
+	$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=$(PATCHES)/$(BUILDCONFIG)/%))
 	rm -rf linux-sh4*
 	if [ -e $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz ]; then \
 		mkdir $(buildprefix)/$(KERNEL_DIR); \
@@ -362,15 +363,15 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 	$(MAKE) -C $(KERNEL_DIR) modules_install \
 		ARCH=sh \
 		CROSS_COMPILE=$(target)- \
+		DEPMOD=$(DEPMOD) \
 		INSTALL_MOD_PATH=$(targetprefix)
-	$(INSTALL) -d $(prefix)/$*$(notdir $(bootprefix)) && \
-	$(INSTALL) -m644 $(KERNEL_DIR)/arch/sh/boot/uImage $(prefix)/$*$(notdir $(bootprefix))/vmlinux.ub && \
-	$(INSTALL) -m644 $(KERNEL_DIR)/vmlinux $(prefix)/$*cdkroot/boot/vmlinux-sh4-$(KERNELVERSION) && \
-	$(INSTALL) -m644 $(KERNEL_DIR)/System.map $(prefix)/$*cdkroot/boot/System.map-sh4-$(KERNELVERSION) && \
-	$(INSTALL) -m644 $(KERNEL_DIR)/COPYING $(prefix)/$*cdkroot/boot/LICENSE && \
-	cp $(KERNEL_DIR)/arch/sh/boot/uImage $(prefix)/$*cdkroot/boot/ && \
-	rm $(prefix)/$*cdkroot/lib/modules/$(KERNELVERSION)/build || true && \
-	rm $(prefix)/$*cdkroot/lib/modules/$(KERNELVERSION)/source || true
+	$(INSTALL) -m644 $(KERNEL_DIR)/arch/sh/boot/uImage $(bootprefix)/vmlinux.ub && \
+	$(INSTALL) -m644 $(KERNEL_DIR)/vmlinux $(targetprefix)/boot/vmlinux-sh4-$(KERNELVERSION) && \
+	$(INSTALL) -m644 $(KERNEL_DIR)/System.map $(targetprefix)/boot/System.map-sh4-$(KERNELVERSION) && \
+	$(INSTALL) -m644 $(KERNEL_DIR)/COPYING $(targetprefix)/boot/LICENSE && \
+	cp $(KERNEL_DIR)/arch/sh/boot/uImage $(targetprefix)/boot/ && \
+	rm $(targetprefix)/lib/modules/$(KERNELVERSION)/build || true && \
+	rm $(targetprefix)/lib/modules/$(KERNELVERSION)/source || true
 	touch $@
 
 $(D)/tfkernel.do_compile:

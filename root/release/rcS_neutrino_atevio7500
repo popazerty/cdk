@@ -1,6 +1,7 @@
 #!/bin/sh
 
 MODDIR=/lib/modules
+
 insmod $MODDIR/nuvoton.ko
 
 if [ -e /var/etc/.firstboot ]; then
@@ -16,7 +17,6 @@ fi
 /etc/init.d/portmap start
 
 insmod $MODDIR/e2_proc.ko
-
 insmod $MODDIR/sata.ko
 
 # start automounter with umount timeout of 5 seconds
@@ -30,14 +30,14 @@ if [ ! -e /var/etc/.firstboot ]; then
 
    fp_control -c
 
-   echo "starting telnetd"
-   /usr/sbin/telnetd -l /bin/autologin
+#   echo "starting telnetd"
+#   /usr/sbin/telnetd -l /bin/autologin
 
    echo "init stmfb"
    insmod $MODDIR/stmcore-display-sti7105.ko
    insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:cvbs:yuv;# display1=720x576-16@50:1m:pal:cvbs;
 
-   echo "LOADING MODULES"   
+   echo "LOADING MODULES"
    fp_control -t "LOADING MODULES"
 
    if [ ! -e /lib/firmware/audio.elf ]; then
@@ -63,9 +63,8 @@ if [ ! -e /var/etc/.firstboot ]; then
    echo "init AVS"
    insmod $MODDIR/avs.ko type=stv6418
 
+   echo "init player"
    insmod $MODDIR/mmelog.ko
-   #there is no mpeg2hw on atevio7500, will be handled by fw & copos
-   #insmod $MODDIR/mpeg2hw.ko mmeName=MPEG2_TRANSFORMER0
    insmod $MODDIR/ksound.ko
    insmod $MODDIR/p2div64.ko
    insmod $MODDIR/stm_v4l2.ko
@@ -83,7 +82,6 @@ if [ ! -e /var/etc/.firstboot ]; then
 #   insmod $MODDIR/tda10024.ko
 # DVB-T
 #   insmod $MODDIR/cxd2820.ko
-
    insmod $MODDIR/starci.ko
    insmod $MODDIR/smartcard.ko
    insmod $MODDIR/pti.ko
@@ -97,9 +95,6 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/silencegen.ko
    insmod $MODDIR/bpamem.ko
 
-   #showiframe -p /var/boot/bootlogo.mvi &
-   #stfbcontrol a 0
-
    echo "init frontpanel"
    insmod $MODDIR/simu_button.ko
 
@@ -107,6 +102,9 @@ if [ ! -e /var/etc/.firstboot ]; then
    #period
    #delay
    /bin/evremote2 10 120 &
+
+# Module aus modules.extra laden
+   [ -f /var/etc/modules.extra ] && eval `sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/insmod \0;/' < /var/etc/modules.extra`
 
    #timefix
    date -s "200901011200"
@@ -124,16 +122,16 @@ if [ ! -e /var/etc/.firstboot ]; then
    NFS=`grep -c nfs /proc/cmdline`
    if [ "$NFS" -eq "1" ]; then
       echo "Booting from nfs, don't set network"
-   else 
+   else
       if [ -e /etc/network/interfaces ]; then
-	 ip addr flush eth0
-	 /etc/init.d/networking stop
-	 DHCP=`grep -c dhcp /etc/network/interfaces`
-	 if [ "$DHCP" -eq "1" ]; then
-	    echo "Starting dhcp"
+         ip addr flush eth0
+         /etc/init.d/networking stop
+         DHCP=`grep -c dhcp /etc/network/interfaces`
+         if [ "$DHCP" -eq "1" ]; then
+            echo "Starting dhcp"
             /etc/init.d/udhcpc start
-	 fi
-	 /etc/init.d/networking start
+         fi
+         /etc/init.d/networking start
       fi
    fi
 

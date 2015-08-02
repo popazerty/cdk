@@ -26,10 +26,6 @@ missing
 .deps/
 BUILD/
 BUILDLOG/
-SOURCES/
-RPMS/
-SRPMS/
-SPECS/
 own_build/
 linux-sh4*
 busybox-*

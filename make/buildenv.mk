@@ -59,6 +59,14 @@ BUILDENV := \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	PKG_CONFIG_PATH="$(targetprefix)/usr/lib/pkgconfig"
 
+CONFIGURE_OPTS = \
+	--build=$(build) --host=$(target)
+
+CONFIGURE = \
+	test -f ./configure || ./autogen.sh && \
+	$(BUILDENV) \
+	./configure $(CONFIGURE_OPTS)
+
 MAKE_OPTS := \
 	CC=$(target)-gcc \
 	CXX=$(target)-g++ \
@@ -73,19 +81,6 @@ MAKE_OPTS := \
 	LN_S="ln -s" \
 	ARCH=sh \
 	CROSS_COMPILE=$(target)-
-
-MAKE_ARGS := \
-	CC=$(target)-gcc \
-	CXX=$(target)-g++ \
-	LD=$(target)-ld \
-	NM=$(target)-nm \
-	AR=$(target)-ar \
-	AS=$(target)-as \
-	RANLIB=$(target)-ranlib \
-	STRIP=$(target)-strip \
-	OBJCOPY=$(target)-objcopy \
-	OBJDUMP=$(target)-objdump \
-	LN_S="ln -s"
 
 PLATFORM_CPPFLAGS := \
 	$(if $(UFS910),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_UFS910 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
@@ -169,24 +164,6 @@ D      = .deps
 DEPDIR = $(D)
 
 VPATH  = $(D)
-
-CONFIGURE_OPTS = \
-	--build=$(build) \
-	--host=$(target) \
-	--prefix=$(targetprefix)/usr \
-	--with-driver=$(driverdir) \
-	--with-dvbincludes=$(targetprefix)/usr/include \
-	--with-boxtype=$(BOXTYPE) \
-	--with-target=cdk
-
-CONFIGURE = \
-	./autogen.sh && \
-	CC=$(target)-gcc \
-	CXX=$(target)-g++ \
-	CFLAGS="-Wall $(TARGET_CFLAGS)" \
-	CXXFLAGS="-Wall $(TARGET_CXXFLAGS)" \
-	LDFLAGS="$(TARGET_LDFLAGS)" \
-	./configure $(CONFIGURE_OPTS)
 
 ACLOCAL_AMFLAGS = -I .
 

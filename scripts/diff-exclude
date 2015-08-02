@@ -21,8 +21,6 @@
 .libs
 .git
 .svn
-.svnignore
-.gitignore
 autom4te.cache
 aclocal.m4
 config.guess

@@ -112,6 +112,9 @@ if [ ! -e /var/etc/.firstboot ]; then
 
    /bin/evremote2 hl101 &
 
+# Module aus modules.extra laden
+   [ -f /var/etc/modules.extra ] && eval `sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/insmod \0;/' < /var/etc/modules.extra`
+
 #   echo "starting telnetd"
 #   /usr/sbin/telnetd -l /bin/autologin
 #   /etc/init.d/vsftpd start

@@ -16,8 +16,8 @@ mostlyclean-local: cdk-clean
 
 # Clean tuxbox source directories
 cdk-clean:
-	-$(MAKE) -C linux-sh4 clean
-	-$(MAKE) -C $(driverdir) KERNEL_LOCATION=$(buildprefix)/linux-sh4 \
+	-$(MAKE) -C $(buildprefix)/$(KERNEL_DIR) clean
+	-$(MAKE) -C $(driverdir) KERNEL_LOCATION=$(buildprefix)/$(KERNEL_DIR) \
 		BIN_DEST=$(targetprefix)/bin \
 		INSTALL_MOD_PATH=$(targetprefix) clean
 	-$(MAKE) -C $(appsdir)/tools distclean
@@ -33,7 +33,7 @@ clean-local: mostlyclean-local depsclean
 	-rm -rf $(prefix)/*cdkroot
 	-rm -rf $(prefix)/*cdkroot-tftpboot
 	-rm -rf $(prefix)/release*
-	-rm -rf $(D)/linux-kernel
+	-rm -rf $(D)/linux-kernel*
 
 # Be brutal...just nuke it!
 distclean-local:
@@ -42,7 +42,6 @@ distclean-local:
 	-$(MAKE) driver-clean
 	-rm -f Makefile-archive
 	-rm -f rules-downcheck.pl
-	-rm -f linux-sh4
 	-rm -rf $(D)
 	-rm -rf $(prefix)/*cdkroot/
 	-rm -rf $(prefix)/*cdkroot-tftpboot

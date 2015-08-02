@@ -119,8 +119,8 @@
  		info->map[i].virt = devm_ioremap(&dev->dev, info->map[i].phys,
  						 info->map[i].size);
  		if (info->map[i].virt == NULL) {
-@@ -136,6 +227,8 @@
- 
+@@ -141,6 +230,8 @@
+ #endif
  		simple_map_init(&info->map[i]);
  
 +		printk("MAP[%d]: virtual address: 0x%p\n", i, info->map[i].virt);
@@ -128,7 +128,7 @@
  		probe_type = rom_probe_types;
  		for (; info->mtd[i] == NULL && *probe_type != NULL; probe_type++)
  			info->mtd[i] = do_map_probe(*probe_type, &info->map[i]);
-@@ -169,6 +262,25 @@
+@@ -174,6 +265,25 @@
  	if (err)
  		goto err_out;
  
@@ -154,7 +154,7 @@
  #ifdef CONFIG_MTD_PARTITIONS
  	err = parse_mtd_partitions(info->cmtd, part_probe_types,
  				&info->parts, 0);
-@@ -187,6 +298,7 @@
+@@ -192,6 +302,7 @@
  #endif
  
  	add_mtd_device(info->cmtd);
@@ -174,7 +174,7 @@
  };
  
  /*
-@@ -319,7 +321,8 @@
+@@ -345,7 +347,8 @@
  	list_for_each_entry_safe(slave, next, &mtd_partitions, list)
  		if (slave->master == master) {
  			list_del(&slave->list);
@@ -184,7 +184,7 @@
  			kfree(slave);
  		}
  
-@@ -409,6 +412,7 @@
+@@ -438,6 +441,7 @@
  	slave->mtd.erase = part_erase;
  	slave->master = master;
  	slave->offset = part->offset;
@@ -192,8 +192,8 @@
  
  	if (slave->offset == MTDPART_OFS_APPEND)
  		slave->offset = cur_offset;
-@@ -497,9 +501,15 @@
- 	}
+@@ -530,9 +534,15 @@
+ 		slave->mtd.flags |= MTD_SPANS_MASTER;
  
  out_register:
 +	if (part->mtdp) {

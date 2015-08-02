@@ -16,10 +16,12 @@
  	unsigned char *p_lfb = playerconfig->lfb;
  	enum ddvd_result res = DDVD_OK;
  	int msg;
+-	// try to load liba52.so.0 for softdecoding
+-	int have_liba52 = ddvd_load_liba52();
 +#if defined(__sh__)
 +#else
- 	// try to load liba52.so.0 for softdecoding
- 	int have_liba52 = ddvd_load_liba52();
++ 	// try to load liba52.so.0 for softdecoding
++ 	int have_liba52 = ddvd_load_liba52();
 +#endif
  
  	// decide which resize routine we should use

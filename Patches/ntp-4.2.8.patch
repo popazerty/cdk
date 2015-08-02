@@ -1,15 +1,12 @@
-diff --git a/include/ntp_machine.h b/include/ntp_machine.h
-index 69dca68..91d233a 100644
---- a/include/ntp_machine.h
-+++ b/include/ntp_machine.h
-@@ -15,6 +15,9 @@
- #endif
- #include <time.h>
+--- a/scripts/build/mkver.in	2014-12-19 12:56:52.000000000 +0100
++++ b/scripts/build/mkver.in	2015-02-03 12:44:15.008408400 +0100
+@@ -15,7 +15,7 @@
+  *) ConfStr="${ConfStr}-@VER_SUFFIX@" ;;
+ esac
  
-+#ifndef MOD_NANO
-+#define MOD_NANO ADJ_NANO
-+#endif
- #include "ntp_proto.h"
+-ConfStr="$ConfStr `LC_TIME=C TZ=UTC date`"
++ConfStr="$ConfStr"
  
- /*
+ if [ ! -f .version ]; then
+   echo 0 > .version
 

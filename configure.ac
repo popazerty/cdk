@@ -37,6 +37,14 @@ AC_ARG_ENABLE(enigma2,
 AM_CONDITIONAL(ENABLE_ENIGMA2,test "$enable_enigma2" = "yes")
 AC_SUBST(ENIGMA2)
 
+AC_ARG_ENABLE(tvheadend,
+	AS_HELP_STRING(--enable-tvheadend, Setting up the CDK to build tvheadend),
+	[case "${enableval}" in
+		yes) TVHEADEND=tvheadend ;;
+	esac],[enable_tvheadend=no])
+AM_CONDITIONAL(ENABLE_TVHEADEND,test "$enable_tvheadend" = "yes")
+AC_SUBST(TVHEADEND)
+
 AC_ARG_ENABLE(wlandriver,
 	AS_HELP_STRING(--enable-wlandriver, Setting up the CDK to build wlandriver),
 	[case "${enableval}" in
@@ -1006,6 +1014,8 @@ TUXBOX_RULES_MAKE(wpa_supplicant)
 TUXBOX_RULES_MAKE(ethtool)
 TUXBOX_RULES_MAKE(xupnpd)
 TUXBOX_RULES_MAKE(udpxy)
+
+TUXBOX_RULES_MAKE(tvheadend)
 
 #
 # localmacros

@@ -7,7 +7,6 @@ $(D)/tuxtxtlib: bootstrap @DEPENDS_tuxtxtlib@
 		aclocal && \
 		autoheader && \
 		autoconf && \
-		libtoolize --copy --ltdl && \
 		automake --foreign --add-missing && \
 		$(BUILDENV) \
 		./configure \
@@ -32,7 +31,6 @@ $(D)/tuxtxt32bpp: tuxtxtlib @DEPENDS_tuxtxt32bpp@
 		aclocal && \
 		autoheader && \
 		autoconf && \
-		libtoolize --copy --ltdl && \
 		automake --foreign --add-missing && \
 		$(BUILDENV) \
 		./configure \

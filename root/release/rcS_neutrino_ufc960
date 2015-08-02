@@ -74,10 +74,6 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/stmalloc.ko
    insmod $MODDIR/platform.ko
    insmod $MODDIR/silencegen.ko
-
-   #showiframe -p /boot/bootlogo.mvi &
-   #stfbcontrol a 0
-
    insmod $MODDIR/bpamem.ko
    mknod /dev/bpamem c 153 0
 
@@ -94,10 +90,8 @@ if [ ! -e /var/etc/.firstboot ]; then
    #delay
    /bin/evremote2 0 0 10 120 &
 
-   #DVD-PLAYER EXIT-TASTE LOAD OR EJECT DVD
-   #mount /dev/sr0 /media/dvd
-   #fix this later if we got to manage a marusys raw device driver
-   mount /dev/sda5 /hdd/
+# Module aus modules.extra laden
+   [ -f /var/etc/modules.extra ] && eval `sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/insmod \0;/' < /var/etc/modules.extra`
 
    /etc/init.d/portmap start
 #   /etc/init.d/vsftpd start
