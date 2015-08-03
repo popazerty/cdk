@@ -1,6 +1,6 @@
 --- libdreamdvd-6aa22dd3f530ca4be49946e07e4a0bfe60427bdf/main.c.org	2014-05-06 13:59:51.224430745 +0200
 +++ libdreamdvd-6aa22dd3f530ca4be49946e07e4a0bfe60427bdf/main.c	2014-05-27 16:10:13.021393436 +0200
-@@ -133,7 +133,11 @@
+@@ -141,7 +141,11 @@
  	// defaults
  	ddvd_set_ac3thru(pconfig, 0);
  	ddvd_set_language(pconfig, "en");
@@ -12,7 +12,7 @@
  	ddvd_set_video(pconfig, DDVD_4_3, DDVD_LETTERBOX, DDVD_PAL);
  	ddvd_set_lfb(pconfig, NULL, 720, 576, 1, 720);
  	struct ddvd_resume resume_info;
-@@ -622,8 +626,11 @@
+@@ -630,8 +634,11 @@
  	unsigned char *p_lfb = playerconfig->lfb;
  	enum ddvd_result res = DDVD_OK;
  	int msg;
@@ -23,10 +23,10 @@
 + 	// try to load liba52.so.0 for softdecoding
 + 	int have_liba52 = ddvd_load_liba52();
 +#endif
- 
- 	// decide which resize routine we should use
- 	// on 4bpp mode we use bicubic resize for sd skins because we get much better results with subtitles and the speed is ok
-@@ -740,7 +747,11 @@
+ 	int audio_lock = 0;
+ 	int spu_lock = 0;
+
+@@ -759,7 +766,11 @@
  		Perror("AUDIO_PLAY");
  
  #elif CONFIG_API_VERSION == 3
@@ -38,7 +38,7 @@
  	if (ddvd_fdvideo == -1) {
  		Perror("/dev/dvb/adapter0/video0");
  		res = DDVD_BUSY;
-@@ -782,8 +793,12 @@
+@@ -801,8 +812,12 @@
  		safe_write(ddvd_output_fd, ddvd_startup_logo, sizeof(ddvd_startup_logo));
  # else
  	unsigned char pes_header[] = { 0x00, 0x00, 0x01, 0xE0, 0x00, 0x00, 0x80, 0x00, 0x00 };
@@ -51,7 +51,7 @@
  # endif
  #endif
  
-@@ -807,10 +822,13 @@
+@@ -826,10 +841,13 @@
  	ddvd_mpa_init(48000, 192000);	//init MPA Encoder with 48kHz and 192k Bitrate
  
  	int ac3thru = 1;
@@ -65,7 +65,7 @@
  
  	char osdtext[512];
  	osdtext[0] = 0;
-@@ -891,7 +909,11 @@
+@@ -910,7 +928,11 @@
  	}
  
  	/* set read ahead cache usage to no */
