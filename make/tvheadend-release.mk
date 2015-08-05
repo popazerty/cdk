@@ -962,7 +962,7 @@ endif
 	fi
 
 #
-# Neutrino HD2 Workaround Build in Player
+# Neutrino HD2 Workaround Built-in Player
 #
 	if [ -e $(targetprefix)/usr/local/bin/eplayer3 ]; then \
 		cp -f $(targetprefix)/usr/local/bin/eplayer3 $(prefix)/release/bin/; \
@@ -1032,8 +1032,6 @@ $(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL1
 	ln -s /tmp $(prefix)/release/var/log
 	ln -s /tmp $(prefix)/release/var/run
 	ln -s /tmp $(prefix)/release/var/tmp
-
-
 
 #
 # sh4-linux-strip all

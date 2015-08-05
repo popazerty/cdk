@@ -311,19 +311,19 @@ esac
 
 WLANDR="No"
 case "$REPLY" in
-	1)	IMAGEN="enigma2";;
-	3)	IMAGEN="neutrino";;
-	4)	IMAGEN="neutrino"
+	1)	IMAGEN="Enigma2";;
+	3)	IMAGEN="Neutrino";;
+	4)	IMAGEN="Neutrino"
 		CONFIGPARAM="$CONFIGPARAM --enable-wlandriver"
 		WLANDR="Yes";;
-	5)	IMAGEN="tvheadend";;
-	*)	IMAGEN="enigma2"
+	5)	IMAGEN="Tvheadend";;
+	*)	IMAGEN="Eenigma2"
 		CONFIGPARAM="$CONFIGPARAM --enable-wlandriver"
 		WLANDR="Yes";;
 esac
 
 case "$IMAGEN" in
-	neutrino)
+	Neutrino)
 	 	if [ "$MFWORK" != "built-in" ]; then
 			echo "You did not select built-in as the Media Framework."
 			echo "This is required for Neutrino."
@@ -354,7 +354,7 @@ case "$IMAGEN" in
 				make distclean
 			fi
 		fi;;
-	tvheadend)
+	Tvheadend)
 		CONFIGPARAM="$CONFIGPARAM --enable-tvheadend"
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
@@ -363,8 +363,8 @@ case "$IMAGEN" in
 				make distclean
 			fi
 		fi;;
-	enigma2)
-	if [ "$MFWORK" == "built-in" ]; then
+	Enigma2)
+		if [ "$MFWORK" == "built-in" ]; then
 			echo "You selected built-in as the Media Framework."
 			echo "You cannot build Enigma2 with that."
 			echo "Exiting..."
@@ -415,9 +415,9 @@ echo "----------------------------------------"
 echo
 # Create build executable file
 cat $CURDIR/remake > $CURDIR/build
-if [ "$IMAGEN" == "enigma2" ]; then
+if [ "$IMAGEN" == "Enigma2" ]; then
   echo "make yaud-enigma2-pli-nightly" >> $CURDIR/build
-elif [ "$IMAGEN" == "tvheadend" ]; then
+elif [ "$IMAGEN" == "Tvheadend" ]; then
   echo "make yaud-tvheadend" >> $CURDIR/build
 else
   case "$NEUTRINO" in

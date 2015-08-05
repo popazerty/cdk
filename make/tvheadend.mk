@@ -1,8 +1,10 @@
-yaud-tvheadend: yaud-none \
+yaud-tvheadend: yaud-none lirc \
 		boot-elf tvheadend release_tvheadend
 	@TUXBOX_YAUD_CUSTOMIZE@
 
-TVHEADEND_DEPS  = bootstrap openssl python
+TVHEADEND_DEPS = bootstrap openssl python
+
+TVHEADEND_PATCHES =
 
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
@@ -14,6 +16,10 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	git clone https://github.com/tvheadend/tvheadend.git $(archivedir)/tvheadend.git; \
 	cp -ra $(archivedir)/tvheadend.git $(sourcedir)/tvheadend; \
 	cp -ra $(sourcedir)/tvheadend $(sourcedir)/tvheadend.org
+	for i in $(TVHEADEND_PATCHES); do \
+		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		set -e; cd $(sourcedir)/tvheadend && patch -p1 -i $$i; \
+	done;
 	touch $@
 
 $(D)/tvheadend.config.status:
