@@ -79,7 +79,7 @@ fi
 
 echo "Loading modules"
 
-if [ ! -e /boot/audio.elf ]; then
+if [ ! -e /lib/firmware/audio.elf ]; then
    echo "NO AUDIO FW!!!"
    echo "NO AUDIO FW!!!" > /dev/vfd
 fi
@@ -90,12 +90,12 @@ echo "Load 8" > /dev/vfd
 #if [ ! $dtsdown ] && [ -e /boot/audio_dts.elf ]; then
 #   /bin/ustslave /dev/st231-1 /boot/audio_dts.elf > /dev/null
 #else
-   /bin/ustslave /dev/st231-1 /boot/audio.elf > /dev/null
+   /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
 #fi
 
 echo "Load video firmware (LOAD 7)"
 echo "Load 7" > /dev/vfd
-/bin/ustslave /dev/st231-0 /boot/video.elf > /dev/null
+/bin/ustslave /dev/st231-0 /lib/firmware/video.elf > /dev/null
 
 echo "Init embx (LOAD 6)"
 echo "Load 6" > /dev/vfd

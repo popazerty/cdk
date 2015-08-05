@@ -60,7 +60,7 @@ insmod $MODDIR/stmcore-display-sti7105.ko
 
 echo "Loading modules"
 
-if [ ! -e /boot/audio.elf ]; then
+if [ ! -e /lib/firmware/audio.elf ]; then
    echo "NO AUDIO FW!!!"
    "FW MISSING!!!" > /dev/vfd
 fi
@@ -71,12 +71,12 @@ echo "LOAD 8" > /dev/vfd
 #if [ ! $dtsdown ] && [ -e /boot/audio_dts.elf ]; then
 #   /bin/ustslave /dev/st231-1 /boot/audio_dts.elf > /dev/null
 #else
-   /bin/ustslave /dev/st231-1 /boot/audio.elf > /dev/null
+   /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
 #fi
 
 echo "Load video firmware (LOAD 7)"
 echo "LOAD 7" > /dev/vfd
-/bin/ustslave /dev/st231-0 /boot/video.elf > /dev/null
+/bin/ustslave /dev/st231-0 /lib/firmware/video.elf > /dev/null
 
 echo "Init embx (LOAD 6)"
 echo "LOAD 6" > /dev/vfd
