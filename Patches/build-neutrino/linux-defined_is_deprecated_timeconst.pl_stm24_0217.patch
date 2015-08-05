@@ -12,7 +12,7 @@ fix a couple warnings from BUG() usage
  #ifndef HAVE_ARCH_BUG_ON
 --- a/kernel/timeconst.pl
 +++ b/kernel/timeconst.pl
-@@ -370,7 +370,7 @@ if ($hz eq '--can') {
+@@ -370,7 +370,7 @@
  	}
  
  	@val = @{$canned_values{$hz}};
@@ -23,7 +23,7 @@ fix a couple warnings from BUG() usage
  	output($hz, @val);
 --- a/scripts/mod/modpost.c
 +++ b/scripts/mod/modpost.c
-@@ -1559,7 +1559,8 @@ static void get_markers(struct elf_info *info, struct module *mod)
+@@ -1359,7 +1359,8 @@
  			const char *name = strings + sym->st_value;
  			const char *fmt = strchr(name, '\0') + 1;
  			char *line = NULL;
@@ -33,7 +33,7 @@ fix a couple warnings from BUG() usage
  			NOFAIL(line);
  			mod->markers[n++] = line;
  		}
-@@ -1979,7 +1980,8 @@ static void write_dump(const char *fname)
+@@ -1787,7 +1788,8 @@ static void write_dump(const char *fname)
  static void add_marker(struct module *mod, const char *name, const char *fmt)
  {
  	char *line = NULL;

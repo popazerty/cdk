@@ -332,21 +332,19 @@ case "$IMAGEN" in
 		fi
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
-			[1-5])	REPLY=$8;;
+			[1-4])	REPLY=$8;;
 			*)	echo -e "\nWhich neutrino variant do you want to build?"
-				echo "   1) neutrino-mp"
-				echo "   2) neutrino-mp-next"
-				echo "   3) neutrino-mp-cst-next"
-				echo "   4) neutrino-hd2-exp"
-#				echo "   5) neutrino-mp-tangos"
-				read -p " Select Neutrino variant (1-5)? ";;
+				echo "   1) neutrino-mp-next"
+				echo "   2) neutrino-mp-cst-next"
+				echo "   3) neutrino-hd2-exp"
+				echo "   4) neutrino-mp-tangos"
+				read -p " Select Neutrino variant (1-4)? ";;
 		esac
 		case "$REPLY" in
-			2)	IMAGEN="neutrino-mp-next";;
-			3)	IMAGEN="neutrino-mp-cst-next";;
-			4)	IMAGEN="neutrino-hd2-exp";;
-#			5)	IMAGEN="neutrino-mp-tangos";;
-			*)	IMAGEN="neutrino-mp";;
+			2)	IMAGEN="neutrino-mp-cst-next";;
+			3)	IMAGEN="neutrino-hd2-exp";;
+			4)	IMAGEN="neutrino-mp-tangos";;
+			*)	IMAGEN="neutrino-mp-next";;
 		esac
 		NEUTRINO=$REPLY
 		if [ -e lastChoice ]; then
@@ -423,11 +421,10 @@ elif [ "$IMAGEN" == "tvheadend" ]; then
   echo "make yaud-tvheadend" >> $CURDIR/build
 else
   case "$NEUTRINO" in
-    1) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
-    2) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
-    3) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-#    5) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+    1) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
+    2) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
+    3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
+    4) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
     *) exit;;
   esac
 fi

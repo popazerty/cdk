@@ -1,0 +1,123 @@
+--- nhd2-exp.org/lib/libdvbapi/Makefile.am
++++ nhd2-exp/lib/libdvbapi/Makefile.am
+@@ -8,10 +8,10 @@
+ 	-I$(top_srcdir)/lib/libeventserver
+ 
+ if ENABLE_GSTREAMER
+-INCLUDES += @GST_CFLAGS@
++AM_CPPFLAGS = @GST_CFLAGS@
+ else
+ if ENABLE_LIBEPLAYER3
+-INCLUDES += -I$(top_srcdir)/lib/libeplayer3/include
++AM_CPPFLAGS = -I$(top_srcdir)/lib/libeplayer3/include
+ endif
+ endif
+ 
+--- nhd2-exp.org/lib/libeplayer3/Makefile.am
++++ nhd2-exp/lib/libeplayer3/Makefile.am
+@@ -2,7 +2,7 @@
+ 
+ CXXFLAGS = -Wall
+ 
+-INCLUDES = \
++AM_CPPFLAGS \
+ 	-I$(srcdir)/include \
+ 	-I$(top_srcdir)/lib/libdvbapi
+ 
+--- nhd2-exp.org/lib/libdvbsub/Makefile.am
++++ nhd2-exp/lib/libdvbsub/Makefile.am
+@@ -5,13 +5,13 @@
+ 	@AVCODEC_CFLAGS@
+ 
+ if BOXTYPE_COOLSTREAM
+-INCLUDES += -I$(top_srcdir)/src/zapit/include \
++AM_CPPFLAGS = -I$(top_srcdir)/src/zapit/include \
+ 	-I$(top_srcdir)/lib/libcoolstream
+ else
+-INCLUDES += -I$(top_srcdir)/lib/libdvbapi
++AM_CPPFLAGS = -I$(top_srcdir)/lib/libdvbapi
+ endif
+ 
+-AM_CPPFLAGS = -D__STDC_CONSTANT_MACROS
++AM_CPPFLAGS += -D__STDC_CONSTANT_MACROS
+ 
+ noinst_LIBRARIES = libdvbsub.a
+ 
+--- nhd2-exp.org/lib/liblcddisplay/Makefile.am
++++ nhd2-exp/lib/liblcddisplay/Makefile.am
+@@ -1,4 +1,4 @@
+-INCLUDES = \
++AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/lib \
+ 	-I$(top_srcdir)/src \
+ 	-I$(top_srcdir)/src/system \
+--- nhd2-exp.org/lib/libtuxtxt/Makefile.am
++++ nhd2-exp/lib/libtuxtxt/Makefile.am
+@@ -1,4 +1,4 @@
+-INCLUDES = \
++AM_CPPFLAGS = \
+	-I$(top_builddir) \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/src \
+@@ -8,13 +8,13 @@
+ 	@FREETYPE_CFLAGS@
+ 
+ if BOXTYPE_COOLSTREAM
+-INCLUDES += -I$(top_srcdir)/src/zapit/include \
++AM_CPPFLAGS = -I$(top_srcdir)/src/zapit/include \
+ 	-I$(top_srcdir)/lib/libcoolstream
+ else
+-INCLUDES += -I$(top_srcdir)/lib/libdvbapi
++AM_CPPFLAGS = -I$(top_srcdir)/lib/libdvbapi
+ endif
+ 
+-AM_CPPFLAGS = -Wno-multichar
++AM_CPPFLAGS += -Wno-multichar
+ 
+ noinst_LIBRARIES = libtuxtxt.a
+ 
+--- nhd2-exp.org/lib/libxmltree/Makefile.am
++++ nhd2-exp/lib/libxmltree/Makefile.am
+@@ -1,4 +1,4 @@
+-INCLUDES = -I$(srcdir)/xmltok
++AM_CPPFLAGS = -I$(srcdir)/xmltok
+ 
+ noinst_LIBRARIES = libtuxbox-xmltree.a
+ 
+--- nhd2-exp.org/lib/sectionsdclient/Makefile.am
++++ nhd2-exp/lib/sectionsdclient/Makefile.am
+@@ -1,4 +1,4 @@
+-INCLUDES = \
++AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/lib \
+ 	-I$(top_srcdir)/src/zapit/include/zapit \
+ 	-I$(top_srcdir)/lib/connection \
+--- nhd2-exp.org/lib/timerdclient/Makefile.am
++++ nhd2-exp/lib/timerdclient/Makefile.am
+@@ -1,4 +1,4 @@
+-INCLUDES = \
++AM_CPPFLAGS = \
+	-I$(top_srcdir)/lib \
+	-I$(top_srcdir)/src/zapit/include/zapit \
+	-I$(top_srcdir)/lib/connection \
+--- nhd2-exp.org/src/Makefile.am
++++ nhd2-exp/lib/src/Makefile.am
+@@ -1,6 +1,6 @@
+ SUBDIRS = zapit gui daemonc driver system timerd nhttpd sectionsd
+ 
+-INCLUDES = \
++AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/src/zapit/include/zapit \
+ 	-I$(top_srcdir)/lib \
+ 	-I$(top_srcdir)/lib/connection \
+--- nhd2-exp.org/src/driver/Makefile.am
++++ nhd2-exp/lib/src/driver/Makefile.am
+@@ -1,6 +1,6 @@
+ SUBDIRS = pictureviewer audiodec
+ 
+-INCLUDES = \
++AM_CPPFLAGS = \
+ 	-I$(top_builddir) \
+ 	-I$(top_srcdir) \
+ 	-I$(top_srcdir)/src \
+

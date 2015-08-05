@@ -752,16 +752,7 @@
  }
  
  void CVFD::setFan(bool enable)
-@@ -843,7 +936,7 @@
- 	//openDevice();
- 	
- 	//if( ioctl(fd, VFDSETFAN, enable) < 0)  
--	//	perror("VFDPWRLED");
-+	//	perror("VFDSETFAN");
- 	
- 	//closeDevice();
- #endif	
-@@ -937,7 +1030,7 @@
+@@ -939,7 +1032,7 @@
  	memcpy(&data, timebuf, 6); 
  	
  	if( ioctl(fd, VFDSETTIME, &data) < 0)  

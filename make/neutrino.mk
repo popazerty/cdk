@@ -3,7 +3,7 @@
 #
 $(targetprefix)/var/etc/.version:
 	echo "imagename=Neutrino" > $@
-	echo "homepage=http://gitorious.org/open-duckbox-project-sh4" >> $@
+	echo "homepage=http://github.org/audioniek" >> $@
 	echo "creator=`id -un`" >> $@
 	echo "docs=http://gitorious.org/open-duckbox-project-sh4/pages/Home" >> $@
 	echo "forum=http://gitorious.org/open-duckbox-project-sh4" >> $@
