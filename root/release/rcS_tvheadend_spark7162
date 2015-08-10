@@ -86,12 +86,11 @@ fi
 
 echo "Load audio firmware (LOAD 8)"
 echo "Load 8" > /dev/vfd
-#dtsdown=`cat /etc/enigma2/settings | grep systemoptions.dtsdownmix | cut -d "=" -f2`
-#if [ ! $dtsdown ] && [ -e /boot/audio_dts.elf ]; then
-#   /bin/ustslave /dev/st231-1 /boot/audio_dts.elf > /dev/null
-#else
+if [ -e //lib/firmware/audio_dts.elf ]; then
+   /bin/ustslave /dev/st231-1 /lib/firmware/audio_dts.elf > /dev/null
+else
    /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
-#fi
+fi
 
 echo "Load video firmware (LOAD 7)"
 echo "Load 7" > /dev/vfd
@@ -100,9 +99,10 @@ echo "Load 7" > /dev/vfd
 echo "Init embx (LOAD 6)"
 echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
-insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
-insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
-insmod $MODDIR/mme_host.ko transport0=shm
+insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0
+insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000
+#insmod $MODDIR/mme_host.ko transport0=shm
+insmod $MODDIR/mme_host.ko
 
 echo "Init AVS (LOAD 5)"
 echo "Load 5" > /dev/vfd
@@ -120,18 +120,18 @@ insmod $MODDIR/stmvout.ko
 insmod $MODDIR/stmvbi.ko
 insmod $MODDIR/pseudocard.ko
 
-#Set desired mode for tuner 3 here: t=DVB-T, c=DVB=C
+#Set desired mode for tuner 3 here: t=DVB-T, c=DVB-C
 tunertype='t'
 insmod $MODDIR/spark7162.ko UnionTunerType=$tunertype
 
 if [ -e $MODDIR/pti.ko ]; then
-#      if [ ! $?=='2' ]; then
+#   if [ ! $?=='2' ]; then
       pti_arg="waitMS=20 videoMem=4096"
       echo "Full feature pti"
-#      else
-#         pti_arg=""
-#         echo "Simple pti"
-#     fi
+#   else
+#      pti_arg=""
+#      echo "Simple pti"
+#   fi
   insmod $MODDIR/pti.ko $pti_arg
 fi
 insmod $MODDIR/stm_monitor.ko
@@ -155,19 +155,20 @@ insmod $MODDIR/smartcard.ko
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
-#showiframe -p /boot/bootlogo.mvi &
+if [ -e /boot/tvhlogo_720.mvi ]; then
+   showiframe -p /boot/tvhlogo_720.mvi &
+fi
 stfbcontrol a 0
 
-#echo "Init lircd (LOAD 2)"
-#echo "Load 2" > /dev/vfd
+echo "Init smartcard cardreader (LOAD 2)"
+echo "Load 2" > /dev/vfd
 #/usr/bin/lircd
 #rm -rf /dev/rc
 #mknod /dev/rc c 147 1 #VFD
 #/bin/evremote2 10 120 &
 
-echo "Init smartcard cardreader"
-mknod /dev/sci0 c 169 0
-mknod /dev/sci1 c 169 1
+#mknod /dev/sci0 c 169 0
+#mknod /dev/sci1 c 169 1
 
 #major=$(awk "\$2==\"sparkid\" {print \$1}" /proc/devices)
 #rm -f /dev/sparkid
@@ -217,10 +218,12 @@ else
       /etc/init.d/networking start &
    fi
 fi
+#Allow network to wake up and initialize
 sleep 2
+#Show IP address on frontpanel
 ip=`ifconfig eth0 | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p'`
-echo "IP: $ip"
-echo "IP: $ip" > /dev/vfd
+echo "IP $ip" > /dev/vfd
+sleep 3
 
 ## Start automount
 #if [ -e /etc/init.d/automount ]; then
@@ -249,7 +252,7 @@ echo "Start Tvheadend"
 
 until false
 do
-#   echo "Entering Tvheadend main loop"
+   echo "Entering Tvheadend main loop"
    /usr/local/bin/tvheadend --http_port 80 -C
    rtv=$?
    echo "Tvheadend ended <- RTV: " $rtv

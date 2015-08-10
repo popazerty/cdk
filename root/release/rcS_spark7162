@@ -100,8 +100,8 @@ echo "Load 7" > /dev/vfd
 echo "Init embx (LOAD 6)"
 echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
-insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
-insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
+insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0
+insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
@@ -132,7 +132,7 @@ if [ -e $MODDIR/pti.ko ]; then
       echo "Full feature pti"
 #   else
 #      pti_arg=""
-#     echo "Simple pti"
+#      echo "Simple pti"
 #   fi
    insmod $MODDIR/pti.ko $pti_arg
 fi
@@ -157,7 +157,9 @@ insmod $MODDIR/cec.ko activemode=1
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
-showiframe -p /boot/bootlogo.mvi &
+if [ -e /boot/bootlogo.mvi ]; then
+   showiframe -p /boot/bootlogo.mvi &
+fi
 stfbcontrol a 0
 
 echo "Init lircd (LOAD 2)"
@@ -219,7 +221,12 @@ else
       /etc/init.d/networking start &
    fi
 fi
+#Allow network to wake up and initialize
 sleep 2
+#Show IP address on frontpanel
+#ip=`ifconfig eth0 | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p'`
+#echo "IP $ip" > /dev/vfd
+#sleep 3
 
 # Start automount
 if [ -e /etc/init.d/automount ]; then

@@ -1,2 +1,2 @@
-boot
+boot/*.elf
 var/etc/.version
