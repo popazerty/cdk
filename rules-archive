@@ -69,7 +69,8 @@ libvorbisidec_1.0.2+svn18153.orig.tar.gz;http://ftp.debian.org/debian/pool/main/
 #
 # contrib libs
 #
-openssl-0.9.8zf.tar.gz;http://www.openssl.org/source
+ncurses-5.9.tar.gz;ftp://ftp.gnu.org/gnu/ncurses
+gmp-6.0.0a.tar.xz;https://gmplib.org/download/gmp/
 lua-5.2.3.tar.gz;http://www.lua.org/ftp
 luaposix.git;git://github.com/luaposix/luaposix.git;release-v31
 luacurl.git;git://github.com/Lua-cURL/Lua-cURLv3.git
@@ -81,8 +82,8 @@ rtmpdump.git;git://github.com/oe-alliance/rtmpdump;2.4
 lirc-0.9.0.tar.gz;http://prdownloads.sourceforge.net/lirc
 libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
 libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
-glib-2.28.3.tar.gz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.28
-libffi-3.1.tar.gz;ftp://sourceware.org/pub/libffi
+glib-2.45.4.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.45
+libffi-3.2.1.tar.gz;ftp://sourceware.org/pub/libffi
 orc-0.4.18.tar.gz;http://gstreamer.freedesktop.org/src/orc
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
 libmng-1.0.10.tar.bz2;http://dfn.dl.sourceforge.net/sourceforge/libmng
@@ -127,7 +128,6 @@ pugixml-1.6.tar.gz;http://github.com/zeux/pugixml/releases/download/v1.6
 #
 # contrib apps
 #
-ncurses-5.9.tar.gz;ftp://ftp.gnu.org/gnu/ncurses
 bzip2-1.0.6.tar.gz;http://www.bzip.org/1.0.6
 grep-2.5.1.tar.bz2;ftp://mirrors.kernel.org/gnu/grep
 grep_2.5.1.ds2-6.diff.gz;http://64studio.hivelocity.net/apt/pool/main/g/grep
@@ -210,6 +210,13 @@ libgd-2.1.0.tar.gz;http://bitbucket.org/libgd/gd-libgd/downloads
 dpf-ax.svn;svn://svn.code.sf.net/p/dpf-ax/code/trunk
 
 #
+# Security
+#
+openssl-0.9.8zf.tar.gz;http://www.openssl.org/source
+gnutls-3.4.3.tar.xz;ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4
+nettle-3.1.tar.gz;https://ftp.gnu.org/gnu/nettle
+
+#
 # File Systems and Disk Management
 #
 dosfstools-3.0.16.tar.gz;http://www.daniel-baumann.ch/files/software/dosfstools
@@ -252,4 +259,4 @@ wpa_supplicant-2.1.tar.gz;http://hostap.epitest.fi/releases
 ethtool-6.tar.gz;http://downloads.openwrt.org/sources
 xupnpd.git;git://github.com/clark15b/xupnpd
 udpxy.1.0.23-0-prod.tar.gz;http://www.udpxy.com/download/1_23
-
+glib-networking-2.45.1.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/2.45

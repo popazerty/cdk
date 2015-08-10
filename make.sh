@@ -317,7 +317,7 @@ case "$REPLY" in
 		CONFIGPARAM="$CONFIGPARAM --enable-wlandriver"
 		WLANDR="Yes";;
 	5)	IMAGEN="Tvheadend";;
-	*)	IMAGEN="Eenigma2"
+	*)	IMAGEN="Enigma2"
 		CONFIGPARAM="$CONFIGPARAM --enable-wlandriver"
 		WLANDR="Yes";;
 esac

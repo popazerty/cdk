@@ -2,7 +2,7 @@
 #
 # gstreamer
 #
-$(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
+$(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 $(D)/glibnetworking @DEPENDS_gstreamer@
 	@PREPARE_gstreamer@
 	cd @DIR_gstreamer@ && \
 		$(CONFIGURE) \
@@ -12,6 +12,7 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
 			--disable-gst-debug \
 			--disable-debug \
 			--enable-introspection=no \
+			--enable-gnutls=yes \
 			ac_cv_func_register_printf_function=no \
 		&& \
 		$(MAKE) && \

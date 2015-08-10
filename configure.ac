@@ -591,12 +591,14 @@ fi
 if test -z "$TARGET_CFLAGS" -o -z "$TARGET_CXXFLAGS"; then
 	TARGET_CFLAGS="-pipe"
 	if test "$enable_debug" = "yes"; then
-		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g -gdwarf-2 -I$targetprefix/usr/include"
-		TARGET_LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
+		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g -gdwarf-2"
+		TARGET_LDFLAGS=""
 	else
-		TARGET_CFLAGS="$TARGET_CFLAGS -Os -I$targetprefix/usr/include"
-		TARGET_LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
+		TARGET_CFLAGS="$TARGET_CFLAGS -Os"
+		TARGET_LDFLAGS=""
 	fi
+	TARGET_LDFLAGS="$TARGET_LDFLAGS -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
+	TARGET_CFLAGS="$TARGET_CFLAGS -I$targetprefix/usr/include"
 	TARGET_CXXFLAGS="$TARGET_CFLAGS"
 fi
 AC_SUBST(CFLAGS)
@@ -787,6 +789,7 @@ TUXBOX_RULES_MAKE(host_pkgconfig)
 TUXBOX_RULES_MAKE(host_module_init_tools)
 TUXBOX_RULES_MAKE(host_mtd_utils)
 TUXBOX_RULES_MAKE(host_glib2_genmarshal)
+TUXBOX_RULES_MAKE(host_libffi)
 TUXBOX_RULES_MAKE(uboot_tf7700)
 
 #
@@ -837,7 +840,8 @@ TUXBOX_RULES_MAKE(libvorbisidec)
 #
 # contrib libs
 #
-TUXBOX_RULES_MAKE(openssl)
+TUXBOX_RULES_MAKE(libncurses)
+TUXBOX_RULES_MAKE(gmp)
 TUXBOX_RULES_MAKE(lua)
 TUXBOX_RULES_MAKE(luacurl)
 TUXBOX_RULES_MAKE(luaexpat)
@@ -900,7 +904,6 @@ TUXBOX_RULES_MAKE(libxslt)
 #
 # contrib apps
 #
-TUXBOX_RULES_MAKE(libncurses)
 TUXBOX_RULES_MAKE(bzip2)
 TUXBOX_RULES_MAKE(grep)
 TUXBOX_RULES_MAKE(openrdate)
@@ -977,6 +980,13 @@ TUXBOX_RULES_MAKE(libgd2)
 TUXBOX_RULES_MAKE(libdpfax)
 
 #
+# Security
+#
+TUXBOX_RULES_MAKE(openssl)
+TUXBOX_RULES_MAKE(gnutls)
+TUXBOX_RULES_MAKE(nettle)
+
+#
 # File Systems and Disk Management
 #
 TUXBOX_RULES_MAKE(dosfstools)
@@ -1014,7 +1024,11 @@ TUXBOX_RULES_MAKE(wpa_supplicant)
 TUXBOX_RULES_MAKE(ethtool)
 TUXBOX_RULES_MAKE(xupnpd)
 TUXBOX_RULES_MAKE(udpxy)
+TUXBOX_RULES_MAKE(glibnetworking)
 
+#
+# TVHEADEND
+#
 TUXBOX_RULES_MAKE(tvheadend)
 
 #
@@ -1048,6 +1062,7 @@ AC_MSG_RESULT([
 $ccacheinfo
 summary:
 ----------------------------------------
+<<<<<<< HEAD
 Ccache support              : $enable_ccache
 Target CPU/boxtype          : $CPU_MODEL / $BOXTYPE
 Linux kernel                : ${KERNELVERSION%.*}

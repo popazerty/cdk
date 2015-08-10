@@ -1,8 +1,8 @@
-yaud-tvheadend: yaud-none lirc \
+yaud-tvheadend: yaud-none \
 		boot-elf tvheadend release_tvheadend
 	@TUXBOX_YAUD_CUSTOMIZE@
 
-TVHEADEND_DEPS = bootstrap openssl python
+TVHEADEND_DEPS = bootstrap openssl python ntp
 
 TVHEADEND_PATCHES =
 

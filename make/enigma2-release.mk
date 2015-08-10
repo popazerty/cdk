@@ -306,6 +306,7 @@ release_enigma2_spark7162: release_enigma2_common_utils
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/vdstandby
 	rm -f $(prefix)/release/bin/eeprom
+	cp -p $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/
 	cp -dp $(buildprefix)/root/release/lircd_spark7162.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	mkdir -p $(prefix)/release/var/run/lirc
@@ -835,7 +836,6 @@ release_enigma2_base:
 	cp -p $(targetprefix)/usr/bin/ffmpeg $(prefix)/release/sbin/ && \
 	cp -p $(targetprefix)/usr/bin/opkg-cl $(prefix)/release/usr/bin/opkg && \
 	cp -p $(targetprefix)/usr/bin/python $(prefix)/release/usr/bin/ && \
-	cp -p $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/ && \
 	cp -p $(targetprefix)/usr/sbin/ethtool $(prefix)/release/usr/sbin/ && \
 	cp -dp $(targetprefix)/sbin/mkfs $(prefix)/release/sbin/
 if !ENABLE_UFS910
@@ -1330,9 +1330,6 @@ endif
 	fi
 	if [ -d $(prefix)/release/usr/lib/glib-2.0 ]; then \
 		rm -rf $(prefix)/release/usr/lib/glib-2.0; \
-	fi
-	if [ -d $(prefix)/release/usr/lib/gio ]; then \
-		rm -rf $(prefix)/release/usr/lib/gio; \
 	fi
 	if [ -d $(prefix)/release/usr/lib/enchant ]; then \
 		rm -rf $(prefix)/release/usr/lib/enchant; \

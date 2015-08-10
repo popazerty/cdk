@@ -1,7 +1,7 @@
 $(D)/bootstrap: \
 	$(CCACHE) \
-	host_pkgconfig \
 	crosstool \
+	host_pkgconfig \
 	host_module_init_tools \
 	host_mtd_utils
 	touch $@

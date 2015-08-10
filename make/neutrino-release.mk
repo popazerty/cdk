@@ -279,6 +279,7 @@ release_neutrino_spark7162: release_neutrino_common_utils
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/vdstandby
 	rm -f $(prefix)/release/bin/eeprom
+	cp -p $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/
 	cp -dp $(buildprefix)/root/release/lircd_spark7162.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	cp -f $(buildprefix)/root/sbin/flashcp $(prefix)/release/sbin

@@ -43,6 +43,21 @@ $(D)/host_mtd_utils: @DEPENDS_host_mtd_utils@
 	touch $@
 
 #
+# host_libffi
+#
+$(D)/host_libffi: @DEPENDS_host_libffi@
+	@PREPARE_host_libffi@
+	cd @DIR_host_libffi@ && \
+		./configure \
+			--prefix=$(hostprefix) \
+			--disable-static \
+		&& \
+		$(MAKE) && \
+		@INSTALL_host_libffi@
+	@CLEANUP_host_libffi@
+	touch $@
+
+#
 # host_glib2_genmarshal
 #
 $(D)/host_glib2_genmarshal: @DEPENDS_host_glib2_genmarshal@

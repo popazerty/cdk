@@ -10,7 +10,7 @@ yaud-enigma2-pli-nightly: yaud-none host_python lirc \
 #
 ENIGMA2_DEPS  = bootstrap libncurses openssl libcurl libid3tag libmad libpng libjpeg libgif_e2 libfreetype libfribidi libsigc_e2 libreadline
 ENIGMA2_DEPS += libexpat libdvbsipp python libxml2_e2 libxslt elementtree lxml libxmlccwrap zope_interface twisted pyopenssl pythonwifi pilimaging
-ENIGMA2_DEPS += pyusb pycrypto pythonmechanize libdreamdvd tuxtxt32bpp sdparm hotplug_e2 ntp wpa_supplicant wireless_tools minidlna opkg ethtool
+ENIGMA2_DEPS += pyusb pycrypto pythonmechanize libdreamdvd tuxtxt32bpp sdparm hotplug_e2 wpa_supplicant wireless_tools minidlna opkg ethtool
 ENIGMA2_DEPS += $(MEDIAFW_DEP) $(EXTERNALLCD_DEP)
 
 E_CONFIG_OPTS = --enable-duckbox
@@ -21,6 +21,7 @@ endif
 
 if ENABLE_SPARK7162
 E_CONFIG_OPTS += --enable-spark7162
+ENIGMA2_DEPS += ntp
 endif
 
 if ENABLE_FORTIS_HDBOX
@@ -102,7 +103,7 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; \
 		[ "$$REVISION" == "" ] || (cd $(sourcedir)/enigma2-nightly; git checkout "$$REVISION"; cd "$(buildprefix)";); \
 		cp -ra $(sourcedir)/enigma2-nightly $(sourcedir)/enigma2-nightly.org; \
-		cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
+		set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
 		cd $(sourcedir)/enigma2-nightly; \
 		patch -p1 < "../../cdk/Patches/vfd-drivers.patch"; \
 		rm -rf $(targetprefix)/usr/local/share/enigma2/rc_models; \

@@ -1315,8 +1315,6 @@ $(D)/libflac: $(D)/bootstrap @DEPENDS_libflac@
 $(D)/libxml2_e2: $(D)/bootstrap $(D)/zlib $(D)/python @DEPENDS_libxml2_e2@
 	@PREPARE_libxml2_e2@
 	cd @DIR_libxml2_e2@ && \
-		touch NEWS AUTHORS ChangeLog && \
-		autoreconf -fi && \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--enable-shared \
@@ -1348,8 +1346,6 @@ $(D)/libxml2_e2: $(D)/bootstrap $(D)/zlib $(D)/python @DEPENDS_libxml2_e2@
 $(D)/libxml2: $(D)/bootstrap $(D)/zlib @DEPENDS_libxml2@
 	@PREPARE_libxml2@
 	cd @DIR_libxml2@ && \
-		touch NEWS AUTHORS ChangeLog && \
-		autoreconf -fi && \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--enable-shared \
@@ -1687,7 +1683,7 @@ $(D)/libdvbsipp: $(D)/bootstrap @DEPENDS_libdvbsipp@
 		$(CONFIGURE) \
 			--prefix=$(targetprefix)/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) && \
 		@INSTALL_libdvbsipp@
 	@CLEANUP_libdvbsipp@
 	touch $@
@@ -2039,3 +2035,68 @@ $(D)/libplist: $(D)/bootstrap @DEPENDS_libplist@
 		@INSTALL_libplist@
 	@CLEANUP_libplist@
 	touch $@
+
+#
+# gmp
+#
+$(D)/gmp: $(D)/bootstrap @DEPENDS_gmp@
+	@PREPARE_gmp@
+	cd @DIR_gmp@ && \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		&& \
+		$(MAKE) && \
+		@INSTALL_gmp@
+	@CLEANUP_gmp@
+	touch $@
+
+#
+# nettle
+#
+$(D)/nettle: $(D)/bootstrap $(D)/gmp @DEPENDS_nettle@
+	@PREPARE_nettle@
+	cd @DIR_nettle@ && \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--with-gmp=yes \
+		&& \
+		$(MAKE) && \
+		@INSTALL_nettle@
+	@CLEANUP_nettle@
+	touch $@
+
+#
+# gnutls
+#
+$(D)/gnutls: $(D)/bootstrap $(D)/nettle @DEPENDS_gnutls@
+	@PREPARE_gnutls@
+	cd @DIR_gnutls@ && \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--disable-rpath \
+			--with-included-libtasn1 \
+			--enable-local-libopts \
+			--with-libpthread-prefix=$(targetprefix)/usr \
+			--disable-guile \
+			--disable-crywrap \
+			--without-p11-kit \
+		&& \
+		$(MAKE) && \
+		@INSTALL_gnutls@
+	@CLEANUP_gnutls@
+	touch $@
+
+#
+# glibnetworking
+#
+$(D)/glibnetworking: $(D)/bootstrap $(D)/gnutls $(D)/glib2 @DEPENDS_glibnetworking@
+	@PREPARE_glibnetworking@
+	cd @DIR_glibnetworking@ && \
+		$(CONFIGURE) \
+			--prefix=/usr/ \
+		&& \
+		$(MAKE) && \
+		@INSTALL_glibnetworking@
+	@CLEANUP_glibnetworking@
+	touch $@
+
