@@ -69,7 +69,7 @@
  const char *ObjectSource[] =
  {
  	"(illegal)",
-@@ -4831,8 +4893,10 @@
+@@ -4830,8 +4892,10 @@
  			renderinfo->var_screeninfo.yoffset = 0;
  		else
  			renderinfo->var_screeninfo.yoffset = renderinfo->var_screeninfo.yres;
@@ -80,7 +80,7 @@
  #ifdef HAVE_TRIPLEDRAGON
  		tdfb_attr();
  #endif
-@@ -5365,6 +5429,9 @@
+@@ -5364,6 +5428,9 @@
  
  		tuxtxt_cache.pageupdate=0;
  	}
@@ -90,7 +90,7 @@
  }
  /******************************************************************************
   * MyFaceRequester
-@@ -5534,6 +5601,15 @@
+@@ -5533,6 +5600,15 @@
  		return 0;
  	}
  
@@ -106,7 +106,7 @@
  	/* change to PAL resolution */
  	if (renderinfo->var_screeninfo.xres != 720) 
  	{
-@@ -5553,6 +5629,7 @@
+@@ -5552,6 +5628,7 @@
  		FT_Done_FreeType(renderinfo->library);
  		return 0;
  	}
@@ -114,7 +114,7 @@
  
  	/* get fixed screeninfo */
  	if (ioctl(renderinfo->fb, FBIOGET_FSCREENINFO, &renderinfo->fix_screeninfo) == -1)
-@@ -5578,8 +5655,17 @@
+@@ -5577,8 +5654,17 @@
  	renderinfo->var_screeninfo.yoffset);
  #endif
  		/* map framebuffer into memory */
@@ -132,7 +132,7 @@
  	/* set new colormap */
  	tuxtxt_setcolors(renderinfo,(unsigned short *)tuxtxt_defaultcolors, 0, tuxtxt_color_SIZECOLTABLE);
  
-@@ -5622,8 +5708,10 @@
+@@ -5621,8 +5707,10 @@
  	{
  		renderinfo->var_screeninfo.yoffset = 0;
  
@@ -145,7 +145,7 @@
  	if (renderinfo->avs >= 0)
 --- a/tuxtxt_def.h.orig	2014-06-09 13:01:05.263971761 +0200
 +++ b/tuxtxt_def.h	2014-06-09 13:01:05.299971762 +0200
-@@ -295,6 +295,11 @@
+@@ -301,6 +301,11 @@
  	unsigned char axdrcs[12+1+10+1];
  	struct fb_var_screeninfo var_screeninfo;
  	struct fb_fix_screeninfo fix_screeninfo;

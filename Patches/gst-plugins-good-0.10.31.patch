@@ -1,6 +1,6 @@
 --- a/gst/avi/gstavidemux.c
 +++ b/gst/avi/gstavidemux.c
-@@ -4747,12 +4747,16 @@
+@@ -4755,12 +4755,16 @@
      buf = gst_avi_demux_invert (stream, buf);
  
      /* mark non-keyframes */

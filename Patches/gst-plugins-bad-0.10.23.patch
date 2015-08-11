@@ -95,7 +95,7 @@
  struct _GstFluPSDemux
 --- a/gst/mpegdemux/gstmpegtsdemux.c
 +++ b/gst/mpegdemux/gstmpegtsdemux.c
-@@ -821,11 +821,6 @@
+@@ -832,11 +832,6 @@
        name = g_strdup_printf ("subpicture_%04x", stream->PID);
        caps = gst_caps_new_simple ("video/x-dvd-subpicture", NULL);
        break;
