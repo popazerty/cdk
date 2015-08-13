@@ -46,12 +46,21 @@ AM_CONDITIONAL(ENABLE_TVHEADEND,test "$enable_tvheadend" = "yes")
 AC_SUBST(TVHEADEND)
 
 AC_ARG_ENABLE(wlandriver,
-	AS_HELP_STRING(--enable-wlandriver, Setting up the CDK to build wlandriver),
+	AS_HELP_STRING(--enable-wlandriver, Setting up the CDK to build WLAN drivers),
 	[case "${enableval}" in
 		yes) WLANDRIVER=wlandriver ;;
 	esac],[enable_wlandriver=no])
 AM_CONDITIONAL(ENABLE_WLANDRIVER,test "$enable_wlandriver" = "yes")
 AC_SUBST(WLANDRIVER)
+
+AC_ARG_ENABLE(dvbtdriver,
+-enable-dvbtdriver
+	AS_HELP_STRING(--enable-dvbtdriver, Setting up the CDK to build DVB-T drivers),
+	[case "${enableval}" in
+		yes) DVBTDRIVER=dvbtdriver ;;
+	esac],[enable_dvbtdriver=no])
+AM_CONDITIONAL(ENABLE_DVBTDRIVER,test "$enable_dvbtdriver" = "yes")
+AC_SUBST(DVBTDRIVER)
 
 AC_ARG_ENABLE(player191,
 	AS_HELP_STRING(--enable-player191, set up the CDK to use player191),
@@ -1062,7 +1071,6 @@ AC_MSG_RESULT([
 $ccacheinfo
 summary:
 ----------------------------------------
-<<<<<<< HEAD
 Ccache support              : $enable_ccache
 Target CPU/boxtype          : $CPU_MODEL / $BOXTYPE
 Linux kernel                : ${KERNELVERSION%.*}
