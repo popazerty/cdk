@@ -807,6 +807,7 @@ $(D)/libdvdnav: $(D)/bootstrap $(D)/libdvdread @DEPENDS_libdvdnav@
 	@PREPARE_libdvdnav@
 	cd @DIR_libdvdnav@ && \
 		$(BUILDENV) \
+		libtoolize --copy --ltdl && \
 		./autogen.sh \
 			--build=$(build) \
 			--host=$(target) \
