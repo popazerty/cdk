@@ -13,7 +13,7 @@ $(targetprefix)/var/etc/.version:
 #
 #
 #
-NEUTRINO_DEPS  = bootstrap openssl libcurl libpng libjpeg libgif libfreetype
+NEUTRINO_DEPS  = bootstrap libcurl libpng libjpeg libgif libfreetype
 NEUTRINO_DEPS += ffmpeg ntp lua luaexpat luacurl libdvbsipp libsigc libopenthreads libusb libalsa
 NEUTRINO_DEPS += $(EXTERNALLCD_DEP)
 

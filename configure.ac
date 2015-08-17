@@ -991,6 +991,7 @@ TUXBOX_RULES_MAKE(libdpfax)
 #
 # Security
 #
+TUXBOX_RULES_MAKE(openssl_e2)
 TUXBOX_RULES_MAKE(openssl)
 TUXBOX_RULES_MAKE(gnutls)
 TUXBOX_RULES_MAKE(nettle)

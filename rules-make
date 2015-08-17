@@ -178,14 +178,18 @@ libplist;1.10;libplist-1.10;libplist-1.10.tar.gz;extract:libplist-1.10.tar.gz
 gdata;2.0.18;gdata-2.0.18;gdata-2.0.18.tar.gz;extract:gdata-2.0.18.tar.gz
 elementtree;1.2.6-20050316;elementtree-1.2.6-20050316;elementtree-1.2.6-20050316.tar.gz;extract:elementtree-1.2.6-20050316.tar.gz
 lxml;2.2.8;lxml-2.2.8;lxml-2.2.8.tgz;extract:lxml-2.2.8.tgz
-setuptools;0.6c11;setuptools-0.6c11;setuptools-0.6c11.tar.gz;extract:setuptools-0.6c11.tar.gz
+#setuptools;0.6c11;setuptools-0.6c11;setuptools-0.6c11.tar.gz;extract:setuptools-0.6c11.tar.gz
+setuptools;5.2;setuptools-5.2;setuptools-5.2.tar.gz;extract:setuptools-5.2.tar.gz
 twisted;13.2.0;Twisted-13.2.0;Twisted-13.2.0.tar.bz2;extract:Twisted-13.2.0.tar.bz2
 pilimaging;1.1.7;Imaging-1.1.7;Imaging-1.1.7.tar.gz;extract:Imaging-1.1.7.tar.gz;patch:Imaging-1.1.7-crosscompiling.patch
 pycrypto;2.5;pycrypto-2.5;pycrypto-2.5.tar.gz;extract:pycrypto-2.5.tar.gz;patch:python-pycrypto-no-usr-include.patch
-pyopenssl;0.13;pyOpenSSL-0.13;pyOpenSSL-0.13.tar.gz;extract:pyOpenSSL-0.13.tar.gz
+#pyopenssl;0.13;pyOpenSSL-0.13;pyOpenSSL-0.13.tar.gz;extract:pyOpenSSL-0.13.tar.gz
+pyopenssl;0.15.1;pyOpenSSL-0.15.1;pyOpenSSL-0.15.1.tar.gz;extract:pyOpenSSL-0.15.1.tar.gz
 pyusb;1.0.0a3;pyusb-1.0.0a3;pyusb-1.0.0a3.tar.gz;extract:pyusb-1.0.0a3.tar.gz
-host_python;2.7.3;host-python-2.7.3;Python-2.7.3.tar.bz2:python_2.7.3.patch;extract:Python-2.7.3.tar.bz2;move:Python-2.7.3:host-python-2.7.3;patch:python_2.7.3.patch
-python;2.7.3;python-2.7.3;Python-2.7.3.tar.bz2:python_2.7.3.patch;extract:Python-2.7.3.tar.bz2;move:Python-2.7.3:python-2.7.3;patch:python_2.7.3.patch;patch:python_2.7.3-ctypes-libffi-fix.patch;patch:python_2.7.3-pgettext.patch
+#host_python;2.7.3;host-python-2.7.3;Python-2.7.3.tar.bz2:python_2.7.3.patch;extract:Python-2.7.3.tar.bz2;move:Python-2.7.3:host-python-2.7.3;patch:python_2.7.3.patch
+#python;2.7.3;python-2.7.3;Python-2.7.3.tar.bz2:python_2.7.3.patch;extract:Python-2.7.3.tar.bz2;move:Python-2.7.3:python-2.7.3;patch:python_2.7.3.patch;patch:python_2.7.3-ctypes-libffi-fix.patch;patch:python_2.7.3-pgettext.patch
+host_python;2.7.9;host-python-2.7.9;Python-2.7.9.tar.xz;extract:Python-2.7.9.tar.xz;move:Python-2.7.9:host-python-2.7.9;patch:python_2.7.9-use-proper-tools-for-cross-build.patch;patch:python_2.7.9-revert_use_of_sysconfigdata.patch;patch:python_2.7.9.patch;patch:python_2.7.9-pgettext.patch
+python;2.7.9;python-2.7.9;Python-2.7.9.tar.xz;extract:Python-2.7.9.tar.xz;move:Python-2.7.9:python-2.7.9;patch:python_2.7.9-use-proper-tools-for-cross-build.patch;patch:python_2.7.9-revert_use_of_sysconfigdata.patch;patch:python_2.7.9.patch;patch:python_2.7.9-pgettext.patch;patch:python_2.7.9-disable-certificate-verification.patch
 pythonwifi;0.5.0;python-wifi-0.5.0;python-wifi-0.5.0.tar.bz2;extract:python-wifi-0.5.0.tar.bz2
 pythoncheetah;2.4.4;Cheetah-2.4.4;Cheetah-2.4.4.tar.gz;extract:Cheetah-2.4.4.tar.gz
 pythonmechanize;0.2.5;mechanize-0.2.5;mechanize-0.2.5.tar.gz;extract:mechanize-0.2.5.tar.gz
@@ -235,6 +239,7 @@ libdpfax;ax;dpf-ax;dpf-ax.svn;extract:dpf-ax.svn
 # Security
 #
 openssl;0.9.8zf;openssl-0.9.8zf;openssl-0.9.8zf.tar.gz;extract:openssl-0.9.8zf.tar.gz;patch:openssl-0.9.8.patch;patch:openssl-0.9.8-parallel-build.patch
+openssl_e2;1.0.2d;openssl-1.0.2d;openssl-1.0.2d.tar.gz;extract:openssl-1.0.2d.tar.gz;patch:openssl-1.0.2.patch
 gnutls;3.4.3;gnutls-3.4.3;gnutls-3.4.3.tar.xz;extract:gnutls-3.4.3.tar.xz
 nettle;3.1;nettle-3.1;nettle-3.1.tar.gz;extract:nettle-3.1.tar.gz
 

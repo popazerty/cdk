@@ -9,7 +9,7 @@ $(D)/host_python: @DEPENDS_host_python@
 		OPT="$(HOST_CFLAGS)" \
 		./configure \
 			--without-cxx-main \
-			--without-threads \
+			--with-threads \
 		&& \
 		$(MAKE) python Parser/pgen && \
 		mv python ./hostpython && \
@@ -20,7 +20,7 @@ $(D)/host_python: @DEPENDS_host_python@
 			--prefix=$(hostprefix) \
 			--sysconfdir=$(hostprefix)/etc \
 			--without-cxx-main \
-			--without-threads \
+			--with-threads \
 		&& \
 		$(MAKE) \
 			TARGET_OS=$(build) \
@@ -31,6 +31,64 @@ $(D)/host_python: @DEPENDS_host_python@
 			all install && \
 		cp ./hostpgen $(hostprefix)/bin/pgen ) && \
 	@CLEANUP_host_python@
+	touch $@
+
+#
+# python
+#
+$(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/zlib $(D)/$(OPENSSL) $(D)/libffi $(D)/bzip2 $(D)/libreadline $(D)/sqlite @DEPENDS_python@
+	@PREPARE_python@
+	( cd @DIR_python@ && \
+		CONFIG_SITE= \
+		autoreconf --verbose --install --force Modules/_ctypes/libffi && \
+		autoconf && \
+		$(CONFIGURE) \
+			--build=$(build) \
+			--host=$(target) \
+			--target=$(target) \
+			--prefix=/usr \
+			--sysconfdir=/etc \
+			--enable-shared \
+			--enable-ipv6 \
+			--without-cxx-main \
+			--with-threads \
+			--with-pymalloc \
+			--with-signal-module \
+			--with-wctype-functions \
+			ac_sys_system=Linux \
+			ac_sys_release=2 \
+			ac_cv_file__dev_ptmx=yes \
+			ac_cv_file__dev_ptc=no \
+			ac_cv_no_strict_aliasing_ok=yes \
+			ac_cv_pthread=yes \
+			ac_cv_cxx_thread=yes \
+			ac_cv_sizeof_off_t=8 \
+			ac_cv_have_chflags=no \
+			ac_cv_have_lchflags=no \
+			ac_cv_py_format_size_t=yes \
+			ac_cv_broken_sem_getvalue=no \
+			MACHDEP=linux2 \
+			HOSTPYTHON=$(hostprefix)/bin/python \
+			OPT="$(TARGET_CFLAGS)" \
+		&& \
+		$(MAKE) $(MAKE_OPTS) \
+			TARGET_OS=$(target) \
+			PYTHON_MODULES_INCLUDE="$(targetprefix)/usr/include" \
+			PYTHON_MODULES_LIB="$(targetprefix)/usr/lib $(targetprefix)/lib" \
+			CROSS_COMPILE_TARGET=yes \
+			CROSS_COMPILE=$(target) \
+			HOSTARCH=sh4-linux \
+			CFLAGS="$(TARGET_CFLAGS) -fno-inline" \
+			LDFLAGS="$(TARGET_LDFLAGS)" \
+			LD="$(target)-gcc" \
+			HOSTPYTHON=$(hostprefix)/bin/python \
+			HOSTPGEN=$(hostprefix)/bin/pgen \
+			all install DESTDIR=$(targetprefix) \
+		) && \
+		@INSTALL_python@
+	$(LN_SF) ../../libpython$(PYTHON_VERSION).so.1.0 $(targetprefix)/$(PYTHON_DIR)/config/libpython$(PYTHON_VERSION).so && \
+	$(LN_SF) $(targetprefix)/$(PYTHON_INCLUDE_DIR) $(targetprefix)/usr/include/python
+	@CLEANUP_python@
 	touch $@
 
 #
@@ -115,51 +173,6 @@ $(D)/pycrypto: $(D)/bootstrap $(D)/setuptools @DEPENDS_pycrypto@
 		PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
 		$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
 	@CLEANUP_pycrypto@
-	touch $@
-
-#
-# python
-#
-$(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/openssl $(D)/sqlite $(D)/libreadline $(D)/bzip2 @DEPENDS_python@
-	@PREPARE_python@
-	( cd @DIR_python@ && \
-		CONFIG_SITE= \
-		autoreconf --verbose --install --force Modules/_ctypes/libffi && \
-		autoconf && \
-		$(CONFIGURE) \
-			--build=$(build) \
-			--host=$(target) \
-			--target=$(target) \
-			--prefix=/usr \
-			--sysconfdir=/etc \
-			--enable-shared \
-			--enable-ipv6 \
-			--without-cxx-main \
-			--with-threads \
-			--with-pymalloc \
-			--with-signal-module \
-			--with-wctype-functions \
-			HOSTPYTHON=$(hostprefix)/bin/python \
-			OPT="$(TARGET_CFLAGS)" \
-		&& \
-		$(MAKE) $(MAKE_OPTS) \
-			TARGET_OS=$(target) \
-			PYTHON_MODULES_INCLUDE="$(targetprefix)/usr/include" \
-			PYTHON_MODULES_LIB="$(targetprefix)/usr/lib $(targetprefix)/lib" \
-			CROSS_COMPILE_TARGET=yes \
-			CROSS_COMPILE=$(target) \
-			HOSTARCH=sh4-linux \
-			CFLAGS="$(TARGET_CFLAGS) -fno-inline" \
-			LDFLAGS="$(TARGET_LDFLAGS)" \
-			LD="$(target)-gcc" \
-			HOSTPYTHON=$(hostprefix)/bin/python \
-			HOSTPGEN=$(hostprefix)/bin/pgen \
-			all install DESTDIR=$(targetprefix) \
-		) && \
-		@INSTALL_python@
-	$(LN_SF) ../../libpython$(PYTHON_VERSION).so.1.0 $(targetprefix)/$(PYTHON_DIR)/config/libpython$(PYTHON_VERSION).so && \
-	$(LN_SF) $(targetprefix)/$(PYTHON_INCLUDE_DIR) $(targetprefix)/usr/include/python
-	@CLEANUP_python@
 	touch $@
 
 #

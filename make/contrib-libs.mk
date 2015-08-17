@@ -36,6 +36,23 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 	touch $@
 
 #
+# openssl_e2
+#
+$(D)/openssl_e2: $(D)/bootstrap @DEPENDS_openssl_e2@
+	@PREPARE_openssl_e2@
+	cd @DIR_openssl_e2@ && \
+		$(BUILDENV) \
+		./Configure -DL_ENDIAN shared no-hw no-engine linux-generic32 \
+			--prefix=/usr \
+			--openssldir=/etc/ssl \
+			--openssldir=/.remove \
+		&& \
+		$(MAKE) && \
+		@INSTALL_openssl_e2@
+	@CLEANUP_openssl_e2@
+	touch $@
+
+#
 # openssl
 #
 $(D)/openssl: $(D)/bootstrap @DEPENDS_openssl@
@@ -393,7 +410,7 @@ $(D)/libgif_e2: $(D)/bootstrap @DEPENDS_libgif_e2@
 #
 # libcurl
 #
-$(D)/libcurl: $(D)/bootstrap $(D)/openssl $(D)/zlib @DEPENDS_libcurl@
+$(D)/libcurl: $(D)/bootstrap $(D)/$(OPENSSL) $(D)/zlib @DEPENDS_libcurl@
 	@PREPARE_libcurl@
 	cd @DIR_libcurl@ && \
 		$(CONFIGURE) \
@@ -671,7 +688,7 @@ $(D)/lcms: $(D)/bootstrap $(D)/libjpeg @DEPENDS_lcms@
 $(D)/directfb: $(D)/bootstrap $(D)/libfreetype @DEPENDS_directfb@
 	@PREPARE_directfb@
 	cd @DIR_directfb@ && \
-		libtoolize --copy --ltdl && \
+		libtoolize --copy --ltdl --force && \
 		autoreconf -fi && \
 		$(BUILDENV) \
 		./configure \
@@ -807,7 +824,7 @@ $(D)/libdvdnav: $(D)/bootstrap $(D)/libdvdread @DEPENDS_libdvdnav@
 	@PREPARE_libdvdnav@
 	cd @DIR_libdvdnav@ && \
 		$(BUILDENV) \
-		libtoolize --copy --ltdl && \
+		libtoolize --copy --ltdl --force && \
 		./autogen.sh \
 			--build=$(build) \
 			--host=$(target) \
@@ -827,9 +844,9 @@ $(D)/libdvdread: $(D)/bootstrap @DEPENDS_libdvdread@
 	@PREPARE_libdvdread@
 	cd @DIR_libdvdread@ && \
 		$(CONFIGURE) \
+			--prefix=/usr \
 			--enable-static \
 			--enable-shared \
-			--prefix=/usr \
 		&& \
 		$(MAKE) && \
 		@INSTALL_libdvdread@
@@ -883,13 +900,15 @@ $(D)/libfdk_aac: $(D)/bootstrap @DEPENDS_libfdk_aac@
 if ENABLE_ENIGMA2
 FFMPEG_EXTRA  = --enable-librtmp
 FFMPEG_EXTRA += --enable-protocol=librtmp --enable-protocol=librtmpe --enable-protocol=librtmps --enable-protocol=librtmpt --enable-protocol=librtmpte
-LIBRTMPDUMP   = librtmpdump
+OPENSSL = openssl_e2
+LIBRTMPDUMP = librtmpdump
 else
 FFMPEG_EXTRA = --disable-iconv
 LIBXML2 = libxml2
+OPENSSL = openssl
 endif
 
-$(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
+$(D)/ffmpeg: $(D)/bootstrap $(D)/$(OPENSSL) $(D)/libass  $(D)/$(LIBXML2)  $(D)/$(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 	@PREPARE_ffmpeg@
 	cd @DIR_ffmpeg@ && \
 		./configure \
@@ -1183,7 +1202,7 @@ $(D)/enchant: $(D)/bootstrap $(D)/glib2 @DEPENDS_enchant@
 $(D)/lite: $(D)/bootstrap $(D)/directfb @DEPENDS_lite@
 	@PREPARE_lite@
 	cd @DIR_lite@ && \
-		libtoolize --copy --ltdl && \
+		libtoolize --copy --ltdl --force && \
 		autoreconf -fi && \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -1664,7 +1683,7 @@ $(D)/pugixml: $(D)/bootstrap @DEPENDS_pugixml@
 #
 # librtmpdump
 #
-$(D)/librtmpdump: $(D)/bootstrap $(D)/openssl $(D)/zlib @DEPENDS_librtmpdump@
+$(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/$(OPENSSL) @DEPENDS_librtmpdump@
 	@PREPARE_librtmpdump@
 	[ -d "$(archivedir)/rtmpdump.git" ] && \
 	(cd $(archivedir)/rtmpdump.git; git pull; cd "$(buildprefix)";); \
