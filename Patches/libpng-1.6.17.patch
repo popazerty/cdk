@@ -12,7 +12,7 @@
 diff -Nura libpng-1.6.10.orig/Makefile.in libpng-1.6.10/Makefile.in
 --- libpng-1.6.10.orig/Makefile.in	2014-03-17 08:51:25.807005070 -0300
 +++ libpng-1.6.10/Makefile.in	2014-03-17 09:14:44.846617623 -0300
-@@ -87,7 +87,7 @@
+@@ -97,7 +97,7 @@
  host_triplet = @host@
  check_PROGRAMS = pngtest$(EXEEXT) pngunknown$(EXEEXT) \
  	pngstest$(EXEEXT) pngvalid$(EXEEXT) pngimage$(EXEEXT)
@@ -23,7 +23,7 @@ diff -Nura libpng-1.6.10.orig/Makefile.in libpng-1.6.10/Makefile.in
  
 --- libpng-1.6.8/Makefile.am	2013-12-30 18:23:08.261797417 +0800
 +++ libpng-1.6.8.bak/Makefile.am	2013-12-30 18:22:15.565795726 +0800
-@@ -225,7 +225,7 @@
+@@ -231,7 +231,7 @@
  # interfering with the symbol file format.
  SYMBOL_CFLAGS = -DPNGLIB_LIBNAME='PNG@PNGLIB_MAJOR@@PNGLIB_MINOR@_0'\
  		-DPNGLIB_VERSION='@PNGLIB_VERSION@'\
@@ -34,18 +34,18 @@ diff -Nura libpng-1.6.10.orig/Makefile.in libpng-1.6.10/Makefile.in
  if DO_PNG_PREFIX
 --- libpng-1.6.8/Makefile.in	2013-12-30 18:23:08.261797417 +0800
 +++ libpng-1.6.8.bak/Makefile.in	2013-12-30 18:22:09.853794547 +0800
-@@ -698,7 +698,7 @@
+@@ -747,7 +747,7 @@
  # interfering with the symbol file format.
  SYMBOL_CFLAGS = -DPNGLIB_LIBNAME='PNG@PNGLIB_MAJOR@@PNGLIB_MINOR@_0' \
  	-DPNGLIB_VERSION='@PNGLIB_VERSION@' \
 -	-DSYMBOL_PREFIX='$(SYMBOL_PREFIX)' -DPNG_NO_USE_READ_MACROS \
 +	-DSYMBOL_PREFIX='' -DPNG_NO_USE_READ_MACROS \
  	-DPNG_BUILDING_SYMBOL_TABLE $(am__append_5)
- all: $(BUILT_SOURCES) config.h
- 	$(MAKE) $(AM_MAKEFLAGS) all-am
+ 
+ # EXT_LIST is a list of the possibly library directory extensions, this exists
 --- libpng-1.6.13/pngrtran.c.org
 +++ libpng-1.6.13/pngrtran.c
-@@ -4694,6 +4694,34 @@
+@@ -4700,6 +4700,34 @@
   * and is very touchy.  If you add a transformation, take care to
   * decide how it fits in with the other transformations here.
   */
@@ -80,12 +80,13 @@ diff -Nura libpng-1.6.10.orig/Makefile.in libpng-1.6.10/Makefile.in
  void /* PRIVATE */
  png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
  {
-@@ -4724,6 +4752,8 @@
+@@ -4730,6 +4758,8 @@
        png_error(png_ptr, "Uninitialized row");
     }
  
 +   png_do_remove_color_if_full_alpha(row_info, png_ptr->row_buf + 1);
 +
  #ifdef PNG_READ_EXPAND_SUPPORTED
-    if (png_ptr->transformations & PNG_EXPAND)
+    if ((png_ptr->transformations & PNG_EXPAND) != 0)
     {
+

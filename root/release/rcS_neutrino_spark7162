@@ -1,23 +1,12 @@
 #!/bin/sh
-#Version 150404.1
+#Version 150817.1
 
-echo "Spark 7162"
+echo "Spark 7162 Neutrino"
 
 MODDIR=/lib/modules
 
 echo "Init frontpanel"
 insmod $MODDIR/aotom.ko paramDebug=0
-#insmod $MODDIR/simu_button.ko
-if [ -e $MODDIR/encrypt.ko ]; then
-   insmod $MODDIR/encrypt.ko
-fi
-
-#clockon=`cat /etc/enigma2/settings | grep systemoptions.clockon | cut -d "=" -f2`
-#if [ ! $clockon ]; then
-#   /bin/fp_control -tm 1
-#else
-#   /bin/fp_control -tm 0
-#fi
 
 if [ -e /var/etc/.firstboot ]; then
    echo "Wait 1 min." > /dev/vfd
@@ -35,94 +24,68 @@ fi
 
 insmod $MODDIR/e2_proc.ko
 
-/etc/init.d/autofs start
-
-if [ -e "$MODDIR/cpu_frequ.ko" ]; then
-   insmod $MODDIR/cpu_frequ.ko
-   cpufreq=`cat /etc/enigma2/settings | grep systemoptions.freq | cut -d "=" -f2`
-   case $cpufreq in
-      200) overclk=5123;;
-      300) overclk=2561;;
-      450) overclk=3841;;
-      500) overclk=12803;;
-      540) overclk=4609;;
-      600) overclk=5121;;
-      630) overclk=5377;;
-      650) overclk=16643;;
-      700) overclk=17923;;
-      710) overclk=18179;;
-      750) overclk=19203;;
-      775) overclk=39686;;
-      800) overclk=20483;;
-      *)   cpufreq=540
-           overclk=4609;;
-   esac
-   echo $overclk > /proc/cpu_frequ/pll0_ndiv_mdiv
-   echo "Setting CPU clock speed to $cpufreq MHz (overclk=$overclk)"
-fi
+#if [ -e "$MODDIR/cpu_frequ.ko" ]; then
+#   insmod $MODDIR/cpu_frequ.ko
+#   cpufreq=`cat /etc/enigma2/settings | grep systemoptions.freq | cut -d "=" -f2`
+#   case $cpufreq in
+#      200) overclk=5123;;
+#      300) overclk=2561;;
+#      450) overclk=3841;;
+#      500) overclk=12803;;
+#      540) overclk=4609;;
+#      600) overclk=5121;;
+#      630) overclk=5377;;
+#      650) overclk=16643;;
+#      700) overclk=17923;;
+#      710) overclk=18179;;
+#      750) overclk=19203;;
+#      775) overclk=39686;;
+#      800) overclk=20483;;
+#      *)   cpufreq=540
+#           overclk=4609;;
+#   esac
+#   echo $overclk > /proc/cpu_frequ/pll0_ndiv_mdiv
+#   echo "Setting CPU clock speed to $cpufreq MHz (overclk=$overclk)"
+#fi
 
 echo "Starting DEBUG Interface"
 /etc/init.d/mountall start
 /etc/init.d/hostname start
 
-echo -n "Starting telnetd "
-autologin=`cat /etc/enigma2/settings | grep systemoptions.autologin | cut -d "=" -f2`
-if [ ! $autologin ]; then
-   /usr/sbin/telnetd -l /bin/autologin
-   echo "with autologin"
-else
-   /usr/sbin/telnetd -l /bin/login
-   echo "with normal login"
-fi
-
-#clockon=`cat /etc/enigma2/settings | grep systemoptions.clockon | cut -d "=" -f2`
-#if [ ! $clockon ]; then
-#   /bin/fp_control -tm 1
-#else
-   /bin/fp_control -tm 0
-#fi
-
 echo "Init stmfb (LOAD 9)"
 echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
-
-if  grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
-  insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb; #SCART
-else
-  insmod $MODDIR/stmfb.ko display0=1280x720-32@50:15m:pal:rgb:rgb; #HDMI
-fi
+insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:rgb:rgb; #HDMI
 
 echo "Loading modules"
 
-if [ ! -e /boot/audio.elf ]; then
-   echo "NO AUDIO FW!!!"
-   echo "NO AUDIO FW!!!" > /dev/vfd
+if [ ! -e /lib/firmware/audio.elf ] || [ ! -e /lib/firmware/video.elf ]; then
+   echo "FIRMWARE MISSING!"
+   echo "FW MISSING!" > /dev/vfd
 fi
 
 echo "Load audio firmware (LOAD 8)"
 echo "Load 8" > /dev/vfd
-dtsdown=`cat /etc/enigma2/settings | grep systemoptions.dtsdownmix | cut -d "=" -f2`
-if [ ! $dtsdown ] && [ -e /boot/audio_dts.elf ]; then
-   /bin/ustslave /dev/st231-1 /boot/audio_dts.elf > /dev/null
+if [ -e /lib/firmware/audio_dts.elf ]; then
+   /bin/ustslave /dev/st231-1 /lib/firmware/audio_dts.elf > /dev/null
 else
-   /bin/ustslave /dev/st231-1 /boot/audio.elf > /dev/null
+   /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
 fi
 
 echo "Load video firmware (LOAD 7)"
 echo "Load 7" > /dev/vfd
-/bin/ustslave /dev/st231-0 /boot/video.elf > /dev/null
+/bin/ustslave /dev/st231-0 /lib/firmware/video.elf > /dev/null
 
 echo "Init embx (LOAD 6)"
 echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
-insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
-insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
+insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0
+insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
 echo "Load 5" > /dev/vfd
 insmod $MODDIR/avs.ko type=avs_pio
-#insmod $MODDIR/avs.ko type=avs_none #HDMU value
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
 echo "Init player $player (LOAD 4)"
@@ -132,84 +95,76 @@ insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
 insmod $MODDIR/p2div64.ko
 insmod $MODDIR/stm_v4l2.ko
-if [ $player -gt 131 ]; then
-   insmod $MODDIR/stmvout.ko
-   insmod $MODDIR/stmvbi.ko
-fi
+insmod $MODDIR/stmvout.ko
+insmod $MODDIR/stmvbi.ko
 insmod $MODDIR/pseudocard.ko
 
-tunertype=`cat /etc/enigma2/settings | grep systemoptions.tunertype | cut -d "=" -f2`
-if [ ! $tunertype ]; then
-   tunertype='t'
-fi
+#Set desired mode for tuner 3 here: t=DVB-T, c=DVB-C
+tunertype='t'
 insmod $MODDIR/spark7162.ko UnionTunerType=$tunertype
 
-if [ $player -gt 131 ]; then
-   if [ -e $MODDIR/pti.ko ]; then
-#      if [ ! $?=='2' ]; then
-         pti_arg="waitMS=20 videoMem=4096"
-         echo "Full feature pti"
-#      else
-#         pti_arg=""
-#         echo "Simple pti"
-#     fi
-     insmod $MODDIR/pti.ko $pti_arg
-   fi
-   insmod $MODDIR/stm_monitor.ko
-   insmod $MODDIR/stmsysfs.ko
-   insmod $MODDIR/stmdvb.ko
-else
-   insmod $MODDIR/pti.ko
-   insmod $MODDIR/stmdvb.ko
-#   /etc/init.d/stmdvb_check
-   insmod $MODDIR/stm_monitor.ko
-fi
+#pti_arg="waitMS=20 videoMem=4096"
+#echo "Full feature pti"
+pti_arg=""
+echo "Simple pti"
+insmod $MODDIR/pti.ko $pti_arg
+insmod $MODDIR/stm_monitor.ko
+insmod $MODDIR/stmsysfs.ko
+insmod $MODDIR/stmdvb.ko
 
 echo "Load 3" > /dev/vfd
-echo "Load 3"
-#insmod $MODDIR/player2.ko discardlateframe=0
+echo "LOAD 3"
 insmod $MODDIR/player2.ko
 insmod $MODDIR/sth264pp.ko
 insmod $MODDIR/stmalloc.ko
 insmod $MODDIR/platform.ko
 insmod $MODDIR/silencegen.ko
-
 insmod $MODDIR/smartcard.ko
-
-echo "Init HDMI-CEC"
-insmod $MODDIR/cec.ko activemode=1
-
 insmod $MODDIR/bpamem.ko
-mknod /dev/bpamem c 153 0
 
-showiframe -p /boot/bootlogo.mvi &
+if [ -e /boot/neutrinologo_720.mvi ]; then
+   showiframe -p /boot/neutrinologo_720.mvi &
+fi
+
 stfbcontrol a 0
+
+if [ -e $MODDIR/cec.ko ]; then
+   echo "Init HDMI-CEC"
+   insmod $MODDIR/cec.ko activemode=1
+fi
 
 echo "Init lircd (LOAD 2)"
 echo "Load 2" > /dev/vfd
-/usr/bin/lircd
-rm -rf /dev/rc
-mknod /dev/rc c 147 1 #VFD
-/bin/evremote2 10 120 &
-
-echo "Init smartcard cardreader"
-mknod /dev/sci0 c 169 0
-mknod /dev/sci1 c 169 1
+mkdir -p /var/run/lirc
+/usr/bin/lircd -u
 
 #major=$(awk "\$2==\"sparkid\" {print \$1}" /proc/devices)
 #rm -f /dev/sparkid
 #mknod /dev/sparkid c $major 0
+#   rm /f /dev/dvb/adapter0/ca1
+#   mknod /dev/dvb/adapter0/ca1 c 212 22
+
+#echo "Init smartcard cardreader"
+#mknod /dev/sci0 c 169 0
+#mknod /dev/sci1 c 169 1
 
 stfbcontrol a 255
 
-wlan=`cat /etc/enigma2/settings | grep systemoptions.wlan | cut -d "=" -f2`
-if [ ! $wlan ] || [ ! -e $MODDIR/$wlan.ko ]; then
-   echo "No WLAN"
-else
-   insmod $MODDIR/$wlan.ko
-   echo "$wlan WLAN"
-#   echo "$wlan WLAN" > /dev/vfd
-#   sleep 3
+#wlan=`cat /etc/enigma2/settings | grep systemoptions.wlan | cut -d "=" -f2`
+#if [ ! $wlan ] || [ ! -e $MODDIR/$wlan.ko ]; then
+#   echo "No WLAN"
+#else
+#   insmod $MODDIR/$wlan.ko
+#   echo "$wlan WLAN"
+##   echo "$wlan WLAN" > /dev/vfd
+##   sleep 3
+#fi
+
+# Start automounter with umount timeout of 5 seconds
+mkdir -p /tmp/autofs
+insmod $MODDIR/autofs4.ko
+if [ -e /etc/init.d/automount ]; then
+   /usr/sbin/automount --ghost --timeout=5 /tmp/autofs file /etc/auto.usb
 fi
 
 if [ -e $MODDIR/ntfs.ko ]; then
@@ -225,10 +180,6 @@ echo "Load 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
 
-#mknod /dev/dvb/adapter0/frontend1 c 212 19  #SAT1
-#mknod /dev/dvb/adapter0/frontend2 c 212 35  #SAT2
-#mknod /dev/dvb/adapter0/frontend3 c 212 51  #T/C
-
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
    echo "Booting from nfs, don't set network"
@@ -241,15 +192,10 @@ else
          echo "Starting DHCP on eth0"
          /etc/init.d/udhcpc start
       fi
-      /etc/init.d/networking start &
+      /etc/init.d/networking start
    fi
 fi
 sleep 2
-
-# Start automount
-if [ -e /etc/init.d/automount ]; then
-   python /etc/init.d/automount &
-fi
 
 # Do own extras
 if [ -e /etc/ownscript.sh ]; then
@@ -257,11 +203,8 @@ if [ -e /etc/ownscript.sh ]; then
 fi
 
 # Try and synchronise time
-#inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
-# if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
 if [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
-#   (/sbin/ntpdate pl.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
    (/sbin/ntpdate de.pool.ntp.org; /bin/fp_control -sst) &
 else
    if [ -e /usr/sbin/time.sh ]; then
@@ -270,37 +213,34 @@ else
    fi
 fi
 
-echo "Start Neutrino"
+#tuner workaround
+export FE_OFFSET=1
+
 echo "Start Neutrino" > /dev/vfd
 
 until false
 do
-   echo "Entering e2 main loop"
-   if [ -e /usr/local/share/enigma2/backdrop.mvi ]; then
-      showiframe -p /usr/local/share/enigma2/backdrop.mvi &
-   fi
-   /usr/local/bin/enigma2
+   echo "Starting neutrino ->"
+   /usr/local/bin/neutrino
    rtv=$?
-   echo "Neutrino ended <- RTV: " $rtv
-   /bin/fp_control -i 46 0
+   echo "neutrino ended <- RTV: " $rtv
    case "$rtv" in
-      0)  echo "0"
-          echo "SHUTDOWN"
-          echo "Shutdown" > /dev/vfd
-          fi
-          init 0;;
-      1)  echo "1"
-          echo "REBOOT"
-          echo "Reboot" > /dev/vfd
-          init 6;;
-      *)  echo "*"
-          echo "ERROR"
-          echo "Error" > /dev/vfd
-          init 6;;
+      0) echo "0"
+         echo "SHUTDOWN"
+         echo "Shutdown" > /dev/vfd
+         init 0;;
+      1) echo "1"
+         echo "REBOOT"
+         echo "Reboot" > /dev/vfd
+         init 6;;
+      *) echo "*"
+         echo "ERROR"
+         echo "Error" > /dev/vfd
+         init 6;;
    esac
-done 
+done
 
 #never reached
 echo "Reboot SPARK7162" > /dev/vfd
 echo "REBOOT SPARK7162"
-reboot -f
+init 6

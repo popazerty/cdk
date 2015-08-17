@@ -1,7 +1,7 @@
 diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
 --- ffmpeg-2.3-original/configure	2014-07-16 03:00:37.000000000 +0200
 +++ ffmpeg-2.3/configure	2014-07-31 17:58:33.782371338 +0200
-@@ -269,6 +269,7 @@
+@@ -275,6 +275,7 @@
    --enable-x11grab         enable X11 grabbing (legacy) [no]
    --disable-xlib           disable xlib [autodetect]
    --disable-zlib           disable zlib [autodetect]
@@ -9,7 +9,7 @@ diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
  
  Toolchain options:
    --arch=ARCH              select architecture [$arch]
-@@ -1404,6 +1405,7 @@
+@@ -1413,6 +1414,7 @@
      sdl
      x11grab
      xlib
@@ -17,7 +17,7 @@ diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
      zlib
  "
  
-@@ -2415,6 +2417,7 @@
+@@ -2437,6 +2439,7 @@
  eac3_demuxer_select="ac3_parser"
  f4v_muxer_select="mov_muxer"
  flac_demuxer_select="flac_parser"
@@ -25,7 +25,7 @@ diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
  hds_muxer_select="flv_muxer"
  hls_muxer_select="mpegts_muxer"
  image2_alias_pix_demuxer_select="image2_demuxer"
-@@ -4825,6 +4828,11 @@
+@@ -4885,6 +4888,11 @@
  disabled bzlib || check_lib2 bzlib.h BZ2_bzlibVersion -lbz2 || disable bzlib
  disabled  lzma || check_lib2  lzma.h lzma_version_number -llzma || disable lzma
  
@@ -40,7 +40,7 @@ diff -ur --new-file ffmpeg-2.3-original/configure ffmpeg-2.3/configure
 diff -ur --new-file ffmpeg-2.3-original/libavformat/allformats.c ffmpeg-2.3/libavformat/allformats.c
 --- ffmpeg-2.3-original/libavformat/allformats.c	2014-07-16 03:00:38.000000000 +0200
 +++ ffmpeg-2.3/libavformat/allformats.c	2014-07-31 17:58:33.786371338 +0200
-@@ -139,7 +139,7 @@
+@@ -141,7 +141,7 @@
      REGISTER_MUXDEMUX(H261,             h261);
      REGISTER_MUXDEMUX(H263,             h263);
      REGISTER_MUXDEMUX(H264,             h264);
@@ -2716,7 +2716,7 @@ diff -ur --new-file ffmpeg-2.3-original/libavformat/hdsdec.c ffmpeg-2.3/libavfor
 diff -ur --new-file ffmpeg-2.3-original/libavformat/Makefile ffmpeg-2.3/libavformat/Makefile
 --- ffmpeg-2.3-original/libavformat/Makefile	2014-07-16 03:00:38.000000000 +0200
 +++ ffmpeg-2.3/libavformat/Makefile	2014-07-31 17:58:33.794371338 +0200
-@@ -173,6 +173,7 @@
+@@ -178,6 +178,7 @@
  OBJS-$(CONFIG_H263_MUXER)                += rawenc.o
  OBJS-$(CONFIG_H264_DEMUXER)              += h264dec.o rawdec.o
  OBJS-$(CONFIG_H264_MUXER)                += rawenc.o
