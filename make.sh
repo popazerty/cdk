@@ -333,21 +333,23 @@ case "$IMAGEN" in
 		fi
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
-			[1-4])	REPLY=$8;;
+			[1-6])	REPLY=$8;;
 			*)	echo -e "\nWhich Neutrino variant do you want to build?"
-				echo "   1) neutrino-mp-next"
-				echo "   2) neutrino-mp-cst-next"
-				echo "   3) neutrino-hd2-exp"
-#				echo "   4) neutrino-mp-martii-github"
-				echo "   4) neutrino-mp-tangos"
-				read -p " Select Neutrino variant (1-5)? ";;
+				echo "   1) Neutrino mp"
+				echo "   2) Neutrino mp (next)"
+				echo "   3) Neutrino mp (cst-next)"
+				echo "   4) Neutrino HD2 exp"
+				echo "   5) Neutrino mp (Tangos)"
+				echo "   6) Neutrino mp (martii-github)"
+				read -p " Select Neutrino variant (1-6)? ";;
 		esac
 		case "$REPLY" in
-			2)	IMAGEN="neutrino-mp-cst-next";;
-			3)	IMAGEN="neutrino-hd2-exp";;
-#			4)	IMAGEN="neutrino-mp-martii-github";;
-			4)	IMAGEN="neutrino-mp-tangos";;
-			*)	IMAGEN="neutrino-mp-next";;
+			1)	IMAGEN="Neutrino mp";;
+			3)	IMAGEN="Neutrino mp (cst-next)";;
+			4)	IMAGEN="Neutrino HD2 exp";;
+			5)	IMAGEN="Neutrino mp (Tangos)";;
+			6)	IMAGEN="Neutrino mp (martii-github)";;
+			*)	IMAGEN="Neutrino mp (next)";;
 		esac
 		NEUTRINO=$REPLY
 		if [ -e lastChoice ]; then
@@ -424,11 +426,12 @@ elif [ "$IMAGEN" == "Tvheadend" ]; then
   echo "make yaud-tvheadend" >> $CURDIR/build
 else
   case "$NEUTRINO" in
-    1) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
-    2) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
-    3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-#    4) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+    1) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
+    2) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
+    3) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
+    4) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
+    5) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+    6) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
     *) exit;;
   esac
 fi

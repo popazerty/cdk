@@ -69,6 +69,18 @@
  elif test "$BOXMODEL" = "cuberevo"; then
  	AC_DEFINE(BOXMODEL_CUBEREVO, 1, [cuberevo])
  elif test "$BOXMODEL" = "cuberevo_mini2"; then
+#--- neutrino-mp-martii-github/src/driver/vfd.h.org
+#+++ neutrino-mp-martii-github/src/driver/vfd.h
+#@@ -157,8 +157,8 @@
+# 		void Unlock();
+# 		void Clear();
+# 		void ShowIcon(fp_icon icon, bool show);
+#+		void UpdateIcons();
+# #if HAVE_DUCKBOX_HARDWARE
+#-		void UpdateIcons();
+# 		void ShowScrollText(char * str);
+# 		static void* ThreadScrollText(void * arg);
+# 		void ClearIcons();
 --- neutrino-mp-martii-github.org/src/driver/vfd.cpp
 +++ neutrino-mp-martii-github/src/driver/vfd.cpp
 @@ -55,10 +55,15 @@
@@ -516,8 +528,17 @@
  #endif // VFD_UPDATE
 -
 -
---- neutrino-mp-martii-github.org/src/neutrino.cpp
+--- neutrino-mp-martii-github/src/neutrino.cpp.org
 +++ neutrino-mp-martii-github/src/neutrino.cpp
+@@ -2894,7 +2894,7 @@
+ #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+ 		C3DSetup::getInstance()->exec(NULL, "zapped");
+ #endif
+-#if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
++#if HAVE_DUCKBOX_HARDWARE
+ 		CVFD::getInstance()->UpdateIcons();
+ #endif
+ #ifdef ENABLE_GRAPHLCD
 @@ -4022,6 +4022,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
@@ -553,25 +574,27 @@
  #endif
  #include <driver/radiotext.h>
  #include <driver/streamts.h>
-@@ -1112,6 +1115,11 @@
+@@ -1112,6 +1115,12 @@
  
  	if(inst->Timeshift())
  		autoshift = false;
-+#if defined(BOXMODEL_SPARK7162)
-+		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, false);
-+#elif defined(BOXMODEL_FORTIS_HDBOX)
++//#if defined(BOXMODEL_SPARK7162)
++//		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, false);
++//#elif defined(BOXMODEL_FORTIS_HDBOX)
++#if defined(BOXMODEL_FORTIS_HDBOX)
 +		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, false);
 +#endif
  
  	delete inst;
  }
-@@ -1256,6 +1264,11 @@
+@@ -1256,6 +1265,12 @@
  		std::string tmode = "ptimeshift"; // already recording, pause
  		bool res = true;
  		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
-+#if defined (BOXMODEL_SPARK7162)
-+		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, true);
-+#elif defined(BOXMODEL_FORTIS_HDBOX)
++//#if defined (BOXMODEL_SPARK7162)
++//		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, true);
++//#elif defined(BOXMODEL_FORTIS_HDBOX)
++#if defined(BOXMODEL_FORTIS_HDBOX)
 +		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
 +#endif
  		/* start temporary timeshift if enabled and not running, but dont start second record */
@@ -688,6 +711,148 @@
  
  	HideHintBox();
  
+--- neutrino-mp-martii-github/src/zapit/include/video.h.org
++++ neutrino-mp-martii-github/src/zapit/include/video.h
+@@ -4,8 +4,5 @@
+ #endif
+ #if USE_STB_HAL
+ #include <init_td.h>
+-#include <video_td.h>
+-#elif HAVE_TRIPLEDRAGON
+-#include <init_td.h>
+-#include <video_td.h>
++#include <video_hal.h>
+ #endif
+--- neutrino-mp-martii-github/src/zapit/include/dmx.h.org
++++ neutrino-mp-martii-github/src/zapit/include/dmx.h
+@@ -1,11 +1,9 @@
+ #if HAVE_COOL_HARDWARE
+ #include <dmx_cs.h>
+ #elif USE_STB_HAL
+-#include <dmx_td.h>
+-#elif HAVE_TRIPLEDRAGON
+-#include <dmx_td.h>
++#include <dmx_hal.h>
+ #else
+-#error neither HAVE_COOL_HARDWARE nor HAVE_TRIPLEDRAGON nor USE_STB_HAL defined.
++#error neither HAVE_COOL_HARDWARE nor USE_STB_HAL defined.
+ #error do you need to include config.h?
+ #endif
+ 
+--- neutrino-mp-martii-github/src/zapit/src/capmt.cpp.org
++++ neutrino-mp-martii-github/src/zapit/src/capmt.cpp
+@@ -31,7 +31,7 @@
+ 
+ #include <ca_cs.h>
+ #ifndef HAVE_COOL_HARDWARE
+-#include <dmx_td.h>
++#include <dmx_hal.h>
+ #endif
+ 
+ #include <dvbsi++/program_map_section.h>
+--- neutrino-mp-martii-github/src/zapit/src/zapit.cpp.org
++++ neutrino-mp-martii-github/src/zapit/src/zapit.cpp
+@@ -68,8 +68,8 @@
+ #include <ca_cs.h>
+ #endif
+ #if USE_STB_HAL || HAVE_TRIPLEDRAGON
+-#include <video_td.h>
+-#include <audio_td.h>
++#include <video_hal.h>
++#include <audio_hal.h>
+ #endif
+ #include <system/set_threadname.h>
+ #include <driver/rcinput.h>
+--- neutrino-mp-martii-github/src/zapit/include/audio.h.org
++++ neutrino-mp-martii-github/src/zapit/include/audio.h
+@@ -2,5 +2,5 @@
+ #include <audio_cs.h>
+ #endif
+ #if HAVE_TRIPLEDRAGON || USE_STB_HAL
+-#include <audio_td.h>
++#include <audio_hal.h>
+ #endif
+--- neutrino-mp-martii-github/src/driver/lcdd.h.org
++++ neutrino-mp-martii-github/src/driver/lcdd.h
+@@ -31,7 +31,7 @@
+ #endif
+ 
+ #include <system/settings.h>
+-#include <audio_td.h>
++#include <audio_hal.h>
+ 
+ #define LCDDIR_VAR "/var/share/tuxbox/neutrino/lcdd"
+ 
+--- neutrino-mp-martii-github/src/driver/record.h.org
++++ neutrino-mp-martii-github/src/driver/record.h
+@@ -40,7 +40,7 @@
+ #include <record_cs.h>
+ #endif
+ #if HAVE_TRIPLEDRAGON || USE_STB_HAL
+-#include <record_td.h>
++#include <record_hal.h>
+ #endif
+ 
+ #include <OpenThreads/Mutex>
+--- neutrino-mp-martii-github/src/gui/movieplayer.h.org
++++ neutrino-mp-martii-github/src/gui/movieplayer.h
+@@ -48,7 +48,7 @@
+ #if HAVE_COOL_HARDWARE
+ #include <audio_cs.h>
+ #else
+-#include <audio_td.h>
++#include <audio_hal.h>
+ #endif
+ 
+ #include <stdio.h>
+--- neutrino-mp-martii-github/src/gui/audioplayer.cpp.org
++++ neutrino-mp-martii-github/src/gui/audioplayer.cpp
+@@ -76,7 +76,7 @@
+ #if HAVE_COOL_HARDWARE
+ #include <audio_cs.h>
+ #else
+-#include <audio_td.h>
++#include <audio_hal.h>
+ #endif
+ #include <algorithm>
+ #include <sys/time.h>
+--- neutrino-mp-martii-github/src/driver/simple_display.cpp.org
++++ neutrino-mp-martii-github/src/driver/simple_display.cpp
+@@ -42,7 +42,7 @@
+ 
+ #if HAVE_SPARK_HARDWARE
+ #include <aotom_main.h>
+-#include <audio_td.h>
++#include <audio_hal.h>
+ #endif
+ 
+ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
+--- neutrino-mp-martii-github/src/eitd/dmx.h.org
++++ neutrino-mp-martii-github/src/eitd/dmx.h
+@@ -33,7 +33,7 @@
+ #include <dmx_cs.h>
+ #endif
+ #if HAVE_TRIPLEDRAGON || USE_STB_HAL
+-#include <dmx_td.h>
++#include <dmx_hal.h>
+ #endif
+ 
+ #include <zapit/types.h>
+--- neutrino-mp-martii-github/src/driver/lcdd.h.org
++++ neutrino-mp-martii-github/src/driver/lcdd.h
+@@ -262,6 +262,12 @@
+ 		void Lock();
+ 		void Unlock();
+ 		void Clear();
++#ifdef BOXMODEL_SPARK7162
++		void SetIcons(int icon, bool show);
++		void UpdateIcons();
++		void ShowDiskLevel();
++#endif
++		void Reset() {};
+ 		void ShowIcon(fp_icon icon, bool show);
+ 		void ShowText(const char * str, bool rescheduleTime = true);
+ 		~CLCD();
 #--- neutrino-mp-martii-github.org/src/system/ytcache.cpp
 #+++ neutrino-mp-martii-github/src/system/ytcache.cpp
 #@@ -185,8 +185,9 @@
