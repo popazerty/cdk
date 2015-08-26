@@ -795,6 +795,8 @@ endif
 #
 	ln -sf /usr/share $(prefix)/release/usr/local/share
 	cp $(targetprefix)/usr/local/bin/tvheadend $(prefix)/release/usr/local/bin/
+	[ ! -d $(prefix)/release/.hts/tvheadend ] && mkdir -p $(prefix)/release/.hts/tvheadend 
+	cp -r $(buildprefix)/root/root_tvheadend/.hts/tvheadend/* $(prefix)/release/.hts/tvheadend
 
 #
 # WLAN

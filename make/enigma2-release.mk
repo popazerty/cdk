@@ -1160,7 +1160,7 @@ endif
 
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
 #	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/site-packages/cryptography/hazmat -name '*.py' -exec rm -f {} \;
+#	find $(prefix)/release$(PYTHON_DIR)/site-packages/cryptography/hazmat -name '*.py' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
