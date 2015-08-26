@@ -205,11 +205,11 @@ $(D)/python_enum34: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/pytho
 # python_pyasn1_modules
 #
 $(D)/python_pyasn1_modules: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_pyasn1_modules@
- @PREPARE_python_pyasn1_modules@
- cd @DIR_python_pyasn1_modules@ && \
- $(PYTHON_INSTALL)
- @CLEANUP_python_pyasn1_modules@
- touch $@
+	@PREPARE_python_pyasn1_modules@
+	cd @DIR_python_pyasn1_modules@ && \
+		$(PYTHON_INSTALL)
+	@CLEANUP_python_pyasn1_modules@
+	touch $@
 
 #
 # python_pyasn1
