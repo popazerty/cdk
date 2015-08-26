@@ -2,9 +2,13 @@ yaud-tvheadend: yaud-none \
 		boot-elf tvheadend release_tvheadend
 	@TUXBOX_YAUD_CUSTOMIZE@
 
-TVHEADEND_DEPS = bootstrap openssl python ntp
+TVHEADEND_DEPS = bootstrap openssl python
 
 TVHEADEND_PATCHES = tvheadend.patch
+
+if ENABLE_SPARK7162
+TVHEADEND_DEPS += ntp
+endif
 
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend

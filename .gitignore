@@ -1,6 +1,5 @@
-*~
 m
-Archive
+Archive/
 COPYING
 INSTALL
 Makefile
@@ -28,7 +27,7 @@ missing
 BUILD/
 BUILDLOG/
 own_build/
-linux-sh4*
-busybox-*
+linux-sh4*/
+busybox-*/
 custom/yaud-neutrino-*
 custom/yaud-enigma2-*

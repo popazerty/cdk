@@ -9,7 +9,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 5: Media Framework (1-4)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
- echo "Parameter 8: Neutrino variant (1-4)"
+ echo "Parameter 8: Neutrino variant (1-6)"
  exit
 fi
 
@@ -165,8 +165,8 @@ case $2 in
 		echo "   1) STM 24 P0209"
 		echo "   2) STM 24 P0211"
 		echo "   3) STM 24 P0214"
-		echo "   4) STM 24 P0215 (recommended)"
-		echo "   5) STM 24 P0217 (experimental)"
+		echo "   4) STM 24 P0215"
+		echo "   5) STM 24 P0217 (recommended)"
 		read -p "Select kernel (1-5)? ";;
 esac
 
@@ -175,8 +175,8 @@ case "$REPLY" in
 	2)  KERNEL="--enable-p0211";KERNELP="P0211";;
 	3)  KERNEL="--enable-p0214";KERNELP="P0214";;
 	4)  KERNEL="--enable-p0215";KERNELP="P0215";;
-	5)  KERNEL="--enable-p0217";KERNELP="P0217";;
-	*)  KERNEL="--enable-p0215";KERNELP="P0215";;
+#	5)  KERNEL="--enable-p0217";KERNELP="P0217";;
+	*)  KERNEL="--enable-p0217";KERNELP="P0217";;
 esac
 CONFIGPARAM="$CONFIGPARAM $KERNEL"
 

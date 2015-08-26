@@ -8,6 +8,7 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 			--target=$(target) \
 			--prefix=/usr \
 			--with-terminfo-dirs=/usr/share/terminfo \
+			--with-pkg-config=/usr/lib/pkgconfig \
 			--with-shared \
 			--without-cxx \
 			--without-cxx-binding \
@@ -25,7 +26,8 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 			--without-manpages \
 			--with-fallbacks='linux vt100 xterm' \
 		&& \
-		$(MAKE) libs HOSTCC=gcc \
+		$(MAKE) libs \
+			HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)" && \
 		sed -e 's,^prefix="/usr",prefix="$(targetprefix)/usr",' < misc/ncurses-config > $(hostprefix)/bin/ncurses5-config && \
@@ -410,7 +412,7 @@ $(D)/libgif_e2: $(D)/bootstrap @DEPENDS_libgif_e2@
 #
 # libcurl
 #
-$(D)/libcurl: $(D)/bootstrap $(D)/$(OPENSSL) $(D)/zlib @DEPENDS_libcurl@
+$(D)/libcurl: $(D)/bootstrap $(OPENSSL) $(D)/zlib @DEPENDS_libcurl@
 	@PREPARE_libcurl@
 	cd @DIR_libcurl@ && \
 		$(CONFIGURE) \
@@ -908,7 +910,7 @@ LIBXML2 = libxml2
 OPENSSL = openssl
 endif
 
-$(D)/ffmpeg: $(D)/bootstrap $(D)/$(OPENSSL) $(D)/libass  $(D)/$(LIBXML2)  $(D)/$(LIBRTMPDUMP) @DEPENDS_ffmpeg@
+$(D)/ffmpeg: $(D)/bootstrap $(OPENSSL) $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @DEPENDS_ffmpeg@
 	@PREPARE_ffmpeg@
 	cd @DIR_ffmpeg@ && \
 		./configure \
@@ -1683,7 +1685,7 @@ $(D)/pugixml: $(D)/bootstrap @DEPENDS_pugixml@
 #
 # librtmpdump
 #
-$(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/$(OPENSSL) @DEPENDS_librtmpdump@
+$(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(OPENSSL) @DEPENDS_librtmpdump@
 	@PREPARE_librtmpdump@
 	[ -d "$(archivedir)/rtmpdump.git" ] && \
 	(cd $(archivedir)/rtmpdump.git; git pull; cd "$(buildprefix)";); \

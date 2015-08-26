@@ -23,7 +23,7 @@ endif
 
 NEUTRINO_DEPS2 = libid3tag libmad libvorbisidec
 
-N_CFLAGS  = -Wall -W -Wshadow -g0 -pipe -Os -fno-strict-aliasing -D__user= -DCPU_FREQ
+N_CFLAGS  = -Wall -W -Wshadow -g0 -pipe -Os -fno-strict-aliasing -DCPU_FREQ
 
 N_CPPFLAGS = -I$(driverdir)/bpamem
 N_CPPFLAGS += -I$(targetprefix)/usr/include/

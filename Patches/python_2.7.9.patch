@@ -190,37 +190,6 @@ diff -Nur '--exclude-from=diff-ignore' python-2.7.3.org/Modules/_ctypes/libffi/f
  
 -ffi_cflags = '@CFLAGS@'
 +ffi_cflags = '@CFLAGS@ -DPIC'
-diff -urN Python-2.7.3/Makefile.pre.in ltib/rpm/BUILD/Python-2.7.3/Makefile.pre.in
---- Python-2.7.3/Makefile.pre.in	2011-06-11 11:46:26.000000000 -0400
-+++ ltib/rpm/BUILD/Python-2.7.3/Makefile.pre.in	2011-11-14 12:10:41.013373444 -0500
-@@ -194,6 +194,7 @@
- 
- PYTHON=		python$(EXE)
- BUILDPYTHON=	python$(BUILDEXE)
-+HOSTPYTHON=     ./$(BUILDPYTHON)
- 
- PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
- _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
-@@ -475,7 +476,7 @@
- 	esac; \
- 	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
- 		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
--		$(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build
-+		PYTHONXCPREFIX='$(DESTDIR)$(prefix)' $(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build
- 
- # Build static library
- # avoid long command lines, same as LIBRARY_OBJS
-@@ -1176,7 +1177,9 @@
- # Install the dynamically loadable modules
- # This goes into $(exec_prefix)
- sharedinstall: sharedmods
--	$(RUNSHARED) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
-+	CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
-+	$(RUNSHARED) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
-+	   	--skip-build \
- 	   	--prefix=$(prefix) \
- 		--install-scripts=$(BINDIR) \
- 		--install-platlib=$(DESTSHARED) \
 diff -Nur python-2.7.3.org/Python/compile.c python-2.7.3/Python/compile.c
 --- python-2.7.3.org/Python/compile.c	2010-06-22 23:47:04.000000000 +0200
 +++ python-2.7.3/Python/compile.c	2012-09-17 21:55:58.776875344 +0200

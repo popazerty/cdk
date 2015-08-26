@@ -612,7 +612,6 @@ release_enigma2_vip1_v2: release_enigma2_common_utils
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	mkdir -p $(prefix)/release/var/run/lirc
 	rm -f $(prefix)/release/bin/vdstandby
-	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/local/share/fonts/
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_vip2.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
 
 #
@@ -632,7 +631,6 @@ release_enigma2_vip2_v1: release_enigma2_common_utils
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	mkdir -p $(prefix)/release/var/run/lirc
 	rm -f $(prefix)/release/bin/vdstandby
-	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/local/share/fonts/
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_vip2.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
 
 #
@@ -970,15 +968,7 @@ endif
 # fonts
 #
 	cp $(buildprefix)/root/root_enigma2/usr/share/fonts/* $(prefix)/release/usr/share/fonts/
-	if [ -e $(targetprefix)/usr/share/fonts/tuxtxt.otb ]; then \
-		cp $(targetprefix)/usr/share/fonts/tuxtxt.otb $(prefix)/release/usr/share/fonts/; \
-	fi
-	if [ -e $(targetprefix)/usr/local/share/fonts/andale.ttf ]; then \
-		cp $(targetprefix)/usr/local/share/fonts/andale.ttf $(prefix)/release/usr/share/fonts/; \
-	fi
-	if [ -e $(targetprefix)/usr/local/share/fonts/DroidSans-Bold.ttf ]; then \
-		cp $(targetprefix)/usr/local/share/fonts/DroidSans-Bold.ttf $(prefix)/release/usr/share/fonts/; \
-	fi
+	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/share/fonts/
 	ln -s /usr/share/fonts $(prefix)/release/usr/local/share/fonts
 
 #
@@ -1068,25 +1058,13 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/sqlite3/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/unittest/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah-2.4.4-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah/Tests
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/elementtree-1.2.6_20050316-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/lxml
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/lxml-2.2.8-py$(PYTHON_VERSION).egg-info
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxml2mod.so
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxsltmod.so
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/OpenSSL/test
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/PIL/PIL-1.1.7-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pyOpenSSL-0.13-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/python_wifi-0.5.0-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pycrypto-2.5-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/pyusb-1.0.0a3-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/mechanize-0.2.5-py2.7.egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/setuptools
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/setuptools-0.6c11-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/zope/interface/tests
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/zope.interface-4.0.1-py$(PYTHON_VERSION).egg-info
-	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Twisted-13.0.0-py$(PYTHON_VERSION).egg-info
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/application/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/conch/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/internet/test
@@ -1105,6 +1083,7 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/trial/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/web/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/words/test
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION).egg-info
 
 # delete mips remote control files
 # old rc_models scheme
@@ -1181,6 +1160,7 @@ endif
 
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
 #	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/site-packages/cryptography/hazmat -name '*.py' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
@@ -1228,62 +1208,12 @@ endif
 # GSTREAMER
 #
 if ENABLE_MEDIAFWGSTREAMER
-	if [ -d $(prefix)/release/usr/lib/gstreamer-0.10 ]; then \
-		#removed rm \
-		rm -rf $(prefix)/release/usr/lib/libgstfft*; \
-		rm -rf $(prefix)/release/usr/lib/gstreamer-0.10/*; \
+	if [ -d $(prefix)/release/usr/lib/gstreamer-1.0 ]; then \
+		rm -rf $(prefix)/release/usr/lib/gstreamer-1.0/*; \
 		cp -a $(targetprefix)/usr/bin/gst-* $(prefix)/release/usr/bin/; \
 		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/bin/gst-launch*; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstalsa.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstapetag.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstapp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstasf.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstassrender.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioconvert.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioparsers.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioresample.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstautodetect.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstavi.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcdxaparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcoreelements.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcoreindexers.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdecodebin.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdecodebin2.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvbaudiosink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvbvideosink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvdsub.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstflac.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstflv.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstfragmented.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgsticydemux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstid3demux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstisomp4.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmad.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmatroska.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegaudioparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegdemux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegstream.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstogg.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstplaybin.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtmp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtpmanager.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtsp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsouphttpsrc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgsttypefindfunctions.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstudp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstvcdsrc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstwavparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		if [ -e $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpeg.so ]; then \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpeg.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpegscale.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstpostproc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		fi; \
-		if [ -e $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubsink.so ]; then \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubsink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		fi; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/lib/gstreamer-0.10/*; \
+		cp -a $(targetprefix)/usr/lib/gstreamer-1.0/libgst*.so $(prefix)/release/usr/lib/gstreamer-1.0/; \
+		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/lib/gstreamer-1.0/*; \
 	fi
 endif
 

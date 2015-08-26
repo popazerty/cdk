@@ -6,6 +6,27 @@ PYTHON_DIR = /usr/lib/python$(PYTHON_VERSION)
 PYTHON_INCLUDE_DIR = /usr/include/python$(PYTHON_VERSION)
 
 #
+# python helpers
+#
+PYTHON_BUILD = \
+	CC="$(target)-gcc" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	LDFLAGS="$(TARGET_LDFLAGS)" \
+	LDSHARED="$(target)-gcc -shared" \
+	PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
+	CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
+	$(hostprefix)/bin/python ./setup.py build --executable=/usr/bin/python
+
+PYTHON_INSTALL = \
+	CC="$(target)-gcc" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	LDFLAGS="$(TARGET_LDFLAGS)" \
+	LDSHARED="$(target)-gcc -shared" \
+	PYTHONPATH=$(targetprefix)$(PYTHON_DIR)/site-packages \
+	CPPFLAGS="$(CPPFLAGS) -I$(targetprefix)/usr/include/python$(PYTHON_VERSION)" \
+	$(hostprefix)/bin/python ./setup.py install --root=$(targetprefix) --prefix=/usr
+
+#
 #
 #
 PATH := $(hostprefix)/bin:$(crossprefix)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
