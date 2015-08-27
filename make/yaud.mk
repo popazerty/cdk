@@ -1,7 +1,7 @@
 $(D)/bootstrap: \
 	$(CCACHE) \
-	host_pkgconfig \
 	crosstool \
+	host_pkgconfig \
 	host_module_init_tools \
 	host_mtd_utils
 	touch $@
@@ -24,8 +24,7 @@ $(D)/net-utils: \
 	portmap \
 	nfs_utils \
 	vsftpd \
-	autofs \
-	ntp
+	autofs
 	touch $@
 
 #

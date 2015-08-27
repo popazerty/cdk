@@ -1,0 +1,156 @@
+--- tvheadend.org/src/tvheadend.h
++++ tvheadend/src/tvheadend.h
+@@ -92,12 +92,12 @@
+   return r;
+ }
+ 
+-typedef struct str_list
++typedef struct strg_list
+ {
+   int max;
+   int num;
+   char **str;
+-} str_list_t;
++} strg_list_t;
+ 
+ #define PTS_UNSET INT64_C(0x8000000000000000)
+ 
+@@ -785,4 +785,14 @@
+ #define PRItime_t       "ld"
+ #endif
+ 
++/* VFD output */
++#define VFD_DEVICE "/dev/vfd"
++#define VFDDISPLAYCHARS 0xc0425a00
++
++struct vfd_ioctl_data {
++  unsigned char start;
++  unsigned char data[64];
++  unsigned char length;
++};
++
+ #endif /* TV_HEAD_H */
+--- tvheadend.org/src/input/mpegts.c
++++ tvheadend/src/input/mpegts.c
+@@ -20,8 +20,8 @@
+ #include "mpegts/fastscan.h"
+ 
+ void
+-mpegts_init ( int linuxdvb_mask, str_list_t *satip_client,
+-              str_list_t *tsfiles, int tstuners )
++mpegts_init ( int linuxdvb_mask, strg_list_t *satip_client,
++              strg_list_t *tsfiles, int tstuners )
+ {
+   /* Register classes (avoid API 400 errors due to not yet defined) */
+   idclass_register(&mpegts_network_class);
+--- tvheadend.org/src/input/mpegts.h
++++ tvheadend/src/input/mpegts.h
+@@ -70,8 +70,8 @@
+  * Setup / Tear down
+  * *************************************************************************/
+ 
+-void mpegts_init ( int linuxdvb_mask, str_list_t *satip_client,
+-                   str_list_t *tsfiles, int tstuners );
++void mpegts_init ( int linuxdvb_mask, strg_list_t *satip_client,
++                   strg_list_t *tsfiles, int tstuners );
+ void mpegts_done ( void );
+ 
+ /* **************************************************************************
+--- tvheadend.org/src/input/mpegts/satip/satip.c
++++ tvheadend/src/input/mpegts/satip/satip.c
+@@ -728,7 +728,7 @@
+ static gtimer_t satip_discovery_static_timer;
+ static gtimer_t satip_discovery_timerq;
+ static gtimer_t satip_discovery_msearch_timer;
+-static str_list_t *satip_static_clients;
++static strg_list_t *satip_static_clients;
+ 
+ static void
+ satip_discovery_destroy(satip_discovery_t *d, int unlink)
+@@ -1191,7 +1191,7 @@
+  * Initialization
+  */
+ 
+-void satip_init ( str_list_t *clients )
++void satip_init ( strg_list_t *clients )
+ {
+   TAILQ_INIT(&satip_discoveries);
+   satip_static_clients = clients;
+--- tvheadend.org/src/input/mpegts/satip/satip.h
++++ tvheadend/src/input/mpegts/satip/satip.h
+@@ -22,7 +22,7 @@
+ 
+ void satip_device_discovery_start( void );
+ 
+-void satip_init( str_list_t *clients );
++void satip_init( strg_list_t *clients );
+ void satip_done( void );
+ 
+ #endif /* __TVH_SATIP_H__ */
+--- tvheadend.org/src/main.c
++++ tvheadend/src/main.c
+@@ -80,6 +80,7 @@
+ #include <openssl/err.h>
+ #include <openssl/rand.h>
+ #include <openssl/engine.h>
++#include <stropts.h>
+ 
+ pthread_t main_tid;
+ 
+@@ -582,6 +583,11 @@
+   FILE *pidfile = NULL;
+   extern int dvb_bouquets_parse;
+ 
++ /* for writing to VFD */
++  const char *txtstr;
++  int file_vfd = -1;
++  struct vfd_ioctl_data vfddata;
++
+   main_tid = pthread_self();
+ 
+   /* Setup global mutexes */
+@@ -638,8 +644,8 @@
+              *opt_bindaddr     = NULL,
+              *opt_subscribe    = NULL,
+              *opt_user_agent   = NULL;
+-  str_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
+-  str_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
++  strg_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
++  strg_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
+   cmdline_opt_t cmdline_opts[] = {
+     {   0, NULL,        N_("Generic Options"),         OPT_BOOL, NULL         },
+     { 'h', "help",      N_("Show this page"),          OPT_BOOL, &opt_help    },
+@@ -760,7 +766,7 @@
+     else if (opt->type == OPT_INT)
+       *((int*)opt->param) = atoi(argv[i]);
+     else if (opt->type == OPT_STR_LIST) {
+-      str_list_t *strl = opt->param;
++      strg_list_t *strl = opt->param;
+       if (strl->num < strl->max)
+         strl->str[strl->num++] = argv[i];
+     }
+@@ -1069,6 +1075,24 @@
+          getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
+          hts_settings_get_root());
+ 
++/* Sign on to VFD */
++	txtstr = "Tvheadend";
++	vfddata.start = 0;
++	vfddata.length = strlen(txtstr);
++	memcpy (vfddata.data, txtstr, vfddata.length);
++
++	if (file_vfd == -1)
++	{
++		file_vfd = open(VFD_DEVICE, O_RDWR);
++	}
++	if (file_vfd > -1)
++	{
++		ioctl(file_vfd, VFDDISPLAYCHARS, vfddata.data);
++		ioctl(file_vfd, I_FLUSH, FLUSHRW);
++		close(file_vfd);
++		file_vfd = -1;
++	}
++
+   if(opt_abort)
+     abort();
+

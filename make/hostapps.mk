@@ -8,7 +8,8 @@ $(D)/host_pkgconfig: @DEPENDS_host_pkgconfig@
 			--prefix=$(hostprefix) \
 			--program-prefix=$(target)- \
 			--disable-host-tool \
-			--with-pc_path=$(targetprefix)/usr/lib/pkgconfig && \
+			--with-pc_path=$(targetprefix)/usr/lib/pkgconfig \
+		&& \
 		$(MAKE) && \
 		@INSTALL_host_pkgconfig@
 	@CLEANUP_host_pkgconfig@
@@ -22,9 +23,11 @@ $(D)/host_module_init_tools: @DEPENDS_host_module_init_tools@ directories
 	cd @DIR_host_module_init_tools@ && \
 		autoreconf -fi && \
 		./configure \
-			--prefix=$(hostprefix) && \
-		$(MAKE)
-		$(INSTALL) -m755 @DIR_host_module_init_tools@/build/depmod $(hostprefix)/bin/depmod
+			--prefix=$(hostprefix) \
+			--sbindir=$(hostprefix)/bin \
+		&& \
+		$(MAKE) && \
+		@INSTALL_host_module_init_tools@
 	@CLEANUP_host_module_init_tools@
 	touch $@
 
@@ -40,7 +43,22 @@ $(D)/host_mtd_utils: @DEPENDS_host_mtd_utils@
 	touch $@
 
 #
+# host_libffi
 #
+$(D)/host_libffi: @DEPENDS_host_libffi@
+	@PREPARE_host_libffi@
+	cd @DIR_host_libffi@ && \
+		./configure \
+			--prefix=$(hostprefix) \
+			--disable-static \
+		&& \
+		$(MAKE) && \
+		@INSTALL_host_libffi@
+	@CLEANUP_host_libffi@
+	touch $@
+
+#
+# host_glib2_genmarshal
 #
 $(D)/host_glib2_genmarshal: @DEPENDS_host_glib2_genmarshal@
 	@PREPARE_host_glib2_genmarshal@

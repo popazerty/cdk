@@ -4,11 +4,8 @@
 $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(NFS_UTILS_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_nfs_utils@
 	@PREPARE_nfs_utils@
 	cd @DIR_nfs_utils@ && \
-		$(BUILDENV) \
-		./configure \
+		$(CONFIGURE) \
 			CC_FOR_BUILD=$(target)-gcc \
-			--build=$(build) \
-			--host=$(target) \
 			--prefix=/usr \
 			--disable-gss \
 			--enable-ipv6=no \
@@ -22,7 +19,7 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(NFS_UTILS_ADAPTED_ETC_FILES:%=ro
 		[ -f $$i ] && $(INSTALL) -m644 $$i $(prefix)/$*cdkroot/etc/$$i || true; \
 		[ "$${i%%/*}" = "init.d" ] && chmod 755 $(prefix)/$*cdkroot/etc/$$i || true; done )
 	@CLEANUP_nfs_utils@
-	@touch $@
+	touch $@
 
 #
 # libevent
@@ -30,10 +27,7 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(NFS_UTILS_ADAPTED_ETC_FILES:%=ro
 $(D)/libevent: $(D)/bootstrap @DEPENDS_libevent@
 	@PREPARE_libevent@
 	cd @DIR_libevent@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=$(prefix)/$*cdkroot/usr/ \
 		&& \
 		$(MAKE) && \
@@ -47,11 +41,8 @@ $(D)/libevent: $(D)/bootstrap @DEPENDS_libevent@
 $(D)/libnfsidmap: $(D)/bootstrap @DEPENDS_libnfsidmap@
 	@PREPARE_libnfsidmap@
 	cd @DIR_libnfsidmap@ && \
-		$(BUILDENV) \
+		$(CONFIGURE) \
 		ac_cv_func_malloc_0_nonnull=yes \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
 			--prefix=$(prefix)/$*cdkroot/usr/ \
 		&& \
 		$(MAKE) && \
@@ -78,10 +69,7 @@ $(D)/vsftpd: $(D)/bootstrap @DEPENDS_vsftpd@
 $(D)/ethtool: $(D)/bootstrap @DEPENDS_ethtool@
 	@PREPARE_ethtool@
 	cd @DIR_ethtool@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--libdir=$(targetprefix)/usr/lib \
 			--prefix=/usr \
 		&& \
@@ -178,12 +166,14 @@ $(D)/netio: $(D)/bootstrap @DEPENDS_netio@
 $(D)/ntp: $(D)/bootstrap @DEPENDS_ntp@
 	@PREPARE_ntp@
 	cd @DIR_ntp@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--target=$(target) \
 			--prefix=/usr \
+			--disable-tick \
+			--disable-tickadj \
+			--with-yielding-select=yes \
+			--without-ntpsnmpd \
+			--disable-debugging \
 		&& \
 		$(MAKE) && \
 		@INSTALL_ntp@
@@ -230,23 +220,37 @@ $(D)/%lighttpd: $(D)/lighttpd.do_compile
 $(D)/wireless_tools: $(D)/bootstrap @DEPENDS_wireless_tools@
 	@PREPARE_wireless_tools@
 	cd @DIR_wireless_tools@ && \
-		$(MAKE) $(MAKE_OPTS) && \
+		$(MAKE) CC="$(target)-gcc" CFLAGS="$(TARGET_CFLAGS) -I." && \
 		@INSTALL_wireless_tools@
 	@CLEANUP_wireless_tools@
 	touch $@
 
 #
+# libnl
+#
+$(D)/libnl: $(D)/bootstrap $(OPENSSL) @DEPENDS_libnl@
+	@PREPARE_libnl@
+	cd @DIR_libnl@ && \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		$(MAKE) && \
+		@INSTALL_libnl@
+	@CLEANUP_libnl@
+	touch $@
+
+#
 # wpa_supplicant
 #
-$(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools @DEPENDS_wpa_supplicant@
+$(D)/wpa_supplicant: $(D)/bootstrap $(OPENSSL) $(D)/wireless_tools @DEPENDS_wpa_supplicant@
 	@PREPARE_wpa_supplicant@
 	cd @DIR_wpa_supplicant@/wpa_supplicant && \
 		$(INSTALL) -m 644 $(buildprefix)/Patches/wpa_supplicant.config .config && \
 		export CFLAGS=-I$(targetprefix)/usr/include && \
+		export CPPFLAGS=-I$(targetprefix)/usr/include && \
 		export LIBS="-L$(targetprefix)/usr/lib -Wl,-rpath-link,$(targetprefix)/usr/lib" && \
 		export LDFLAGS="-L$(targetprefix)/usr/lib" && \
-		export DESTDIR=$(targetprefix)/usr && \
-		$(MAKE) $(MAKE_OPTS) && \
+		make CC=$(target)-gcc TARGETPREFIX=$(targetprefix) && \
+		$(target)-strip --strip-unneeded wpa_supplicant && \
 		@INSTALL_wpa_supplicant@
 	@CLEANUP_wpa_supplicant@
 	touch $@
@@ -256,7 +260,7 @@ $(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools @DEPENDS_wp
 #
 $(D)/xupnpd: $(D)/bootstrap @DEPENDS_xupnpd@
 	@PREPARE_xupnpd@
-	cd @DIR_xupnpd@ && \
+	cd @DIR_xupnpd@/src && \
 		$(BUILDENV) \
 		$(MAKE) TARGET=$(target) sh4 && \
 		@INSTALL_xupnpd@

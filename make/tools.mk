@@ -5,7 +5,10 @@ tools-clean:
 	-$(MAKE) -C $(appsdir)/tools distclean
 
 $(appsdir)/tools/config.status: bootstrap driver bzip2 libpng libjpeg ffmpeg
-	cd $(appsdir)/tools && $(CONFIGURE) \
+	cd $(appsdir)/tools && \
+	$(CONFIGURE) \
+	--prefix=$(targetprefix)/usr \
+	--with-boxtype=$(BOXTYPE) \
 	$(if $(MULTICOM324), --enable-multicom324) \
 	$(if $(MULTICOM406), --enable-multicom406) \
 	$(if $(EPLAYER3), --enable-eplayer3)

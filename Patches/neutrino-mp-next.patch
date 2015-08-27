@@ -15,8 +15,8 @@
  	[  --with-boxmodel         valid for coolstream: nevis, apollo
                            valid for dreambox: dm500, dm500plus, dm600pvr, dm56x0, dm7000, dm7020, dm7025
                            valid for ipbox: ip200, ip250, ip350, ip400
--                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, cuberevo, cuberevo_mini2, cuberevo_2000hd, tf7700],
-+                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini2, cuberevo_2000hd, tf7700],
+-                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, cuberevo, cuberevo_mini2, cuberevo_mini, cuberevo_250hd, cuberevo_2000hd, tf7700],
++                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini2, cuberevo_mini, cuberevo_250hd, cuberevo_2000hd, tf7700],
  	[case "${withval}" in
  		nevis|apollo)
  			if test "$BOXTYPE" = "coolstream"; then
@@ -24,8 +24,8 @@
  				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
  			fi
  			;;
--		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|cuberevo|cuberevo_mini2|cuberevo_2000hd|tf7700)
-+		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|dp7000|cuberevo|cuberevo_mini2|cuberevo_2000hd|tf7700)
+-		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|cuberevo|cuberevo_mini2|cuberevo_mini|cuberevo_250hd|cuberevo_2000hd|tf7700)
++		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|dp7000|cuberevo|cuberevo_mini2|cuberevo_mini|cuberevo_250hd|cuberevo_2000hd|tf7700)
  			if test "$BOXTYPE" = "duckbox"; then
  				BOXMODEL="$withval"
  			else
@@ -41,8 +41,8 @@
 +
  AM_CONDITIONAL(BOXMODEL_CUBEREVO,test "$BOXMODEL" = "cuberevo")
  AM_CONDITIONAL(BOXMODEL_CUBEREVO_MINI2,test "$BOXMODEL" = "cuberevo_mini2")
- AM_CONDITIONAL(BOXMODEL_CUBEREVO_2000HD,test "$BOXMODEL" = "cuberevo_2000hd")
-@@ -609,6 +619,16 @@
+ AM_CONDITIONAL(BOXMODEL_CUBEREVO_MINI,test "$BOXMODEL" = "cuberevo_mini")
+@@ -611,6 +621,16 @@
  	AC_DEFINE(BOXMODEL_FORTIS_HDBOX, 1, [fortis_hdbox])
  elif test "$BOXMODEL" = "octagon1008"; then
  	AC_DEFINE(BOXMODEL_OCTAGON1008, 1, [octagon1008])
@@ -104,27 +104,25 @@
  
 --- neutrino-mp-next.org/src/driver/vfd.cpp
 +++ neutrino-mp-next/src/driver/vfd.cpp
-@@ -53,12 +53,15 @@
+@@ -53,12 +53,13 @@
  
  #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
  	#define VFDLENGTH 8
 -#elif defined (BOXMODEL_FORTIS_HDBOX)
 +#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
-	#define VFDLENGTH 12
+ 	#define VFDLENGTH 12
 -#elif defined (BOXMODEL_ATEVIO7500)
 -	#define VFDLENGTH 12
--#elif defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)
-+#elif defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162) \
+-#elif (defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)) || defined (BOXMODEL_CUBEREVO_250HD)
++#elif (defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)) || defined (BOXMODEL_CUBEREVO_250HD) \
 +   || defined (BOXMODEL_HS7810A) \
 +   || defined (BOXMODEL_HS7119) \
 +   || defined (BOXMODEL_HS7819)
  	#define VFDLENGTH 4
-+#elif defined (BOXMODEL_HS7110)
-+	#define VFDLENGTH 0
  #else
  	#define VFDLENGTH 16
  #endif
-@@ -116,6 +119,7 @@
+@@ -116,6 +117,7 @@
  	}
  }
  
@@ -132,7 +130,7 @@
  static void writeCG (unsigned char adress, unsigned char pixeldata[5])
  {
  	struct vfd_ioctl_data data;
-@@ -129,6 +133,7 @@
+@@ -129,6 +131,7 @@
  	write_to_vfd(VFDWRITECGRAM, &data);
  	return;
  }
@@ -140,7 +138,7 @@
  
  static void ShowNormalText(char * str, bool fromScrollThread = false)
  {
-@@ -199,36 +204,40 @@
+@@ -199,36 +202,40 @@
  
  	int i;
  	char *str = (char *)arg;
@@ -201,7 +199,7 @@
  CVFD::CVFD()
  {
  #ifdef VFD_UPDATE
-@@ -315,6 +324,9 @@
+@@ -315,6 +322,9 @@
  	if(g_settings.lcd_info_line){
  		switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
  	}
@@ -211,7 +209,7 @@
  }
  
  void* CVFD::TimeThread(void *)
-@@ -369,12 +381,55 @@
+@@ -369,12 +379,55 @@
  #else
  // Brightness
  	struct vfd_ioctl_data data;
@@ -270,7 +268,7 @@
  // Power on/off
  	if (power) {
  		data.start = 0x01;
-@@ -383,8 +438,8 @@
+@@ -383,8 +436,8 @@
  	}
  	data.length = 0;
  	write_to_vfd(VFDDISPLAYWRITEONOFF, &data, true);
@@ -281,19 +279,22 @@
  }
  
  void CVFD::setlcdparameter(void)
-@@ -532,8 +587,23 @@
+@@ -532,10 +585,23 @@
  			if(force || ( switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))) ) {
  				hour = t->tm_hour;
  				minute = t->tm_min;
--				strftime(timestr, 20, "%H:%M", t);
 +#if !defined (BOXMODEL_HS7810A) && !defined (BOXMODEL_HS7119) && !defined (BOXMODEL_HS7819)
 +  #if defined (BOXMODEL_OCTAGON1008)
 +				ShowIcon(ICON_COLON2, true);
 +				strftime(timestr, 5, "%H%M", t);
+-#if (defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)) || defined (BOXMODEL_CUBEREVO_250HD)
++  #elif (defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)) || defined (BOXMODEL_CUBEREVO_250HD)
+ 				strftime(timestr, 20, "%H%M", t);
+-#else
+-				strftime(timestr, 20, "%H:%M", t);
 +  #else
 +				strftime(timestr, 6, "%H:%M", t);
 +  #endif
- 				ShowText(timestr);
 +#else //HS7810A, HS7119 or HS7819, string should not scroll
 +				strftime(timestr, 6, "%H:%M", t);
 +				struct vfd_ioctl_data data;
@@ -302,11 +303,10 @@
 +				data.start = 0;
 +				data.length = 5;
 +				write_to_vfd(VFDDISPLAYCHARS, &data);
-+#endif
+ #endif
+ 				ShowText(timestr);
  			}
- 		}
- 	}
-@@ -585,10 +655,14 @@
+@@ -589,10 +655,14 @@
  	}
  }
  #endif
@@ -322,7 +322,7 @@
  #endif
  }
  
-@@ -610,13 +684,13 @@
+@@ -614,13 +684,13 @@
  	if ((mode == MODE_TVRADIO) && g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME]) {
  #if HAVE_DUCKBOX_HARDWARE
  		int pp = (int) round((double) vol / (double) 2);
@@ -338,22 +338,22 @@
  			int j = pp / 5;
  			// v-lines 0-5 = {0x10,0x11,0x12,0x13,0x14,0x15}
  			char c0[1] = {0x5F};
-@@ -655,19 +729,32 @@
+@@ -659,19 +729,33 @@
  					strncat(VolumeBar, c0, 1);
  			}
  			ShowText(VolumeBar);
 -#elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
 +  #elif defined (BOXMODEL_TF7700)
-			char vol_chr[64] = "";
-			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL: %d%%", (int)vol);
-			ShowText(vol_chr);
--#elif defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)
+ 			char vol_chr[64] = "";
+ 			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL: %d%%", (int)vol);
+ 			ShowText(vol_chr);
+-#elif (defined HAVE_SPARK_HARDWARE && !defined (BOXMODEL_SPARK7162)) || defined (BOXMODEL_CUBEREVO_250HD)
 +  #elif defined (BOXMODEL_OCTAGON1008)
-			char vol_chr[64] = "";
+ 			char vol_chr[64] = "";
 -			snprintf(vol_chr, sizeof(vol_chr)-1, "%d", (int)vol);
 +			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL=%3d", (int)vol);
-			ShowText(vol_chr);
--#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913) || defined (BOXMODEL_CUBEREVO) || defined (BOXMODEL_CUBEREVO_MINI2) || defined (BOXMODEL_CUBEREVO_2000HD)
+ 			ShowText(vol_chr);
+-#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913) || defined (BOXMODEL_CUBEREVO) || defined (BOXMODEL_CUBEREVO_MINI) || defined (BOXMODEL_CUBEREVO_MINI2) || defined (BOXMODEL_CUBEREVO_2000HD)
 +  #elif defined (BOXMODEL_SPARK) \
 +     || defined (BOXMODEL_HS7119) \
 +     || defined (BOXMODEL_HS7810A) \
@@ -366,17 +366,18 @@
 +     || defined (BOXMODEL_UFS912) \
 +     || defined (BOXMODEL_UFS913) \
 +     || defined (BOXMODEL_CUBEREVO) \
++     || defined (BOXMODEL_CUBEREVO_MINI) \
 +     || defined (BOXMODEL_CUBEREVO_MINI2) \
 +     || defined (BOXMODEL_CUBEREVO_2000HD)
-			char vol_chr[64] = "";
-			snprintf(vol_chr, sizeof(vol_chr)-1, "Volume: %d%%", (int)vol);
-			ShowText(vol_chr);
+ 			char vol_chr[64] = "";
+ 			snprintf(vol_chr, sizeof(vol_chr)-1, "Volume: %d%%", (int)vol);
+ 			ShowText(vol_chr);
 -#endif
 +  #endif
-			oldpp = pp;
-		}
+ 			oldpp = pp;
+ 		}
  #else
-@@ -881,6 +968,9 @@
+@@ -885,6 +969,9 @@
  		ShowIcon(FP_ICON_COL1, true);
  		ShowIcon(FP_ICON_COL2, true);
  #endif
@@ -386,14 +387,14 @@
  		showclock = true;
  		showTime(true);      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
  		                 /* "showTime()" clears the whole lcd in MODE_STANDBY                         */
-@@ -1023,11 +1113,13 @@
+@@ -1027,13 +1115,13 @@
  	else
  		text[0] = 0;
  #else
--#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
-+#if defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
-+	ShowText("    ");
-+#elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
+-#if defined (BOXMODEL_CUBEREVO_250HD)
++#if defined (BOXMODEL_CUBEREVO_250HD) || defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
+ 	ShowText("    ");
+ #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
  	ShowText("        ");
  #elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
  	ShowText("            ");
@@ -402,7 +403,7 @@
  	ShowText("                ");
  #endif
  #endif
-@@ -1042,13 +1134,20 @@
+@@ -1048,13 +1135,20 @@
  	if(ret < 0)
  		perror(show ? "IOC_FP_SET_ICON" : "IOC_FP_CLEAR_ICON");
  #else
@@ -425,7 +426,7 @@
  	data.data[4] = show;
  	data.length = 5;
  	write_to_vfd(VFDICONDISPLAYONOFF, &data);
-@@ -1059,15 +1158,22 @@
+@@ -1065,15 +1159,22 @@
  #ifdef HAVE_DUCKBOX_HARDWARE
  void CVFD::ClearIcons()
  {
@@ -454,7 +455,7 @@
 			ShowIcon((fp_icon)id, false);
 	}
 	return;
-@@ -1434,5 +1540,3 @@
+@@ -1440,5 +1541,3 @@
  }
  /*****************************************************************************************/
  #endif // VFD_UPDATE

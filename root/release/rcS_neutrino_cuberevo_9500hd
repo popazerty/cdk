@@ -89,8 +89,8 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/boxtype.ko
 fi
 
-showiframe -p /var/boot/bootlogo.mvi &
-stfbcontrol a 0
+# Module aus modules.extra laden
+   [ -f /var/etc/modules.extra ] && eval `sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/insmod \0;/' < /var/etc/modules.extra`
 
 if [ ! -e /var/etc/.firstboot ]; then
    echo "enigma2" > /dev/dbox/fp0

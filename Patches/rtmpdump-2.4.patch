@@ -1,7 +1,5 @@
-Index: rtmpdump-2.4/Makefile
-===================================================================
---- rtmpdump-2.4.orig/Makefile	2011-07-12 02:24:33.000000000 +0200
-+++ rtmpdump-2.4/Makefile	2012-07-07 17:30:29.000000000 +0200
+--- rtmpdump-2.4.orig/Makefile
++++ rtmpdump-2.4/Makefile
 @@ -1,6 +1,6 @@
  VERSION=v2.4
  
@@ -19,10 +17,8 @@ Index: rtmpdump-2.4/Makefile
  
  bindir=$(prefix)/bin
  sbindir=$(prefix)/sbin
-Index: rtmpdump-2.4/librtmp/Makefile
-===================================================================
---- rtmpdump-2.4.orig/librtmp/Makefile	2011-07-12 02:24:33.000000000 +0200
-+++ rtmpdump-2.4/librtmp/Makefile	2012-07-07 17:30:16.000000000 +0200
+--- rtmpdump-2.4.orig/librtmp/Makefile
++++ rtmpdump-2.4/librtmp/Makefile
 @@ -1,6 +1,6 @@
  VERSION=v2.4
  
@@ -40,3 +36,13 @@ Index: rtmpdump-2.4/librtmp/Makefile
  
  
  OBJS=rtmp.o log.o amf.o hashswf.o parseurl.o
+--- rtmpdump-2.4.orig/librtmp/librtmp.pc.in
++++ rtmpdump-2.4/librtmp/librtmp.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@prefix@
+ exec_prefix=${prefix}
+-libdir=@libdir@
++libdir=${prefix}/lib
+ incdir=${prefix}/include
+ 
+ Name: librtmp

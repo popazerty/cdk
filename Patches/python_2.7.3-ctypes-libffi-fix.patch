@@ -1,6 +1,6 @@
 --- Python-2.7.3-orig/configure.in	2014-02-20 11:33:41.000000000 +0100
 +++ Python-2.7.3/configure.in	2014-02-24 15:18:55.000000000 +0100
-@@ -1194,7 +1194,7 @@
+@@ -1192,7 +1192,7 @@
  then
    AC_MSG_CHECKING(whether gcc supports ParseTuple __format__)
    save_CFLAGS=$CFLAGS
@@ -11,7 +11,7 @@
    ],[
 --- Python-2.7.3-orig/configure	2014-02-20 11:33:41.000000000 +0100
 +++ Python-2.7.3/configure	2014-02-24 16:23:23.000000000 +0100
-@@ -5735,7 +5735,7 @@
+@@ -5731,7 +5731,7 @@
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether gcc supports ParseTuple __format__" >&5
  $as_echo_n "checking whether gcc supports ParseTuple __format__... " >&6; }
    save_CFLAGS=$CFLAGS
@@ -64,7 +64,7 @@ diff -Nur '--exclude-from=diff-ignore' python-2.7.3.org/Modules/_ctypes/libffi/M
  
 --- python-2.7.3.org/Modules/_ctypes/libffi/fficonfig.py.in	2010-01-16 19:05:15.000000000 +0100
 +++ python-2.7.3/Modules/_ctypes/libffi/fficonfig.py.in	2012-04-09 19:38:57.000000000 +0200
-@@ -30,4 +30,4 @@
+@@ -32,4 +32,4 @@
  
  ffi_sources += ffi_platforms['@TARGET@']
  

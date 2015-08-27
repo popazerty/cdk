@@ -3,7 +3,7 @@
 #
 $(targetprefix)/var/etc/.version:
 	echo "imagename=Neutrino" > $@
-	echo "homepage=http://gitorious.org/open-duckbox-project-sh4" >> $@
+	echo "homepage=http://github.org/audioniek" >> $@
 	echo "creator=`id -un`" >> $@
 	echo "docs=http://gitorious.org/open-duckbox-project-sh4/pages/Home" >> $@
 	echo "forum=http://gitorious.org/open-duckbox-project-sh4" >> $@
@@ -13,13 +13,17 @@ $(targetprefix)/var/etc/.version:
 #
 #
 #
-NEUTRINO_DEPS  = bootstrap openssl libcurl libpng libjpeg libgif libfreetype
-NEUTRINO_DEPS += ffmpeg lua luaexpat luacurl libdvbsipp libsigc libopenthreads libusb libalsa
+NEUTRINO_DEPS  = bootstrap libcurl libpng libjpeg libgif libfreetype
+NEUTRINO_DEPS += ffmpeg ntp lua luaexpat luacurl libdvbsipp libsigc libopenthreads libusb libalsa
 NEUTRINO_DEPS += $(EXTERNALLCD_DEP)
+
+if ENABLE_WLANDRIVER
+NEUTRINO_DEPS += wpa_supplicant wireless_tools
+endif
 
 NEUTRINO_DEPS2 = libid3tag libmad libvorbisidec
 
-N_CFLAGS  = -Wall -W -Wshadow -g0 -pipe -Os -fno-strict-aliasing -D__KERNEL_STRICT_NAMES -DCPU_FREQ
+N_CFLAGS  = -Wall -W -Wshadow -g0 -pipe -Os -fno-strict-aliasing -DCPU_FREQ
 
 N_CPPFLAGS = -I$(driverdir)/bpamem
 N_CPPFLAGS += -I$(targetprefix)/usr/include/
@@ -68,7 +72,7 @@ $(D)/libstb-hal-github-old.do_prepare:
 	cp -ra $(sourcedir)/libstb-hal-github-old $(sourcedir)/libstb-hal-github-old.org
 	for i in $(NEUTRINO_MP_LIBSTB_GH_OLD_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/libstb-hal-github-old && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/libstb-hal-github-old && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -124,7 +128,7 @@ $(D)/libstb-hal-cst-next.do_prepare:
 	cp -ra $(sourcedir)/libstb-hal-cst-next $(sourcedir)/libstb-hal-cst-next.org
 	for i in $(NEUTRINO_MP_LIBSTB_CST_NEXT_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/libstb-hal-cst-next && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/libstb-hal-cst-next && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -188,7 +192,7 @@ $(D)/neutrino-mp-cst-next.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-cst-next
 	cp -ra $(sourcedir)/neutrino-mp-cst-next $(sourcedir)/neutrino-mp-cst-next.org
 	for i in $(NEUTRINO_MP_CST_NEXT_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/neutrino-mp-cst-next && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/neutrino-mp-cst-next && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -213,6 +217,10 @@ $(D)/neutrino-mp-cst-next.config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
+			--with-iconsdir=/usr/share/tuxbox/neutrino/icons \
+			--with-localedir=/usr/share/tuxbox/neutrino/locale \
+			--with-private_httpddir=/usr/share/tuxbox/neutrino/httpd \
+			--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 			--with-stb-hal-includes=$(sourcedir)/libstb-hal-cst-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
@@ -280,12 +288,12 @@ $(D)/neutrino-mp-martii-github.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-cst-nex
 	[ -d "$(archivedir)/neutrino-mp-martii-github.git" ] && \
 	(cd $(archivedir)/neutrino-mp-martii-github.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-martii-github.git" ] || \
-	git clone https://github.com/MaxWiesel/neutrino-mp-martii.git $(archivedir)/neutrino-mp-martii-github.git; \
+	git clone https://github.com/MaxWiesel/neutrino-mp-martii-test.git $(archivedir)/neutrino-mp-martii-github.git; \
 	cp -ra $(archivedir)/neutrino-mp-martii-github.git $(sourcedir)/neutrino-mp-martii-github; \
 	cp -ra $(sourcedir)/neutrino-mp-martii-github $(sourcedir)/neutrino-mp-martii-github.org
 	for i in $(NEUTRINO_MP_MARTII_GH_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/neutrino-mp-martii-github && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/neutrino-mp-martii-github && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -357,7 +365,6 @@ neutrino-mp-martii-github-distclean:
 
 ################################################################################
 #
-
 # yaud-neutrino-mp-next
 #
 yaud-neutrino-mp-next: yaud-none lirc \
@@ -389,7 +396,7 @@ $(D)/libstb-hal-next.do_prepare:
 	cp -ra $(sourcedir)/libstb-hal-next $(sourcedir)/libstb-hal-next.org
 	for i in $(NEUTRINO_MP_LIBSTB_NEXT_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/libstb-hal-next && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/libstb-hal-next && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -444,7 +451,7 @@ $(D)/neutrino-mp-next.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-next
 	cp -ra $(sourcedir)/neutrino-mp-next $(sourcedir)/neutrino-mp-next.org
 	for i in $(NEUTRINO_MP_NEXT_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/neutrino-mp-next && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/neutrino-mp-next && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -532,16 +539,15 @@ NEUTRINO_HD2_PATCHES =
 $(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2) $(MEDIAFW_DEP) libflac
 	rm -rf $(sourcedir)/nhd2-exp
 	rm -rf $(sourcedir)/nhd2-exp.org
-	[ -d "$(archivedir)/neutrino-hd2-exp.git" ] && \
-	(cd $(archivedir)/neutrino-hd2-exp.git; git pull ; cd "$(buildprefix)";); \
-	[ -d "$(archivedir)/neutrino-hd2-exp.git" ] || \
-	git clone https://github.com/mohousch/neutrinohd2.git $(archivedir)/neutrino-hd2-exp.git; \
-	cp -ra $(archivedir)/neutrino-hd2-exp.git $(sourcedir)/nhd2-exp; \
-	(cd $(sourcedir)/nhd2-exp; git checkout nhd2-exp; cd "$(buildprefix)";); \
+	[ -d "$(archivedir)/neutrino-hd2-exp.svn" ] && \
+	(cd $(archivedir)/neutrino-hd2-exp.svn; svn up ; cd "$(buildprefix)";); \
+	[ -d "$(archivedir)/neutrino-hd2-exp.svn" ] || \
+	svn co http://neutrinohd2.googlecode.com/svn/branches/nhd2-exp $(archivedir)/neutrino-hd2-exp.svn; \
+	cp -ra $(archivedir)/neutrino-hd2-exp.svn $(sourcedir)/nhd2-exp; \
 	cp -ra $(sourcedir)/nhd2-exp $(sourcedir)/nhd2-exp.org
 	for i in $(NEUTRINO_HD2_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/nhd2-exp && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/nhd2-exp && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -627,7 +633,7 @@ $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-cst-next
 	cp -ra $(sourcedir)/neutrino-mp-tangos $(sourcedir)/neutrino-mp-tangos.org
 	for i in $(NEUTRINO_MP_TANGOS_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/neutrino-mp-tangos && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/neutrino-mp-tangos && patch -p1 -i $$i; \
 	done;
 	touch $@
 
@@ -652,6 +658,10 @@ $(D)/neutrino-mp-tangos.config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
+			--with-iconsdir=/usr/share/tuxbox/neutrino/icons \
+			--with-localedir=/usr/share/tuxbox/neutrino/locale \
+			--with-private_httpddir=/usr/share/tuxbox/neutrino/httpd \
+			--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 			--with-stb-hal-includes=$(sourcedir)/libstb-hal-cst-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \

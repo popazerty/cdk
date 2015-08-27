@@ -37,13 +37,30 @@ AC_ARG_ENABLE(enigma2,
 AM_CONDITIONAL(ENABLE_ENIGMA2,test "$enable_enigma2" = "yes")
 AC_SUBST(ENIGMA2)
 
+AC_ARG_ENABLE(tvheadend,
+	AS_HELP_STRING(--enable-tvheadend, Setting up the CDK to build tvheadend),
+	[case "${enableval}" in
+		yes) TVHEADEND=tvheadend ;;
+	esac],[enable_tvheadend=no])
+AM_CONDITIONAL(ENABLE_TVHEADEND,test "$enable_tvheadend" = "yes")
+AC_SUBST(TVHEADEND)
+
 AC_ARG_ENABLE(wlandriver,
-	AS_HELP_STRING(--enable-wlandriver, Setting up the CDK to build wlandriver),
+	AS_HELP_STRING(--enable-wlandriver, Setting up the CDK to build WLAN drivers),
 	[case "${enableval}" in
 		yes) WLANDRIVER=wlandriver ;;
 	esac],[enable_wlandriver=no])
 AM_CONDITIONAL(ENABLE_WLANDRIVER,test "$enable_wlandriver" = "yes")
 AC_SUBST(WLANDRIVER)
+
+AC_ARG_ENABLE(dvbtdriver,
+-enable-dvbtdriver
+	AS_HELP_STRING(--enable-dvbtdriver, Setting up the CDK to build DVB-T drivers),
+	[case "${enableval}" in
+		yes) DVBTDRIVER=dvbtdriver ;;
+	esac],[enable_dvbtdriver=no])
+AM_CONDITIONAL(ENABLE_DVBTDRIVER,test "$enable_dvbtdriver" = "yes")
+AC_SUBST(DVBTDRIVER)
 
 AC_ARG_ENABLE(player191,
 	AS_HELP_STRING(--enable-player191, set up the CDK to use player191),
@@ -583,12 +600,14 @@ fi
 if test -z "$TARGET_CFLAGS" -o -z "$TARGET_CXXFLAGS"; then
 	TARGET_CFLAGS="-pipe"
 	if test "$enable_debug" = "yes"; then
-		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g -gdwarf-2 -I$targetprefix/usr/include"
-		TARGET_LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
+		TARGET_CFLAGS="$TARGET_CFLAGS -O2 -g -gdwarf-2"
+		TARGET_LDFLAGS=""
 	else
-		TARGET_CFLAGS="$TARGET_CFLAGS -Os -I$targetprefix/usr/include"
-		TARGET_LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
+		TARGET_CFLAGS="$TARGET_CFLAGS -Os"
+		TARGET_LDFLAGS=""
 	fi
+	TARGET_LDFLAGS="$TARGET_LDFLAGS -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$targetprefix/usr/lib -L$targetprefix/usr/lib -L$targetprefix/lib"
+	TARGET_CFLAGS="$TARGET_CFLAGS -I$targetprefix/usr/include"
 	TARGET_CXXFLAGS="$TARGET_CFLAGS"
 fi
 AC_SUBST(CFLAGS)
@@ -757,7 +776,7 @@ if test "$enable_mediafwgstreamer" == "yes"; then
 	MEDIAFW="gstreamer"
 	MEDIAFW_DEP="gst_plugins_dvbmediasink"
 elif test "$enable_buildinplayer" == "yes"; then
-	MEDIAFW="build-in player"
+	MEDIAFW="built-in player"
 	MEDIAFW_DEP="ffmpeg"
 else
 	MEDIAFW="eplayer3"
@@ -779,6 +798,7 @@ TUXBOX_RULES_MAKE(host_pkgconfig)
 TUXBOX_RULES_MAKE(host_module_init_tools)
 TUXBOX_RULES_MAKE(host_mtd_utils)
 TUXBOX_RULES_MAKE(host_glib2_genmarshal)
+TUXBOX_RULES_MAKE(host_libffi)
 TUXBOX_RULES_MAKE(uboot_tf7700)
 
 #
@@ -829,12 +849,14 @@ TUXBOX_RULES_MAKE(libvorbisidec)
 #
 # contrib libs
 #
-TUXBOX_RULES_MAKE(openssl)
+TUXBOX_RULES_MAKE(libncurses)
+TUXBOX_RULES_MAKE(gmp)
 TUXBOX_RULES_MAKE(lua)
 TUXBOX_RULES_MAKE(luacurl)
 TUXBOX_RULES_MAKE(luaexpat)
 TUXBOX_RULES_MAKE(howl)
 TUXBOX_RULES_MAKE(libopenthreads)
+TUXBOX_RULES_MAKE(pugixml)
 TUXBOX_RULES_MAKE(libboost)
 TUXBOX_RULES_MAKE(zlib)
 TUXBOX_RULES_MAKE(libcap)
@@ -844,7 +866,6 @@ TUXBOX_RULES_MAKE(libsigc_e2)
 TUXBOX_RULES_MAKE(libsigc)
 TUXBOX_RULES_MAKE(glib2)
 TUXBOX_RULES_MAKE(libffi)
-TUXBOX_RULES_MAKE(orc)
 TUXBOX_RULES_MAKE(libiconv)
 TUXBOX_RULES_MAKE(libmng)
 TUXBOX_RULES_MAKE(lcms)
@@ -891,7 +912,6 @@ TUXBOX_RULES_MAKE(libxslt)
 #
 # contrib apps
 #
-TUXBOX_RULES_MAKE(libncurses)
 TUXBOX_RULES_MAKE(bzip2)
 TUXBOX_RULES_MAKE(grep)
 TUXBOX_RULES_MAKE(openrdate)
@@ -915,34 +935,42 @@ TUXBOX_RULES_MAKE(wget)
 #
 # python
 #
-TUXBOX_RULES_MAKE(gdata)
-TUXBOX_RULES_MAKE(elementtree)
-TUXBOX_RULES_MAKE(lxml)
-TUXBOX_RULES_MAKE(setuptools)
-TUXBOX_RULES_MAKE(twisted)
-TUXBOX_RULES_MAKE(pilimaging)
 TUXBOX_RULES_MAKE(host_python)
 TUXBOX_RULES_MAKE(python)
-TUXBOX_RULES_MAKE(pycrypto)
-TUXBOX_RULES_MAKE(pyusb)
-TUXBOX_RULES_MAKE(pyopenssl)
-TUXBOX_RULES_MAKE(pythonwifi)
-TUXBOX_RULES_MAKE(pythoncheetah)
-TUXBOX_RULES_MAKE(pythonmechanize)
-TUXBOX_RULES_MAKE(zope_interface)
+TUXBOX_RULES_MAKE(python_gdata)
+TUXBOX_RULES_MAKE(python_elementtree)
+TUXBOX_RULES_MAKE(python_lxml)
+TUXBOX_RULES_MAKE(python_setuptools)
+TUXBOX_RULES_MAKE(python_twisted)
+TUXBOX_RULES_MAKE(python_imaging)
+TUXBOX_RULES_MAKE(python_pycrypto)
+TUXBOX_RULES_MAKE(python_pyusb)
+TUXBOX_RULES_MAKE(python_six)
+TUXBOX_RULES_MAKE(python_cffi)
+TUXBOX_RULES_MAKE(python_enum34)
+TUXBOX_RULES_MAKE(python_pyasn1)
+TUXBOX_RULES_MAKE(python_pyasn1_modules)
+TUXBOX_RULES_MAKE(python_pycparser)
+TUXBOX_RULES_MAKE(python_cryptography)
+TUXBOX_RULES_MAKE(python_pyopenssl)
+TUXBOX_RULES_MAKE(python_wifi)
+TUXBOX_RULES_MAKE(python_cheetah)
+TUXBOX_RULES_MAKE(python_mechanize)
+TUXBOX_RULES_MAKE(python_zope_interface)
 
 #
 # gstreamer
 #
+TUXBOX_RULES_MAKE(orc)
+TUXBOX_RULES_MAKE(gst_gmediarender)
+TUXBOX_RULES_MAKE(gst_plugins_dvbmediasink)
 TUXBOX_RULES_MAKE(gstreamer)
 TUXBOX_RULES_MAKE(gst_plugins_base)
 TUXBOX_RULES_MAKE(gst_plugins_good)
 TUXBOX_RULES_MAKE(gst_plugins_bad)
 TUXBOX_RULES_MAKE(gst_plugins_ugly)
-TUXBOX_RULES_MAKE(gst_ffmpeg)
-TUXBOX_RULES_MAKE(gst_gmediarender)
+TUXBOX_RULES_MAKE(gst_libav)
 TUXBOX_RULES_MAKE(gst_plugins_fluendo_mpegdemux)
-TUXBOX_RULES_MAKE(gst_plugins_dvbmediasink)
 TUXBOX_RULES_MAKE(gst_plugin_subsink)
 
 #
@@ -966,6 +994,14 @@ TUXBOX_RULES_MAKE(libusb)
 TUXBOX_RULES_MAKE(libusbcompat)
 TUXBOX_RULES_MAKE(libgd2)
 TUXBOX_RULES_MAKE(libdpfax)
+
+#
+# Security
+#
+TUXBOX_RULES_MAKE(openssl_e2)
+TUXBOX_RULES_MAKE(openssl)
+TUXBOX_RULES_MAKE(gnutls)
+TUXBOX_RULES_MAKE(nettle)
 
 #
 # File Systems and Disk Management
@@ -1000,10 +1036,17 @@ TUXBOX_RULES_MAKE(ntp)
 TUXBOX_RULES_MAKE(lighttpd)
 TUXBOX_RULES_MAKE(wireless_tools)
 TUXBOX_RULES_MAKE(zd1211)
+TUXBOX_RULES_MAKE(libnl)
 TUXBOX_RULES_MAKE(wpa_supplicant)
 TUXBOX_RULES_MAKE(ethtool)
 TUXBOX_RULES_MAKE(xupnpd)
 TUXBOX_RULES_MAKE(udpxy)
+TUXBOX_RULES_MAKE(glibnetworking)
+
+#
+# TVHEADEND
+#
+TUXBOX_RULES_MAKE(tvheadend)
 
 #
 # localmacros
@@ -1036,29 +1079,25 @@ AC_MSG_RESULT([
 $ccacheinfo
 summary:
 ----------------------------------------
-ccache support              : $enable_ccache
-target cpu/boxtype          : $CPU_MODEL / $BOXTYPE
-linux kernel                : ${KERNELVERSION%.*}
-kernelversion               : $KERNELVERSION
-localversion                : $KERNELSTMLABEL
-Patchlevel P0209            : $enable_p0209
-Patchlevel P0211            : $enable_p0211
-Patchlevel P0214            : $enable_p0214
-Patchlevel P0215            : $enable_p0215
-Patchlevel P0217            : $enable_p0217
+Ccache support              : $enable_ccache
+Target CPU/boxtype          : $CPU_MODEL / $BOXTYPE
+Linux kernel                : ${KERNELVERSION%.*}
+Kernelversion               : $KERNELVERSION
+Localversion                : $KERNELSTMLABEL
+Patchlevel                  : P0$KERNELLABEL
 DEBUG                       : $enable_debug
-boot prefix                 : $bootprefix
-serversupport               : $serversupport
-host prefix                 : $hostprefix
-cross prefix                : $crossprefix
-target prefix               : $targetprefix
-build prefix                : $buildprefix
-target apps directory       : $appsdir
-driver directory            : $driverdir
-source directory            : $sourcedir
-buildtmp directory          : $buildtmp
-customization directory     : $customizationsdir
-archive directory           : $archivedir
+Boot prefix                 : $bootprefix
+Serversupport               : $serversupport
+Host prefix                 : $hostprefix
+Cross prefix                : $crossprefix
+Target prefix               : $targetprefix
+Build prefix                : $buildprefix
+Target apps directory       : $appsdir
+Driver directory            : $driverdir
+Source directory            : $sourcedir
+Buildtmp directory          : $buildtmp
+Customization directory     : $customizationsdir
+Archive directory           : $archivedir
 Player191                   : $enable_player191
 Multicom324                 : $enable_multicom324
 Multicom406                 : $enable_multicom406

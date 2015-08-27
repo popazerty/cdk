@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 150328.1
+#Version 150810.1
 
 echo "Spark 7162"
 
@@ -71,7 +71,6 @@ fi
 echo "Init stmfb (LOAD 9)"
 echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
-
 if  grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
   insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb; #SCART
 else
@@ -80,9 +79,9 @@ fi
 
 echo "Loading modules"
 
-if [ ! -e /boot/audio.elf ]; then
-   echo "NO AUDIO FW!!!"
-   echo "NO AUDIO FW!!!" > /dev/vfd
+if [ ! -e /boot/audio.elf ] || [ ! -e /boot/video.elf ]; then
+   echo "FIRMWARE MISSING!"
+   echo "FW MISSING!" > /dev/vfd
 fi
 
 echo "Load audio firmware (LOAD 8)"
@@ -101,14 +100,13 @@ echo "Load 7" > /dev/vfd
 echo "Init embx (LOAD 6)"
 echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
-insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
-insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
+insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0
+insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
 echo "Load 5" > /dev/vfd
 insmod $MODDIR/avs.ko type=avs_pio
-#insmod $MODDIR/avs.ko type=avs_none #HDMU value
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
 echo "Init player $player (LOAD 4)"
@@ -118,10 +116,8 @@ insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
 insmod $MODDIR/p2div64.ko
 insmod $MODDIR/stm_v4l2.ko
-if [ $player -gt 131 ]; then
-   insmod $MODDIR/stmvout.ko
-   insmod $MODDIR/stmvbi.ko
-fi
+insmod $MODDIR/stmvout.ko
+insmod $MODDIR/stmvbi.ko
 insmod $MODDIR/pseudocard.ko
 
 tunertype=`cat /etc/enigma2/settings | grep systemoptions.tunertype | cut -d "=" -f2`
@@ -130,26 +126,19 @@ if [ ! $tunertype ]; then
 fi
 insmod $MODDIR/spark7162.ko UnionTunerType=$tunertype
 
-if [ $player -gt 131 ]; then
-   if [ -e $MODDIR/pti.ko ]; then
-#      if [ ! $?=='2' ]; then
-         pti_arg="waitMS=20 videoMem=4096"
-         echo "Full feature pti"
-#      else
-#         pti_arg=""
-#         echo "Simple pti"
-#     fi
-     insmod $MODDIR/pti.ko $pti_arg
-   fi
-   insmod $MODDIR/stm_monitor.ko
-   insmod $MODDIR/stmsysfs.ko
-   insmod $MODDIR/stmdvb.ko
-else
-   insmod $MODDIR/pti.ko
-   insmod $MODDIR/stmdvb.ko
-#   /etc/init.d/stmdvb_check
-   insmod $MODDIR/stm_monitor.ko
+if [ -e $MODDIR/pti.ko ]; then
+#   if [ ! $?=='2' ]; then
+      pti_arg="waitMS=20 videoMem=4096"
+      echo "Full feature pti"
+#   else
+#      pti_arg=""
+#      echo "Simple pti"
+#   fi
+   insmod $MODDIR/pti.ko $pti_arg
 fi
+insmod $MODDIR/stm_monitor.ko
+insmod $MODDIR/stmsysfs.ko
+insmod $MODDIR/stmdvb.ko
 
 echo "LOAD 3"
 echo "Load 3" > /dev/vfd
@@ -168,7 +157,9 @@ insmod $MODDIR/cec.ko activemode=1
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
-showiframe -p /boot/bootlogo.mvi &
+if [ -e /boot/bootlogo.mvi ]; then
+   showiframe -p /boot/bootlogo.mvi &
+fi
 stfbcontrol a 0
 
 echo "Init lircd (LOAD 2)"
@@ -211,9 +202,9 @@ echo "Load 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
 
-#mknod /dev/dvb/adapter0/frontend1 c 212 19  #SAT1
-#mknod /dev/dvb/adapter0/frontend2 c 212 35  #SAT2
-#mknod /dev/dvb/adapter0/frontend3 c 212 51  #T/C
+mknod /dev/dvb/adapter0/frontend1 c 212 19  #SAT1
+mknod /dev/dvb/adapter0/frontend2 c 212 35  #SAT2
+mknod /dev/dvb/adapter0/frontend3 c 212 51  #T/C
 
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
@@ -230,7 +221,12 @@ else
       /etc/init.d/networking start &
    fi
 fi
+#Allow network to wake up and initialize
 sleep 2
+#Show IP address on frontpanel
+#ip=`ifconfig eth0 | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p'`
+#echo "IP $ip" > /dev/vfd
+#sleep 3
 
 # Start automount
 if [ -e /etc/init.d/automount ]; then
@@ -247,7 +243,6 @@ fi
 # if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
 if [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
-#   (/sbin/ntpdate pl.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
    /sbin/ntpdate de.pool.ntp.org
    /bin/fp_control -sst &
 else
@@ -321,9 +316,9 @@ do
           echo "Error" > /dev/vfd
           init 6;;
    esac
-done 
+done
 
 #never reached
-echo "Reboot SPARK7162" > /dev/vfd
 echo "REBOOT SPARK7162"
+echo "Reboot SPARK7162" > /dev/vfd
 reboot -f

@@ -1,13 +1,14 @@
 #!/bin/bash
+# Version 20150813.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
- echo "Parameter 1: target system (1-36)"
+ echo "Parameter 1: target system (1-35)"
  echo "Parameter 2: kernel (1-5)"
  echo "Parameter 3: debug (y/N)"
  echo "Parameter 4: player (1-2)"
  echo "Parameter 5: Media Framework (1-4)"
  echo "Parameter 6: External LCD support (1-2)"
- echo "Parameter 7: Image (Enigma=1/Neutrino=2) (1-2)"
+ echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
  echo "Parameter 8: Neutrino variant (1-6)"
  exit
 fi
@@ -93,8 +94,8 @@ case $1 in
 		echo "   33) Ferguson Ariva @Link 200"
 		echo "   34) Fortis HS7119"
 		echo "   35) Fortis HS7819"
-		echo "   36) Fortis DP7000 (not finished yet)"
-		read -p "Select target (1-36)? ";;
+#		echo "   36) Fortis DP7000 (not finished yet)"
+		read -p "Select target (1-35)? ";;
 esac
 
 case "$REPLY" in
@@ -162,10 +163,10 @@ case $2 in
 	[1-5])	REPLY=$2;;
 	*)	echo -e "\nKernel:"
 		echo "   1) STM 24 P0209"
-		echo "   2) STM 24 P0211 (recommended)"
-		echo "   3) STM 24 P0214 (experimental)"
-		echo "   4) STM 24 P0215 (experimental)"
-		echo "   4) STM 24 P0217 (experimental)"
+		echo "   2) STM 24 P0211"
+		echo "   3) STM 24 P0214"
+		echo "   4) STM 24 P0215"
+		echo "   5) STM 24 P0217 (recommended)"
 		read -p "Select kernel (1-5)? ";;
 esac
 
@@ -174,21 +175,26 @@ case "$REPLY" in
 	2)  KERNEL="--enable-p0211";KERNELP="P0211";;
 	3)  KERNEL="--enable-p0214";KERNELP="P0214";;
 	4)  KERNEL="--enable-p0215";KERNELP="P0215";;
-	5)  KERNEL="--enable-p0217";KERNELP="P0217";;
-	*)  KERNEL="--enable-p0215";KERNELP="P0215";;
+#	5)  KERNEL="--enable-p0217";KERNELP="P0217";;
+	*)  KERNEL="--enable-p0217";KERNELP="P0217";;
 esac
 CONFIGPARAM="$CONFIGPARAM $KERNEL"
 
 ##############################################
 
+echo
 if [ "$3" ]; then
 	REPLY="$3"
 else
 	REPLY=N
-	read -p "   Activate debug (y/N)? "
+	read -p "Activate debug (y/N)? "
 fi
-[ "$REPLY" == "y" -o "$REPLY" == "Y" ] && CONFIGPARAM="$CONFIGPARAM --enable-debug"
-DEBUGR=$REPLY
+if [ "$REPLY" == "y" -o "$REPLY" == "Y" ]; then
+	CONFIGPARAM="$CONFIGPARAM --enable-debug"
+	DEBUGR="Yes"
+else
+DEBUGR="No"
+fi
 
 ##############################################
 
@@ -287,22 +293,39 @@ case $6 in
 esac
 
 case "$REPLY" in
-	2)	EXTERNAL_LCD="--enable-externallcd";LCDR="Y";;
-	*)	EXTERNAL_LCD="";LCDR="N";;
+	2)	EXTERNAL_LCD="--enable-externallcd";LCDR="Yes";;
+	*)	EXTERNAL_LCD="";LCDR="No";;
 esac
 
 ##############################################
 
 case $7 in
-	[1-2])	REPLY=$7;;
+	[1-5]) REPLY=$7;;
 	*)	echo -e "\nWhich Image do you want to build:"
-		echo "   1) Enigma2 (includes WLAN drivers)"
-		echo "   2) Neutrino"
-		read -p "Select Image to build (1-2)? ";;
+		echo "   1) Enigma2"
+		echo "   2) Enigma2 (includes WLAN drivers)"
+		echo "   3) Neutrino"
+		echo "   4) Neutrino (includes WLAN drivers)"
+		echo "   5) Tvheadend"
+		read -p "Select Image to build (1-5)? ";;
 esac
 
+WLANDR="No"
 case "$REPLY" in
-	2)	if [ "$MFWORK" != "built-in" ]; then
+	1)	IMAGEN="Enigma2";;
+	3)	IMAGEN="Neutrino";;
+	4)	IMAGEN="Neutrino"
+		CONFIGPARAM="$CONFIGPARAM --enable-wlandriver"
+		WLANDR="Yes";;
+	5)	IMAGEN="Tvheadend";;
+	*)	IMAGEN="Enigma2"
+		CONFIGPARAM="$CONFIGPARAM --enable-wlandriver"
+		WLANDR="Yes";;
+esac
+
+case "$IMAGEN" in
+	Neutrino)
+	 	if [ "$MFWORK" != "built-in" ]; then
 			echo "You did not select built-in as the Media Framework."
 			echo "This is required for Neutrino."
 			echo "Exiting..."
@@ -311,37 +334,60 @@ case "$REPLY" in
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
 			[1-6])	REPLY=$8;;
-			*)	echo -e "\nWhich neutrino variant do you want to build?"
-				echo "   1) neutrino-mp"
-				echo "   2) neutrino-mp-next"
-				echo "   3) neutrino-hd2-exp"
-				echo "   4) neutrino-mp-github-next-cst"
-				echo "   5) neutrino-mp-martii-github"
-				echo "   6) neutrino-mp-tangos"
+			*)	echo -e "\nWhich Neutrino variant do you want to build?"
+				echo "   1) Neutrino mp"
+				echo "   2) Neutrino mp (next)"
+				echo "   3) Neutrino mp (cst-next)"
+				echo "   4) Neutrino HD2 exp"
+				echo "   5) Neutrino mp (Tangos)"
+				echo "   6) Neutrino mp (martii-github)"
 				read -p " Select Neutrino variant (1-6)? ";;
 		esac
 		case "$REPLY" in
-			2)	IMAGEN="neutrino-mp-next";;
-			3)	IMAGEN="neutrino-hd2-exp";;
-			4)	IMAGEN="neutrino-mp-github-next-cst";;
-			5)	IMAGEN="neutrino-mp-martii-github";;
-			6)	IMAGEN="neutrino-mp-tangos";;
-			*)	IMAGEN="neutrino-mp";;
+			1)	IMAGEN="Neutrino mp";;
+			3)	IMAGEN="Neutrino mp (cst-next)";;
+			4)	IMAGEN="Neutrino HD2 exp";;
+			5)	IMAGEN="Neutrino mp (Tangos)";;
+			6)	IMAGEN="Neutrino mp (martii-github)";;
+			*)	IMAGEN="Neutrino mp (next)";;
 		esac
-		NEUTRINO=$REPLY;;
-	*)	if [ "$MFWORK" == "built-in" ]; then
+		NEUTRINO=$REPLY
+		if [ -e lastChoice ]; then
+			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
+			LASTIMAGE=`grep -e "enable-tvheadend" ./lastChoice`
+			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
+				make distclean
+			fi
+		fi;;
+	Tvheadend)
+		CONFIGPARAM="$CONFIGPARAM --enable-tvheadend"
+		if [ -e lastChoice ]; then
+			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
+			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
+			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
+				make distclean
+			fi
+		fi;;
+	Enigma2)
+		if [ "$MFWORK" == "built-in" ]; then
 			echo "You selected built-in as the Media Framework."
 			echo "You cannot build Enigma2 with that."
 			echo "Exiting..."
 			exit
 		fi
-		CONFIGPARAM="$CONFIGPARAM --enable-enigma2 --enable-wlandriver"
-		IMAGEN="enigma2";;
+		CONFIGPARAM="$CONFIGPARAM --enable-enigma2"
+		if [ -e lastChoice ]; then
+			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
+			LASTIMAGE=`grep -e "enable-tvheadend" ./lastChoice`
+			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
+				make distclean
+			fi
+		fi;;
 esac
 
 ##############################################
 
-CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD $IMAGE"
+CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD"
 
 ##############################################
 
@@ -368,21 +414,24 @@ echo "Debug option             : $DEBUGR"
 echo "Selected player          : $PLAYERR"
 echo "Selected media framework : $MFWORK"
 echo "External LCD support     : $LCDR"
+echo "WLAN drivers             : $WLANDR"
 echo "Image                    : $IMAGEN"
 echo "----------------------------------------"
 echo
 # Create build executable file
 cat $CURDIR/remake > $CURDIR/build
-if [ "$IMAGEN" == "enigma2" ]; then
+if [ "$IMAGEN" == "Enigma2" ]; then
   echo "make yaud-enigma2-pli-nightly" >> $CURDIR/build
+elif [ "$IMAGEN" == "Tvheadend" ]; then
+  echo "make yaud-tvheadend" >> $CURDIR/build
 else
   case "$NEUTRINO" in
     1) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
     2) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
-    3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-mp-github-next-cst" >> $CURDIR/build;;
-    5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
-    6) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+    3) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
+    4) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
+    5) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+    6) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
     *) exit;;
   esac
 fi

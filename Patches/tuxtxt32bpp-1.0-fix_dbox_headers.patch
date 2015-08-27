@@ -42,9 +42,9 @@
  		++cnt;
  	}
  
-@@ -2926,6 +2942,9 @@
- 				case KEY_HELP:		RCCode = RC_HELP;	break;
+@@ -2943,6 +2959,9 @@
  				case KEY_MENU:		RCCode = RC_DBOX;	break;
+ 				case KEY_TEXT:
  				case KEY_EXIT:		RCCode = RC_HOME;	break;
 +#ifdef __sh__
 +				case KEY_HOME:		RCCode = RC_HOME;	break;
@@ -52,3 +52,4 @@
  				case KEY_POWER:		RCCode = RC_STANDBY;	break;
  				default:			RCCode = -1;		break;
  				}
+

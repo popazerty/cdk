@@ -127,6 +127,13 @@ start()
   for TARGET in spark spark7162; do
     if [ ${HOST} == ${TARGET} ]; then
       ${MAKEDEV} uinput
+      break
+    fi
+  done
+
+  # neutrino
+  for TARGET in spark; do
+    if [ ${HOST} == ${TARGET} ]; then
       ln -sf /dev/input/event1 input/nevis_ir
       break
     fi

@@ -2,17 +2,18 @@
 #
 # gstreamer
 #
-$(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
+$(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 $(D)/glibnetworking @DEPENDS_gstreamer@
 	@PREPARE_gstreamer@
 	cd @DIR_gstreamer@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
+			--disable-gtk-doc \
+			--disable-docbook \
 			--disable-dependency-tracking \
 			--disable-check \
 			--disable-gst-debug \
+			--disable-examples \
+			--disable-tests \
 			--disable-debug \
 			--enable-introspection=no \
 			ac_cv_func_register_printf_function=no \
@@ -28,20 +29,15 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 @DEPENDS_gstreamer@
 $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/libogg $(D)/libalsa @DEPENDS_gst_plugins_base@
 	@PREPARE_gst_plugins_base@
 	cd @DIR_gst_plugins_base@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
-			--disable-theora \
-			--disable-gnome_vfs \
-			--disable-pango \
-			--disable-x \
+			--disable-freetypetest \
+			--disable-libvisual \
+			--disable-valgrind \
+			--disable-debug \
+			--disable-tests \
 			--disable-examples \
 			--disable-debug \
-			--disable-freetypetest \
-			--enable-orc \
-			--with-audioresample-format=int \
 		&& \
 		$(MAKE) && \
 		@INSTALL_gst_plugins_base@
@@ -54,17 +50,13 @@ $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/li
 $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libflac @DEPENDS_gst_plugins_good@
 	@PREPARE_gst_plugins_good@
 	cd @DIR_gst_plugins_good@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
-			--disable-esd \
-			--disable-esdtest \
-			--disable-aalib \
-			--disable-shout2 \
+			--enable-oss \
+			--enable-gst_v4l2 \
+			--without-libv4l2 \
+			--disable-examples \
 			--disable-debug \
-			--disable-x \
 		&& \
 		$(MAKE) && \
 		@INSTALL_gst_plugins_good@
@@ -77,29 +69,66 @@ $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/
 $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmodplug @DEPENDS_gst_plugins_bad@
 	@PREPARE_gst_plugins_bad@
 	cd @DIR_gst_plugins_bad@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
-			--disable-sdl \
-			--disable-modplug \
-			--disable-mpeg2enc \
-			--disable-mplex \
-			--disable-vdpau \
+			--disable-fatal-warnings \
+			--enable-dvb \
+			--enable-shm \
+			--enable-fbdev \
+			--enable-decklink \
+			--enable-dts \
+			--enable-mpegdemux \
+			--disable-acm \
+			--disable-android_media \
 			--disable-apexsink \
-			--disable-cdaudio \
-			--disable-mpeg2enc \
+			--disable-apple_media \
+			--disable-avc \
+			--disable-chromaprint \
+			--disable-cocoa \
+			--disable-daala \
+			--disable-dc1394 \
+			--disable-direct3d \
+			--disable-directdraw \
+			--disable-directsound \
+			--disable-gme \
+			--disable-gsettings \
+			--disable-gsm \
+			--disable-kate \
+			--disable-ladspa \
+			--disable-linsys \
+			--disable-lv2 \
+			--disable-mimic \
 			--disable-mplex \
-			--disable-librfb \
-			--disable-vdpau \
-			--disable-examples \
+			--disable-musepack \
+			--disable-mythtv \
+			--disable-nas \
+			--disable-ofa \
+			--disable-openjpeg \
+			--disable-opensles \
+			--disable-pvr \
+			--disable-quicktime \
+			--disable-resindvd \
+			--disable-sdl \
 			--disable-sdltest \
-			--disable-curl \
-			--disable-rsvg \
+			--disable-sndio \
+			--disable-soundtouch \
+			--disable-spandsp \
+			--disable-spc \
+			--disable-srtp \
+			--disable-teletextdec \
+			--disable-timidity \
+			--disable-vcd \
+			--disable-vdpau \
+			--disable-voaacenc \
+			--disable-voamrwbenc \
+			--disable-wasapi \
+			--disable-wildmidi \
+			--disable-wininet \
+			--disable-winscreencap \
+			--disable-zbar \
+			--disable-examples \
 			--disable-debug \
 			--enable-orc \
-			ac_cv_openssldir=no \
 		&& \
 		$(MAKE) && \
 		@INSTALL_gst_plugins_bad@
@@ -112,13 +141,14 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmod
 $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_ugly@
 	@PREPARE_gst_plugins_ugly@
 	cd @DIR_gst_plugins_ugly@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
+			--disable-fatal-warnings \
+			--disable-amrnb \
+			--disable-amrwb \
+			--disable-sidplay \
+			--disable-twolame \
 			--disable-debug \
-			--disable-mpeg2dec \
 			--enable-orc \
 		&& \
 		$(MAKE) && \
@@ -127,23 +157,16 @@ $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPE
 	touch $@
 
 #
-# gst_ffmpeg
+# gst_libav
 #
-$(D)/gst_ffmpeg: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_ffmpeg@
-	@PREPARE_gst_ffmpeg@
-	cd @DIR_gst_ffmpeg@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+$(D)/gst_libav: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_libav@
+	@PREPARE_gst_libav@
+	cd @DIR_gst_libav@ && \
+		$(CONFIGURE) \
 			--prefix=/usr \
+			--disable-fatal-warnings \
 			\
-			--with-ffmpeg-extra-configure=" \
-			--disable-ffserver \
-			--disable-ffplay \
-			--disable-ffmpeg \
-			--disable-ffprobe \
-			--enable-postproc \
+			--with-libav-extra-configure=" \
 			--enable-gpl \
 			--enable-static \
 			--enable-pic \
@@ -175,9 +198,11 @@ $(D)/gst_ffmpeg: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gs
 			--disable-debug \
 			--disable-bsfs \
 			--enable-pthreads \
-			--enable-bzlib"
-		@INSTALL_gst_ffmpeg@
-	@CLEANUP_gst_ffmpeg@
+			--enable-bzlib" \
+		&& \
+		$(MAKE) && \
+		@INSTALL_gst_libav@
+	@CLEANUP_gst_libav@
 	touch $@
 
 #
@@ -186,10 +211,7 @@ $(D)/gst_ffmpeg: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gs
 $(D)/gst_plugins_fluendo_mpegdemux: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_fluendo_mpegdemux@
 	@PREPARE_gst_plugins_fluendo_mpegdemux@
 	cd @DIR_gst_plugins_fluendo_mpegdemux@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-check=no \
 		&& \
@@ -209,10 +231,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 		autoconf --force && \
 		autoheader --force && \
 		automake --add-missing --copy --force-missing --foreign && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
 		$(MAKE) && \
@@ -226,10 +245,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 $(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp @DEPENDS_gst_gmediarender@
 	@PREPARE_gst_gmediarender@
 	cd @DIR_gst_gmediarender@ && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-libupnp=$(targetprefix)/usr \
 		&& \
@@ -249,10 +265,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 		autoconf --force && \
 		autoheader --force && \
 		automake --add-missing --copy --force-missing --foreign && \
-		$(BUILDENV) \
-		./configure \
-			--build=$(build) \
-			--host=$(target) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
 		$(MAKE) && \

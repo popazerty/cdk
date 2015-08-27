@@ -54,32 +54,9 @@ $(archivedir)/stlinux24-host-%.noarch.rpm:
 	[ ! -f $(archivedir)/$(notdir $@) ] && \
 	(cd $(archivedir) && $(WGET) $(URL4HU)/$(notdir $@)) || true
 
-################################
-# libffi
-LIBFFI_VER=3.0.11
-
-# glib; the low-level core library that forms the basis for projects such as GTK+ and GNOME
-GLIB_MAJOR=2
-GLIB_MINOR=34
-GLIB_MICRO=3
-GLIB_VER=$(GLIB_MAJOR).$(GLIB_MINOR).$(GLIB_MICRO)
-
-################################
-
-$(archivedir)/libffi-$(LIBFFI_VER).tar.gz:
-	$(WGETN) ftp://sourceware.org/pub/libffi/libffi-$(LIBFFI_VER).tar.gz
-
-$(archivedir)/glib-$(GLIB_VER).tar.xz:
-	$(WGETN) http://ftp.gnome.org/pub/gnome/sources/glib/$(GLIB_MAJOR).$(GLIB_MINOR)/$(lastword $(subst /, ,$@))
 
 $(archivedir)/lcd4linux.svn:
 	false || mkdir -p $(archivedir) && ( \
 	svn co https://ssl.bulix.org/svn/lcd4linux/trunk $(archivedir)/lcd4linux.svn || \
-	false )
-	@touch $@
-
-$(archivedir)/xupnpd.svn:
-	false || mkdir -p $(archivedir) && ( \
-	svn co http://tsdemuxer.googlecode.com/svn/trunk/xupnpd/src $(archivedir)/xupnpd.svn || \
 	false )
 	@touch $@

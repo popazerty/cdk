@@ -36,10 +36,10 @@ LIBGCC_VER    = 4.8.2-138
 GLIBC_VER     = 2.14.1-50
 else
 # 4.8.4
-BINUTILS_VER = 2.24.51.0.3-76
-GCC_VER = 4.8.4-139
-LIBGCC_VER = 4.8.4-148
-GLIBC_VER = 2.14.1-56
+BINUTILS_VER  = 2.24.51.0.3-77
+GCC_VER       = 4.8.4-139
+LIBGCC_VER    = 4.8.4-149
+GLIBC_VER     = 2.14.1-56
 endif
 
 $(hostprefix)/bin/unpack-rpm.sh:
@@ -70,6 +70,14 @@ crosstool-rpminstall
 	fi
 	if test -e $(crossprefix)/target/usr/lib/libstdc++.so; then \
 		cp -a $(crossprefix)/target/usr/lib/libstdc++.s*[!y] $(targetprefix)/lib; \
+		cp -a $(crossprefix)/target/usr/lib/libdl.so $(targetprefix)/usr/lib; \
+		cp -a $(crossprefix)/target/usr/lib/libm.so $(targetprefix)/usr/lib; \
+		cp -a $(crossprefix)/target/usr/lib/librt.so $(targetprefix)/usr/lib; \
+		cp -a $(crossprefix)/target/usr/lib/libutil.so $(targetprefix)/usr/lib; \
+		cp -a $(crossprefix)/target/usr/lib/libpthread.so $(targetprefix)/usr/lib; \
+		cp -a $(crossprefix)/target/usr/lib/libresolv.so $(targetprefix)/usr/lib; \
+		ln -s $(crossprefix)/target/usr/lib/libc.so $(targetprefix)/usr/lib/libc.so; \
+		ln -s $(crossprefix)/target/usr/lib/libc_nonshared.a $(targetprefix)/usr/lib/libc_nonshared.a; \
 	fi
 	if test -e $(crossprefix)/target/lib; then \
 		cp -a $(crossprefix)/target/lib/*so* $(targetprefix)/lib; \
@@ -96,6 +104,7 @@ $(D)/directories:
 	ln -s ../init.d $(targetprefix)/etc/rc.d/init.d
 	$(INSTALL) -d $(targetprefix)/lib/lsb
 	$(INSTALL) -d $(targetprefix)/usr/{bin,lib,local,sbin,share}
+	$(INSTALL) -d $(targetprefix)/usr/lib/pkgconfig
 	$(INSTALL) -d $(targetprefix)/usr/include/linux
 	$(INSTALL) -d $(targetprefix)/usr/include/linux/dvb
 	$(INSTALL) -d $(targetprefix)/usr/local/{bin,sbin,share}

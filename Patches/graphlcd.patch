@@ -1131,7 +1131,14 @@ diff -Naur graphlcd-base-touchcol.git/Make.config graphlcd-base-touchcol/Make.co
  
  # comment this variable out if you want binaries to be stripped when installing (for production-level binaries or packages)
  #HAVE_STRIP = -s
-@@ -80,7 +81,7 @@
+@@ -74,13 +75,13 @@
+ #HAVE_GRAPHICSMAGICK=1
+ 
+ # comment this variable or set to 0 if you do not want to build the vncserver driver, even if requirements (libvncserver) are fullfilled on the system
+-HAVE_DRIVER_VNCSERVER=1
++#HAVE_DRIVER_VNCSERVER=1
+ 
+ ### Experimental drivers
  
  # uncomment this variable if you want to enable the experimental AX 206 based digital photo frame driver
  # Read DRIVER.ax206dpf before use!

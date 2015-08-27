@@ -1,12 +1,13 @@
 #!/bin/sh
 
 MODDIR=/lib/modules
+
 insmod $MODDIR/micom.ko paramDebug=0
 
 if [ -e /var/etc/.firstboot ]; then
-   # fp_control does not work here
-  echo "WAIT 1 min" >/dev/vfd
-  echo "WAIT 1 min"
+   #fp_control does not work here
+   echo "WAIT 1 min" >/dev/vfd
+   echo "WAIT 1 min"
    rm /var/etc/.firstboot
    touch /dev/.devfsd
 fi
@@ -21,7 +22,7 @@ insmod $MODDIR/e2_proc.ko
 
 if [ ! -e /var/etc/.firstboot ]; then
 
- echo "Starting DEBUG Interface"
+   echo "Starting DEBUG Interface"
    /etc/init.d/mountall start
    /etc/init.d/hostname start
    /etc/init.d/networking start
@@ -55,10 +56,10 @@ if [ ! -e /var/etc/.firstboot ]; then
 
    /sbin/ifconfig lo 127.0.0.1 up
 
-# echo "starting telnetd"
+#   echo "starting telnetd"
 #   /usr/sbin/telnetd -l /bin/autologin
 
- echo "init stmfb"
+   echo "init stmfb"
    insmod $MODDIR/stmcore-display-sti7105.ko
    insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:cvbs:yuv;# display1=720x576-16@50:8m:pal:cvbs;
 
@@ -79,13 +80,13 @@ if [ ! -e /var/etc/.firstboot ]; then
 #   /bin/stslave -t st231.1 -R /lib/firmware/audio.elf
    /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf
 
- echo "init embx"
+   echo "init embx"
    insmod $MODDIR/embxshell.ko
    insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
    insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
    insmod $MODDIR/mme_host.ko transport0=shm
 
- echo "init AVS"
+   echo "init AVS"
    insmod $MODDIR/avs.ko type=stv6417
    insmod $MODDIR/mmelog.ko
    insmod $MODDIR/ksound.ko
@@ -112,9 +113,6 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/silencegen.ko
    insmod $MODDIR/bpamem.ko
 
-   #showiframe -p /var/boot/bootlogo.mvi &
-   stfbcontrol a 0
-
    echo "init frontpanel"
    insmod $MODDIR/simu_button.ko
 
@@ -122,6 +120,9 @@ if [ ! -e /var/etc/.firstboot ]; then
    #period
    #delay
    /bin/evremote2 10 120 &
+
+# Module aus modules.extra laden
+   [ -f /var/etc/modules.extra ] && eval `sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/insmod \0;/' < /var/etc/modules.extra`
 
    #timefix
    date -s "200901011200"
