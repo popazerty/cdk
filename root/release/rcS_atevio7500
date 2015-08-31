@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 140727.1
+#Version 150831.1
 
 echo "Fortis HS8200"
 
@@ -10,13 +10,13 @@ insmod $MODDIR/nuvoton.ko
 insmod $MODDIR/simu_button.ko
 
 if [ -e /var/etc/.firstboot ]; then
-   echo "WAIT 1 min" >/dev/vfd
+   echo "Wait 1 min." > /dev/vfd
    echo "WAIT 1 minute"
    rm /var/etc/.firstboot
    sleep 1
    touch /dev/.devfsd
 else
-   echo "LOAD 10" >/dev/vfd
+   echo "Load 10" > /dev/vfd
    echo "Start (LOAD 10)"
 fi
 
@@ -48,25 +48,24 @@ else
 fi
 
 echo "Init stmfb (LOAD 9)"
-echo "LOAD 9" > /dev/vfd
+echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
 
-#insmod $MODDIR/stmfb.ko display0=1280x720-32@50:15m:pal:yuv:yuv;# display1=720x576-16@50:1m:pal:cvbs;
 if grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
    insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb; #SCART
 else
-   insmod $MODDIR/stmfb.ko display0=1280x720-32@50:15m:pal:rgb:rgb; #HDMI
+   insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:rgb:rgb; #HDMI
 fi
 
 echo "Loading modules"
 
-if [ ! -e /boot/audio.elf ]; then
-   echo "NO AUDIO FW!!!"
-   "FW MISSING!!!" > /dev/vfd
+if [ ! -e /boot/audio.elf ] || [ ! -e /boot/video.elf ]; then
+   echo "FIRMWARE MISSING!"
+   echo "FW MISSING!" > /dev/vfd
 fi
 
 echo "Load audio firmware (LOAD 8)"
-echo "LOAD 8" > /dev/vfd
+echo "Load 8" > /dev/vfd
 dtsdown=`cat /etc/enigma2/settings | grep systemoptions.dtsdownmix | cut -d "=" -f2`
 if [ ! $dtsdown ] && [ -e /boot/audio_dts.elf ]; then
    /bin/ustslave /dev/st231-1 /boot/audio_dts.elf > /dev/null
@@ -75,23 +74,23 @@ else
 fi
 
 echo "Load video firmware (LOAD 7)"
-echo "LOAD 7" > /dev/vfd
+echo "Load 7" > /dev/vfd
 /bin/ustslave /dev/st231-0 /boot/video.elf > /dev/null
 
 echo "Init embx (LOAD 6)"
-echo "LOAD 6" > /dev/vfd
+echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
-insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
-insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
+insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0
+insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
-echo "LOAD 5" > /dev/vfd
+echo "Load 5" > /dev/vfd
 insmod $MODDIR/avs.ko type=stv6418
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
 echo "Init player $player (LOAD 4)"
-echo "LOAD 4" > /dev/vfd
+echo "Load 4" > /dev/vfd
 
 insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
@@ -109,7 +108,6 @@ insmod $MODDIR/avl2108.ko
 
 insmod $MODDIR/starci.ko
 
-if [ $player -gt 131 ]; then
 #   insmod $MODDIR/pti.ko waitMS=20 videoMem=4096
 #   if [ $?=='2' ]; then
 #      # Simple pti
@@ -118,11 +116,6 @@ if [ $player -gt 131 ]; then
    insmod $MODDIR/stm_monitor.ko
    insmod $MODDIR/stmsysfs.ko
    insmod $MODDIR/stmdvb.ko
-else
-   insmod $MODDIR/pti.ko
-   insmod $MODDIR/stmdvb.ko
-   insmod $MODDIR/stm_monitor.ko
-fi
 
 echo "Init player2 (LOAD 3)"
 echo "LOAD 3" > /dev/vfd
@@ -144,26 +137,11 @@ showiframe -p /boot/bootlogo.mvi &
 stfbcontrol a 0
 
 echo "Init lircd (LOAD 2)"
-echo "LOAD 2" > /dev/vfd
+echo "Load 2" > /dev/vfd
 mknod /dev/rc c 147 1 
-
 /bin/evremote2 10 140 &
 
 stfbcontrol a 255
-
-# Why is this done twice?
-#/etc/init.d/mountall start
-#/etc/init.d/hostname start
-#echo -n "Starting telnetd "
-#autologin=`cat /etc/enigma2/settings | grep systemoptions.autologin | cut -d "=" -f2`
-#if [ ! $autologin ]; then
-#   /usr/sbin/telnetd -l /bin/autologin
-#   echo "with autologin"
-#else
-#  /usr/sbin/telnetd -l /bin/login
-#  echo "with normal login"
-#fi
-#end twice
 
 wlan=`cat /etc/enigma2/settings | grep systemoptions.wlan | cut -d "=" -f2`
 if [ ! $wlan ] || [ ! -e $MODDIR/$wlan.ko ]; then
@@ -183,8 +161,8 @@ if [ -e $MODDIR/cifs.ko ]; then
    insmod $MODDIR/cifs.ko
 fi
 
-echo "Init ftp (LOAD 1)"
-echo "LOAD 1" > /dev/vfd
+echo "Init FTP (LOAD 1)"
+echo "Load 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
 
@@ -195,9 +173,9 @@ else
    if [ -e /etc/network/interfaces ]; then
       ip addr flush eth0
       /etc/init.d/networking stop
-      DHCP=`grep -c dhcp /etc/network/interfaces`
+      DHCP=`grep -c 'iface eth0 inet dhcp' /etc/network/interfaces`
       if [ "$DHCP" -eq "1" ]; then
-         echo "Starting DHCP"
+         echo "Starting DHCP on eth0"
          /etc/init.d/udhcpc start
       fi
       /etc/init.d/networking start
@@ -246,13 +224,12 @@ if [ -e /etc/ownscript.sh ]; then
 fi
 
 #timefix e2
-date -s "201406011200"
+date -s "201509011200"
 # Try and synchronise time
 inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
 if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
-#   (/sbin/ntpdate pl.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
-   (/sbin/ntpdate nl.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
+   (/sbin/ntpdate de.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
 else
    if [ -e /usr/sbin/time.sh ]; then
       echo "Use transponder time"
@@ -260,8 +237,9 @@ else
    fi
 fi
 
-echo "Start OpenPLi" > /dev/vfd
-echo "Start OpenPLi"
+echo "Start Enigma2" > /dev/vfd
+echo "Start Enigma2"
+
 until false
 do
    echo "Entering e2 main loop"
@@ -296,7 +274,7 @@ do
          echo -n " ";;
       *) echo "*"
          echo "ERROR"
-         echo "ERROR" > /dev/vfd
+         echo "Error" > /dev/vfd
          init 6;;
    esac
 done

@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 150817.1
+#Version 150831.1
 
 echo "Spark 7162 Tvheadend"
 
@@ -16,7 +16,7 @@ if [ -e /var/etc/.firstboot ]; then
    touch /dev/.devfsd
 else
    echo "Load 10" > /dev/vfd
-   echo "LOAD 10"
+   echo "Start (LOAD 10)"
 fi
 
 /etc/init.d/mountvirtfs start
@@ -55,7 +55,7 @@ echo "Starting DEBUG Interface"
 echo "Init stmfb (LOAD 9)"
 echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
-insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:rgb:rgb; #HDMI
+insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:yuv:yuv
 
 echo "Loading modules"
 
@@ -131,10 +131,6 @@ echo "Init smartcard cardreader (LOAD 2)"
 echo "Load 2" > /dev/vfd
 #mkdir -p /var/run/lirc
 #/usr/bin/lircd -u
-
-#major=$(awk "\$2==\"sparkid\" {print \$1}" /proc/devices)
-#rm -f /dev/sparkid
-#mknod /dev/sparkid c $major 0
 
 stfbcontrol a 255
 
@@ -220,7 +216,7 @@ do
    rtv=$?
    echo "Tvheadend ended <- RTV: " $rtv
    case "$rtv" in
-      0) echo "1"
+      0) echo "0"
          echo "SHUTDOWN"
          echo "Shutdown" > /dev/vfd
          init 0;;
