@@ -17,7 +17,6 @@ if [ -e /var/etc/.firstboot ]; then
 else
    echo "Load 10" > /dev/vfd
    echo "Start (LOAD 10)"
-fi
 
 /etc/init.d/mountvirtfs start
 /etc/init.d/portmap start

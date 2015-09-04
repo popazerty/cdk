@@ -171,12 +171,12 @@ case $2 in
 esac
 
 case "$REPLY" in
-	1)  KERNEL="--enable-p0209";KERNELP="P0209";;
-	2)  KERNEL="--enable-p0211";KERNELP="P0211";;
-	3)  KERNEL="--enable-p0214";KERNELP="P0214";;
-	4)  KERNEL="--enable-p0215";KERNELP="P0215";;
-#	5)  KERNEL="--enable-p0217";KERNELP="P0217";;
-	*)  KERNEL="--enable-p0217";KERNELP="P0217";;
+	1)  KERNEL="--enable-p0209";;
+	2)  KERNEL="--enable-p0211";;
+	3)  KERNEL="--enable-p0214";;
+	4)  KERNEL="--enable-p0215";;
+	5)  KERNEL="--enable-p0217";;
+	*)  KERNEL="--enable-p0217";;
 esac
 CONFIGPARAM="$CONFIGPARAM $KERNEL"
 

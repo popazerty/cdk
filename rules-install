@@ -70,6 +70,7 @@ libogg;rewrite-pkgconfig:ogg.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARG
 libsamplerate;make:install:prefix=/usr:DESTDIR=TARGET
 libvorbis;rewrite-pkgconfig:vorbis.pc:vorbisenc.pc:vorbisfile.pc;make:install:prefix=/usr:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libvorbis.la:TARGET/usr/lib/libvorbisenc.la:TARGET/usr/lib/libvorbisfile.la
 libvorbisidec;make:install:DESTDIR=TARGET;install:-m644:vorbisidec.pc:TARGET/usr/lib/pkgconfig;rewrite-pkgconfig:TARGET/usr/lib/pkgconfig/vorbisidec.pc;rewrite-libtool:TARGET/usr/lib/libvorbisidec.la
+libdca;rewrite-pkgconfig:libdca/libdca.pc:libdca/libdts.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libdca.la
 
 #
 # contrib libs

@@ -80,6 +80,7 @@ libogg;1.3.2;libogg-1.3.2;libogg-1.3.2.tar.gz;extract:libogg-1.3.2.tar.gz;patch:
 libsamplerate;0.1.8;libsamplerate-0.1.8;libsamplerate-0.1.8.tar.gz;extract:libsamplerate-0.1.8.tar.gz
 libvorbis;1.3.4;libvorbis-1.3.4;libvorbis-1.3.4.tar.gz;extract:libvorbis-1.3.4.tar.gz;patch:libvorbis-1.3.4-nodoc.patch
 libvorbisidec;1.0.2+svn18153;libvorbisidec-1.0.2+svn18153;libvorbisidec_1.0.2+svn18153.orig.tar.gz:tremor.patch;extract:libvorbisidec_1.0.2+svn18153.orig.tar.gz;patch:tremor.patch
+libdca;0.0.5;libdca-0.0.5;libdca-0.0.5.tar.bz2;extract:libdca-0.0.5.tar.bz2
 
 #
 # contrib libs
@@ -175,7 +176,7 @@ libplist;1.10;libplist-1.10;libplist-1.10.tar.gz;extract:libplist-1.10.tar.gz
 # PYTHON
 #
 host_python;2.7.9;host-python-2.7.9;Python-2.7.9.tar.xz;extract:Python-2.7.9.tar.xz;move:Python-2.7.9:host-python-2.7.9;patch:python_2.7.9-xcompile.patch;patch:python_2.7.9-revert_use_of_sysconfigdata.patch;patch:python_2.7.9.patch;patch:python_2.7.9-pgettext.patch
-python;2.7.9;python-2.7.9;Python-2.7.9.tar.xz;extract:Python-2.7.9.tar.xz;move:Python-2.7.9:python-2.7.9;patch:python_2.7.9-xcompile.patch;patch:python_2.7.9-revert_use_of_sysconfigdata.patch;patch:python_2.7.9.patch;patch:python_2.7.9-pgettext.patch;patch:python_2.7.9-disable-certificate-verification.patch
+python;2.7.9;python-2.7.9;Python-2.7.9.tar.xz;extract:Python-2.7.9.tar.xz;move:Python-2.7.9:python-2.7.9;patch:python_2.7.9-xcompile.patch;patch:python_2.7.9-revert_use_of_sysconfigdata.patch;patch:python_2.7.9.patch;patch:python_2.7.9-pgettext.patch
 python_gdata;2.0.18;gdata-2.0.18;gdata-2.0.18.tar.gz;extract:gdata-2.0.18.tar.gz
 python_elementtree;1.2.6-20050316;elementtree-1.2.6-20050316;elementtree-1.2.6-20050316.tar.gz;extract:elementtree-1.2.6-20050316.tar.gz
 python_lxml;2.2.8;lxml-2.2.8;lxml-2.2.8.tgz;extract:lxml-2.2.8.tgz
@@ -203,13 +204,13 @@ python_cryptography;0.8.1;cryptography-0.8.1;cryptography-0.8.1.tar.gz;extract:c
 orc;0.4.24;orc-0.4.24;orc-0.4.24.tar.xz;extract:orc-0.4.24.tar.xz
 gst_gmediarender;0.0.6;gmediarender-0.0.6;gmediarender-0.0.6.tar.bz2;extract:gmediarender-0.0.6.tar.bz2;patch:gst-gmediarender-0.0.6.patch
 #gst_plugins_dvbmediasink;0.10.1;gst-plugins-dvbmediasink-0.10.1;;link:../apps/libs/gst-plugins-dvbmediasink-0.10.1:gst-plugins-dvbmediasink-0.10.1
-gst_plugins_dvbmediasink;1.0;gst-plugins-dvbmediasink-1.0;;link:../apps/libs/gst-plugins-dvbmediasink-1.0:gst-plugins-dvbmediasink-1.0
-gstreamer;1.5.2;gstreamer-1.5.2;gstreamer-1.5.2.tar.xz;extract:gstreamer-1.5.2.tar.xz
-gst_plugins_base;1.5.2;gst-plugins-base-1.5.2;gst-plugins-base-1.5.2.tar.xz;extract:gst-plugins-base-1.5.2.tar.xz
-gst_plugins_good;1.5.2;gst-plugins-good-1.5.2;gst-plugins-good-1.5.2.tar.xz;extract:gst-plugins-good-1.5.2.tar.xz
-gst_plugins_bad;1.5.2;gst-plugins-bad-1.5.2;gst-plugins-bad-1.5.2.tar.xz;extract:gst-plugins-bad-1.5.2.tar.xz
+gst_plugins_dvbmediasink;1.0;gst-plugins-dvbmediasink-1.0;gst-plugins-dvbmediasink.git;extract:gst-plugins-dvbmediasink.git;patch:gst-1.0-plugins-dvbmediasink-sh4.patch
+gstreamer;1.5.2;gstreamer-1.5.2;gstreamer-1.5.2.tar.xz;extract:gstreamer-1.5.2.tar.xz;patch:gstreamer-1.0-fix-crash-with-gst-inspect.patch;patch:gstreamer-1.0-revert-baseparse-fix-GST_BASE_PARSE_FLAG_LOST_SYNC.patch
+gst_plugins_base;1.5.2;gst-plugins-base-1.5.2;gst-plugins-base-1.5.2.tar.xz;extract:gst-plugins-base-1.5.2.tar.xz;patch:gst-1.0-plugins-base-get-caps-from-src-pad-when-query-caps.patch;patch:gst-1.0-plugins-base-riff-media-added-fourcc-to-all-mpeg4-video-caps.patch;patch:gst-1.0-plugins-base-subparse-avoid-false-negatives-dealing-with-UTF-8.patch;patch:gst-1.0-plugins-base-taglist-not-send-to-down-stream-if-all-the-frame-cor.patch
+gst_plugins_good;1.5.2;gst-plugins-good-1.5.2;gst-plugins-good-1.5.2.tar.xz;extract:gst-plugins-good-1.5.2.tar.xz;patch:gst-1.0-plugins-good-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch
+gst_plugins_bad;1.5.2;gst-plugins-bad-1.5.2;gst-plugins-bad-1.5.2.tar.xz;extract:gst-plugins-bad-1.5.2.tar.xz;patch:gst-1.0-plugins-bad-configure-allow-to-disable-libssh2.patch;patch:gst-1.0-plugins-bad-dvbapi5-fix-old-kernel.patch;patch:gst-1.0-plugins-bad-rtmp-fix-seeking-and-potential-segfault.patch
 gst_plugins_ugly;1.5.2;gst-plugins-ugly-1.5.2;gst-plugins-ugly-1.5.2.tar.xz;extract:gst-plugins-ugly-1.5.2.tar.xz
-gst_libav;1.5.2;gst-libav-1.5.2;gst-libav-1.5.2.tar.xz;extract:gst-libav-1.5.2.tar.xz
+gst_libav;1.5.2;gst-libav-1.5.2;gst-libav-1.5.2.tar.xz;extract:gst-libav-1.5.2.tar.xz;patch:gst-1.0-libav-disable-yasm-for-libav-when-disable-yasm.patch;patch:gst-1.0-libav-fix-sh4-compile-gcc48.patch
 gst_plugins_fluendo_mpegdemux;0.10.71;gst-fluendo-mpegdemux-0.10.71;gst-fluendo-mpegdemux-0.10.71.tar.gz;extract:gst-fluendo-mpegdemux-0.10.71.tar.gz;patch:gst-plugins-fluendo-mpegdemux-0.10.71.patch
 gst_plugin_subsink;1.0;gst-plugin-subsink-1.0;gst-plugin-subsink.git;extract:gst-plugin-subsink.git
 

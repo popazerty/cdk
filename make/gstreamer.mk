@@ -257,8 +257,10 @@ $(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp
 #
 # gst_plugins_dvbmediasink
 #
-$(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink @DEPENDS_gst_plugins_dvbmediasink@
+$(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink $(D)/libdca @DEPENDS_gst_plugins_dvbmediasink@
 	@PREPARE_gst_plugins_dvbmediasink@
+	[ -d "$(archivedir)/gst-plugins-dvbmediasink.git.git" ] && \
+	(cd $(archivedir)/gst-plugins-dvbmediasink.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_gst_plugins_dvbmediasink@ && \
 		aclocal --force -I m4 && \
 		libtoolize --copy --force && \
@@ -267,6 +269,13 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 		automake --add-missing --copy --force-missing --foreign && \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--with-wma \
+			--with-wmv \
+			--with-pcm \
+			--with-eac3 \
+			--with-dtsdownmix \
+			--with-mpeg4v2 \
+			--with-gstversion=1.0 \
 		&& \
 		$(MAKE) && \
 		@INSTALL_gst_plugins_dvbmediasink@

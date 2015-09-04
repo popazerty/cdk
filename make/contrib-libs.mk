@@ -565,6 +565,20 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg @DEPENDS_libvorbisidec@
 	touch $@
 
 #
+# libdca
+#
+$(D)/libdca: $(D)/bootstrap @DEPENDS_libdca@
+	@PREPARE_libdca@
+	cd @DIR_libdca@ && \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		&& \
+		$(MAKE) all && \
+		@INSTALL_libdca@
+	@CLEANUP_libdca@
+	touch $@
+
+#
 # libffi
 #
 $(D)/libffi: $(D)/bootstrap @DEPENDS_libffi@

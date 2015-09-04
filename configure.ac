@@ -845,6 +845,7 @@ TUXBOX_RULES_MAKE(libogg)
 TUXBOX_RULES_MAKE(libsamplerate)
 TUXBOX_RULES_MAKE(libvorbis)
 TUXBOX_RULES_MAKE(libvorbisidec)
+TUXBOX_RULES_MAKE(libdca)
 
 #
 # contrib libs
@@ -1081,9 +1082,7 @@ summary:
 ----------------------------------------
 Ccache support              : $enable_ccache
 Target CPU/boxtype          : $CPU_MODEL / $BOXTYPE
-Linux kernel                : ${KERNELVERSION%.*}
 Kernelversion               : $KERNELVERSION
-Localversion                : $KERNELSTMLABEL
 Patchlevel                  : P0$KERNELLABEL
 DEBUG                       : $enable_debug
 Boot prefix                 : $bootprefix
