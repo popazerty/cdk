@@ -62,7 +62,7 @@ UFS913_PATCHES_24 = $(COMMONPATCHES_24) \
 
 OCTAGON1008_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-octagon1008_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-octagon1008_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-octagon1008_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-usbwait123_stm24.patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch
@@ -76,14 +76,14 @@ ATEVIO7500_PATCHES_24 = $(COMMONPATCHES_24) \
 HS7110_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7110_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7110_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-hs7110_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
 HS7810A_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7810a_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7810a_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-hs7810a_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
@@ -159,7 +159,7 @@ SPARK7162_PATCHES_24 = $(COMMONPATCHES_24) \
 
 FORTIS_HDBOX_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-fortis_hdbox_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-fortis_hdbox_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-fortis_hdbox_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-usbwait123_stm24.patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \

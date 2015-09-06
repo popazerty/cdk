@@ -102,7 +102,7 @@
    extern int dvb_bouquets_parse;
  
 + /* for writing to VFD */
-+  const char *txtstr;
++//  char txtstr;
 +  int file_vfd = -1;
 +  struct vfd_ioctl_data vfddata;
 +
@@ -129,24 +129,25 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1069,6 +1075,24 @@
+@@ -1069,6 +1075,25 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  
 +/* Sign on to VFD */
-+	txtstr = "Tvheadend";
++	char txtstr[] = "Tvheadend";
++
 +	vfddata.start = 0;
 +	vfddata.length = strlen(txtstr);
-+	memcpy (vfddata.data, txtstr, vfddata.length);
++	memset(vfddata.data, 0, 64);
++	memcpy(vfddata.data, txtstr, vfddata.length);
 +
 +	if (file_vfd == -1)
 +	{
-+		file_vfd = open(VFD_DEVICE, O_RDWR);
++		file_vfd = open(VFD_DEVICE, O_WRONLY);
 +	}
 +	if (file_vfd > -1)
 +	{
-+		ioctl(file_vfd, VFDDISPLAYCHARS, vfddata.data);
-+		ioctl(file_vfd, I_FLUSH, FLUSHRW);
++		write(file_vfd, vfddata.data, vfddata.length);
 +		close(file_vfd);
 +		file_vfd = -1;
 +	}
