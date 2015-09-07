@@ -1,7 +1,7 @@
 #!/bin/sh
-#Version 150831.1
+#Version 150907.1
 
-echo "Fortis HS8200"
+echo "Fortis HS8200 Enigma2"
 
 MODDIR=/lib/modules
 
@@ -52,9 +52,9 @@ echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
 
 if grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
-   insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb; #SCART
+   insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb #SCART
 else
-   insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:rgb:rgb; #HDMI
+   insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:rgb:rgb #HDMI
 fi
 
 echo "Loading modules"
@@ -108,17 +108,14 @@ insmod $MODDIR/avl2108.ko
 
 insmod $MODDIR/starci.ko
 
-#   insmod $MODDIR/pti.ko waitMS=20 videoMem=4096
-#   if [ $?=='2' ]; then
-#      # Simple pti
-      insmod $MODDIR/pti.ko
-#   fi
-   insmod $MODDIR/stm_monitor.ko
-   insmod $MODDIR/stmsysfs.ko
-   insmod $MODDIR/stmdvb.ko
+echo "Simple pti"
+insmod $MODDIR/pti.ko
+insmod $MODDIR/stm_monitor.ko
+insmod $MODDIR/stmsysfs.ko
+insmod $MODDIR/stmdvb.ko
 
 echo "Init player2 (LOAD 3)"
-echo "LOAD 3" > /dev/vfd
+echo "Load 3" > /dev/vfd
 insmod $MODDIR/player2.ko
 insmod $MODDIR/sth264pp.ko
 insmod $MODDIR/stmalloc.ko
@@ -133,7 +130,9 @@ fi
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
-showiframe -p /boot/bootlogo.mvi &
+if [ -e /boot/bootlogo.mvi ]; then
+   showiframe -p /boot/bootlogo.mvi &
+fi
 stfbcontrol a 0
 
 echo "Init lircd (LOAD 2)"
@@ -226,8 +225,9 @@ fi
 #timefix e2
 date -s "201509011200"
 # Try and synchronise time
-inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
-if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
+#inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
+# if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
+if [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
    (/sbin/ntpdate de.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
 else
@@ -237,8 +237,8 @@ else
    fi
 fi
 
-echo "Start Enigma2" > /dev/vfd
 echo "Start Enigma2"
+echo "Start Enigma2" > /dev/vfd
 
 until false
 do
@@ -257,13 +257,16 @@ do
       1) echo "1"
          echo "SHUTDOWN"
          echo "Shutdown" > /dev/vfd
+         if [ -e /usr/local/share/enigma2/shutdown.mvi ]; then
+            showiframe -p /usr/local/share/enigma2/shutdown.mvi &
+         fi
          init 0;;
       2) echo "2"
          echo "REBOOT"
          echo "Reboot" > /dev/vfd
          init 6;;
       3) echo "3"
-         echo "RESTART GUI"
+         echo "E2 RESTART"
          echo "Restart GUI" > /dev/vfd
          echo "0" > /proc/progress
          if [ -e /usr/local/share/enigma2/backdrop.mvi ]; then

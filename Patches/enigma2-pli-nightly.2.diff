@@ -10177,16 +10177,16 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp enig
  
  /*	if (double_buffer)
  	{
-@ -253,7 +260,7 @@
+@@ -253,7 +264,7 @@
  				if (!i)
- 					eDebug("failed to load %s! (%m)", rfilename.c_str());
+ 					eDebug("[MAIN] failed to load %s: %m", rfilename.c_str());
  				else
--					eDebug("found %d spinner!\n", i);
-+					eDebug("found %d spinners.\n", i);
+-					eDebug("[MAIN] found %d spinner!\n", i);
++					eDebug("[MAIN] found %d spinners.\n", i);
  				break;
  			}
  		}
-@@ -216,9 +227,9 @@
+@@ -258,9 +269,9 @@
  			}
  		}
  		if (i)
