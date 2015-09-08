@@ -30,8 +30,12 @@ fi
 insmod $MODDIR/e2_proc.ko
 #insmod $MODDIR/sata.ko
 
-## Start automounter with umount timeout of 5 seconds
-#/etc/init.d/autofs start
+# Start automounter with umount timeout of 5 seconds
+insmod $MODDIR/autofs4.ko
+if [ -e /etc/init.d/automount ]; then
+   /usr/sbin/automount --ghost --timeout=5 /tmp/autofs file /etc/auto.usb
+fi
+
 
 echo "Starting DEBUG Interface"
 /etc/init.d/mountall start
@@ -49,8 +53,8 @@ insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:yuv:yuv
 echo "Loading modules"
 
 if [ ! -e /lib/firmware/audio.elf ] || [ ! -e /lib/firmware/video.elf ]; then
-   echo "FIRMWARE MISSING!"
-   echo "FW MISSING!" > /dev/vfd
+  echo "FIRMWARE MISSING!"
+  echo "FW MISSING!" > /dev/vfd
 fi
 
 echo "Load audio firmware (LOAD 8)"
@@ -92,8 +96,12 @@ insmod $MODDIR/frontend_platform.ko
 insmod $MODDIR/socket.ko
 insmod $MODDIR/lnbh221.ko
 insmod $MODDIR/lnb_pio.ko
+# DVB-S
 insmod $MODDIR/avl2108.ko
+# DVB-C
 #insmod $MODDIR/tda10024.ko
+# DVB-T
+#insmod $MODDIR/cxd2820.ko
 
 insmod $MODDIR/starci.ko
 
@@ -140,13 +148,6 @@ stfbcontrol a 255
 ##   echo "$wlan WLAN" > /dev/vfd
 ##   sleep 3
 #fi
-
-# Start automounter with umount timeout of 5 seconds
-mkdir -p /tmp/autofs
-insmod $MODDIR/autofs4.ko
-if [ -e /etc/init.d/automount ]; then
-   /usr/sbin/automount --ghost --timeout=5 /tmp/autofs file /etc/auto.usb
-fi
 
 if [ -e $MODDIR/ntfs.ko ]; then
    insmod $MODDIR/ntfs.ko

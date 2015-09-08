@@ -103,8 +103,12 @@ insmod $MODDIR/frontend_platform.ko
 insmod $MODDIR/socket.ko
 insmod $MODDIR/lnbh221.ko
 insmod $MODDIR/lnb_pio.ko
+# DVB-S
 insmod $MODDIR/avl2108.ko
+# DVB-C
 #insmod $MODDIR/tda10024.ko
+# DVB-T
+#insmod $MODDIR/cxd2820.ko
 
 insmod $MODDIR/starci.ko
 
@@ -135,7 +139,7 @@ if [ -e /boot/bootlogo.mvi ]; then
 fi
 stfbcontrol a 0
 
-echo "Init lircd (LOAD 2)"
+echo "Init rc (LOAD 2)"
 echo "Load 2" > /dev/vfd
 mknod /dev/rc c 147 1 
 /bin/evremote2 10 140 &
