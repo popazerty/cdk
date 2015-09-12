@@ -171,12 +171,18 @@ case $2 in
 esac
 
 case "$REPLY" in
-	1)  KERNEL="--enable-p0209";;
-	2)  KERNEL="--enable-p0211";;
-	3)  KERNEL="--enable-p0214";;
-	4)  KERNEL="--enable-p0215";;
-	5)  KERNEL="--enable-p0217";;
-	*)  KERNEL="--enable-p0217";;
+	1)  KERNEL="--enable-p0209"
+            KERNELP="2.6.32.46_stm24_209";;
+	2)  KERNEL="--enable-p0211"
+            KERNELP="2.6.32.59_stm24_211";;
+	3)  KERNEL="--enable-p0214"
+            KERNELP="2.6.32.61_stm24_214";;
+	4)  KERNEL="--enable-p0215"
+            KERNELP="2.6.32.61_stm24_215";;
+#	5)  KERNEL="--enable-p0217"
+#            KERNELP="2.6.32.61_stm24_217";;
+	*)  KERNEL="--enable-p0217"
+            KERNELP="2.6.32.61_stm24_217";;
 esac
 CONFIGPARAM="$CONFIGPARAM $KERNEL"
 
@@ -409,7 +415,7 @@ echo "----------------------------------------"
 echo "Your build environment is ready :-)"
 echo
 echo "Selected receiver        : $RECEIVER"
-echo "Selected kernel          : stm24 $KERNELP"
+echo "Selected kernel          : $KERNELP"
 echo "Debug option             : $DEBUGR"
 echo "Selected player          : $PLAYERR"
 echo "Selected media framework : $MFWORK"
