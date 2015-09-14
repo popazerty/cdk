@@ -664,6 +664,8 @@ release_enigma2_tf7700: release_enigma2_common_utils
 	cp -f $(buildprefix)/root/release/fstab_tf7700 $(prefix)/release/etc/fstab
 	cp -f $(targetprefix)/sbin/shutdown $(prefix)/release/sbin/
 	rm -f $(prefix)/release/bin/vdstandby
+	cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/rc.png; \
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_tf7700.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
 
 #
@@ -792,6 +794,7 @@ release_enigma2_base:
 	cp $(targetprefix)/boot/audio.elf $(prefix)/release/boot/audio.elf && \
 	cp -dp $(targetprefix)/etc/fstab $(prefix)/release/etc/ && \
 	cp -dp $(buildprefix)/root/etc/group $(prefix)/release/etc/ && \
+	cp -dp $(buildprefix)/root/etc/issue $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/host.conf $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hostname $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hosts $(prefix)/release/etc/ && \
@@ -1139,6 +1142,11 @@ endif
 		if [ ! ENABLE_HS7110 && ! ENABLE_HS7119  && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
 			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
 			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
+		fi
+
+		if [ ! ENABLE_TF7700 && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/*; \
+			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700; \
 		fi
 
 #

@@ -220,7 +220,7 @@
 		<key id="KEY_BACK" mapto="prevSubservice" flags="m" />
 		<key id="KEY_FORWARD" mapto="nextSubservice" flags="m" />
 		<key id="KEY_EXIT" mapto="exit" flags="m" /> 
-		<key id="KEY_HOME" mapto="exit" flags="m" />                 
+		<key id="KEY_HOME" mapto="exit" flags="m" />
 	</map>
 
 	<map context="GlobalActions">
@@ -290,7 +290,7 @@
 
 	<map context="InfobarTimeshiftActions">
 		<key id="KEY_T" mapto="timeshiftStart" flags="m" /> <!-- Tms key -->
-		<key id="KEY_PAUSE" mapto="timeshiftStart" flags="m" /> 
+		<key id="KEY_PAUSE" mapto="timeshiftStart" flags="m" />
 		<key id="KEY_STOP" mapto="timeshiftStop" flags="m" />
 	</map>
 
