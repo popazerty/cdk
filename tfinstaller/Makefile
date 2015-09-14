@@ -3,13 +3,62 @@ BASE_DIR=..
 TFINSTALLER_DIR=.
 all:	
 	cp $(KERNEL_DIR)/arch/sh/boot/uImage.gz $(TFINSTALLER_DIR)/uImage.gz.org
+	if [ -e $(KERNEL_DIR)/arch/sh/boot/uImage ]; then \
+		rm $(KERNEL_DIR)/arch/sh/boot/uImage; \
+	fi
 	cp $(TFINSTALLER_DIR)/initramfs_list $(KERNEL_DIR)/initramfs_list
 	cp $(KERNEL_DIR)/.config $(TFINSTALLER_DIR)/.config.org
-	sed -i 's/CONFIG_INITRAMFS_SOURCE=""/CONFIG_INITRAMFS_SOURCE="initramfs_list"/g' $(KERNEL_DIR)/.config && \
-		echo "CONFIG_INITRAMFS_ROOT_UID=0" >> $(KERNEL_DIR)/.config && \
-		echo "CONFIG_INITRAMFS_ROOT_GID=0" >> $(KERNEL_DIR)/.config && \
-		echo "# CONFIG_INITRAMFS_COMPRESSION_NONE is not set" >> $(KERNEL_DIR)/.config && \
-		echo "CONFIG_INITRAMFS_COMPRESSION_GZIP=y" >> $(KERNEL_DIR)/.config
+	sed -i 's/# CONFIG_INITRAMFS_SOURCE is not set/CONFIG_INITRAMFS_SOURCE="initramfs_list"/g' $(KERNEL_DIR)/.config
+	sed -i 's/CONFIG_INITRAMFS_SOURCE=""/CONFIG_INITRAMFS_SOURCE="initramfs_list"/g' $(KERNEL_DIR)/.config
+	if [ `grep -x -c "CONFIG_INITRAMFS_ROOT_UID=0" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "CONFIG_INITRAMFS_ROOT_UID=0" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_INITRAMFS_ROOT_GID=0" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "CONFIG_INITRAMFS_ROOT_GID=0" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "# CONFIG_RD_GZIP is not set" $(KERNEL_DIR)/.config` == 1 ]; then \
+		sed -i 's/# CONFIG_RD_GZIP is not set/CONFIG_RD_GZIP=y/g' $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_RD_GZIP=y" $(KERNEL_DIR)/config` == 0 ]; then \
+		echo "CONFIG_RD_GZIP=y" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_RD_BZIP2=y" $(KERNEL_DIR)/.config` == 1 ]; then \
+		sed -i 's/CONFIG_RD_BZIP2=y/# CONFIG_RD_BZIP2 is not set=y/g' $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "# CONFIG_RD_BZIP2 is not set" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "# CONFIG_RD_BZIP2 is not set" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_RD_LZMA=y" $(KERNEL_DIR)/.config` == 1 ]; then \
+		sed -i 's/CONFIG_RD_LZMA=y/# CONFIG_RD_LZMA is not set/g' $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "# CONFIG_RD_LZMA is not set" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "# CONFIG_RD_LZMA is not set" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_INITRAMFS_COMPRESSION_NONE=y" $(KERNEL_DIR)/.config` == 1 ]; then \
+		sed -i 's/CONFIG_INITRAMFS_COMPRESSION_NONE=y/# CONFIG_INITRAMFS_COMPRESSION_NONE is not set/g' $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "# CONFIG_INITRAMFS_COMPRESSION_NONE is not set" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "# CONFIG_INITRAMFS_COMPRESSION_NONE is not set" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "# CONFIG_INITRAMFS_COMPRESSION_GZIP is not set" $(KERNEL_DIR)/.config` == 1 ]; then \
+		sed -i 's/# CONFIG_INITRAMFS_COMPRESSION_GZIP is not set/CONFIG_INITRAMFS_COMPRESSION_GZIP=y/g' $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_INITRAMFS_COMPRESSION_GZIP=y" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "CONFIG_INITRAMFS_COMPRESSION_GZIP=y" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_INITRAMFS_COMPRESSION_BZIP2=y" $(KERNEL_DIR)/.config` == 1 ]; then \
+		sed -i 's/CONFIG_INITRAMFS_COMPRESSION_BZIP2=y/# CONFIG_INITRAMFS_COMPRESSION_BZIP2 is not set/g' $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "# CONFIG_INITRAMFS_COMPRESSION_BZIP2 is not set" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "# CONFIG_INITRAMFS_COMPRESSION_GZIP is not set" >> $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "CONFIG_INITRAMFS_COMPRESSION_LZMA=y" $(KERNEL_DIR)/.config` == 1 ]; then \
+		sed -i 's/CONFIG_INITRAMFS_COMPRESSION_LZMA=y/# CONFIG_INITRAMFS_COMPRESSION_LZMA is not set/g' $(KERNEL_DIR)/.config; \
+	fi
+	if [ `grep -x -c "# CONFIG_INITRAMFS_COMPRESSION_LZMA is not set" $(KERNEL_DIR)/.config` == 0 ]; then \
+		echo "# CONFIG_INITRAMFS_COMPRESSION_LZMA is not set" >> $(KERNEL_DIR)/.config; \
+	fi
+#	cp $(KERNEL_DIR)/.config $(TFINSTALLER_DIR)/.config.tf
 	@export PATH=$(hostprefix)/bin:$(PATH) && \
 	$(MAKE) -C $(BASE_DIR) tfkernel.do_compile
 	rm $(KERNEL_DIR)/initramfs_list
@@ -29,6 +78,8 @@ clean:
 	rm -f uImage
 	rm -f u-boot.ftfd
 	rm -f tfpacker
+#	rm -f config.tf
+#	rm -f config.tf2
 
 .c.o:
 	gcc -c $< -Wall

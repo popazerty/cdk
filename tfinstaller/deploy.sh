@@ -1,19 +1,22 @@
 #!/bin/sh
 
-echo "-------------------------------------"
+echo "--------------------------------------------------------------------"
 echo "deploy.sh"
-echo "V0.10: Try several times to mount USB sticks if mount fails"
-echo "V0.09: Log installation to boot medium removed again because it caused problems"
+echo "V0.11: Non-jfs RECORD partion was always formatted in ext2,"
+echo "       even with useext2e2=0"
+echo "V0.10: Try to mount USB stick several times if mount fails"
+echo "V0.09: Log installation to boot medium removed again because"
+echo "       it caused problems"
 echo "V0.08: Log installation to boot medium"
-echo "V0.07: Do not install E2 if disk is not partitioned
-             and parameter partition is set to 0"
+echo "V0.07: Do not install E2 if disk is not partitioned"
+echo "       and parameter partition is set to 0"
 echo "V0.06: Added EXT2 option for E2 and MINI partitions"
 echo "V0.05: Added JFS option for RECORD partition"
 echo "V0.04: Changed ini File format"
 echo "V0.03: Suppress meaningless tar errors during save settings"
 echo "V0.02: Format Mini partitions with Ext3 instead of Ext2"
 echo "V0.01: New parameter CREATEMINI and cleanup of KEEPSETTINGS"
-echo "-------------------------------------"
+echo "--------------------------------------------------------------------"
 
 # default installation device
 HDD=/dev/sda
@@ -21,13 +24,14 @@ HDD=/dev/sda
 # Check if the correct MTD setup has been used
 if [ -z "`cat /proc/mtd | grep mtd3 | grep 'TF Kernel'`" ]
 then
-        echo 'ERR MTD' > /dev/fplarge
-        echo 'ERR MTD'
-        exit 1
+  echo 'ERR MTD' > /dev/fplarge
+  echo 'ERR MTD'
+  exit 1
 fi
 
 
 # Give the system a chance to recognize the USB stick
+echo
 echo "Mounting USB stick"
 echo '   9'     > /dev/fpsmall
 echo 'USB STCK' > /dev/fplarge
@@ -79,8 +83,8 @@ if [ -f /instsrc/topfield.tfd ]; then
   reboot
   exit
 fi
-mkdir /instdest
 
+mkdir /instdest
 
 export startingLine1=`grep -m 1 -n "\[settings\]" /instsrc/Enigma_Installer.ini | awk -F: '{ print $1 }' 2>/dev/null`
 export startingLine2=`grep -m 1 -n "\[ownsettings\]" /instsrc/Enigma_Installer.ini | awk -F: '{ print $1 }' 2>/dev/null`
@@ -114,22 +118,24 @@ eval `sed -e 's/[[:space:]]*\=[[:space:]]*/=/g' \
    < /instsrc/Enigma_Installer.ini \
     | sed -n -e "/^\[parameter\]/,/^\s*\[/{/^[^;].*\=.*/p;}"`
 
-
 echo "-------------------------------------"
-echo "partition:" "$partition"
-echo "createmini:" "$createmini"
-echo "keepsettings:" "$keepsettings"
-echo "keepbootargs:" "$keepbootargs"
-
-echo "usejfs:" "$usejfs"
-echo "useext2e2:" "$useext2e2"
-
-echo "usbhdd:" "$usbhdd"
-echo "format:" "$format"
-echo "update:" "$update"
+echo "Using the following settings:"
+echo 
+echo "partition    :" "$partition"
+echo "createmini   :" "$createmini"
+echo "keepsettings :" "$keepsettings"
+echo "keepbootargs :" "$keepbootargs"
+echo
+echo "usejfs       :" "$usejfs"
+echo "useext2e2    :" "$useext2e2"
+echo
+echo "usbhdd       :" "$usbhdd"
+echo "format       :" "$format"
+echo "update       :" "$update"
 echo "-------------------------------------"
 
 # Undocumented feature for testing: abort shell script
+#CONSOLE=666
 if [ "$CONSOLE" = "666" ]; then
   echo "CONSOLE" > /dev/fplarge
   echo "Entering console mode"
@@ -146,6 +152,7 @@ DATAFS=$HDD"3"
 
 # If the keyword 'keepsettings' has been specified, save some config files to the disk
 if [ "$keepsettings" = "1" ]; then
+  echo
   echo Saving settings
   echo "SAVE" > /dev/fpsmall
   echo "SETTINGS" > /dev/fplarge
@@ -173,6 +180,7 @@ fi
 
 if [ "$usbhdd" = "1" ]; then
   # the following is only executed when usbhdd is selected
+  echo
   echo "Preparing installation to USB HDD"
   mkdir /instsrc1
   if [ -d /initsrc/settings ]; then
@@ -181,8 +189,8 @@ if [ "$usbhdd" = "1" ]; then
   cp /instsrc/rootfs.tar.gz /instsrc1
   if [ $? != 0 ]; then
     echo "error copying files to RAM disk"
-    echo 'FAIL'     > /dev/fpsmall
-    echo 'RAMDISK'  > /dev/fplarge
+    echo "FAIL" > /dev/fpsmall
+    echo "RAMDISK" > /dev/fplarge
     exit
   fi
 
@@ -192,8 +200,8 @@ if [ "$usbhdd" = "1" ]; then
   mv /instsrc1 /instsrc
 
   echo "waiting for USB stick to be detached"
-  echo 'STCK'     > /dev/fpsmall
-  echo ' DETACH'  > /dev/fplarge
+  echo "STCK" > /dev/fpsmall
+  echo " DETACH" > /dev/fplarge
 
   while (true) do
     if [ "`grep sdb /proc/diskstats`" == "" ]; then
@@ -203,8 +211,8 @@ if [ "$usbhdd" = "1" ]; then
   done
 
   echo "USB detached"
-  echo ' HDD'     > /dev/fpsmall
-  echo ' ATTACH'  > /dev/fplarge
+  echo " HDD" > /dev/fpsmall
+  echo " ATTACH" > /dev/fplarge
 
   while (true) do
     if [ "`grep sdb /proc/diskstats`" != "" ]; then
@@ -213,14 +221,16 @@ if [ "$usbhdd" = "1" ]; then
     sleep 1
   done
 
-  echo "USB attached"
+  echo "USB HDD attached"
 fi
+
 
 # Skip formatting if the keyword 'format' is not specified in the control file
 if [ $format != "1" ]; then
-  echo Checking hdd
-  echo '   8'     > /dev/fpsmall
-  echo 'HDD CHK'  > /dev/fplarge
+  echo
+  echo "Checking HDD"
+  echo "   8" > /dev/fpsmall
+  echo "HDD CHK" > /dev/fplarge
 
   fsck.ext3 -y $ROOTFS
   if [ "$usejfs" = "1" ]; then
@@ -230,35 +240,37 @@ if [ $format != "1" ]; then
   fi
 else
   if [ "$partition" = "1" ]; then
+    echo
     echo "Partitioning HDD"
-    echo '   8'     > /dev/fpsmall
-    echo 'HDD PART' > /dev/fplarge
-    dd if=/dev/zero of=$HDD bs=512 count=64
+    echo "   8" > /dev/fpsmall
+    echo "HDD PART" > /dev/fplarge
+    dd if=/dev/zero of=$HDD bs=512 count=64 2> /dev/null
     sfdisk --re-read $HDD
     if [ "$createmini" != "1" ]; then
       # Erase the disk and create 3 partitions
       #  1:   2GB Linux
-      #  2: 512MB Swap
+      #  2: 256MB Swap
       #  3: remaining space LINUX
-      sfdisk $HDD -uM << EOF
-,2048,L
+      sfdisk $HDD -uM -L << EOF
+,2048,L,*
 ,256,S
 ,,L
 ;
 EOF
     else
       export set recsize=$((`sfdisk -s $HDD`/1024-2048-256-1024-1024-1024-1024))
+      echo "Recording partition size is $recsize MB"
       # Erase the disk and create 8 partitions
       #  1:   2GB Linux
-      #  2: 512MB Swap
+      #  2: 256MB Swap
       #  3: remaining space LINUX
       #  4: Extended Partition
       #  5: 1GB  LINUX
       #  6: 1GB  LINUX
       #  7: 1GB  LINUX
       #  8: 1GB  LINUX
-      sfdisk $HDD -uM << EOF
-,2048,L
+      sfdisk $HDD -uM -L << EOF
+,2048,L,*
 ,256,S
 ,$recsize,L
 ,,E
@@ -269,24 +281,26 @@ EOF
 EOF
     fi
   else
-    echo Skipping partitioning of the disk
+    echo
+    echo "Skipping partitioning of the disk"
     # Check if the RECORD Partition is there already. If not cancel the installation
     fpart=`fdisk -l "$HDD" | grep -c "$HDD"3`
     if [ $fpart = 0 ]; then
-      echo ' ERR' > /dev/fpsmall
-      echo 'REC PART'  > /dev/fplarge
-      echo Error. Disk not partitioned yet. Installation canceled.
+      echo " ERR" > /dev/fpsmall
+      echo "REC PART" > /dev/fplarge
+      echo "Error. Disk not partitioned yet. Installation canceled."
       halt
     else
-      echo OK, Disk already partitioned.
+      echo "OK, Disk already partitioned."
     fi
   fi
 
   # Format both Linux partitions
-  echo "Formatting HDD"
-  echo '   7'     > /dev/fpsmall
-  echo 'HDD FMT'  > /dev/fplarge
-  ln -s /proc/mounts /etc/mtab
+  echo
+  echo "Formatting HDD (rootfs)"
+  echo "   7" > /dev/fpsmall
+  echo "HDD FMT" > /dev/fplarge
+  #ln -s /proc/mounts /etc/mtab
   
   fs="ext3"
   if [ "$useext2e2" = "1" ]; then
@@ -297,7 +311,7 @@ EOF
 
   if [ "$partition" = "1" ]; then
     if [ "$createmini" = "1" ]; then
-      echo 'MINI'     > /dev/fpsmall
+      echo "MINI" > /dev/fpsmall
       mknod $HDD"5" b 8 5
       mknod $HDD"6" b 8 6
       mknod $HDD"7" b 8 7
@@ -307,29 +321,35 @@ EOF
       mkfs.$fs -L MINI3 $HDD"7"
       mkfs.$fs -L MINI4 $HDD"8"
     fi
-    echo '   6'     > /dev/fpsmall
+    echo
+    echo "Formatting HDD (record)"
+    echo "   6" > /dev/fpsmall
     if [ "$usejfs" = "1" ]; then
-      echo 'HDD FMT JFS'  > /dev/fplarge
+      echo "HDD FMT JFS"  > /dev/fplarge
       mkfs.jfs -q -L RECORD $DATAFS
     else
-      mkfs.ext2 -L RECORD $DATAFS
+      echo "HDD FMT EXT"  > /dev/fplarge
+      mkfs.$fs -F -L RECORD $DATAFS
     fi
   fi
 
   # Initialise the swap partition
-  echo '   5'     > /dev/fpsmall
-  echo 'HDD SWAP' > /dev/fplarge
+  echo
+  echo "Formatting HDD (swap)"
+  echo "   5" > /dev/fpsmall
+  echo "HDD SWAP" > /dev/fplarge
   mkswap $SWAPFS
   echo "SWAPPART" > /deploy/swaplabel
-  dd if=/deploy/swaplabel of="$SWAPFS" seek=1052 bs=1 count=8
+  dd if=/deploy/swaplabel of="$SWAPFS" seek=1052 bs=1 count=8 2> /dev/null
 fi
 
 
 # Skip rootfs installation if the keyword 'update' is not specified in the control file
 if [ "$update" = "1" ]; then
-  echo "Installing root file system"
-  echo '   4'     > /dev/fpsmall
-  echo 'ROOT FS'  > /dev/fplarge
+  echo
+  echo -n "Installing root file system: "
+  echo "   4" > /dev/fpsmall
+  echo "ROOT FS" > /dev/fplarge
   mount $ROOTFS /instdest
   cd /instdest
   gunzip -c /instsrc/rootfs.tar.gz | tar -x
@@ -343,14 +363,16 @@ if [ "$update" = "1" ]; then
   cd ..
   sync
   umount /instdest
+  echo "done"
 else
-  echo Skipping root file system
+  echo "Skipping root file system"
 fi
 
 
 # Restore the settings
 if [ "$keepsettings" = "1" ]; then
-  echo Restoring settings
+  echo
+  echo -n "Restoring settings: "
   echo "RSTR" > /dev/fpsmall
   echo "SETTINGS" > /dev/fplarge
   mount $ROOTFS /instdest
@@ -360,7 +382,9 @@ if [ "$keepsettings" = "1" ]; then
   sync
   sleep 3
   umount /instdest
+  echo "done"
 fi
+
 
 # Make sure that the data partition contains subdirectories
 mkdir -p /mnt
@@ -371,46 +395,55 @@ mkdir -p /mnt/picture
 sync
 umount /mnt
 
+
 # Write U-Boot settings into the flash
-echo "Flashing U-Boot settings"
-echo '   3'     > /dev/fpsmall
-echo 'LOADER'   > /dev/fplarge
-dd if=/deploy/u-boot.mtd1 of=/dev/mtdblock1  
+echo
+echo -n "Flashing U-Boot settings: "
+echo "   3" > /dev/fpsmall
+echo "LOADER" > /dev/fplarge
+dd if=/deploy/u-boot.mtd1 of=/dev/mtdblock1 2> /dev/null
 if [ $? -ne 0 ]; then  
   echo "FAIL" > /dev/fpsmall  
   exit  
 fi 
+echo "done"
+
 
 # Skip Flash MTD2 if keyword 'nomtd2' is specified in the control file
 if [ "$keepbootargs" != "1" ]; then
-	if [ "$usbhdd" = "1" ]; then
-		dd if=/deploy/U-Boot_Settings_usb.mtd2 of=/dev/mtdblock2
-	else
-		dd if=/deploy/U-Boot_Settings_hdd.mtd2 of=/dev/mtdblock2
-	fi
-	if [ $? -ne 0 ]; then
-		echo "FAIL" > /dev/fpsmall
-		exit
-	fi
+  if [ "$usbhdd" = "1" ]; then
+    dd if=/deploy/U-Boot_Settings_usb.mtd2 of=/dev/mtdblock2 2> /dev/null
+  else
+    dd if=/deploy/U-Boot_Settings_hdd.mtd2 of=/dev/mtdblock2 2> /dev/null
+  fi
+  if [ $? -ne 0 ]; then
+    echo "FAIL" > /dev/fpsmall
+    exit
+  fi
 else
   echo "Skipped flashing mtdblock2 on user request."
 fi
 
+
 # write the kernel to flash
-echo "Flashing kernel"
-echo '   2'     > /dev/fpsmall
-echo 'KERNEL'   > /dev/fplarge
+echo
+echo -n "Flashing kernel: "
+echo "   2" > /dev/fpsmall
+echo "KERNEL" > /dev/fplarge
 mount $ROOTFS /instdest
-dd if=/instdest/boot/uImage of=/dev/mtdblock3
+dd if=/instdest/boot/uImage of=/dev/mtdblock3 2> /dev/null
 if [ $? -ne 0 ]; then
   echo "FAIL" > /dev/fpsmall
   exit
 fi
+echo "done"
 
 
 # unmount and check the file system
-echo '   1'     > /dev/fpsmall
-echo 'FSCK'     > /dev/fplarge
+echo
+echo "Checking HDD rootfs"
+echo "   1" > /dev/fpsmall
+echo "FSCK" > /dev/fplarge
 umount /instdest
 rmdir /instdest
 fsck.ext3 -f -y $ROOTFS
@@ -424,7 +457,7 @@ fi
 
 
 # Reboot
-echo '   0'     > /dev/fpsmall
-echo 'REBOOT'   > /dev/fplarge
+echo "   0" > /dev/fpsmall
+echo "REBOOT" > /dev/fplarge
 sleep 2
-reboot
+reboot -f

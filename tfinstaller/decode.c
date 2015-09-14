@@ -24,23 +24,32 @@ void decode(uint count, uchar buffer[])
 	uint r, c;
 
 	r = 0;
-	while (--j >= 0) {
+	while (--j >= 0)
+	{
 		buffer[r] = buffer[i];
 		i = (i + 1) & (DICSIZ - 1);
 		if (++r == count) return;
 	}
-	for ( ; ; ) {
+	for ( ; ; )
+	{
 		c = decode_c();
-		if (c <= UCHAR_MAX) {
+		if (c <= UCHAR_MAX)
+		{
 			buffer[r] = c;
 			if (++r == count) return;
-		} else {
+		}
+		else
+		{
 			j = c - (UCHAR_MAX + 1 - THRESHOLD);
 			i = (r - decode_p() - 1) & (DICSIZ - 1);
-			while (--j >= 0) {
+			while (--j >= 0)
+			{
 				buffer[r] = buffer[i];
 				i = (i + 1) & (DICSIZ - 1);
-				if (++r == count) return;
+				if (++r == count)
+				{
+					return;
+				}
 			}
 		}
 	}

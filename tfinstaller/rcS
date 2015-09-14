@@ -4,7 +4,8 @@
 /bin/stty -F /dev/ttyAS0 speed 115200
 /bin/stty -F /dev/ttyAS0
 
-busybox --install
+#busybox --install
+#busybox
 insmod /drvko/e2_proc.ko
 insmod /drvko/tffp.ko
 

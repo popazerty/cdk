@@ -1,5 +1,5 @@
 /***********************************************************
-	encode.c -- sliding dictionary with percolating update
+    encode.c -- sliding dictionary with percolating update
 ***********************************************************/
 #include "ar.h"
 #include <stdlib.h>
@@ -19,8 +19,7 @@ ulong compsize, origsize;  /* global */
 
 
 static uchar *text, *childcount;
-static node pos, matchpos, avail,
-	*position, *parent, *prev, *next = NULL;
+static node pos, matchpos, avail, *position, *parent, *prev, *next = NULL;
 static int remainder, matchlen;
 
 #if MAXMATCH <= (UCHAR_MAX + 1)
@@ -31,36 +30,55 @@ static int remainder, matchlen;
 
 static void allocate_memory(void)
 {
-	if (next != NULL) return;
-    text = malloc(DICSIZ * 2 + MAXMATCH);
+	if (next != NULL)
+	{
+		return;
+	}
+	text = malloc(DICSIZ * 2 + MAXMATCH);
 	level      = malloc((DICSIZ + UCHAR_MAX + 1) * sizeof(*level));
 	childcount = malloc((DICSIZ + UCHAR_MAX + 1) * sizeof(*childcount));
-	#if PERCOLATE
-	  position = malloc((DICSIZ + UCHAR_MAX + 1) * sizeof(*position));
-	#else
-	  position = malloc(DICSIZ * sizeof(*position));
-	#endif
+#if PERCOLATE
+	position   = malloc((DICSIZ + UCHAR_MAX + 1) * sizeof(*position));
+#else
+	position   = malloc(DICSIZ * sizeof(*position));
+#endif
 	parent     = malloc(DICSIZ * 2 * sizeof(*parent));
 	prev       = malloc(DICSIZ * 2 * sizeof(*prev));
 	next       = malloc((MAX_HASH_VAL + 1) * sizeof(*next));
-	if (next == NULL) error("Out of memory.");
+	if (next == NULL)
+	{
+		error("Out of memory.");
+	}
 }
 
 static void init_slide(void)
 {
 	node i;
 
-	for (i = DICSIZ; i <= DICSIZ + UCHAR_MAX; i++) {
+	for (i = DICSIZ; i <= DICSIZ + UCHAR_MAX; i++)
+	{
 		level[i] = 1;
-		#if PERCOLATE
-			position[i] = NIL;  /* sentinel */
-		#endif
+#if PERCOLATE
+		position[i] = NIL;  /* sentinel */
+#endif
 	}
-	for (i = DICSIZ; i < DICSIZ * 2; i++) parent[i] = NIL;
+
+	for (i = DICSIZ; i < DICSIZ * 2; i++)
+	{
+		parent[i] = NIL;
+	}
 	avail = 1;
-	for (i = 1; i < DICSIZ - 1; i++) next[i] = i + 1;
+
+	for (i = 1; i < DICSIZ - 1; i++)
+	{
+		next[i] = i + 1;
+	}
 	next[DICSIZ - 1] = NIL;
-	for (i = DICSIZ * 2; i <= MAX_HASH_VAL; i++) next[i] = NIL;
+
+	for (i = DICSIZ * 2; i <= MAX_HASH_VAL; i++)
+	{
+		next[i] = NIL;
+	}
 }
 
 #define HASH(p, c) ((p) + ((c) << (DICBIT - 9)) + DICSIZ * 2)
@@ -72,7 +90,10 @@ static node child(node q, uchar c)
 
 	r = next[HASH(q, c)];
 	parent[NIL] = q;  /* sentinel */
-	while (parent[r] != q) r = next[r];
+	while (parent[r] != q)
+	{
+		r = next[r];
+	}
 	return r;
 }
 
@@ -91,9 +112,15 @@ void split(node old)
 {
 	node new, t;
 
-	new = avail;  avail = next[new];  childcount[new] = 0;
-	t = prev[old];  prev[new] = t;  next[t] = new;
-	t = next[old];  next[new] = t;  prev[t] = new;
+	new = avail;
+	avail = next[new];
+	childcount[new] = 0;
+	t = prev[old];
+	prev[new] = t;
+	next[t] = new;
+	t = next[old];
+	next[new] = t;
+	prev[t] = new;
 	parent[new] = parent[old];
 	level[new] = matchlen;
 	position[new] = pos;
@@ -106,51 +133,85 @@ static void insert_node(void)
 	node q, r, j, t;
 	uchar c, *t1, *t2;
 
-	if (matchlen >= 4) {
+	if (matchlen >= 4)
+	{
 		matchlen--;
 		r = (matchpos + 1) | DICSIZ;
-		while ((q = parent[r]) == NIL) r = next[r];
-		while (level[q] >= matchlen) {
+		while ((q = parent[r]) == NIL)
+		{
+			r = next[r];
+		}
+		while (level[q] >= matchlen)
+		{
 			r = q;  q = parent[q];
 		}
-		#if PERCOLATE
-			t = q;
-			while (position[t] < 0) {
-				position[t] = pos;  t = parent[t];
-			}
-			if (t < DICSIZ) position[t] = pos | PERC_FLAG;
-		#else
-			t = q;
-			while (t < DICSIZ) {
-				position[t] = pos;  t = parent[t];
-			}
-		#endif
-	} else {
+	#if PERCOLATE
+		t = q;
+		while (position[t] < 0)
+		{
+			position[t] = pos;
+			t = parent[t];
+		}
+		if (t < DICSIZ)
+		{
+			position[t] = pos | PERC_FLAG;
+		}
+	#else
+		t = q;
+		while (t < DICSIZ)
+		{
+			position[t] = pos;
+			t = parent[t];
+		}
+	#endif
+	}
+	else
+	{
 		q = text[pos] + DICSIZ;  c = text[pos + 1];
-		if ((r = child(q, c)) == NIL) {
+		if ((r = child(q, c)) == NIL)
+		{
 			makechild(q, c, pos);  matchlen = 1;
 			return;
 		}
 		matchlen = 2;
 	}
-	for ( ; ; ) {
-		if (r >= DICSIZ) {
+	for ( ; ; )
+	{
+		if (r >= DICSIZ)
+		{
 			j = MAXMATCH;  matchpos = r;
-		} else {
+		}
+		else
+		{
 			j = level[r];
 			matchpos = position[r] & ~PERC_FLAG;
 		}
-		if (matchpos >= pos) matchpos -= DICSIZ;
+		if (matchpos >= pos)
+		{
+			matchpos -= DICSIZ;
+		}
 		t1 = &text[pos + matchlen];  t2 = &text[matchpos + matchlen];
-		while (matchlen < j) {
-			if (*t1 != *t2) {  split(r);  return;  }
+
+		while (matchlen < j)
+		{
+			if (*t1 != *t2)
+			{
+				split(r);
+				return;
+			}
 			matchlen++;  t1++;  t2++;
 		}
-		if (matchlen >= MAXMATCH) break;
+
+		if (matchlen >= MAXMATCH)
+		{
+			break;
+		}
 		position[r] = pos;
 		q = r;
-		if ((r = child(q, *t1)) == NIL) {
-			makechild(q, *t1, pos);  return;
+		if ((r = child(q, *t1)) == NIL)
+		{
+			makechild(q, *t1, pos);
+			return;
 		}
 		matchlen++;
 	}
@@ -162,36 +223,61 @@ static void insert_node(void)
 
 static void delete_node(void)
 {
-	#if PERCOLATE
-		node q, r, s, t, u;
-	#else
-		node r, s, t, u;
-	#endif
+#if PERCOLATE
+	node q, r, s, t, u;
+#else
+	node r, s, t, u;
+#endif
 
-	if (parent[pos] == NIL) return;
+	if (parent[pos] == NIL)
+	{
+		return;
+	}
 	r = prev[pos];  s = next[pos];
 	next[r] = s;  prev[s] = r;
 	r = parent[pos];  parent[pos] = NIL;
-	if (r >= DICSIZ || --childcount[r] > 1) return;
-	#if PERCOLATE
-		t = position[r] & ~PERC_FLAG;
-	#else
-		t = position[r];
-	#endif
-	if (t >= pos) t -= DICSIZ;
-	#if PERCOLATE
-		s = t;  q = parent[r];
-		while ((u = position[q]) & PERC_FLAG) {
-			u &= ~PERC_FLAG;  if (u >= pos) u -= DICSIZ;
-			if (u > s) s = u;
-			position[q] = (s | DICSIZ);  q = parent[q];
+
+	if (r >= DICSIZ || --childcount[r] > 1)
+	{
+		return;
+	}
+#if PERCOLATE
+	t = position[r] & ~PERC_FLAG;
+#else
+	t = position[r];
+#endif
+	if (t >= pos)
+	{
+		t -= DICSIZ;
+	}
+#if PERCOLATE
+	s = t;  q = parent[r];
+	while ((u = position[q]) & PERC_FLAG)
+	{
+		u &= ~PERC_FLAG;
+		if (u >= pos)
+		{
+			u -= DICSIZ;
 		}
-		if (q < DICSIZ) {
-			if (u >= pos) u -= DICSIZ;
-			if (u > s) s = u;
-			position[q] = s | DICSIZ | PERC_FLAG;
+		if (u > s)
+		{
+			s = u;
 		}
-	#endif
+		position[q] = (s | DICSIZ);  q = parent[q];
+	}
+	if (q < DICSIZ)
+	{
+		if (u >= pos)
+		{
+			u -= DICSIZ;
+		}
+		if (u > s)
+		{
+			s = u;
+		}
+		position[q] = s | DICSIZ | PERC_FLAG;
+	}
+#endif
 	s = child(r, text[t + level[r]]);
 	t = prev[s];  u = next[s];
 	next[t] = u;  prev[u] = t;
@@ -208,22 +294,23 @@ static void get_next_match(void)
 	int n;
 	int tmpSize = DICSIZ;
 
-	if(origsize >= MAX_BLOCK_SIZE)
+	if (origsize >= MAX_BLOCK_SIZE)
 	{
 		tmpSize = 0;
 		//printf("0\n");
 	}
-	else if((origsize + tmpSize) > MAX_BLOCK_SIZE)
+	else if ((origsize + tmpSize) > MAX_BLOCK_SIZE)
 	{
 		//printf("tmp = %d, orig = %d\n", tmpSize, origsize);
 		tmpSize = MAX_BLOCK_SIZE - origsize;
 	}
 
 	remainder--;
-	if (++pos == DICSIZ * 2) {
+	if (++pos == DICSIZ * 2)
+	{
 		memmove(&text[0], &text[DICSIZ], DICSIZ + MAXMATCH);
 		n = fread_crc(&text[DICSIZ + MAXMATCH], tmpSize, infile);
-		if(n < tmpSize)
+		if (n < tmpSize)
 		{
 			endOfFile = 1;
 			//printf("EOF\n");
@@ -232,7 +319,6 @@ static void get_next_match(void)
 	}
 	delete_node();  insert_node();
 }
-
 
 // the original function has been updated to encode blocks with size
 // of up to 0x7ffa.
@@ -245,7 +331,7 @@ void processFile(int tfd, ulong loadAddr, ulong entryAddr, int fileSize)
 	ushort header[5];
 	ushort blockCount = 0;
 
-	if(tfd)
+	if (tfd)
 	{
 		// prepare TFD file header
 		header[0] = htons(8);
@@ -259,9 +345,9 @@ void processFile(int tfd, ulong loadAddr, ulong entryAddr, int fileSize)
 	// prepare binary header with offsets
 	setBinaryHeader(loadAddr, entryAddr, fileSize);
 
-	while(!endOfFile)
+	while (!endOfFile)
 	{
-		if(readInput(infile) < 1)
+		if (readInput(infile) < 1)
 		{
 			break;
 		}
@@ -269,33 +355,49 @@ void processFile(int tfd, ulong loadAddr, ulong entryAddr, int fileSize)
 		init_slide(); 
 		huf_encode_start();
 		remainder = fread_crc(&text[DICSIZ], DICSIZ + MAXMATCH, infile);
-		if(remainder < 1)
+		if (remainder < 1)
 		{	
 			break;
 		}
 		matchlen = 0;
 		pos = DICSIZ;  insert_node();
-		if (matchlen > remainder) matchlen = remainder;
-		while (remainder > 0 && ! unpackable) {
+		if (matchlen > remainder)
+		{
+			matchlen = remainder;
+		}
+		while (remainder > 0 && ! unpackable)
+		{
 			lastmatchlen = matchlen;  lastmatchpos = matchpos;
 			get_next_match();
-			if (matchlen > remainder) matchlen = remainder;
+			if (matchlen > remainder)
+			{
+				matchlen = remainder;
+			}
 			if (matchlen > lastmatchlen || lastmatchlen < THRESHOLD)
+			{
 				output(text[pos - 1], 0);
-			else {
+			}
+			else
+			{
 				output(lastmatchlen + (UCHAR_MAX + 1 - THRESHOLD),
 					   (pos - lastmatchpos - 2) & (DICSIZ - 1));
-				while (--lastmatchlen > 0) get_next_match();
-				if (matchlen > remainder) matchlen = remainder;
+				while (--lastmatchlen > 0)
+				{
+					get_next_match();
+				}
+				if (matchlen > remainder)
+				{
+					matchlen = remainder;
+				}
 			}
 		}
 		huf_encode_end();
-		if(unpackable)
+		if (unpackable)
 		{
 			copyInput();
 		}
 
-		if(writeOutput(outfile, tfd)  < 1)
+		if (writeOutput(outfile, tfd)  < 1)
 		{
 			printf("No output data written\n");
 			break;
@@ -306,7 +408,7 @@ void processFile(int tfd, ulong loadAddr, ulong entryAddr, int fileSize)
 
 	putc('\n', stderr);
 
-	if(tfd)
+	if (tfd)
 	{
 		// update TFD file header with block count and CRC
 		fseek(outfile, 0, SEEK_SET);
@@ -345,19 +447,27 @@ int main(int argc, char *argv[])
 	{
 		switch (opt)
 		{
-		 case 'l':
-		    loadAddr = strtod(optarg, NULL);
-		    break;
-		 case 'e':
-		    entryAddr = strtod(optarg, NULL);
-		    break;
-		 case 't':
-		    tfd = 1;
-		    break;
-		 default:
-			printf("Unrecognized option -%c\n", optopt);
+			case 'l':
+			{
+				loadAddr = strtod(optarg, NULL);
+				break;
+			}
+			case 'e':
+			{
+				entryAddr = strtod(optarg, NULL);
+				break;
+			}
+			case 't':
+			{
+				tfd = 1;
+				break;
+			}
+			default:
+			{
+				printf("Unrecognized option -%c\n", optopt);
 			printUsage(argv[0]);
 			return -1;
+			}
 		}
 	}
 
@@ -371,24 +481,24 @@ int main(int argc, char *argv[])
 	pInFileName = argv[optind];
 	pOutFileName = argv[optind + 1];
 
-	if(loadAddr == 0)
+	if (loadAddr == 0)
 	{
 		loadAddr = 0x84601000;
 	}
-	if(entryAddr == 0)
+	if (entryAddr == 0)
 	{
 		entryAddr = loadAddr;
 	}
 
-	printf("Load address: 0x%08x\n", loadAddr);
-	printf("Entry address: 0x%08x\n", entryAddr);
+	printf("Load address : 0x%08x\n", (unsigned int)loadAddr);
+	printf("Entry address: 0x%08x\n", (unsigned int)entryAddr);
 
-        if((infile = fopen(pInFileName, "rb")) == NULL)
+        if ((infile = fopen(pInFileName, "rb")) == NULL)
         {
                 printf("Cannot open input file %s\n", pInFileName);
                 return -1;
         }
-        if((outfile = fopen(pOutFileName, "wb")) == NULL)
+        if ((outfile = fopen(pOutFileName, "wb")) == NULL)
         {
                 printf("Cannot open output file %s\n", pOutFileName);
                 return -1;
