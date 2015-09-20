@@ -197,7 +197,7 @@
 		<!--key id="KEY_YELLOW" mapto="audioSelection" flags="m" /-->
 		<key id="KEY_RED" mapto="audioSelection" flags="m" />
 	</map>
-	
+
 	<map context="InfobarAudioSelectionActions">
 		<!--key id="KEY_YELLOW" mapto="audioSelection" flags="m" /-->
 		<key id="KEY_RED" mapto="audioSelection" flags="l" />
@@ -480,7 +480,7 @@
 	<map context="HelpActions">
 		<key id="KEY_F1" mapto="displayHelp" flags="m" />
 	</map>
-	
+
 	<map context="ShortcutActions">
 		<key id="KEY_F1" mapto="red" flags="mr" />
 		<key id="KEY_F2" mapto="yellow" flags="mr" />
@@ -548,7 +548,13 @@
 		<key id="KEY_PAUSE" mapto="pause" flags="m" />
 		<key id="KEY_PLAY" mapto="play" flags="m" />
 		<key id="KEY_STOP" mapto="stop" flags="b" />
+		<key id="KEY_LEFT" mapto="previous" flags="m" />
+		<key id="KEY_RIGHT" mapto="next" flags="m" />
+		
 		<key id="KEY_MENU" mapto="menu" flags="m" />
+
+		<key id="KEY_2" mapto="skipListbegin" flags="m" />
+		<key id="KEY_8" mapto="skipListend" flags="m" />
 		<key id="KEY_PAGEUP" mapto="nextBouquet" flags="m" />
 		<key id="KEY_PAGEDOWN" mapto="prevBouquet" flags="m" />
 		<key id="KEY_FIND" mapto="subtitles" flags="m" />

@@ -1,7 +1,7 @@
 #!/bin/sh
-#Version 150814.1
+#Version 150815.1
 
-echo "Topfield TF77X0 Enigma2"
+echo "Topfield TF77X0HDPVR Enigma2"
 
 MODDIR=/lib/modules
 
@@ -32,12 +32,6 @@ else
    echo "LOAD 10"
 fi
 
-/etc/init.d/mountvirtfs start
-/etc/init.d/portmap start
-
-
-/etc/init.d/autofs start
-
 # remove /dev/ttyAS1 to avoid interference with the FP driver
 if [ -e /dev/ttyAS1 ]; then
    rm -f /dev/ttyAS1
@@ -45,6 +39,11 @@ fi
 
 # Update the GMT offset in case it changed during the standby
 /bin/tffpctl --setgmtoffset
+
+/etc/init.d/mountvirtfs start
+/etc/init.d/portmap start
+
+#/etc/init.d/autofs start
 
 echo -n "Starting telnetd "
 autologin=`cat /etc/enigma2/settings | grep systemoptions.autologin | cut -d "=" -f2`
@@ -56,13 +55,14 @@ else
    echo "with normal login"
 fi
 
+echo "Loading modules"
+
 echo "LOAD" > /dev/fplarge
 echo "   9" > /dev/fpsmall
-echo "init stmfb"
+echo "Init stmfb (LOAD 9)"
 insmod $MODDIR/stmcore-display-stx7109c3.ko
 insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:yuv:yuv
 
-echo "Loading modules"
 if [ ! -e /boot/audio.elf ] || [ ! -e /boot/video.elf ]; then
    echo "FIRMWARE MISSING!"
    echo "  FW" > /dev/fpsmall
@@ -120,7 +120,7 @@ else
    insmod $MODDIR/stm_monitor.ko
 fi
 
-echo "LOAD 3"
+echo "Init eplayer2 (LOAD 3)"
 echo "   3" > /dev/fpsmall
 insmod $MODDIR/player2.ko
 insmod $MODDIR/sth264pp.ko
@@ -140,8 +140,10 @@ stfbcontrol a 0
 #fsck.ext3 /dev/sda3 -a
 #fsck.jfs /dev/sda3 -a
 
+echo "Init remote control (LOAD 2)"
 echo "   2" > /dev/fpsmall
 insmod $MODDIR/boxtype.ko
+insmod $MODDIR/tfswich.ko
 /bin/evremote2 110 10 &
 
 stfbcontrol a 255
@@ -168,7 +170,7 @@ if [ -e $MODDIR/cifs.ko ]; then
    insmod $MODDIR/cifs.ko
 fi
 
-echo "Init FTP (LOAD 1)"
+echo "Init FTP & network (LOAD 1)"
 echo "   1" > /dev/fpsmall
 /etc/init.d/vsftpd start
 /usr/sbin/inetd

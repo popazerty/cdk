@@ -251,7 +251,7 @@
 	<map context="InfobarExtendedAudioSelectionActions">
 		<key id="KEY_YELLOW" mapto="audioSelection" flags="m" />
 	</map>
-	
+
 	<map context="InfobarAudioSelectionActions">
 		<key id="KEY_YELLOW" mapto="audioSelection" flags="m" />
 	</map>
@@ -264,7 +264,7 @@
 	<map context="InfobarSubserviceSelectionActions">
 		<key id="KEY_YELLOW" mapto="subserviceSelection" flags="m" />
 		<key id="KEY_VOLUMEUP" mapto="volumeUp" flags="mr" />
-		<key id="KEY_VOLUMEDOWN" mapto="volumeDown" flags="mr" /> 
+		<key id="KEY_VOLUMEDOWN" mapto="volumeDown" flags="mr" />
 	</map>
         
 	<map context="InfobarSubserviceQuickzapActions">
@@ -273,7 +273,7 @@
 		<key id="KEY_BACK" mapto="prevSubservice" flags="m" />
 		<key id="KEY_FORWARD" mapto="nextSubservice" flags="m" />
 		<key id="KEY_EXIT" mapto="exit" flags="m" /> 
-		<key id="KEY_HOME" mapto="exit" flags="m" />                 
+		<key id="KEY_HOME" mapto="exit" flags="m" />
 	</map>
 
 	<map context="GlobalActions">
@@ -342,7 +342,7 @@
 	</map>
 
 	<map context="InfobarTimeshiftActions">
-		<key id="KEY_PAUSE" mapto="timeshiftStart" flags="m" /> 
+		<key id="KEY_PAUSE" mapto="timeshiftStart" flags="m" />
 		<key id="KEY_STOP" mapto="timeshiftStop" flags="m" />
 	</map>
 
@@ -533,7 +533,7 @@
 	<map context="HelpActions">
 		<key id="KEY_SELECT" mapto="displayHelp" flags="m" />
 	</map>
-	
+
 	<map context="ShortcutActions">
 		<!--key id="KEY_F1" mapto="red" flags="mr" /-->
 		<!--key id="KEY_F2" mapto="yellow" flags="mr" /-->

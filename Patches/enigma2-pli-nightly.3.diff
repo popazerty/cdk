@@ -159,7 +159,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
  lib/python/Plugins/PLi/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
  lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
-@@ -245,6 +342,44 @@
+@@ -245,6 +342,45 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
@@ -188,6 +188,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma
 +lib/python/Plugins/Extensions/hs9510VFD/meta/Makefile
 +lib/python/Plugins/Extensions/hs9510VFD/locale/Makefile
 +lib/python/Plugins/Extensions/hs9510VFD/locale/nl/Makefile
++lib/python/Plugins/Extensions/hs9510VFD/locale/nl/LC_MESSAGES/Makefile
 +lib/python/Plugins/Extensions/sparkVFD/Makefile
 +lib/python/Plugins/Extensions/sparkVFD/meta/Makefile
 +lib/python/Plugins/Extensions/sparkVFD/locale/Makefile
@@ -719,7 +720,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp e
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp enigma2-nightly/lib/driver/vfd.cpp
 --- enigma2-nightly.org/lib/driver/vfd.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.cpp	2013-05-11 19:07:01.916432460 +0200
-@@ -0,0 +1,789 @@
+@@ -0,0 +1,805 @@
 +/*
 + * vfd.cpp
 + *
@@ -881,16 +882,20 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +	int fd = open ("/proc/progress", O_RDONLY);
 +
 +	if (fd < 0)
++	{
 +		return 0;
-+
++	}
 +	n = read(fd, progress, sizeof(progress));
 +	close(fd);
 +
 +	if (n < 0)
++	{
 +		n = 0;
++	}
 +	else if((n > 1) && (progress[n-1] == 0xa))
++	{
 +		n--;
-+
++	}
 +	progress[n] = 0;
 +	return progress;
 +}
@@ -900,13 +905,13 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +	int fplarge = open ("/dev/fplarge", O_WRONLY);
 +	int fpsmall = open ("/dev/fpsmall", O_WRONLY);
 +	int fpc = open ("/dev/fpc", O_WRONLY);
++//	char spc[10];
 +
 +	if ((fplarge < 0) || (fpsmall < 0) || (fpc < 0))
 +	{
 +		printf("Failed opening devices (%d, %d, %d)\n", fplarge, fpsmall, fpc);
 +		return NULL;
 +	}
-+
 +	blocked = true;
 +
 +	// set scroll mode
@@ -949,9 +954,20 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +		{
 +			// display progress
 +			progress = getProgress();
++//			if (strlen(progress) == 1)
++//			{
++//				spc = "  ";
++//			}
++//			if (strlen(progress) == 2)
++//			{
++//				spc = " ";
++//			}
++//			strcat(spc, progress);
 +			write(fpsmall, progress, strlen(progress) + 1);
 +			if (strncmp("100", progress, 3) == 0)
++			{
 +				break;
++			}
 +		}
 +	}
 +	// clear all icons
@@ -969,7 +985,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +
 +	return NULL;
 +}
-+#else  //next code for boxes other than Topfield TF77X0HDPVR
++#else  //next code for boxes other than Topfield TF7700HDPVR
 +
 +void * start_loop (void *arg)
 +{
@@ -1358,7 +1374,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp 
 +
 +void evfd::vfd_clear_string()
 +{
-+	char out[VFDLENGTH];
++	char out[VFDLENGTH + 1];
++	memset(out, 0, VFDLENGTH + 1);
 +	memset(out, ' ', VFDLENGTH);
 +	vfd_write_string(out, true);
 +	return;
@@ -3050,7 +3067,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
  void fbClass::blit()
  {
 +#if defined(__sh__)
-+	int modefd=open("/proc/stb/video/3d_mode", O_RDWR);
++	int modefd = open("/proc/stb/video/3d_mode", O_RDWR);
 +	char buf[16] = "off";
 +	if (modefd > 0)
 +	{
@@ -3059,7 +3076,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enig
 +		close(modefd);
 +	}
 +
-+	STMFBIO_BLT_DATA    bltData;
++	STMFBIO_BLT_DATA     bltData;
 +	memset(&bltData, 0, sizeof(STMFBIO_BLT_DATA));
 +	bltData.operation  = BLT_OP_COPY;
 +	bltData.srcOffset  = 1920*1080*4;
@@ -6308,8 +6325,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				'timer': (self.timer, 'Timer'),
 +				'showFavourites': (self.showFavourites, _('Bouquet list')),
 +				"showSatellites": (self.showSatellites, _('Satellite list')),
-+#				"volumeUp": (self.volumeUp, _("Volume up")),
-+#				"volumeDown": (self.volumeDown, _("Volume Down")),
++				"volumeUp": (self.volumeUp, _("Volume up")),
++				"volumeDown": (self.volumeDown, _("Volume Down")),
 +#compatibility with older keymaps
 +				"switchChannelUp": (self.keyUpCheck, self.getKeyUpHelptext),
 +				"switchChannelDown": (self.keyDownCheck, self.getKeyDownHelpText),
@@ -6343,15 +6360,15 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +		self.servicelist.showSatellites()
 +		self.session.execDialog(self.servicelist)
 +
-+#	def volumeUp(self):
-+#		from enigma import eDVBVolumecontrol
-+#		from Components.VolumeControl import VolumeControl
-+#		VolumeControl.instance.volUp()
++	def volumeUp(self):
++		from enigma import eDVBVolumecontrol
++		from Components.VolumeControl import VolumeControl
++		VolumeControl.instance.volUp()
 +
-+#	def volumeDown(self):
-+#		from enigma import eDVBVolumecontrol
-+#		from Components.VolumeControl import VolumeControl
-+#		VolumeControl.instance.volDown()
++	def volumeDown(self):
++		from enigma import eDVBVolumecontrol
++		from Components.VolumeControl import VolumeControl
++		VolumeControl.instance.volDown()
 +
  	def zapDown(self):
  		if self.servicelist.inBouquet():
@@ -6576,7 +6593,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +	def aspectSelection(self):
 +		selection = 0
 +		tlist = []
-+		tlist.append((_("Subservice list..."), "subservice"))
++		tlist.append((_("Subservice list"), "subservice"))
 +		tlist.append((_("Resolution"), "resolution"))
 +		tlist.append((_("3D Mode"), "tdmodus"))
 +		tlist.append(("--", ""))
@@ -6645,7 +6662,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +		selection = 0
 +		tlist = []
 +		tlist.append((_("Exit"), "exit"))
-+		tlist.append((_("Auto(not available)"), "auto"))
++		tlist.append((_("Auto (not available)"), "auto"))
 +		tlist.append(("Video: " + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
 +		tlist.append(("--", ""))
 +		tlist.append(("576i", "576i50"))
@@ -6755,8 +6772,8 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				"showRadio": (self.showRadio, _("Show the radio player")),
 +				"showTv": (self.showTv, _("Show the TV player")),
 +				"toogleTvRadio": (self.toogleTvRadio, _("Toggles between TV and radio")),
-+#				"volumeUp": (self._volUp, _("Volume up")),
-+#				"volumeDown": (self._volDown, _("Volume Down")),
++				"volumeUp": (self._volUp, _("Volume up")),
++				"volumeDown": (self._volDown, _("Volume Down")),
 +				"resolution": (self.resolution, _("Select display resolution")),
 +				"aspect": (self.aspect, _("Select aspect ratio")),
  			}, prio=2)
@@ -6854,15 +6871,15 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
 +				gMainDC.getInstance().setResolution(-1, -1)
 +		return
 +
-+#	def _volUp(self):
-+#		print "_volUp"
-+#		from Components.VolumeControl import VolumeControl
-+#		VolumeControl.instance.volUp()
++	def _volUp(self):
++		print "_volUp"
++		from Components.VolumeControl import VolumeControl
++		VolumeControl.instance.volUp()
 +
-+#	def _volDown(self):
-+#		print "_volDown"
-+#		from Components.VolumeControl import VolumeControl
-+#		VolumeControl.instance.volDown()
++	def _volDown(self):
++		print "_volDown"
++		from Components.VolumeControl import VolumeControl
++		VolumeControl.instance.volDown()
  
  	def __onClose(self):
  		InfoBar.instance = None
@@ -7192,7 +7209,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
 -		KEYIDS["KEY_OK"]: ("OK", ""),
 -		KEYIDS["KEY_UP"]: ("UP",),
 -		KEYIDS["KEY_DOWN"]: ("DOWN",),
-+	{  # for remotes with ID 2 (based on is spark remote RC12)
++	{  # for remotes with ID 2 (base is spark remote RC12)
  		KEYIDS["KEY_POWER"]: ("POWER",),
 -		KEYIDS["KEY_RED"]: ("RED",),
 -		KEYIDS["KEY_BLUE"]: ("BLUE",),
@@ -7222,7 +7239,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
  		KEYIDS["KEY_0"]: ("0",),
  		KEYIDS["KEY_1"]: ("1",),
  		KEYIDS["KEY_2"]: ("2",),
-@@ -127,107 +111,102 @@
+@@ -127,107 +111,100 @@
  		KEYIDS["KEY_7"]: ("7",),
  		KEYIDS["KEY_8"]: ("8",),
  		KEYIDS["KEY_9"]: ("9",),
@@ -7357,7 +7374,6 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
 -		KEYIDS["KEY_CONTEXT_MENU"]: ("CONTEXT",),
 -		KEYIDS["KEY_EPG"]: ("EPG",),
 -		KEYIDS["KEY_BOOKMARKS"]: ("PLAYLIST",),
-+		KEYIDS["KEY_F3"]: ("F3",),
 +		KEYIDS["KEY_OPEN"]: ("PORTAL",),
 +		# Topfield keys (evremote2, not on Spark)
 +		KEYIDS["KEY_ZOOM"]: ("V.FORMAT",),
@@ -7367,7 +7383,6 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
 +		KEYIDS["KEY_HELP"]: ("INFO",), #wrongly assigned in evremote2
 +		KEYIDS["KEY_LANGUAGE"]: ("AUDIO",),
 +		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
-+		KEYIDS["KEY_TEXT"]: ("TEXT",),
 +		KEYIDS["KEY_DOWN"]: ("DOWN/P-",),
 +		KEYIDS["KEY_UP"]: ("UP/P+",),
 +		KEYIDS["KEY_RIGHT"]: ("RIGHT/V+",),
@@ -7378,7 +7393,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
 +		KEYIDS["KEY_LIST"]: ("RECORDLIST",),
 +		KEYIDS["KEY_PREVIOUS"]: ("STEPBACK",),
 +		KEYIDS["KEY_NEXT"]: ("STEPFORWARD",),
-+		KEYIDS["KEY_EPG"]: ("MARK",),
++		KEYIDS["KEY_OPTION"]: ("MARK",),
 +		KEYIDS["KEY_ARCHIVE"]: ("USB",),
 +		KEYIDS["KEY_TIME"]: ("TIMER",),
 +		# Fortis keys (evremote2, not on Spark or Topfield)
@@ -7417,7 +7432,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Ke
  	},
  ]
  
-@@ -245,13 +224,7 @@
+@@ -245,13 +222,7 @@
  	if rc_model.rcIsDefault():
  		idx = config.misc.rcused.value
  	else:
@@ -10653,6 +10668,25 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  
  def getImageTypeString():
  	try:
+@@ -55,10 +55,9 @@
+ 		cpu_count = 0
+ 		for line in open("/proc/cpuinfo").readlines():
+ 			line = [x.strip() for x in line.strip().split(":")]
+-			if line[0] == "system type":
++			if line[0] == "cpu type":
+ 				processor = line[1].split()[0]
+-			if line[0] == "cpu MHz":
+-				cpu_speed = "%1.0f" % float(line[1])
++				cpu_speed = "unknown"
+ 				cpu_count += 1
+ 		if os.path.isfile('/proc/stb/fp/temp_sensor_avs'):
+ 			temperature = open("/proc/stb/fp/temp_sensor_avs").readline().replace('\n','')
+#-			return "%s %s MHz (%s) %s..C" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count, temperature)
+# 		return "%s %s MHz (%s)" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count)
+#+		return "%s (%s)" % (processor, ngettext("%d core", "%d cores", cpu_count) % cpu_count)
+# 	except:
+# 		return _("undefined")
+# 
 #diff -Nur --exclude=.git --exclude=tuxtxt driver/frontends/spark7162/spark7162.c driver/frontends/spark7162/spark7162.c
 #--- driver/frontends/spark7162/spark7162.c	2013-12-18 20:00:00.000000000 +0100
 #+++ driver/frontends/spark7162/spark7162.c	2014-02-02 20:03:13.000000000 +0100
