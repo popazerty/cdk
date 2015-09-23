@@ -1,8 +1,8 @@
 --- tvheadend.org/src/tvheadend.h
 +++ tvheadend/src/tvheadend.h
-@@ -92,12 +92,12 @@
-   return r;
- }
+@@ -65,12 +65,12 @@
+ 
+ htsmsg_t *tvheadend_capabilities_list(int check);
  
 -typedef struct str_list
 +typedef struct strg_list
@@ -15,7 +15,7 @@
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
  
-@@ -785,4 +785,14 @@
+@@ -767,4 +767,14 @@
  #define PRItime_t       "ld"
  #endif
  
@@ -29,7 +29,27 @@
 +  unsigned char length;
 +};
 +
- #endif /* TV_HEAD_H */
+ #endif /* TVHEADEND_H */
+--- tvheadend.org/src/config.c
++++ tvheadend/src/config.c
+@@ -1334,7 +1334,7 @@
+ {
+   char outfile[PATH_MAX], cwd[PATH_MAX];
+   const char *argv[] = {
+-    "/usr/bin/tar", "cjf", outfile,
++    "/usr/bin/tar", "cf", outfile,
+     "--exclude", "backup", "--exclude", "epggrab/*.sock",
+     ".", NULL
+   };
+@@ -1373,7 +1373,7 @@
+     goto fatal;
+   }
+ 
+-  snprintf(outfile, sizeof(outfile), "%s/backup/%s.tar.bz2",
++  snprintf(outfile, sizeof(outfile), "%s/backup/%s.tar.gz",
+                                      root, oldver);
+   tvhinfo("config", "backup: running, output file %s", outfile);
+ 
 --- tvheadend.org/src/input/mpegts.c
 +++ tvheadend/src/input/mpegts.c
 @@ -20,8 +20,8 @@
@@ -97,19 +117,18 @@
  
  pthread_t main_tid;
  
-@@ -582,6 +583,11 @@
-   FILE *pidfile = NULL;
+@@ -587,6 +588,10 @@
+   } randseed;
    extern int dvb_bouquets_parse;
  
 + /* for writing to VFD */
-+//  char txtstr;
 +  int file_vfd = -1;
 +  struct vfd_ioctl_data vfddata;
 +
    main_tid = pthread_self();
  
    /* Setup global mutexes */
-@@ -638,8 +644,8 @@
+@@ -643,8 +648,8 @@
               *opt_bindaddr     = NULL,
               *opt_subscribe    = NULL,
               *opt_user_agent   = NULL;
@@ -120,7 +139,7 @@
    cmdline_opt_t cmdline_opts[] = {
      {   0, NULL,        N_("Generic Options"),         OPT_BOOL, NULL         },
      { 'h', "help",      N_("Show this page"),          OPT_BOOL, &opt_help    },
-@@ -760,7 +766,7 @@
+@@ -765,7 +770,7 @@
      else if (opt->type == OPT_INT)
        *((int*)opt->param) = atoi(argv[i]);
      else if (opt->type == OPT_STR_LIST) {
@@ -129,7 +148,7 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1069,6 +1075,25 @@
+@@ -1079,6 +1084,25 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  
