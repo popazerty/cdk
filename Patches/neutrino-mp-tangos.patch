@@ -17,21 +17,21 @@
  			BOXMODEL="$withval"
 --- neutrino-mp-tangos.org/src/neutrino.cpp
 +++ neutrino-mp-tangos/src/neutrino.cpp
-@@ -4106,6 +4106,9 @@
+@@ -4108,6 +4108,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
  		}
-+#if defined (FORTIS_HDBOX)
++#if defined (FORTIS_HDBOX) || defined (TF7700)
 +		CVFD::getInstance()->setlcdparameter(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS], 0);
 +#endif
  		CVFD::getInstance()->setBacklight(g_settings.backlight_standby);
  
  		InfoClock->enableInfoClock(false);
-@@ -4137,6 +4140,9 @@
+@@ -4139,6 +4142,9 @@
  		// Active standby off
  		powerManager->SetStandby(false, false);
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-+#if defined (FORTIS_HDBOX)
++#if defined (FORTIS_HDBOX) || defined (TF7700)
 +		CVFD::getInstance()->setlcdparameter(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS], 1);
 +#endif
  		CVFD::getInstance()->ShowText("resume");
@@ -39,68 +39,43 @@
  		videoDecoder->Standby(false);
 --- neutrino-mp-tangos.org/src/gui/vfd_setup.cpp
 +++ neutrino-mp-tangos/src/gui/vfd_setup.cpp
-@@ -206,23 +206,63 @@
- 	brightnessstandby = CVFD::getInstance()->getBrightnessStandby();
- 	brightnessdeepstandby = CVFD::getInstance()->getBrightnessDeepStandby();
- 
-+#if defined(BOXMODEL_FORTIS_HDBOX) \
-+ || defined(BOXMODEL_OCTAGON1008) \
-+ || defined(BOXMODEL_ATEVIO7500) \
-+ || defined(BOXMODEL_HS7110) \
-+ || defined(BOXMODEL_HS7810A) \
-+ || defined(BOXMODEL_HS7119) \
-+ || defined(BOXMODEL_HS7819)
-+	nc = new CMenuOptionNumberChooser(LOCALE_LCDCONTROLER_BRIGHTNESS, &brightness, true, 0, 7, this, CRCInput::RC_nokey, NULL, 0, 0, NONEXISTANT_LOCALE, true);
-+#else
- 	nc = new CMenuOptionNumberChooser(LOCALE_LCDCONTROLER_BRIGHTNESS, &brightness, true, 0, 15, this, CRCInput::RC_nokey, NULL, 0, 0, NONEXISTANT_LOCALE, true);
-+#endif
- 	nc->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESS);
- 	nc->setActivateObserver(this);
- 	mn_widget->addItem(nc);
- 
-+#if defined(BOXMODEL_FORTIS_HDBOX) \
-+ || defined(BOXMODEL_OCTAGON1008) \
-+ || defined(BOXMODEL_ATEVIO7500) \
-+ || defined(BOXMODEL_HS7110) \
-+ || defined(BOXMODEL_HS7810A) \
-+ || defined(BOXMODEL_HS7119) \
-+ || defined(BOXMODEL_HS7819)
-+	nc = new CMenuOptionNumberChooser(LOCALE_LCDCONTROLER_BRIGHTNESSSTANDBY, &brightnessstandby, true, 0, 7, this, CRCInput::RC_nokey, NULL, 0, 0, NONEXISTANT_LOCALE, true);
-+#else
- 	nc = new CMenuOptionNumberChooser(LOCALE_LCDCONTROLER_BRIGHTNESSSTANDBY, &brightnessstandby, true, 0, 15, this, CRCInput::RC_nokey, NULL, 0, 0, NONEXISTANT_LOCALE, true);
-+#endif
- 	nc->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESSSTANDBY);
- 	nc->setActivateObserver(this);
- 	mn_widget->addItem(nc);
- 
- 	if(cs_get_revision() > 7) {
-+#if defined(BOXMODEL_FORTIS_HDBOX) \
-+ || defined(BOXMODEL_OCTAGON1008) \
-+ || defined(BOXMODEL_ATEVIO7500) \
-+ || defined(BOXMODEL_HS7110) \
-+ || defined(BOXMODEL_HS7810A) \
-+ || defined(BOXMODEL_HS7119) \
-+ || defined(BOXMODEL_HS7819)
-+		nc = new CMenuOptionNumberChooser(LOCALE_LCDCONTROLER_BRIGHTNESSDEEPSTANDBY, &brightnessdeepstandby, true, 0, 7, this, CRCInput::RC_nokey, NULL, 0, 0, NONEXISTANT_LOCALE, true);
-+#else
- 		nc = new CMenuOptionNumberChooser(LOCALE_LCDCONTROLER_BRIGHTNESSDEEPSTANDBY, &brightnessdeepstandby, true, 0, 15, this, CRCInput::RC_nokey, NULL, 0, 0, NONEXISTANT_LOCALE, true);
-+#endif
- 		nc->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESSDEEPSTANDBY);
- 		nc->setActivateObserver(this);
- 		mn_widget->addItem(nc);
- 	}
-+#if defined(BOXMODEL_FORTIS_HDBOX) \
-+ || defined(BOXMODEL_OCTAGON1008) \
-+ || defined(BOXMODEL_ATEVIO7500) \
-+ || defined(BOXMODEL_HS7110) \
-+ || defined(BOXMODEL_HS7810A) \
-+ || defined(BOXMODEL_HS7119) \
-+ || defined(BOXMODEL_HS7819)
-+ 	nc = new CMenuOptionNumberChooser(LOCALE_LCDMENU_DIM_BRIGHTNESS, &g_settings.lcd_setting_dim_brightness, vfd_enabled, -1, 7, NULL, CRCInput::RC_nokey, NULL, 0, -1, LOCALE_OPTIONS_OFF, true);
-+#else
- 	nc = new CMenuOptionNumberChooser(LOCALE_LCDMENU_DIM_BRIGHTNESS, &g_settings.lcd_setting_dim_brightness, vfd_enabled, -1, 15, NULL, CRCInput::RC_nokey, NULL, 0, -1, LOCALE_OPTIONS_OFF, true);
-+#endif
- 	nc->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESSDIM);
- 	nc->setActivateObserver(this);
- 	mn_widget->addItem(nc);
+@@ -647,6 +647,8 @@
+ 				ShowIcon(ICON_COLON2, true);
+ #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_CUBEREVO_250HD)
+ 				strftime(timestr, 5, "%H%M", t);
++#elif defined (BOXMODEL_TF7700
++				strftime(timestr, 6, "%H.%M", t);
+ #else
+ 				strftime(timestr, 6, "%H:%M", t);
+ #endif
+@@ -1082,6 +1084,9 @@
+ #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+ 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 7)
+ 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 7;
++#elif defined (BOXMODEL_TF7700)
++	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 5)
++		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 5;
+ #else
+ 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
+ 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 15;
+@@ -1104,6 +1109,9 @@
+ #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+ 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 7)
+ 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 7;
++#elif defined (BOXMODEL_TF7700)
++	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 5)
++		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 5;
+ #else
+ 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 15)
+ 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 15;
+@@ -1125,6 +1133,9 @@
+ #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+ 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 7)
+ 		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 7;
++#elif defined (BOXMODEL_TF7700
++	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 5)
++		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 5;
+ #else
+ 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 15)
+ 		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 15;
 

@@ -12,7 +12,18 @@
  			BOXTYPE="$withval"
  			;;
  		cu*)
-@@ -418,6 +418,14 @@
+@@ -404,6 +404,10 @@
+ 			BOXTYPE="fulan"
+ 			BOXMODEL="$withval"
+ 			;;
++		tf*)
++			BOXTYPE="topfield"
++			BOXMODEL="$withval"
++			;;
+ 		uf*)
+ 			BOXTYPE="kathrein"
+ 			BOXMODEL="$withval"
+@@ -418,6 +422,14 @@
  			;;
  		oct*)
  			BOXTYPE="octagon"
@@ -27,7 +38,12 @@
  			BOXMODEL="$withval"
  			;;
  		vu*)
-@@ -468,6 +476,7 @@
+@@ -464,10 +476,12 @@
+ 				valid for dreambox: dm500, dm500plus, dm600pvr, dm56x0, dm7000, dm7020, dm7025, dm500hd, dm7020hd, dm8000, dm800, dm800se
+ 				valid for xtrend: et4x00,et5x00,et6x00,et9x00
+ 				valid for fulan: spark, spark7162
++				valid for topfield: tf7700
+ 				valid for kathrein: ufs910, ufs922, ufs912, ufs913, ufc960
  				valid for ipbox: ipbox55, ipbox99, ipbox9900
  				valid for atevio: atevio700,atevio7000,atevio7500,atevio7600
  				valid for octagon: octagon1008
@@ -35,7 +51,21 @@
  				valid for vuplus: vusolo,vuduo,vuuno,vuultimo
  				valid for azbox: azboxhd,azboxme,azboxminime
  				valid for technomate: tmtwin,tm2t,tmsingle,tmnano
-@@ -534,6 +543,13 @@
+@@ -511,6 +525,13 @@
+ 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
+ 			fi
+ 			;;
++		tf7700)
++			if test "$BOXTYPE" = "topfield"; then
++				BOXMODEL="$withval"
++			else
++				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
++			fi
++			;;
+ 		ufs910|ufs912|ufs913|ufs922|ufc960)
+ 			if test "$BOXTYPE" = "kathrein"; then
+ 				BOXMODEL="$withval"
+@@ -534,6 +555,13 @@
  			;;
  		octagon1008)
  			if test "$BOXTYPE" = "octagon"; then
@@ -49,20 +79,47 @@
  				BOXMODEL="$withval"
  			else
  				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
-@@ -724,6 +740,12 @@
+@@ -649,7 +677,7 @@
+ AM_CONDITIONAL(BOXTYPE_FULAN, test "$BOXTYPE" = "fulan")
+ AM_CONDITIONAL(BOXTYPE_KATHREIN, test "$BOXTYPE" = "kathrein")
+ AM_CONDITIONAL(BOXTYPE_IPBOX, test "$BOXTYPE" = "ipbox")
+-AM_CONDITIONAL(BOXTYPE_TOPFIELD, test "$BOXTYPE" = "toptfield")
++AM_CONDITIONAL(BOXTYPE_TOPFIELD, test "$BOXTYPE" = "topfield")
+ AM_CONDITIONAL(BOXTYPE_FORTIS_HDBOX, test "$BOXTYPE" = "fortis_hdbox")
+ AM_CONDITIONAL(BOXTYPE_OCTAGON, test "$BOXTYPE" = "octagon")
+ AM_CONDITIONAL(BOXTYPE_ATEVIO, test "$BOXTYPE" = "atevio")
+@@ -707,6 +735,8 @@
+ AM_CONDITIONAL(BOXMODEL_SPARK,test "$BOXMODEL" = "spark")
+ AM_CONDITIONAL(BOXMODEL_SPARK7162,test "$BOXMODEL" = "spark7162")
+ 
++AM_CONDITIONAL(BOXMODEL_TF7700, test "$BOXMODEL" = "tf7700")
++
+ AM_CONDITIONAL(BOXMODEL_UFS910, test "$BOXMODEL" = "ufs910")
+ AM_CONDITIONAL(BOXMODEL_UFS912, test "$BOXMODEL" = "ufs912")
+ AM_CONDITIONAL(BOXMODEL_UFS913, test "$BOXMODEL" = "ufs913")
+@@ -723,6 +753,12 @@
+ AM_CONDITIONAL(BOXMODEL_ATEVIO7600, test "$BOXMODEL" = "atevio7600")
  
  AM_CONDITIONAL(BOXMODEL_OCTAGON_1008, test "$BOXMODEL" = "octagon1008")
- 
++
 +AM_CONDITIONAL(BOXMODEL_HS7110, test "$BOXMODEL" = "hs7110")
 +AM_CONDITIONAL(BOXMODEL_HS7810A, test "$BOXMODEL" = "hs7810a")
 +AM_CONDITIONAL(BOXMODEL_HS7119, test "$BOXMODEL" = "hs7119")
 +AM_CONDITIONAL(BOXMODEL_HS7819, test "$BOXMODEL" = "hs7819")
 +AM_CONDITIONAL(BOXMODEL_DP7000, test "$BOXMODEL" = "dp7000")
-+
+ 
  AM_CONDITIONAL(BOXMODEL_VUSOLO2, test "$BOXMODEL" = "vusolo2")
  AM_CONDITIONAL(BOXMODEL_VUDUO2, test "$BOXMODEL" = "vuduo2")
- AM_CONDITIONAL(BOXMODEL_VUSOLO, test "$BOXMODEL" = "vusolo")
-@@ -784,6 +806,8 @@
+@@ -772,6 +808,8 @@
+ 	AC_DEFINE(PLATFORM_XTREND, 1, [building for xtrend])
+ elif test "$BOXTYPE" = "fulan"; then
+ 	AC_DEFINE(PLATFORM_FULAN, 1, [building for fulan])
++elif test "$BOXTYPE" = "topfield"; then
++	AC_DEFINE(PLATFORM_TOPFIELD, 1, [building for topfield])
+ elif test "$BOXTYPE" = "kathrein"; then
+ 	AC_DEFINE(PLATFORM_KATHREIN, 1, [building for kathrein])
+ elif test "$BOXTYPE" = "ipbox"; then
+@@ -784,6 +822,8 @@
  	AC_DEFINE(PLATFORM_OCTAGON, 1, [building for octagon])
  elif test "$BOXTYPE" = "atevio"; then
  	AC_DEFINE(PLATFORM_ATEVIO, 1, [building for atevio])
@@ -71,10 +128,21 @@
  elif test "$BOXTYPE" = "adb_box"; then
  	AC_DEFINE(PLATFORM_ADB_BOX, 1, [building for adb_box])
  elif test "$BOXTYPE" = "whitebox"; then
-@@ -911,6 +935,17 @@
+@@ -881,6 +921,9 @@
+ elif test "$BOXMODEL" = "spark7162"; then
+ 	AC_DEFINE(PLATFORM_SPARK7162, 1, [building for spark 7162])
+ 
++elif test "$BOXMODEL" = "tf7700"; then
++	AC_DEFINE(PLATFORM_TF7700, 1, [building for topfield tf7700])
++
+ elif test "$BOXMODEL" = "ufs910"; then
+ 	AC_DEFINE(PLATFORM_UFS910, 1, [building for ufs910])
+ elif test "$BOXMODEL" = "ufs912"; then
+@@ -910,6 +953,17 @@
+ 
  elif test "$BOXMODEL" = "octagon1008"; then
  	AC_DEFINE(BOXMODEL_OCTAGON_1008, 1, [building for octagon1008])
- 
++
 +elif test "$BOXMODEL" = "hs7110"; then
 +	AC_DEFINE(BOXMODEL_HS7110, 1, [building for hs7110])
 +elif test "$BOXMODEL" = "hs7110"; then
@@ -85,10 +153,14 @@
 +	AC_DEFINE(BOXMODEL_HS7819, 1, [building for hs7819])
 +elif test "$BOXMODEL" = "dp7000"; then
 +	AC_DEFINE(BOXMODEL_DP7000, 1, [building for dp7000])
-+
+ 
  elif test "$BOXMODEL" = "vusolo2"; then
  	AC_DEFINE(BOXMODEL_VUSOLO2, 1, [vuplus solo2])
- elif test "$BOXMODEL" = "vuduo2"; then
+@@ -977,4 +1031,3 @@
+ fi
+ ])
+ 
+-
 --- nhd2-exp.org/src/driver/vfd.h
 +++ nhd2-exp/src/driver/vfd.h
 @@ -179,7 +178,137 @@

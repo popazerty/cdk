@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20150813.1
+# Version 20150923.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 1: target system (1-35)"
@@ -9,7 +9,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 5: Media Framework (1-4)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
- echo "Parameter 8: Neutrino variant (1-6)"
+ echo "Parameter 8: Neutrino variant (1-5)"
  exit
 fi
 
@@ -339,39 +339,42 @@ case "$IMAGEN" in
 		fi
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
-			[1-6])	REPLY=$8;;
+			[1-5])	REPLY=$8;;
 			*)	echo -e "\nWhich Neutrino variant do you want to build?"
-				echo "   1) Neutrino mp"
-				echo "   2) Neutrino mp (next)"
-				echo "   3) Neutrino mp (cst-next)"
-				echo "   4) Neutrino HD2 exp"
-				echo "   5) Neutrino mp (Tangos)"
-				echo "   6) Neutrino mp (martii-github)"
-				read -p " Select Neutrino variant (1-6)? ";;
+				echo "   1) Neutrino mp (next)"
+				echo "   2) Neutrino mp (cst-next)"
+				echo "   3) Neutrino HD2 exp"
+				echo "   4) Neutrino mp (Tangos)"
+				echo "   5) Neutrino mp (martii-github)"
+				read -p " Select Neutrino variant (1-5)? ";;
 		esac
 		case "$REPLY" in
-			1)	IMAGEN="Neutrino mp";;
-			3)	IMAGEN="Neutrino mp (cst-next)";;
-			4)	IMAGEN="Neutrino HD2 exp";;
-			5)	IMAGEN="Neutrino mp (Tangos)";;
-			6)	IMAGEN="Neutrino mp (martii-github)";;
+			1)	IMAGEN="Neutrino mp (next)";;
+			2)	IMAGEN="Neutrino mp (cst-next)";;
+			3)	IMAGEN="Neutrino HD2 exp";;
+			4)	IMAGEN="Neutrino mp (Tangos)";;
+			5)	IMAGEN="Neutrino mp (martii-github)";;
 			*)	IMAGEN="Neutrino mp (next)";;
 		esac
 		NEUTRINO=$REPLY
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
-			LASTIMAGE=`grep -e "enable-tvheadend" ./lastChoice`
-			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
-				make distclean
+			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
+			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ]; then
+				if [ -d ./.deps ]; then
+					make distclean
+				fi
 			fi
 		fi;;
 	Tvheadend)
 		CONFIGPARAM="$CONFIGPARAM --enable-tvheadend"
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
-			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
-			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
-				make distclean
+			LASTIMAGE2=`grep -e "enable-neutrino" ./lastChoice`
+			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ]; then
+				if [ -d ./.deps ]; then
+					make distclean
+				fi
 			fi
 		fi;;
 	Enigma2)
@@ -384,9 +387,11 @@ case "$IMAGEN" in
 		CONFIGPARAM="$CONFIGPARAM --enable-enigma2"
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
-			LASTIMAGE=`grep -e "enable-tvheadend" ./lastChoice`
-			if [ "$LASTIMAGE" ] && [ -d ./.deps ]; then
-				make distclean
+			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
+			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ]; then
+				if [ -d ./.deps ]; then
+					make distclean
+				fi
 			fi
 		fi;;
 esac
@@ -432,12 +437,11 @@ elif [ "$IMAGEN" == "Tvheadend" ]; then
   echo "make yaud-tvheadend" >> $CURDIR/build
 else
   case "$NEUTRINO" in
-    1) echo "make yaud-neutrino-mp" >> $CURDIR/build;;
-    2) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
-    3) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-    5) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
-    6) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
+    1) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
+    2) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
+    3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
+    4) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+    5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
     *) exit;;
   esac
 fi

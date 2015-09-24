@@ -303,7 +303,7 @@
  
  void CVFD::showServicename(const std::string & name) // UTF-8
  {
-@@ -529,8 +589,24 @@
+@@ -529,8 +589,26 @@
  			if(force || ( switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))) ) {
  				hour = t->tm_hour;
  				minute = t->tm_min;
@@ -313,6 +313,8 @@
 +				ShowIcon(ICON_COLON2, true);
 +  #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119)
 +				strftime(timestr, 5, "%H%M", t);
++  #elif defined (BOXMODEL_TF7700)
++				strftime(timestr, 6, "%H.%M", t);
 +  #else
 +				strftime(timestr, 6, "%H:%M", t);
 +  #endif
@@ -329,7 +331,7 @@
  			}
  		}
  	}
-@@ -580,7 +656,10 @@
+@@ -580,7 +658,10 @@
  void CVFD::showRCLock(int /*duration*/)
  {
  #ifdef HAVE_DUCKBOX_HARDWARE
@@ -341,7 +343,7 @@
  #endif
  }
  
-@@ -604,7 +683,7 @@
+@@ -604,7 +685,7 @@
  		int pp = (int) round((double) vol / (double) 2);
  		if(oldpp != pp)
  		{
@@ -350,7 +352,7 @@
  			int i;
  			unsigned char speaker[5] = {0x1C, 0x1C, 0x1C, 0x3E, 0x7F}; // speaker symbol
  			writeCG(0, speaker);
-@@ -647,19 +726,32 @@
+@@ -647,19 +728,32 @@
  					strncat(VolumeBar, c0, 1);
  			}
  			ShowText(VolumeBar);
@@ -388,7 +390,7 @@
  			oldpp = pp;
  		}
  #else
-@@ -873,6 +965,9 @@
+@@ -873,6 +967,9 @@
  		ShowIcon(FP_ICON_COL1, true);
  		ShowIcon(FP_ICON_COL2, true);
  #endif
@@ -398,13 +400,16 @@
  		showclock = true;
  		showTime(true);      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
  		                 /* "showTime()" clears the whole lcd in MODE_STANDBY                         */
-@@ -916,9 +1011,13 @@
+@@ -916,9 +1013,16 @@
  int CVFD::getBrightness()
  {
  	//FIXME for old neutrino.conf
 +#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
 +	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 7)
 +		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 7;
++#elif defined (BOXMODEL_TF7700)
++	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 5)
++		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 5;
 +#else
  	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
  		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 15;
@@ -413,13 +418,16 @@
  	return g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS];
  }
  
-@@ -933,8 +1032,13 @@
+@@ -933,8 +1037,16 @@
  int CVFD::getBrightnessStandby()
  {
  	//FIXME for old neutrino.conf
 +#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
 +	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 7)
 +		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 7;
++#elif defined (BOXMODEL_TF7700)
++	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 5)
++		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 5;
 +#else
  	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 15)
  		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 15;
@@ -427,13 +435,16 @@
  	return g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS];
  }
  
-@@ -949,8 +1053,13 @@
+@@ -949,8 +1061,16 @@
  int CVFD::getBrightnessDeepStandby()
  {
  	//FIXME for old neutrino.conf
 +#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
 +	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 7)
 +		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 7;
++#elif defined (BOXMODEL_TF7700)
++	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 5)
++		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 5;
 +#else
  	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 15)
  		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 15;
@@ -441,7 +452,7 @@
  	return g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS];
  }
  
-@@ -1015,11 +1124,13 @@
+@@ -1015,11 +1135,13 @@
  	else
  		text[0] = 0;
  #else
@@ -457,7 +468,7 @@
  	ShowText("                ");
  #endif
  #endif
-@@ -1034,13 +1145,20 @@
+@@ -1034,13 +1156,20 @@
  	if(ret < 0)
  		perror(show ? "IOC_FP_SET_ICON" : "IOC_FP_CLEAR_ICON");
  #else
@@ -581,7 +592,7 @@
 +//#if defined(BOXMODEL_SPARK7162)
 +//		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, false);
 +//#elif defined(BOXMODEL_FORTIS_HDBOX)
-+#if defined(BOXMODEL_FORTIS_HDBOX)
++#if defined(BOXMODEL_FORTIS_HDBOX) || defined(BOXMODEL_TF7700)
 +		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, false);
 +#endif
  
@@ -594,7 +605,7 @@
 +//#if defined (BOXMODEL_SPARK7162)
 +//		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, true);
 +//#elif defined(BOXMODEL_FORTIS_HDBOX)
-+#if defined(BOXMODEL_FORTIS_HDBOX)
++#if defined(BOXMODEL_FORTIS_HDBOX) || defined(BOXMODEL_TF7700)
 +		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
 +#endif
  		/* start temporary timeshift if enabled and not running, but dont start second record */

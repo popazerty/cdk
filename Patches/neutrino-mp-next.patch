@@ -61,7 +61,7 @@
  elif test "$BOXMODEL" = "cuberevo_mini2"; then
 --- neutrino-mp-next.org/src/gui/vfd_setup.cpp
 +++ neutrino-mp-next/src/gui/vfd_setup.cpp
-@@ -186,6 +186,15 @@
+@@ -186,6 +186,17 @@
  
  void CVfdSetup::showBrightnessSetup(CMenuWidget *mn_widget)
  {
@@ -71,13 +71,15 @@
 + || defined(BOXMODEL_HS7119) \
 + || defined(BOXMODEL_HS7819)
 +#define MAXBRIGHT 7
++#elif defined(BOXMODEL_TF7700)
++#define MAXBRIGHT 5
 +#else
 +#define MAXBRIGHT 15
 +#endif
  	CMenuOptionNumberChooser * nc;
  	CMenuForwarder * mf;
  
-@@ -195,20 +204,20 @@
+@@ -195,20 +206,20 @@
  	brightnessstandby = CVFD::getInstance()->getBrightnessStandby();
  	brightnessdeepstandby = CVFD::getInstance()->getBrightnessDeepStandby();
  
