@@ -6,6 +6,9 @@ all:
 	if [ -e $(KERNEL_DIR)/arch/sh/boot/uImage ]; then \
 		rm $(KERNEL_DIR)/arch/sh/boot/uImage; \
 	fi
+	if [ -e $(TFINSTALLER_DIR)/uImage ]; then \
+		rm $(TFINSTALLER_DIR)/uImage; \
+	fi
 	cp $(TFINSTALLER_DIR)/initramfs_list $(KERNEL_DIR)/initramfs_list
 	cp $(KERNEL_DIR)/.config $(TFINSTALLER_DIR)/.config.org
 	sed -i 's/# CONFIG_INITRAMFS_SOURCE is not set/CONFIG_INITRAMFS_SOURCE="initramfs_list"/g' $(KERNEL_DIR)/.config
@@ -75,11 +78,9 @@ tfpacker: $(TFP_OBJS)
 
 clean:
 	rm -f $(TFP_OBJS)
-	rm -f uImage
+#	rm -f uImage
 	rm -f u-boot.ftfd
 	rm -f tfpacker
-#	rm -f config.tf
-#	rm -f config.tf2
 
 .c.o:
 	gcc -c $< -Wall

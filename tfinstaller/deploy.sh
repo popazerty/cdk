@@ -1,9 +1,10 @@
 #!/bin/sh
 
-echo "--------------------------------------------------------------------"
+echo "------------------------------------------------------------"
 echo "deploy.sh"
-echo "V0.11: Non-jfs RECORD partion was always formatted in ext2,"
-echo "       even with useext2e2=0"
+echo
+echo "V0.11: Fixed: non-jfs RECORD partion was always formatted in"
+echo "       ext2, even with useext2e2=0"
 echo "V0.10: Try to mount USB stick several times if mount fails"
 echo "V0.09: Log installation to boot medium removed again because"
 echo "       it caused problems"
@@ -16,7 +17,7 @@ echo "V0.04: Changed ini File format"
 echo "V0.03: Suppress meaningless tar errors during save settings"
 echo "V0.02: Format Mini partitions with Ext3 instead of Ext2"
 echo "V0.01: New parameter CREATEMINI and cleanup of KEEPSETTINGS"
-echo "--------------------------------------------------------------------"
+echo "------------------------------------------------------------"
 
 # default installation device
 HDD=/dev/sda
