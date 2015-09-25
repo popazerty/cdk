@@ -68,6 +68,8 @@ done
 
 # If the file topfield.tfd is located on the stick, flash it
 if [ -f /instsrc/topfield.tfd ]; then
+  echo "   1"     > /dev/fpsmall
+  echo "FLASH" > /dev/fplarge
 
   echo
   echo "Please stand by. This will take about 1.5 minutes..."
@@ -80,7 +82,11 @@ if [ -f /instsrc/topfield.tfd ]; then
   dd if=/dev/zero of=/dev/sda bs=512 count=64
   umount /instsrc
 
-  echo "Shutting down"
+  echo
+  echo "<- Job done, rebooting... ->"
+  echo "   0" > /dev/fpsmall
+  echo "REBOOT" > /dev/fplarge
+  sleep 2
   reboot -f
   exit
 fi
@@ -126,7 +132,6 @@ if [ "$startingLine1" -gt "$startingLine2" ]; then
 else
   export set startingLine="$startingLine1"
 fi
-
 
 echo "-------------------------------------"
 echo "Using the following settings:"
@@ -236,19 +241,19 @@ fi
 
 
 # Skip formatting if the keyword 'format' is not specified in the control file
-if [ $format != "1" ]; then
-  echo
-  echo "<- Checking HDD ->"
-  echo "   8" > /dev/fpsmall
-  echo "HDD CHK" > /dev/fplarge
-
-  fsck.ext3 -y $ROOTFS
-  if [ "$usejfs" = "1" ]; then
-    fsck.jfs -p $DATAFS
-  else
-    fsck.ext2 -y $DATAFS
-  fi
-else
+if [ $format = "1" ]; then
+#  echo
+#  echo "<- Checking HDD ->"
+#  echo "   8" > /dev/fpsmall
+#  echo "HDD CHK" > /dev/fplarge
+#
+#  fsck.ext3 -y $ROOTFS
+#  if [ "$usejfs" = "1" ]; then
+#    fsck.jfs -p $DATAFS
+#  else
+#    fsck.ext2 -y $DATAFS
+#  fi
+#else
   if [ "$partition" = "1" ]; then
     echo
     echo "<- Partitioning HDD ->"
@@ -304,45 +309,34 @@ EOF
       echo "OK, HDD already partitioned."
     fi
   fi
+fi
 
-  # Format both Linux partitions
-  echo
-  echo "<- Formatting HDD (rootfs) ->"
-  echo "   7" > /dev/fpsmall
-  echo "HDD FMT" > /dev/fplarge
-  #ln -s /proc/mounts /etc/mtab
+# Format Linux rootfs partitions
+echo
+echo "<- Formatting HDD (rootfs) ->"
+echo "   7" > /dev/fpsmall
+echo "HDD FMT" > /dev/fplarge
+#ln -s /proc/mounts /etc/mtab
   
-  fs="ext3"
-  if [ "$useext2e2" = "1" ]; then
-    fs="ext2"
-  fi
+fs="ext3"
+if [ "$useext2e2" = "1" ]; then
+  fs="ext2"
+fi
   
-  mkfs.$fs -L MINI9 $ROOTFS
+mkfs.$fs -L MINI9 $ROOTFS
 
-  if [ "$partition" = "1" ]; then
-    if [ "$createmini" = "1" ]; then
-      echo "MINI" > /dev/fpsmall
-      mknod $HDD"5" b 8 5
-      mknod $HDD"6" b 8 6
-      mknod $HDD"7" b 8 7
-      mknod $HDD"8" b 8 8
-      mkfs.$fs -L MINI1 $HDD"5"
-      mkfs.$fs -L MINI2 $HDD"6"
-      mkfs.$fs -L MINI3 $HDD"7"
-      mkfs.$fs -L MINI4 $HDD"8"
-    fi
-    echo
-    echo "<- Formatting HDD (record) ->"
-    echo "   6" > /dev/fpsmall
-    if [ "$usejfs" = "1" ]; then
-      echo "HDD FMT JFS"  > /dev/fplarge
-      mkfs.jfs -q -L RECORD $DATAFS
-    else
-      echo "HDD FMT EXT"  > /dev/fplarge
-      mkfs.$fs -F -L RECORD $DATAFS
-    fi
+if [ "$partition" = "1" ]; then
+  if [ "$createmini" = "1" ]; then
+    echo "MINI" > /dev/fpsmall
+    mknod $HDD"5" b 8 5
+    mknod $HDD"6" b 8 6
+    mknod $HDD"7" b 8 7
+    mknod $HDD"8" b 8 8
+    mkfs.$fs -L MINI1 $HDD"5"
+    mkfs.$fs -L MINI2 $HDD"6"
+    mkfs.$fs -L MINI3 $HDD"7"
+    mkfs.$fs -L MINI4 $HDD"8"
   fi
-
   # Initialise the swap partition
   echo
   echo "<- Formatting HDD (swap) ->"
@@ -354,6 +348,18 @@ EOF
   echo
 fi
 
+if [ $format = "1" ]; then
+  echo
+  echo "<- Formatting HDD (record) ->"
+  echo "   6" > /dev/fpsmall
+  if [ "$usejfs" = "1" ]; then
+    echo "HDD FMT JFS"  > /dev/fplarge
+    mkfs.jfs -q -L RECORD $DATAFS
+  else
+    echo "HDD FMT EXT"  > /dev/fplarge
+    mkfs.$fs -F -L RECORD $DATAFS
+  fi
+fi
 
 # Skip rootfs installation if 'update=0' is specified in the control file
 if [ "$update" = "1" ]; then
@@ -379,7 +385,6 @@ else
   echo "<- Skipping installation of root file system ->"
 fi
 
-
 # Restore the settings
 if [ "$keepsettings" = "1" ]; then
   echo
@@ -396,16 +401,19 @@ if [ "$keepsettings" = "1" ]; then
   echo "done ->"
 fi
 
-
 # Make sure that the data partition contains subdirectories
 mkdir -p /mnt
 mount $DATAFS /mnt
 mkdir -p /mnt/movie
 mkdir -p /mnt/music
 mkdir -p /mnt/picture
+#Needed for Neutrino
+mkdir -p /mnt/epg
+mkdir -p /mnt/timeshift
+mkdir -p /mnt/plugins
+mkdir -p /mnt/logos
 sync
 umount /mnt
-
 
 # Write U-Boot settings into the flash
 echo
@@ -418,7 +426,6 @@ if [ $? -ne 0 ]; then
   exit  
 fi 
 echo "done ->"
-
 
 # Skip Flash of MTD2 if 'keepbootargs=1' is specified in the control file
 if [ "$keepbootargs" != "1" ]; then

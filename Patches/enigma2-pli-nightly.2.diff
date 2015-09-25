@@ -17,7 +17,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +fi
 +
 +AC_ARG_ENABLE(mediafwgstreamer,
-+	[  --enable-mediafwgstreamer      enable gstreamer as player engine supportt],
++	[  --enable-mediafwgstreamer      enable gstreamer as player engine support],
 +	[AC_DEFINE(ENABLE_MEDIAFWGSTREAMER,1,[enable gstreamer as player engine support])])
 +
 +AM_CONDITIONAL(ENABLE_MEDIAFWGSTREAMER,test "$enable_mediafwgstreamer" = "yes")
@@ -166,7 +166,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
 +lib/python/Plugins/Extensions/CuberevoVFD/Makefile
-+lib/python/Plugins/Extensions/TopfieldVFD/Makefile
 +lib/python/Plugins/Extensions/fs9000VFD/Makefile
 +lib/python/Plugins/Extensions/fs9000VFD/meta/Makefile
 +lib/python/Plugins/Extensions/fs9000VFD/locale/Makefile
@@ -202,6 +201,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +lib/python/Plugins/Extensions/spark7162VFD/locale/Makefile
 +lib/python/Plugins/Extensions/spark7162VFD/locale/nl/Makefile
 +lib/python/Plugins/Extensions/spark7162VFD/locale/nl/LC_MESSAGES/Makefile
++lib/python/Plugins/Extensions/TopfieldVFD/Makefile
 +lib/python/Plugins/SystemPlugins/VFD-Icons/Makefile
 +lib/python/Plugins/SystemPlugins/VFD-Icons/meta/Makefile
  lib/python/Tools/Makefile
@@ -430,7 +430,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.cp
  	size_t current_span_remaining = 0;
 +#if defined(__sh__)
 +// opens video device for the reverse playback workaround
-+// Changes in this file are cause e2 doesnt tell the player to play reverse
++// Changes in this file are cause e2 does not tell the player to play reverse
 +	int fd_video = open("/dev/dvb/adapter0/video0", O_RDONLY);
 +// Fix to ensure that event evtEOF is called at end of playbackl part 1/3
 +	bool already_empty = false;
@@ -823,7 +823,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +	//ioctl(fpc, FRONTPANELSCROLLMODE, &scrollMode);
 +
 +	// display string
-+	char str[] = "        Topfield TF77X0 ENIGMA2";
++	char str[] = "        TOPFIELD TF77X0 ENIGMA2";
 +	int length = strlen(str);
 +	char dispData[MAX_CHARS + 1];
 +	int offset = 0;
@@ -2007,8 +2007,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci.cpp
 +		d[0] = getSlotID();
 +		d[1] = connection_id;
 +		d[2] = T_DATA_LAST;
-+		d[3] = len + 1; 		/* len */
-+		d[4] = connection_id; 	/* transport connection identifier*/
++		d[3] = len + 1;		/* len */
++		d[4] = connection_id;	/* transport connection identifier*/
 +		len = 5;
 +	}
 +
@@ -2560,8 +2560,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci_ses
  		{
  			eDebug("[CI SESS] PROTOCOL: illegal session number %x", session_nb);
 +#ifdef __sh__
-+			//Dagobert during start-up we seems to have some problems
-+			//on some modules which "looses" the connection. So reset it
++			//Dagobert during start-up we seem to have some problems
++			//on some modules which "lose" the connection. So reset it
 +			deleteSessions(slot);
 +			slot->reset();
 +#endif
@@ -4641,7 +4641,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/Extensions/TopfieldVFD/plugin.py enigma2-nightly/lib/python/Plugins/Extensions/TopfieldVFD/plugin.py
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/TopfieldVFD/plugin.py	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/python/Plugins/Extensions/TopfieldVFD/plugin.py	2015-08-19 23:14:08.351487371 +0200
-@@ -0,0 +1,458 @@
+@@ -0,0 +1,599 @@
 +from Screens.Screen import Screen
 +from Screens.MessageBox import MessageBox
 +from Plugins.Plugin import PluginDescriptor
@@ -4658,7 +4658,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 +from Plugins.Plugin import PluginDescriptor
 +import ServiceReference
 +from enigma import iPlayableService, eTimer, eServiceCenter, iServiceInformation
-+from enigma import evfd
++from enigma import evfd, eDVBVolumecontrol
 +import time, fcntl, struct
 +from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
 +from enigma import eTimer
@@ -4704,17 +4704,63 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 +ioHddFull = struct.pack('LLB', 0x0, 0x800000,0x6)       # "HDD full" flashing
 +hddCheckPeriod = 60 # check every 60 seconds
 +ioIconCmd = 0x400b3a20
++#ioDotOn = struct.pack('LLB', 0x1, 0x0, 0xf)
++#ioDotOff = struct.pack('LLB', 0x1, 0x0, 0x0)
++#ioPowerOn = struct.pack('LLB', 0x2, 0x0, 0xf)
++#ioPowerOff = struct.pack('LLB', 0x2, 0x0, 0x0)
++#ioAMOn = struct.pack('LLB', 0x8, 0x0, 0xf)
++#ioAMOff = struct.pack('LLB', 0x8, 0x0, 0x0)
++#ioPMOn = struct.pack('LLB', 0x10, 0x0, 0xf)
++#ioPMOff = struct.pack('LLB', 0x10, 0x0, 0x0)
++ioTimerOn = struct.pack('LLB', 0x20, 0x0, 0xf)
++ioTimerOff = struct.pack('LLB', 0x20, 0x0, 0x0)
++#ioAC3On = struct.pack('LLB', 0x40, 0x0, 0xf)
++#ioAC3Off = struct.pack('LLB', 0x40, 0x0, 0x0)
 +ioTimeshiftOn = struct.pack('LLB', 0x80, 0x0, 0xf)
 +ioTimeshiftOff = struct.pack('LLB', 0x80, 0x0, 0x0)
++#ioAttnOn = struct.pack('LLB', 0x100, 0x0, 0xf)
++#ioAttnOff = struct.pack('LLB', 0x100, 0x0, 0x0)
++#ioRadioOn = struct.pack('LLB', 0x200, 0x0, 0xf)
++#ioRadioOff = struct.pack('LLB', 0x200, 0x0, 0x0)
++ioDishOn = struct.pack('LLB', 0x400, 0x0, 0xf)
++ioDishOff = struct.pack('LLB', 0x400, 0x0, 0x0)
++#ioMP3On = struct.pack('LLB', 0x800, 0x0, 0xf)
++#ioMP3Off = struct.pack('LLB', 0x800, 0x0, 0x0)
 +ioRec1On = struct.pack('LLB', 0x1000, 0x0, 0xf)
 +ioRec1Off = struct.pack('LLB', 0x1000, 0x0, 0x0)
 +ioRec2On = struct.pack('LLB', 0x2000, 0x0, 0xf)
 +ioRec2Off = struct.pack('LLB', 0x2000, 0x0, 0x0)
 +ioRecBothOn = struct.pack('LLB', 0x3000, 0x0, 0xf)
 +ioRecBothOff = struct.pack('LLB', 0x3000, 0x0, 0x0)
++#ioRecOn = struct.pack('LLB', 0x4000, 0x0, 0xf)
++#ioRecOff = struct.pack('LLB', 0x4000, 0x0, 0x0)
++ioMuteOn = struct.pack('LLB', 0x8000, 0x0, 0xf)
++ioMuteOff = struct.pack('LLB', 0x8000, 0x0, 0x0)
++#ioPauseOn = struct.pack('LLB', 0x10000, 0x0, 0xf)
++#ioPauseOff = struct.pack('LLB', 0x10000, 0x0, 0x0)
++#ioFastForwardOn = struct.pack('LLB', 0x20000, 0x0, 0xf)
++#ioFastForwardOff = struct.pack('LLB', 0x20000, 0x0, 0x0)
++#ioRewindOn = struct.pack('LLB', 0x40000, 0x0, 0xf)
++#ioRewindOff = struct.pack('LLB', 0x40000, 0x0, 0x0)
++#ioStepForwardOn = struct.pack('LLB', 0x80000, 0x0, 0xf)
++#ioStepForwardOff = struct.pack('LLB', 0x80000, 0x0, 0x0)
++#ioPlayOn = struct.pack('LLB', 0x100000, 0x0, 0xf)
++#ioPlayOff = struct.pack('LLB', 0x100000, 0x0, 0x0)
++#ioStepBackOn = struct.pack('LLB', 0x200000, 0x0, 0xf)
++#ioStepBackOff = struct.pack('LLB', 0x200000, 0x0, 0x0)
++#ioNetworkOn = struct.pack('LLB', 0x400000, 0x0, 0xf)
++#ioNetworkOff = struct.pack('LLB', 0x400000, 0x0, 0x0)
++#ioDolbyOn = struct.pack('LLB', 0x800000, 0x0, 0xf)
++#ioDolbyOff = struct.pack('LLB', 0x800000, 0x0, 0x0)
++#ioAttnOn = struct.pack('LLB', 0x1000000, 0x0, 0xf)
++#ioAttnOff = struct.pack('LLB', 0x1000000, 0x0, 0x0)
++#ioCryptedOn = struct.pack('LLB', 0x2000000, 0x0, 0xf)
++#ioCryptedOff = struct.pack('LLB', 0x2000000, 0x0, 0x0)
 +ioEthBothOff = struct.pack('LLB', 0x0c000000, 0x0, 0x0)
 +ioEthLeftOn = struct.pack('LLB', 0x08000000, 0x0, 0xe)
 +ioEthRightOn = struct.pack('LLB', 0x04000000, 0x0,0xb)
++#ioTVOn = struct.pack('LLB', 0x4, 0x0, 0xf) TO BE TESTED
++#ioTVOff = struct.pack('LLB', 0x4, 0x0, 0x0)
 +
 +ioColonOn = struct.pack('LLB', 0x4, 0x0,0x3)
 +ioColonOff = struct.pack('LLB', 0x4, 0x0,0x0)
@@ -4789,12 +4835,17 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 +		self.onClose = [ ]
 +		self.__event_tracker = ServiceEventTracker(screen=self,eventmap=
 +		{
++			iPlayableService.evUpdatedInfo: self.UpdatedInfo,
 +			iPlayableService.evSeekableStatusChanged: self.__evSeekableStatusChanged,
++			iPlayableService.evTunedIn: self.__evTunedIn,
++			iPlayableService.evTuneFailed: self.__evTuneFailed,
 +			iPlayableService.evStart: self.__evStart,
 +		})
 +		session.nav.record_event.append(self.gotRecordEvent)
 +		self.Console = Console()
 +		self.tsEnabled = False
++		self.isMuted = False
++		self.tuned = False
 +		self.recNum = 0
 +		self.timer = eTimer()
 +		self.timer.callback.append(self.handleTimer)
@@ -4922,6 +4973,89 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 +		except AttributeError:
 +			None
 +
++	def displayMute(self):
++		tmp = eDVBVolumecontrol.getInstance().isMuted()
++
++#		if tmp == self.isMuted:
++#			return
++		try:
++			fd = open("/dev/fpc")
++			if tmp == True:
++#				print "[Mute on]"
++				fcntl.ioctl(fd.fileno(), ioIconCmd, ioMuteOn)
++			else:
++#				print "[Mute off]"
++				fcntl.ioctl(fd.fileno(), ioIconCmd, ioMuteOff)
++			fd.close()
++		except IOError,e:
++			if debug:
++				print "TopfieldVFD: displayMute ", e
++			self.isMuted = tmp
++
++	def displayTimer(self):
++		next_rec_time = -1
++		next_rec_time = self.session.nav.RecordTimer.getNextRecordingTime()
++
++		try:
++			fd = open("/dev/fpc")
++			if next_rec_time > 0:
++#				print "[Timer on]"
++				fcntl.ioctl(fd.fileno(), ioIconCmd, ioTimerOn)
++			else:
++#				print "[Timer off]"
++				fcntl.ioctl(fd.fileno(), ioIconCmd, ioTimerOff)
++			fd.close()
++		except IOError,e:
++			if debug:
++				print "TopfieldVFD: displayTimer ", e
++#			self.tsisMuted = tmp
++
++	def __evTunedIn(self):
++		self.tuned = True
++#		Console().ePopen("fp_control -i 42 0 -i 37 0 -i 29 0") #SAT, TER + Alert off
++#		if config.plugins.vfdicon.hddicons.value == "no":
++#			self.displayHddUsedOff()
++
++	def __evTuneFailed(self):
++		self.tuned = False
++#		if config.plugins.vfdicon.hddicons.value == "no":
++#			self.displayHddUsedOff()
++
++	def displayTuned(self):
++		if self.tuned == True:
++			service = self.session.nav.getCurrentService()
++#			if service is not None and self.play == False:
++			if service is not None:
++				info = service.info()
++#				TPdata = info and info.getInfoObject(iServiceInformation.sTransponderData)
++#				tunerType = TPdata.get("tuner_type")
++#				if tunerType == "DVB-S":
++#				Console().ePopen("fp_control -i 42 1 -i 29 0") #SAT on, Alert off
++				try:
++					fd = open("/dev/fpc")
++					fcntl.ioctl(fd.fileno(), ioIconCmd, ioDishOn)
++					fd.close();
++				except IOError,e:
++					self.tuned == True # dummy operation
++#
++#				feinfo = service.frontendInfo()
++#				FEdata = feinfo and feinfo.getAll(True)
++#				tunerNumber = FEdata and FEdata.get("tuner_number")
++#				print "[VFD-Icons] Set SAT icon; tuner number", tunerNumber
++#				if tunerNumber == 0:
++#					Console().ePopen("fp_control -i 44 1 -i 45 0") #dot1 on, dot2 off
++#				else:
++#					Console().ePopen("fp_control -i 45 1 -i 44 0") #dot1 off, dot2 on
++		else:
++			print "[VFD-Icons] No TER or SAT icon"
++			try:
++				fd = open("/dev/fpc")
++				fcntl.ioctl(fd.fileno(), ioIconCmd, ioDishOff)
++				fd.close();
++			except IOError,e:
++				self.tuned == True # dummy operation
++#				Console().ePopen("fp_control -i 37 0 -i 42 0 -i 44 0 -i 45 0 -i 29 0") #TER, SAT, dot1, dot2, Alert off
++
 +	def displayHddUsed(self):
 +		if debug:
 +			print "TopfieldVFD: determine HDD usage"
@@ -4952,6 +5086,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 +		#print "[ TopfieldVFD timer ]"
 +		if self.valuesSet == 0:
 +			self.setValues()
++
++		self.displayMute()
++		self.displayTimer()
 +
 +		if self.clockEnabled:
 +			clock = strftime("%k%M",localtime(time()))
@@ -4995,17 +5132,21 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 +						print "TopfieldVFD: handleTimer (Ethernet) ", e
 +					break
 +
++	def UpdatedInfo(self):
++		self.displayTuned()
++		self.displayMute()
++
 +	def __evStart(self):
 +		self.__evSeekableStatusChanged()
 +
 +	def getTimeshiftState(self):
 +		service = self.session.nav.getCurrentService()
-+		if service is None:
-+			return False
-+		timeshift = service.timeshift()
-+		if timeshift is None:
-+			return False
-+		return True
++		if service:
++			ts = service and service.timeshift()
++#		if timeshift is None:
++			if ts and ts.isTimeshiftActive() > 0:
++				return True
++		return False
 +
 +	def __evSeekableStatusChanged(self):
 +		tmp = self.getTimeshiftState()
@@ -5013,7 +5154,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/E
 +			return
 +		try:
 +			fd = open("/dev/fpc")
-+			if tmp:
++			if tmp == True:
 +				print "[Timeshift enabled]"
 +				fcntl.ioctl(fd.fileno(), ioIconCmd, ioTimeshiftOn)
 +			else:
@@ -6296,7 +6437,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
 +	def __init__(self):
 +		self["AspectSelectionAction"] = HelpableActionMap(self, "InfobarAspectSelectionActions",
 +			{
-+				"aspectSelection": (self.ExGreen_toggleGreen, _("Aspect list")),
++				"aspectSelection": (self.ExGreen_toggleGreen, _("Aspect ratio list")),
 +			})
 +
 +		self["key_green"] = Boolean(True)
@@ -6898,275 +7039,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Com
 +	os.system("rm /tmp/command.txt")
 +	return comandline
 +
-diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/KeyBindings.py enigma2-nightly/lib/python/Tools/KeyBindings.py
---- enigma2-nightly.org/lib/python/Tools/KeyBindings.py	2015-08-07 17:31:49.845972683 +0200
-+++ enigma2-nightly/lib/python/Tools/KeyBindings.py	2015-08-19 23:14:08.355487371 +0200
-@@ -45,7 +45,10 @@
- 		KEYIDS["KEY_9"]: ("9",),
- 		KEYIDS["KEY_EXIT"]: ("EXIT",),
- 		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",)
-+		KEYIDS["KEY_RECORD"]: ("RECORD",),
-+		KEYIDS["KEY_EPG"]: ("EPG",),
-+		KEYIDS["KEY_REWIND"]: ("REWIND",),
-+		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",)
- 	},
- 	{
- 		KEYIDS["BTN_0"]: ("UP", "fp"),
-@@ -87,36 +90,17 @@
- 		KEYIDS["KEY_9"]: ("9",),
- 		KEYIDS["KEY_EXIT"]: ("EXIT",),
- 		KEYIDS["KEY_STOP"]: ("TV", "SHIFT"),
--		KEYIDS["KEY_RECORD"]: ("RADIO", "SHIFT")
-+		KEYIDS["KEY_RECORD"]: ("RADIO", "SHIFT"),
-+		KEYIDS["KEY_EPG"]: ("EPG",),
-+		KEYIDS["KEY_REWIND"]: ("REWIND",),
-+		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",)
- 	},
--	{
--		KEYIDS["BTN_0"]: ("UP", "fp"),
--		KEYIDS["BTN_1"]: ("DOWN", "fp"),
--		KEYIDS["KEY_OK"]: ("OK", ""),
--		KEYIDS["KEY_UP"]: ("UP",),
--		KEYIDS["KEY_DOWN"]: ("DOWN",),
-+	{  # for remotes with ID 2 (base is spark remote RC12)
- 		KEYIDS["KEY_POWER"]: ("POWER",),
--		KEYIDS["KEY_RED"]: ("RED",),
--		KEYIDS["KEY_BLUE"]: ("BLUE",),
--		KEYIDS["KEY_GREEN"]: ("GREEN",),
--		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
--		KEYIDS["KEY_MENU"]: ("MENU",),
--		KEYIDS["KEY_LEFT"]: ("LEFT",),
--		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
--		KEYIDS["KEY_VIDEO"]: ("PVR",),
--		KEYIDS["KEY_INFO"]: ("INFO",),
--		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
--		KEYIDS["KEY_TV"]: ("TV",),
--		KEYIDS["KEY_RADIO"]: ("RADIO",),
--		KEYIDS["KEY_TEXT"]: ("TEXT",),
--		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
--		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
--		KEYIDS["KEY_PREVIOUSSONG"]: ("REWIND",),
--		KEYIDS["KEY_PLAYPAUSE"]: ("PAUSE",),
--		KEYIDS["KEY_PLAY"]: ("PLAY",),
--		KEYIDS["KEY_NEXTSONG"]: ("FASTFORWARD",),
--		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
--		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
-+		KEYIDS["KEY_V"]: ("V.FORMAT",),
-+		KEYIDS["KEY_AUX"]: ("TV/SAT",),
-+		KEYIDS["KEY_TIME"]: ("TIME",),
-+		KEYIDS["KEY_MUTE"]: ("MUTE",),
- 		KEYIDS["KEY_0"]: ("0",),
- 		KEYIDS["KEY_1"]: ("1",),
- 		KEYIDS["KEY_2"]: ("2",),
-@@ -127,107 +111,100 @@
- 		KEYIDS["KEY_7"]: ("7",),
- 		KEYIDS["KEY_8"]: ("8",),
- 		KEYIDS["KEY_9"]: ("9",),
--		KEYIDS["KEY_EXIT"]: ("EXIT",),
--		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",)
--	},
--	{       # XP1000
--		KEYIDS["BTN_0"]: ("UP", "fp"),
--		KEYIDS["BTN_1"]: ("DOWN", "fp"),
--		KEYIDS["KEY_OK"]: ("OK", ""),
-+		KEYIDS["KEY_TV2"]: ("TV/RADIO",),
-+		KEYIDS["KEY_BACK"]: ("RECALL",),
-+		KEYIDS["KEY_PAGEUP"]: ("PAGE+",),  # fortis name CHANNELUP
-+		KEYIDS["KEY_PAGEDOWN"]: ("PAGE-",), # fortis name CHANNELDOWN
-+		KEYIDS["KEY_FIND"]: ("FIND",),
-+		KEYIDS["KEY_ARCHIVE"]: ("FOLDER",),
-+		KEYIDS["KEY_VOLUMEUP"]: ("VOL+",),
-+		KEYIDS["KEY_VOLUMEDOWN"]: ("VOL-",),
-+		KEYIDS["KEY_MENU"]: ("MENU",),
-+		KEYIDS["KEY_INFO"]: ("INFO",),
- 		KEYIDS["KEY_UP"]: ("UP",),
- 		KEYIDS["KEY_DOWN"]: ("DOWN",),
--		KEYIDS["KEY_POWER"]: ("POWER",),
-+		KEYIDS["KEY_LEFT"]: ("LEFT",),
-+		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
-+		KEYIDS["KEY_OK"]: ("OK", ""),
-+		KEYIDS["KEY_HOME"]: ("EXIT",),
-+		KEYIDS["KEY_EPG"]: ("EPG",),
-+		KEYIDS["KEY_FAVORITES"]: ("FAV",),
-+		KEYIDS["KEY_SAT"]: ("SAT",),
- 		KEYIDS["KEY_RED"]: ("RED",),
--		KEYIDS["KEY_BLUE"]: ("BLUE",),
- 		KEYIDS["KEY_GREEN"]: ("GREEN",),
- 		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
--		KEYIDS["KEY_MENU"]: ("MENU",),
--		KEYIDS["KEY_LEFT"]: ("LEFT",),
--		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
--		KEYIDS["KEY_VIDEO"]: ("PVR",),
--		KEYIDS["KEY_INFO"]: ("INFO",),
--		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
--		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
--		KEYIDS["KEY_TV"]: ("TV",),
--		KEYIDS["KEY_RADIO"]: ("RADIO",),
--		KEYIDS["KEY_TEXT"]: ("TEXT",),
-+		KEYIDS["KEY_BLUE"]: ("BLUE",),
-+		KEYIDS["KEY_RECORD"]: ("RECORD",),
-+		KEYIDS["KEY_STOP"]: ("STOP",),
-+		KEYIDS["KEY_PLAY"]: ("PLAY",),
-+		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
-+		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
-+		KEYIDS["KEY_REWIND"]: ("REWIND",),
-+		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
- 		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
--		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
--		KEYIDS["KEY_PREVIOUSSONG"]: ("SKIPBACK",),
--		KEYIDS["KEY_REWIND"]: ("REWIND",),
--		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
--		KEYIDS["KEY_NEXTSONG"]: ("SKIPFORWARD",),
--		KEYIDS["KEY_PLAYPAUSE"]: ("PLAYPAUSE",),
--		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
--		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
--		KEYIDS["KEY_0"]: ("0",),
--		KEYIDS["KEY_1"]: ("1",),
--		KEYIDS["KEY_2"]: ("2",),
--		KEYIDS["KEY_3"]: ("3",),
--		KEYIDS["KEY_4"]: ("4",),
--		KEYIDS["KEY_5"]: ("5",),
--		KEYIDS["KEY_6"]: ("6",),
--		KEYIDS["KEY_7"]: ("7",),
--		KEYIDS["KEY_8"]: ("8",),
--		KEYIDS["KEY_9"]: ("9",),
--		KEYIDS["KEY_EXIT"]: ("EXIT",),
--		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",),
--		KEYIDS["KEY_BOOKMARKS"]: ("PORTAL",),
--		KEYIDS["KEY_VMODE"]: ("VMODE",),
--		KEYIDS["KEY_PROGRAM"]: ("TIMER",),
--		KEYIDS["KEY_SLEEP"]: ("SLEEP",),
--		KEYIDS["KEY_EPG"]: ("EPG",),
--	},
--	{       # Formuler F1
--		KEYIDS["BTN_0"]: ("UP", "fp"),
--		KEYIDS["BTN_1"]: ("DOWN", "fp"),
--		KEYIDS["KEY_OK"]: ("OK", ""),
--		KEYIDS["KEY_UP"]: ("UP",),
--		KEYIDS["KEY_DOWN"]: ("DOWN",),
--		KEYIDS["KEY_POWER"]: ("POWER",),
--		KEYIDS["KEY_RED"]: ("RED",),
--		KEYIDS["KEY_BLUE"]: ("BLUE",),
--		KEYIDS["KEY_GREEN"]: ("GREEN",),
--		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
--		KEYIDS["KEY_MENU"]: ("MENU",),
--		KEYIDS["KEY_LEFT"]: ("LEFT",),
--		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
--		KEYIDS["KEY_VIDEO"]: ("PVR",),
--		KEYIDS["KEY_INFO"]: ("INFO",),
--		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
--		KEYIDS["KEY_TV"]: ("TV",),
--		KEYIDS["KEY_RADIO"]: ("RADIO",),
--		KEYIDS["KEY_TEXT"]: ("TEXT",),
--		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
--		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
--		KEYIDS["KEY_REWIND"]: ("REWIND",),
--		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
--		KEYIDS["KEY_PLAY"]: ("PLAY",),
--		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
--		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
--		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
--		KEYIDS["KEY_0"]: ("0",),
--		KEYIDS["KEY_1"]: ("1",),
--		KEYIDS["KEY_2"]: ("2",),
--		KEYIDS["KEY_3"]: ("3",),
--		KEYIDS["KEY_4"]: ("4",),
--		KEYIDS["KEY_5"]: ("5",),
--		KEYIDS["KEY_6"]: ("6",),
--		KEYIDS["KEY_7"]: ("7",),
--		KEYIDS["KEY_8"]: ("8",),
--		KEYIDS["KEY_9"]: ("9",),
--		KEYIDS["KEY_EXIT"]: ("EXIT",),
--		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",),
-+		KEYIDS["KEY_F"]: ("FAST",),
-+		KEYIDS["KEY_SLOW"]: ("SLOW",),
-+		KEYIDS["KEY_P"]: ("PLAY_MODE",),
-+		KEYIDS["KEY_CLOSE"]: ("USB",),
-+		KEYIDS["KEY_T"]: ("Tms",),
- 		KEYIDS["KEY_F1"]: ("F1",),
- 		KEYIDS["KEY_F2"]: ("F2",),
- 		KEYIDS["KEY_F3"]: ("F3",),
--		KEYIDS["KEY_BACK"]: ("RECALL",),
--		KEYIDS["KEY_CONTEXT_MENU"]: ("CONTEXT",),
--		KEYIDS["KEY_EPG"]: ("EPG",),
--		KEYIDS["KEY_BOOKMARKS"]: ("PLAYLIST",),
-+		KEYIDS["KEY_OPEN"]: ("PORTAL",),
-+		# Topfield keys (evremote2, not on Spark)
-+		KEYIDS["KEY_ZOOM"]: ("V.FORMAT",),
-+		KEYIDS["KEY_SCREEN"]: ("A/R",),
-+		KEYIDS["KEY_AUX"]: ("AUX",),
-+		KEYIDS["KEY_BACK"]: ("BACK",),
-+		KEYIDS["KEY_HELP"]: ("INFO",), #wrongly assigned in evremote2
-+		KEYIDS["KEY_LANGUAGE"]: ("AUDIO",),
-+		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
-+		KEYIDS["KEY_DOWN"]: ("DOWN/P-",),
-+		KEYIDS["KEY_UP"]: ("UP/P+",),
-+		KEYIDS["KEY_RIGHT"]: ("RIGHT/V+",),
-+		KEYIDS["KEY_LEFT"]: ("LEFT/V-",),
-+		KEYIDS["KEY_OK"]: ("OK/LIST",),
-+		KEYIDS["KEY_EPG"]: ("GUIDE",),
-+		KEYIDS["KEY_SLOW"]: ("SLOWMOTION",),
-+		KEYIDS["KEY_LIST"]: ("RECORDLIST",),
-+		KEYIDS["KEY_PREVIOUS"]: ("STEPBACK",),
-+		KEYIDS["KEY_NEXT"]: ("STEPFORWARD",),
-+		KEYIDS["KEY_OPTION"]: ("MARK",),
-+		KEYIDS["KEY_ARCHIVE"]: ("USB",),
-+		KEYIDS["KEY_TIME"]: ("TIMER",),
-+		# Fortis keys (evremote2, not on Spark or Topfield)
-+		KEYIDS["KEY_VOLUMEUP"]: ("VOLUMEUP",),
-+		KEYIDS["KEY_VOLUMEDOWN"]: ("VOLUMEDOWN",),
-+		KEYIDS["KEY_PAGEUP"]: ("CHANNELUP",),
-+		KEYIDS["KEY_PAGEDOWN"]: ("CHANNELDOWN",),
-+		KEYIDS["KEY_MODE"]: ("TVRADIO",),
-+		KEYIDS["KEY_MEMO"]: ("RECALL",),
-+		KEYIDS["KEY_ZOOM"]: ("ZOOM",),
-+		KEYIDS["KEY_ANGLE"]: ("VFORMAT",),
-+		KEYIDS["KEY_SCREEN"]: ("RESOLUTION",),
-+		KEYIDS["KEY_SLOW"]: ("SLEEP",),
-+		KEYIDS["KEY_FAVORITES"]: ("FAV",),
-+		KEYIDS["KEY_SELECT"]: ("CHECK",),
-+		KEYIDS["KEY_TEEN"]: ("UPUP",),
-+		KEYIDS["KEY_TWEN"]: ("DOWNDOWN",),
-+		KEYIDS["KEY_PREVIOUS"]: ("LAST",),
-+		KEYIDS["KEY_NEXT"]: ("NEXT",),
-+#		KEYIDS["KEY_PIP"]: ("PIP",),
-+		KEYIDS["KEY_OPTION"]: ("PIP",),
-+#		KEYIDS["KEY_PIPSWAP"]: ("PIP_SWAP",), #PIP swap
-+		KEYIDS["KEY_GOTO"]: ("SWAP",), #PIP swap
-+#		KEYIDS["KEY_PIPSEL"]: ("PIP_SEL",),
-+		KEYIDS["KEY_SUBTITLE"]: ("LIST",),
-+		KEYIDS["KEY_DIRECTORY"]: ("OPEN",),
-+		KEYIDS["KEY_SLOW"]: ("SLEEP",),
-+		# for compatibility (not on Spark, Topfield or Fortis remote)
-+		KEYIDS["KEY_TV"]: ("TV",),
-+		KEYIDS["KEY_RADIO"]: ("RADIO",),
-+		KEYIDS["KEY_PLAYPAUSE"]: ("PAUSE",),
-+		KEYIDS["KEY_NEXTSONG"]: ("FASTFORWARD",),
-+		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
-+		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
-+		KEYIDS["KEY_EXIT"]: ("EXIT",)
- 	},
- ]
- 
-@@ -245,13 +222,7 @@
- 	if rc_model.rcIsDefault():
- 		idx = config.misc.rcused.value
- 	else:
--		rctype = config.plugins.remotecontroltype.rctype.value
--		if rctype == 14:	# XP1000
--			idx = 3
--		elif rctype == 18:	# F1
--			idx = 4
--		else:
--			idx = 2
-+		idx = 2
- 	if key in keyDescriptions[idx]:
- 		return keyDescriptions[idx].get(key, [ ])
- 
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Makefile.am enigma2-nightly/lib/python/Tools/Makefile.am
 --- enigma2-nightly.org/lib/python/Tools/Makefile.am	2015-08-07 17:31:49.845972683 +0200
 +++ enigma2-nightly/lib/python/Tools/Makefile.am	2015-08-19 23:14:08.355487371 +0200
@@ -9416,13 +9288,13 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicem
  RESULT eServiceMP3::trickSeek(gdouble ratio)
  {
  	if (!m_gst_playbin)
-@@ -943,21 +1311,33 @@
+@@ -943,21 +1311,32 @@
  	m_decoder_time_valid_state = 0;
  	return 0;
  }
 +#endif
  
- 
+-
  RESULT eServiceMP3::seekRelative(int direction, pts_t to)
  {
 +#ifdef ENABLE_MEDIAFWGSTREAMER
@@ -10523,64 +10395,3 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 #+
 # 	return 0;
 # }
-diff -Nur '--exclude=.git' '--exclude=tuxtxt' enigma2-nightly.org/data/rc_models/rc_models.cfg enigma2-nightly.patched/data/rc_models/rc_models.cfg
---- enigma2-nightly.org/data/rc_models/rc_models.cfg	2014-04-03 08:38:53.154073324 +0200
-+++ enigma2-nightly.patched/data/rc_models/rc_models.cfg	2014-05-28 20:18:22.000000000 +0200
-@@ -19,34 +19,13 @@
- #
- # When no entry matches at all, 'default' will be used as remoteName
- #
--et10000  et8000
--et10000.4   dmm
--et10000.6   dmmadv
--et4000   et4x00
--et6500   et6x00
--et6500.4   dmm
--et6500.6   dmmadv
--et8000   et8000
--et8000.4   dmm
--et8000.6   dmmadv
--et9000   et9x00
--et9000.4   dmm
--et9000.6   dmmadv
--et9000.9  et9500
--et9200   et9x00
--et9500   et9500
--vuduo2   vuduo2
--vuduo    vu
--vusolo2  vu
--vusolo   vu
--vuultimo vuultimo
--vuuno    vu
--xp1000   xp1000
--vusolose vu
--vuzero   vu
--formuler1   formuler1
--et7000 et7x00
--et7500 et7x00
--et8500 et8000
--hd2400	hd2400
--hd1100	hd1100
-+hdbox       fs9000
-+octagon1008 hs9510
-+atevio7500  fs9000
-+hs7110      hs7110
-+hs7119      hs7110
-+hs7810a     hs9510
-+hs7819      hs9510
-+spark       spark
-+spark7162   spark
-+tf7700hdpvr tf7700
-+
-diff -Nur '--exclude=.git' '--exclude=tuxtxt' enigma2-nightly.org/data/rc_models/Makefile.am enigma2-nightly.patched/data/rc_models/Makefile.am
---- enigma2-nightly.org/data/rc_models/Makefile.am	2014-04-03 08:38:53.154073324 +0200
-+++ enigma2-nightly.patched/data/rc_models/Makefile.am	2014-05-28 20:18:22.000000000 +0200
-@@ -3,6 +3,8 @@
- dist_install_DATA = \
- 	rc_models.cfg \
-	dmmadv.png  et4x00.png  et8000.png  et9x00.png  vu.png        xp1000.png \
-+	fs9000.png  hs7110.png  hs9510.png  spark.png tf7700.png \
-+	fs9000.xml  hs7110.xml  hs9510.xml  spark.xml tf7700.xml \
- 	dmm.png     et6x00.png  et9500.png  vuduo2.png  vuultimo.png  et7x00.png    formuler1.png \
- 	hd2400.png  hd1100.png \
- 	dmmadv.xml  et4x00.xml  et8000.xml  et9x00.xml  vuultimo.xml  xp1000.xml \

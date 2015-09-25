@@ -235,6 +235,7 @@ do
    rtv=$?
    # update the GMT offset in case it changed while being turned on
    /bin/tffpctl --setgmtoffset
+   /bin/tffpctl --cleardisplay
    echo "e2 ended <- RTV: " $rtv
    case "$rtv" in
       0) echo "0"
@@ -274,6 +275,7 @@ do
    esac
 done
 
+#never reached
 echo "REBOOT" > /dev/fplarge
 echo "REBOOT TF77X0"
 reboot -f
