@@ -1047,7 +1047,7 @@ TUXBOX_RULES_MAKE(glibnetworking)
 #
 # TVHEADEND
 #
-TUXBOX_RULES_MAKE(tvheadend)
+#TUXBOX_RULES_MAKE(tvheadend)
 
 #
 # localmacros

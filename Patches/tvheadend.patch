@@ -15,7 +15,7 @@
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
  
-@@ -767,4 +767,14 @@
+@@ -768,4 +768,14 @@
  #define PRItime_t       "ld"
  #endif
  
@@ -148,13 +148,17 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1079,6 +1084,25 @@
+@@ -1079,6 +1084,29 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  
 +/* Sign on to VFD */
++//#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162)
 +	char txtstr[] = "Tvheadend";
-+
++//#elif defined(PLATFORM_HS7810A) || defined(PLATFORM_HS7119) || defined(PLATFORM_HS7819) || defined(PLATFORM_SPARK)
++//	char txtstr[] = "TvhE";
++//#endif
++//#if !defined(PLATFORM_HS7110) //models without front panel display
 +	vfddata.start = 0;
 +	vfddata.length = strlen(txtstr);
 +	memset(vfddata.data, 0, 64);
@@ -170,7 +174,8 @@
 +		close(file_vfd);
 +		file_vfd = -1;
 +	}
-+
++//#endif
    if(opt_abort)
      abort();
+ 
 

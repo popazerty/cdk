@@ -6,9 +6,7 @@ TVHEADEND_DEPS = bootstrap openssl python
 
 TVHEADEND_PATCHES = tvheadend.patch
 
-if ENABLE_SPARK7162
-TVHEADEND_DEPS += ntp
-endif
+T_CONFIG_OPTS = --enable-duckbox
 
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
@@ -20,7 +18,6 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	git clone https://github.com/tvheadend/tvheadend.git $(archivedir)/tvheadend.git; \
 	cp -ra $(archivedir)/tvheadend.git $(sourcedir)/tvheadend; \
 	cp -ra $(sourcedir)/tvheadend $(sourcedir)/tvheadend.org
-	echo pwd
 	for i in $(TVHEADEND_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/tvheadend && patch -p1 -i $(PATCHES)/$$i; \
@@ -38,10 +35,12 @@ $(D)/tvheadend.config.status:
 			--disable-libav \
 			--disable-dvben50221 \
 			--disable-dbus_1 \
+			--with-boxtype=$(BOXTYPE) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
 			PY_PATH=$(targetprefix)/usr \
-			$(PLATFORM_CPPFLAGS)
+			$(PLATFORM_CPPFLAGS) \
+			$(T_CONFIG_OPTS)
 
 $(D)/tvheadend.do_compile: tvheadend.config.status
 	cd $(sourcedir)/tvheadend && \

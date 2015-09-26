@@ -1,34 +1,31 @@
 #!/bin/sh
-#Version 150831.1
+#Version 150926.1
 
-echo "Fortis HS8200 Tvheadend"
+echo "Fortis HS7810A Tvheadend"
 
 MODDIR=/lib/modules
 
 echo "Init frontpanel"
+if [ ! -e /dev/vfd ]; then
+   mknod -m 0660 /dev/vfd c 147 0
+fi
 insmod $MODDIR/nuvoton.ko
 insmod $MODDIR/simu_button.ko
 
 if [ -e /var/etc/.firstboot ]; then
-   echo "Wait 1 min." > /dev/vfd
+   echo "1min" > /dev/vfd
    echo "WAIT 1 minute"
    rm /var/etc/.firstboot
    sleep 1
    touch /dev/.devfsd
 else
-   echo "Load 10" > /dev/vfd
-   echo "Start (LOAD 10)"
-fi
-
-if [ -d /dev/sda1/Recordings ]; then
-   fsck.jfs -a /dev/sda1
+   echo "LD10" > /dev/vfd
 fi
 
 /etc/init.d/mountvirtfs start
 /etc/init.d/portmap start
 
 insmod $MODDIR/e2_proc.ko
-#insmod $MODDIR/sata.ko
 
 # Start automounter with umount timeout of 5 seconds
 insmod $MODDIR/autofs4.ko
@@ -45,19 +42,21 @@ echo -n "Starting telnetd "
 echo "with autologin"
 
 echo "Init stmfb (LOAD 9)"
-echo "Load 9" > /dev/vfd
-insmod $MODDIR/stmcore-display-sti7105.ko
+echo "LD 9" > /dev/vfd
+insmod $MODDIR/stmcore-display-sti7111.ko
 insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:yuv:yuv
 
 echo "Loading modules"
 
 if [ ! -e /lib/firmware/audio.elf ] || [ ! -e /lib/firmware/video.elf ]; then
-  echo "FIRMWARE MISSING!"
-  echo "FW MISSING!" > /dev/vfd
+   echo "FIRMWARE!"
+   echo "NOFW" > /dev/vfd
+   sleep 5
 fi
 
 echo "Load audio firmware (LOAD 8)"
-echo "Load 8" > /dev/vfd
+echo "LD 8" > /dev/vfd
+/bin/dd if=/dev/zero of=/dev/st231-1 bs=1024 count=4096 2> /dev/null
 if [ -e /lib/firmware/audio_dts.elf ]; then
    /bin/ustslave /dev/st231-1 /lib/firmware/audio_dts.elf > /dev/null
 else
@@ -65,44 +64,36 @@ else
 fi
 
 echo "Load video firmware (LOAD 7)"
-echo "Load 7" > /dev/vfd
+echo "LD 7" > /dev/vfd
+/bin/dd if=/dev/zero of=/dev/st231-0 bs=1024 count=4096 2> /dev/null
 /bin/ustslave /dev/st231-0 /lib/firmware/video.elf > /dev/null
 
 echo "Init embx (LOAD 6)"
-echo "Load 6" > /dev/vfd
+echo "LD 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
-insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0
-insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000
+insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0;
+insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000;
 insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
-echo "Load 5" > /dev/vfd
-insmod $MODDIR/avs.ko type=stv6418
+echo "LD 5" > /dev/vfd
+insmod $MODDIR/avs.ko type=avs_pio
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
 echo "Init player $player (LOAD 4)"
-echo "Load 4" > /dev/vfd
-
+echo "LD 4" > /dev/vfd
 insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
 insmod $MODDIR/p2div64.ko
 insmod $MODDIR/stm_v4l2.ko
-#insmod $MODDIR/stmvout.ko
-#insmod $MODDIR/stmvbi.ko
 insmod $MODDIR/pseudocard.ko
 
-insmod $MODDIR/frontend_platform.ko
-insmod $MODDIR/socket.ko
-insmod $MODDIR/lnbh221.ko
-insmod $MODDIR/lnb_pio.ko
-# DVB-S
-insmod $MODDIR/avl2108.ko
-# DVB-C
-#insmod $MODDIR/tda10024.ko
-# DVB-T
-#insmod $MODDIR/cxd2820.ko
+insmod $MODDIR/lnb.ko type=a8293
+insmod $MODDIR/stv090x.ko paramDebug=0
+mknod /dev/lnb c 149 0
 
 insmod $MODDIR/starci.ko
+insmod $MODDIR/smartcard.ko
 
 #pti_arg="waitMS=20 videoMem=4096"
 #echo "Full feature pti"
@@ -114,7 +105,7 @@ insmod $MODDIR/stmsysfs.ko
 insmod $MODDIR/stmdvb.ko
 
 echo "Init player2 (LOAD 3)"
-echo "Load 3" > /dev/vfd
+echo "LD 3" > /dev/vfd
 insmod $MODDIR/player2.ko
 insmod $MODDIR/sth264pp.ko
 insmod $MODDIR/stmalloc.ko
@@ -134,7 +125,7 @@ fi
 stfbcontrol a 0
 
 echo "Init network (LOAD 2)"
-echo "Load 2" > /dev/vfd
+echo "LD 2" >/dev/vfd
 
 stfbcontrol a 255
 
@@ -157,7 +148,7 @@ if [ -e $MODDIR/cifs.ko ]; then
 fi
 
 echo "Init FTP (LOAD 1)"
-echo "Load 1" > /dev/vfd
+echo "LD 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
 
@@ -178,7 +169,7 @@ else
 fi
 #Allow network to wake up and initialize
 sleep 2
-#Show IP address on frontpanel
+#Show last number of IP address on frontpanel
 ip=`ifconfig eth0 | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p'`
 echo "IP $ip" > /dev/vfd
 sleep 3
@@ -212,18 +203,18 @@ do
    echo "Tvheadend ended <- RTV: " $rtv
    case "$rtv" in
       0) echo "SHUTDOWN"
-         echo "Shutdown" > /dev/vfd
+         echo "Shdn" > /dev/vfd
          init 0;;
       1) echo "REBOOT"
-         echo "Reboot" > /dev/vfd
+         echo "rebt" > /dev/vfd
          init 6;;
       *) echo "ERROR"
-         echo "Error" > /dev/vfd
+         echo "Err " > /dev/vfd
          init 6;;
    esac
 done
 
 #never reached
-echo "REBOOT HS8200" > /dev/vfd
-echo "REBOOT HS8200"
+echo "REBOOT Fortis HS7810A"
+echo "REBOOT Fortis HS7810A" > /dev/vfd
 reboot -f
