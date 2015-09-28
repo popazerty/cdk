@@ -624,7 +624,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp en
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp enigma2-nightly/lib/driver/vfd.cpp
 --- enigma2-nightly.org/lib/driver/vfd.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.cpp	2013-05-11 19:07:01.916432460 +0200
-@@ -0,0 +1,804 @@
+@@ -0,0 +1,805 @@
 +/*
 + * vfd.cpp
 + *
@@ -1002,30 +1002,30 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +		{
 +			vfd.vfd_set_brightness(7);
 +		}
-+//		#if defined(PLATFORM_SPARK7162) //spin circle 14 times
-+//		vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+//		vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+//		vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+//		vfd.vfd_set_icon( (tvfd_icon)(41), ICON_ON, true); //center circle on
-+//		if (vloop%3 == 0)
-+//		{
-+//			vfd.vfd_set_icon((tvfd_icon)(38), ICON_OFF, true);
-+//			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+//			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+//		}
-+//		else if (vloop%3 == 1)
-+//		{
-+//			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+//			vfd.vfd_set_icon((tvfd_icon)(39), ICON_OFF, true);
-+//			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
-+//		}
-+//		else if (vloop%3 == 2)
-+//		{
-+//			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
-+//			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
-+//			vfd.vfd_set_icon((tvfd_icon)(40), ICON_OFF, true);
-+//		}
-+//		#endif
++		#if defined(PLATFORM_SPARK7162) //spin circle 14 times
++		vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
++		vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
++		vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
++		vfd.vfd_set_icon( (tvfd_icon)(41), ICON_ON, true); //center circle on
++		if (vloop%3 == 0)
++		{
++			vfd.vfd_set_icon((tvfd_icon)(38), ICON_OFF, true);
++			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
++			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
++		}
++		else if (vloop%3 == 1)
++		{
++			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
++			vfd.vfd_set_icon((tvfd_icon)(39), ICON_OFF, true);
++			vfd.vfd_set_icon((tvfd_icon)(40), ICON_ON, true);
++		}
++		else if (vloop%3 == 2)
++		{
++			vfd.vfd_set_icon((tvfd_icon)(38), ICON_ON, true);
++			vfd.vfd_set_icon((tvfd_icon)(39), ICON_ON, true);
++			vfd.vfd_set_icon((tvfd_icon)(40), ICON_OFF, true);
++		}
++		#endif
 +		usleep(75000);
 +	}
 +	vfd.vfd_set_brightness(7); // set final brightness
@@ -1278,7 +1278,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +
 +void evfd::vfd_clear_string()
 +{
-+	char out[VFDLENGTH];
++	char out[VFDLENGTH + 1];
++	memset(out, 0, VFDLENGTH + 1);
 +	memset(out, ' ', VFDLENGTH);
 +	vfd_write_string(out, true);
 +	return;
@@ -1432,7 +1433,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.h enigma2-nightly/lib/driver/vfd.h
 --- enigma2-nightly.org/lib/driver/vfd.h	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.h	2015-08-19 23:14:08.331487372 +0200
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,54 @@
 +#ifndef VFD_H_
 +#define VFD_H_
 +
@@ -1917,7 +1918,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci.cpp
  #ifdef CIDEBUG
 @@ -139,6 +144,232 @@
  
- eDVBCIInterfaces *eDVBCIInterfaces::instance = 0;
+ #define CIPLUS_SERVER_SOCKET "/tmp/.listen.ciplus.socket"
  
 +#ifdef __sh__
 +bool eDVBCISlot::checkQueueSize()
@@ -2146,8 +2147,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb_ci/dvbci.cpp
 +#endif
 +
  eDVBCIInterfaces::eDVBCIInterfaces()
+  : eServerSocket(CIPLUS_SERVER_SOCKET, eApp)
  {
- 	int num_ci = 0;
 @@ -152,7 +383,11 @@
  	while (1)
  	{
@@ -2800,7 +2801,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  
  void fbClass::blit()
  {
- 	if (fbFd < 0) return;
 +#if defined(__sh__)
 +	int modefd = open("/proc/stb/video/3d_mode", O_RDWR);
 +	char buf[16] = "off";
@@ -2892,10 +2892,29 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  }
  
  fbClass::~fbClass()
-@@ -235,6 +354,25 @@
+@@ -235,6 +354,45 @@
  	}
  	else
  		locked = 1;
++#if defined(__sh__)
++	outcfg.outputid = STMFBIO_OUTPUTID_MAIN;
++	if (ioctl( fbFd, STMFBIO_GET_OUTPUT_CONFIG, &outcfg ) < 0)
++		perror("STMFBIO_GET_OUTPUT_CONFIG\n");
++
++	outinfo.outputid = STMFBIO_OUTPUTID_MAIN;
++	if (ioctl( fbFd, STMFBIO_GET_OUTPUTINFO, &outinfo ) < 0)
++		perror("STMFBIO_GET_OUTPUTINFO\n");
++
++	//if (ioctl( fbFd, STMFBIO_GET_VAR_SCREENINFO_EX, &infoex ) < 0)
++	//	printf("ERROR\n");
++
++	planemode.layerid = 0;
++	if (ioctl( fbFd, STMFBIO_GET_PLANEMODE, &planemode ) < 0)
++		perror("STMFBIO_GET_PLANEMODE\n");
++
++	if (ioctl( fbFd, STMFBIO_GET_VAR_SCREENINFO_EX, &infoex ) < 0)
++		perror("STMFBIO_GET_VAR_SCREENINFO_EX\n");
++#endif
 +
 +#if defined(__sh__)
 +	outcfg.outputid = STMFBIO_OUTPUTID_MAIN;
@@ -2919,7 +2938,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  	return fbFd;
  }
  
-@@ -245,27 +383,88 @@
+@@ -245,27 +403,89 @@
  	if (locked == 2)  // re-enable manualBlit
  		enableManualBlit();
  	locked=0;
@@ -2968,15 +2987,18 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  		eDebug("[fb] disable FBIO_SET_MANUAL_BLIT: %m");
  	else
  		m_manual_blit = 0;
+-}
+-
 +#endif
- }
- 
++}
++
 +#if defined(__sh__)
 +void fbClass::clearFBblit()
 +{
 +	//set real frambuffer transparent
 +//	memset(lfb, 0x00, xRes * yRes * 4);
 +	blit();
++#endif
 +}
 +
 +int fbClass::getFBdiff(int ret)
@@ -3008,8 +3030,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
 +	if(-bottom > yRes) bottom = -yRes;
 +	bottomDiff = bottom;
 +}
-+#endif
-+
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.h enigma2-nightly/lib/gdi/fb.h
 --- enigma2-nightly.org/lib/gdi/fb.h	2015-08-07 17:31:49.761972686 +0200
 +++ enigma2-nightly/lib/gdi/fb.h	2015-08-19 23:14:08.343487371 +0200
@@ -3146,8 +3166,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/glcddc.cpp e
 +//konfetti: not sure why, but calling the destructor if external lcd (pearl) is selected
 +//e2 crashes. this is also true if the destructor does not contain any code !!!
  	delete lcd;
- 	if (surface.clut.data)
- 		delete[] surface.clut.data;
 +#endif
  	if (surface.clut.data)
  		delete[] surface.clut.data;
@@ -3559,7 +3577,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/Harddisk.py enigma2-nightly/lib/python/Components/Harddisk.py
 --- enigma2-nightly.org/lib/python/Components/Harddisk.py	2015-08-07 17:31:49.773972686 +0200
 +++ enigma2-nightly/lib/python/Components/Harddisk.py	2015-08-19 23:14:08.347487371 +0200
-@@ -71,23 +71,14 @@
+@@ -71,25 +71,16 @@
  			self.dev_path = '/dev/' + self.device
  			self.disk_path = self.dev_path
  
@@ -3590,6 +3608,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  			self.startIdle()
 +		Console().ePopen(("mount", "mount", "-a"))
  
+ 	def __lt__(self, ob):
+ 		return self.device < ob.device
 @@ -130,18 +123,18 @@
  	def diskSize(self):
  		line = readFile(self.sysfsPath('size'))
@@ -4181,10 +4201,10 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/UsageConfig.py enigma2-nightly/lib/python/Components/UsageConfig.py
 --- enigma2-nightly.org/lib/python/Components/UsageConfig.py	2015-08-07 17:31:49.781972685 +0200
 +++ enigma2-nightly/lib/python/Components/UsageConfig.py	2015-08-19 23:14:08.347487371 +0200
-@@ -196,7 +196,7 @@
- 	config.usage.recording_frontend_priority = ConfigSelection(default = "-2", choices = nims)
- 	config.misc.disable_background_scan = ConfigYesNo(default = False)
+@@ -217,7 +217,7 @@
+ 	SystemInfo["DVB-C_priority_tuner_available"] = len(dvbc_nims) > 3 and (len(dvbs_nims) > 2 or len(dvbt_nims) > 2)
  
+ 	config.misc.disable_background_scan = ConfigYesNo(default = False)
 -	config.usage.show_event_progress_in_servicelist = ConfigSelection(default = 'barright', choices = [
 +	config.usage.show_event_progress_in_servicelist = ConfigSelection(default = 'barleft', choices = [
  		('barleft', _("Progress bar left")),
@@ -5996,10 +6016,11 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  
  	def __init__(self):
  		self["ShowHideActions"] = ActionMap( ["InfobarShowHideActions"] ,
-@@ -325,6 +327,12 @@
+@@ -324,6 +326,12 @@
+ 			self.openServiceList()
  		else:
  			self.toggleShow()
- 
++
 +	def epg(self):
 +		self.__state = self.STATE_EPG
 +		self.hide()
@@ -6008,7 +6029,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  
  	def toggleShow(self):
  		if self.__state == self.STATE_HIDDEN:
- 			self.showFirstInfoBar()
 @@ -339,7 +347,9 @@
  			self.show()
  			self.secondInfoBarScreen.show()
@@ -6141,7 +6161,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  			}, 1) # lower priority
  
  	def addExtension(self, extension, key = None, type = EXTENSION_SINGLE):
-@@ -1983,7 +1993,7 @@
+@@ -1983,7 +2037,7 @@
  
  	def updateExtensions(self):
  		self.extensionsList = []
@@ -6159,7 +6179,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  
  	def extensionCallback(self, answer):
  		if answer is not None:
-@@ -2211,11 +2265,11 @@
+@@ -2214,11 +2268,11 @@
  
  class InfoBarInstantRecord:
  	"""Instant Record - handles the instantRecord action in order to
@@ -6173,7 +6193,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  			})
  		self.SelectedInstantServiceRef = None
  		if isStandardInfoBar(self):
-@@ -2298,7 +2352,7 @@
+@@ -2301,7 +2355,7 @@
  	def startInstantRecording(self, limitEvent = False):
  		begin = int(time())
  		end = begin + 3600      # dummy
@@ -6182,7 +6202,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  		info = { }
  
  		self.getProgramInfoAndEvent(info, name)
-@@ -2529,7 +2583,7 @@
+@@ -2532,7 +2586,7 @@
  	def __init__(self):
  		self["AudioSelectionAction"] = HelpableActionMap(self, "InfobarAudioSelectionActions",
  			{
@@ -6191,7 +6211,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  			})
  
  	def audioSelection(self):
-@@ -2543,7 +2597,7 @@
+@@ -2546,7 +2600,7 @@
  	def __init__(self):
  		self["SubserviceSelectionAction"] = HelpableActionMap(self, "InfobarSubserviceSelectionActions",
  			{
@@ -6200,7 +6220,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  			})
  
  		self["SubserviceQuickzapAction"] = HelpableActionMap(self, "InfobarSubserviceQuickzapActions",
-@@ -2619,16 +2629,16 @@
+@@ -2622,18 +2676,18 @@
  				idx += 1
  
  			if self.bouquets and len(self.bouquets):
@@ -6208,7 +6228,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
 +				keys = ["red", "blue", "yellow", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
  				if config.usage.multibouquet.value:
 -					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to bouquet"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + tlist
-+					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to bouquet"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("Exit", "exit"), ("--", "")] + tlist
++					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("Exit", "exit"), ("--", "")] + tlist
  				else:
 -					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + tlist
 +					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("Exit", "exit"), ("--", "")] + tlist
@@ -6228,212 +6248,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  
  	def subserviceSelected(self, service):
  		del self.bouquets
-@@ -2673,7 +2727,7 @@
- 	def __init__(self):
- 		self["RedButtonActions"] = HelpableActionMap(self, "InfobarRedButtonActions",
- 			{
--				"activateRedButton": (self.activateRedButton, _("Red button...")),
-+				"activateRedButton": (self.activateRedButton, _("Red button")),
- 			})
- 		self.onHBBTVActivation = [ ]
- 		self.onRedButtonActivation = [ ]
-@@ -2692,7 +2746,7 @@
- 	def __init__(self):
- 		self["TimerButtonActions"] = HelpableActionMap(self, "InfobarTimerButtonActions",
- 			{
--				"timerSelection": (self.timerSelection, _("Timer selection...")),
-+				"timerSelection": (self.timerSelection, _("Timer selection")),
- 			})
- 
- 	def timerSelection(self):
-@@ -2880,7 +2934,7 @@
- 				elif config.usage.on_movie_start.value == "resume":
- # TRANSLATORS: The string "Resuming playback" flashes for a moment
- # TRANSLATORS: at the start of a movie, when the user has selected
--# TRANSLATORS: "Resume from last position" as start behavior.
-+# TRANSLATORS: "Resume from last position" as start behaviour.
- # TRANSLATORS: The purpose is to notify the user that the movie starts
- # TRANSLATORS: in the middle somewhere and not from the beginning.
- # TRANSLATORS: (Some translators seem to have interpreted it as a
-@@ -3098,7 +3152,7 @@
- 		if self.teletext_plugin is not None:
- 			self["TeletextActions"] = HelpableActionMap(self, "InfobarTeletextActions",
- 				{
--					"startTeletext": (self.startTeletext, _("View teletext..."))
-+					"startTeletext": (self.startTeletext, _("View teletext"))
- 				})
- 		else:
- 			print "no teletext plugin found!"
-@@ -3111,7 +3165,7 @@
- 		object.__init__(self)
- 		self["SubtitleSelectionAction"] = HelpableActionMap(self, "InfobarSubtitleSelectionActions",
- 			{
--				"subtitleSelection": (self.subtitleSelection, _("Subtitle selection...")),
-+				"subtitleSelection": (self.subtitleSelection, _("Subtitle selection")),
- 			})
- 
-@@ -3218,6 +3228,143 @@
- 				if hasattr(self, "dishDialog") and not self.dishDialog.dishState():
- 					Notifications.AddPopup(text = error, type = MessageBox.TYPE_ERROR, timeout = 5, id = "ZapError")
-+
-+class InfoBarAspectSelection:
-+	def __init__(self):
-+		self["AspectSelectionAction"] = HelpableActionMap(self, "InfobarAspectSelectionActions",
-+			{
-+				"aspectSelection": (self.ExGreen_toggleGreen, _("Aspect ratio list")),
-+			})
-+
-+		self["key_green"] = Boolean(True)
-+		self["key_yellow"] = Boolean(True)
-+		self["key_blue"] = Boolean(True)
-+
-+	def ExGreen_doResolution(self):
-+		self.resolutionSelection()
-+
-+	def ExGreen_toggleGreen(self, arg=""):
-+		self.aspectSelection()
-+
-+	def aspectSelection(self):
-+		selection = 0
-+		tlist = []
-+		tlist.append((_("Subservice list"), "subservice"))
-+		tlist.append((_("Resolution"), "resolution"))
-+		tlist.append((_("3D Mode"), "tdmodus"))
-+		tlist.append(("--", ""))
-+		tlist.append(("Pan&Scan", "letterbox"))
-+		tlist.append(("Zoom", "panscan"))
-+		tlist.append(("Panoramic", "non"))
-+		tlist.append(("Bestfit", "bestfit"))
-+
-+		mode = open("/proc/stb/video/policy").read()[:-1]
-+		print mode
-+		for x in range(len(tlist)):
-+			if tlist[x][1] == mode:
-+				selection = x
-+
-+		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
-+		self.session.openWithCallback(self.aspectSelected, ChoiceBox, title=_("Please select an aspect ratio"), list = tlist, selection = selection, keys = keys) 
-+
-+	def aspectSelected(self, aspect):
-+		if not aspect is None:
-+			if isinstance(aspect[1], str):
-+				if aspect[1] == "resolution":
-+					self.ExGreen_doResolution()
-+				elif aspect[1] == "tdmodus":
-+					self.tdmodus()
-+				elif aspect[1] == "subservice":
-+					self.subserviceSelection()
-+				else:
-+					open("/proc/stb/video/policy", "w").write(aspect[1])
-+		return
-+
-+	def tdmodus(self):
-+		selection = 0
-+		tlist = []
-+		tlist.append((_("off"), "off"))
-+		tlist.append((_("Side-by-Side"), "sbs"))
-+		tlist.append((_("Top and Bottom"), "tab"))
-+		keys = ["green", "yellow", "blue"]
-+		self.session.openWithCallback(self.tdSelected, ChoiceBox, title=_("Please select a 3D mode"), list = tlist, selection = selection, keys = keys)
-+
-+	def tdSelected(self, tdmod):
-+		if not tdmod is None:
-+			if isinstance(tdmod[1], str):
-+				if tdmod[1] == "off":
-+					config.av.threedmode.value = "off"
-+					config.av.threedmode.save()
-+					command('killall 3d-mode')
-+				elif tdmod[1] == "sbs":
-+					config.av.threedmode.value = "sbs"
-+					config.av.threedmode.save()
-+					command('3d-mode 40 &')
-+				elif tdmod[1] == "tab":
-+					config.av.threedmode.value = "tab"
-+					config.av.threedmode.save()
-+		return
-+
-+	def resolutionSelection(self):
-+		xresString = open("/proc/stb/vmpeg/0/xres", "r").read()
-+		yresString = open("/proc/stb/vmpeg/0/yres", "r").read()
-+		fpsString = open("/proc/stb/vmpeg/0/framerate", "r").read()
-+		xres = int(xresString, 16)
-+		yres = int(yresString, 16)
-+		fps = int(fpsString, 16)
-+		fpsFloat = float(fps)
-+		fpsFloat = fpsFloat/1000
-+
-+		selection = 0
-+		tlist = []
-+		tlist.append((_("Exit"), "exit"))
-+		tlist.append((_("Auto(not available)"), "auto"))
-+		tlist.append(("Video: " + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
-+		tlist.append(("--", ""))
-+		tlist.append(("576i", "576i50"))
-+		tlist.append(("576p", "576p50"))
-+		tlist.append(("720p@50hz", "720p50"))
-+		tlist.append(("720p@60hz", "720p60"))
-+		tlist.append(("1080i@50hz", "1080i50"))
-+		tlist.append(("1080i@60hz", "1080i60"))
-+		tlist.append(("1080p@23.976hz", "1080p23"))
-+		tlist.append(("1080p@24hz", "1080p24"))
-+		tlist.append(("1080p@25hz", "1080p25"))
-+		tlist.append(("1080p@29hz", "1080p29"))
-+		tlist.append(("1080p@30hz", "1080p30"))
-+		tlist.append(("1080p@50hz", "1080p50"))
-+		tlist.append(("1080p@59hz", "1080p59"))
-+		tlist.append(("1080p@60hz", "1080p60"))
-+
-+		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
-+
-+		mode = open("/proc/stb/video/videomode").read()[:-1]
-+		print mode
-+		for x in range(len(tlist)):
-+			if tlist[x][1] == mode:
-+				selection = x
-+
-+		self.session.openWithCallback(self.ResolutionSelected, ChoiceBox, title=_("Please select a resolution"), list = tlist, selection = selection, keys = keys)
-+
-+	def ResolutionSelected(self, Resolution):
-+		if not Resolution is None:
-+			if isinstance(Resolution[1], str):
-+				if Resolution[1] != "auto":
-+					open("/proc/stb/video/videomode", "w").write(Resolution[1])
-+					from enigma import gMainDC
-+					gMainDC.getInstance().setResolution(-1, -1)
-+		return
-+
-+class InfoBarSleepTimer:
-+	def __init__(self):
-+		self.addExtension((self.getSleepTimerName, self.showSleepTimerSetup, lambda: True), "blue")
-+
-+	def getSleepTimerName(self):
-+		return _("Sleep Timer")
-+
-+	def showSleepTimerSetup(self):
-+		from Screens.SleepTimerEdit import SleepTimerEdit
-+		self.session.open(SleepTimerEdit)
- 
- class InfoBarPowersaver:
- 	def __init__(self):
-@@ -3259,7 +3450,7 @@
- 		if Screens.Standby.inStandby:
- 			self.inactivityTimeoutCallback(True)
- 		else:
--			message = _("Your receiver will got to standby due to inactivity.") + "\n" + _("Do you want this?")
-+			message = _("Your receiver will go to standby due to inactivity.") + "\n" + _("Do you want this?")
- 			self.session.openWithCallback(self.inactivityTimeoutCallback, MessageBox, message, timeout=60, simple=True, default=False, timeout_default=True)
- 
- 	def inactivityTimeoutCallback(self, answer):
-@@ -3277,7 +3468,7 @@
- 		print "[InfoBarPowersaver] set sleeptimer", sleepTime
- 		if sleepTime:
- 			m = abs(sleepTime / 60)
--			message = _("The sleep timer has been activated.") + "\n" + _("And will put your receiver in standby over ") + ngettext("%d minute", "%d minutes", m) % m
-+			message = _("The sleep timer has been activated.") + "\n" + _("And will put your receiver in standby in ") + ngettext("%d minute", "%d minutes", m) % m
- 			self.sleepTimer.startLongTimer(sleepTime)
- 			self.sleepStartTime = time() + sleepTime
- 		else:
- 		self.inactivityTimer = eTimer()
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/InfoBar.py enigma2-nightly/lib/python/Screens/InfoBar.py
 --- enigma2-nightly.org/lib/python/Screens/InfoBar.py	2015-08-07 17:31:49.837972683 +0200
 +++ enigma2-nightly/lib/python/Screens/InfoBar.py	2015-08-19 23:14:08.355487371 +0200
@@ -6501,7 +6315,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
 @@ -76,6 +84,88 @@
  		assert InfoBar.instance is None, "class InfoBar is a singleton class and just one instance of this class is allowed!"
  		InfoBar.instance = self
-+
+ 
 +	def aspect(self):
 +		selection = 0
 +		tlist = []
@@ -6583,9 +6397,10 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
 +		print "_volDown"
 +		from Components.VolumeControl import VolumeControl
 +		VolumeControl.instance.volDown()
- 
++ 
  	def __onClose(self):
  		InfoBar.instance = None
+ 
 @@ -94,6 +184,22 @@
  		self.__serviceStarted(True)
  		self.onExecBegin.remove(self.__checkServiceStarted)
@@ -6691,19 +6506,19 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/ScanSetup.py enigma2-nightly/lib/python/Screens/ScanSetup.py
 --- enigma2-nightly.org/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:30.091088431 +0200
-@@ -795,7 +795,7 @@
+@@ -1081,7 +1081,7 @@
  		self.last_scan_typecable = "single_transponder"
  		self.cable_toggle = {"single_transponder":"complete", "complete":"single_transponder"}
  		self.scan_typeterrestrial = ConfigSelection(default = defaultTerrSearchType, choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("complete", _("Complete"))])
 -		self.scan_input_as = ConfigSelection(default = "channel", choices = [("frequency", _("Frequency")), ("channel", _("Channel"))])
-+		self.scan_input_as = ConfigSelection(default = "frequency", choices = [("frequency", _("Frequency")), ("channel", _("Channel"))])
++		self.scan_input_as = ConfigSelection(default = "frequence", choices = [("frequency", _("Frequency")), ("channel", _("Channel"))])
+ 		self.scan_ter_complete_type = ConfigSelection(default = "all", choices = [("all", _("All frequency")), ("extended", _("Extended"))])
  		self.scan_clearallservices = ConfigSelection(default = "no", choices = [("no", _("no")), ("yes", _("yes")), ("yes_hold_feeds", _("yes (keep feeds)"))])
  		self.scan_onlyfree = ConfigYesNo(default = False)
- 		self.scan_networkScan = ConfigYesNo(default = False)
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/Standby.py enigma2-nightly/lib/python/Screens/Standby.py
 --- enigma2-nightly.org/lib/python/Screens/Standby.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/Standby.py	2014-06-21 13:05:30.091088431 +0200
-@@ -9,12 +9,51 @@
+@@ -9,6 +9,9 @@
  import RecordTimer
  from enigma import eDVBVolumecontrol, eTimer, eDVBLocalTimeHandler, eServiceReference
  from time import time, localtime
@@ -6713,7 +6528,7 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
  inStandby = None
  
-@@ -15,6 +15,9 @@
+@@ -15,6 +18,42 @@
  class Standby(Screen):
  	def Power(self):
  		print "leave standby"
@@ -6883,277 +6698,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Com
 +	os.system("rm /tmp/command.txt")
 +	return comandline
 +
-diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/KeyBindings.py enigma2-nightly/lib/python/Tools/KeyBindings.py
---- enigma2-nightly.org/lib/python/Tools/KeyBindings.py	2015-08-07 17:31:49.845972683 +0200
-+++ enigma2-nightly/lib/python/Tools/KeyBindings.py	2015-08-19 23:14:08.355487371 +0200
-@@ -45,7 +45,10 @@
- 		KEYIDS["KEY_9"]: ("9",),
- 		KEYIDS["KEY_EXIT"]: ("EXIT",),
- 		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",)
-+		KEYIDS["KEY_RECORD"]: ("RECORD",),
-+		KEYIDS["KEY_EPG"]: ("EPG",),
-+		KEYIDS["KEY_REWIND"]: ("REWIND",),
-+		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",)
- 	},
- 	{
- 		KEYIDS["BTN_0"]: ("UP", "fp"),
-@@ -87,36 +90,17 @@
- 		KEYIDS["KEY_9"]: ("9",),
- 		KEYIDS["KEY_EXIT"]: ("EXIT",),
- 		KEYIDS["KEY_STOP"]: ("TV", "SHIFT"),
--		KEYIDS["KEY_RECORD"]: ("RADIO", "SHIFT")
-+		KEYIDS["KEY_RECORD"]: ("RADIO", "SHIFT"),
-+		KEYIDS["KEY_EPG"]: ("EPG",),
-+		KEYIDS["KEY_REWIND"]: ("REWIND",),
-+		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",)
- 	},
--	{
--		KEYIDS["BTN_0"]: ("UP", "fp"),
--		KEYIDS["BTN_1"]: ("DOWN", "fp"),
--		KEYIDS["KEY_OK"]: ("OK", ""),
--		KEYIDS["KEY_UP"]: ("UP",),
--		KEYIDS["KEY_DOWN"]: ("DOWN",),
-+	{  # for remotes with ID 2 (based on is spark remote RC12)
- 		KEYIDS["KEY_POWER"]: ("POWER",),
--		KEYIDS["KEY_RED"]: ("RED",),
--		KEYIDS["KEY_BLUE"]: ("BLUE",),
--		KEYIDS["KEY_GREEN"]: ("GREEN",),
--		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
--		KEYIDS["KEY_MENU"]: ("MENU",),
--		KEYIDS["KEY_LEFT"]: ("LEFT",),
--		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
--		KEYIDS["KEY_VIDEO"]: ("PVR",),
--		KEYIDS["KEY_INFO"]: ("INFO",),
--		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
--		KEYIDS["KEY_TV"]: ("TV",),
--		KEYIDS["KEY_RADIO"]: ("RADIO",),
--		KEYIDS["KEY_TEXT"]: ("TEXT",),
--		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
--		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
--		KEYIDS["KEY_PREVIOUSSONG"]: ("REWIND",),
--		KEYIDS["KEY_PLAYPAUSE"]: ("PAUSE",),
--		KEYIDS["KEY_PLAY"]: ("PLAY",),
--		KEYIDS["KEY_NEXTSONG"]: ("FASTFORWARD",),
--		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
--		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
-+		KEYIDS["KEY_V"]: ("V.FORMAT",),
-+		KEYIDS["KEY_AUX"]: ("TV/SAT",),
-+		KEYIDS["KEY_TIME"]: ("TIME",),
-+		KEYIDS["KEY_MUTE"]: ("MUTE",),
- 		KEYIDS["KEY_0"]: ("0",),
- 		KEYIDS["KEY_1"]: ("1",),
- 		KEYIDS["KEY_2"]: ("2",),
-@@ -127,107 +111,102 @@
- 		KEYIDS["KEY_7"]: ("7",),
- 		KEYIDS["KEY_8"]: ("8",),
- 		KEYIDS["KEY_9"]: ("9",),
--		KEYIDS["KEY_EXIT"]: ("EXIT",),
--		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",)
--	},
--	{       # XP1000
--		KEYIDS["BTN_0"]: ("UP", "fp"),
--		KEYIDS["BTN_1"]: ("DOWN", "fp"),
--		KEYIDS["KEY_OK"]: ("OK", ""),
-+		KEYIDS["KEY_TV2"]: ("TV/RADIO",),
-+		KEYIDS["KEY_BACK"]: ("RECALL",),
-+		KEYIDS["KEY_PAGEUP"]: ("PAGE+",),  # fortis name CHANNELUP
-+		KEYIDS["KEY_PAGEDOWN"]: ("PAGE-",), # fortis name CHANNELDOWN
-+		KEYIDS["KEY_FIND"]: ("FIND",),
-+		KEYIDS["KEY_ARCHIVE"]: ("FOLDER",),
-+		KEYIDS["KEY_VOLUMEUP"]: ("VOL+",),
-+		KEYIDS["KEY_VOLUMEDOWN"]: ("VOL-",),
-+		KEYIDS["KEY_MENU"]: ("MENU",),
-+		KEYIDS["KEY_INFO"]: ("INFO",),
- 		KEYIDS["KEY_UP"]: ("UP",),
- 		KEYIDS["KEY_DOWN"]: ("DOWN",),
--		KEYIDS["KEY_POWER"]: ("POWER",),
-+		KEYIDS["KEY_LEFT"]: ("LEFT",),
-+		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
-+		KEYIDS["KEY_OK"]: ("OK", ""),
-+		KEYIDS["KEY_HOME"]: ("EXIT",),
-+		KEYIDS["KEY_EPG"]: ("EPG",),
-+		KEYIDS["KEY_FAVORITES"]: ("FAV",),
-+		KEYIDS["KEY_SAT"]: ("SAT",),
- 		KEYIDS["KEY_RED"]: ("RED",),
--		KEYIDS["KEY_BLUE"]: ("BLUE",),
- 		KEYIDS["KEY_GREEN"]: ("GREEN",),
- 		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
--		KEYIDS["KEY_MENU"]: ("MENU",),
--		KEYIDS["KEY_LEFT"]: ("LEFT",),
--		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
--		KEYIDS["KEY_VIDEO"]: ("PVR",),
--		KEYIDS["KEY_INFO"]: ("INFO",),
--		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
--		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
--		KEYIDS["KEY_TV"]: ("TV",),
--		KEYIDS["KEY_RADIO"]: ("RADIO",),
--		KEYIDS["KEY_TEXT"]: ("TEXT",),
-+		KEYIDS["KEY_BLUE"]: ("BLUE",),
-+		KEYIDS["KEY_RECORD"]: ("RECORD",),
-+		KEYIDS["KEY_STOP"]: ("STOP",),
-+		KEYIDS["KEY_PLAY"]: ("PLAY",),
-+		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
-+		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
-+		KEYIDS["KEY_REWIND"]: ("REWIND",),
-+		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
- 		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
--		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
--		KEYIDS["KEY_PREVIOUSSONG"]: ("SKIPBACK",),
--		KEYIDS["KEY_REWIND"]: ("REWIND",),
--		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
--		KEYIDS["KEY_NEXTSONG"]: ("SKIPFORWARD",),
--		KEYIDS["KEY_PLAYPAUSE"]: ("PLAYPAUSE",),
--		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
--		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
--		KEYIDS["KEY_0"]: ("0",),
--		KEYIDS["KEY_1"]: ("1",),
--		KEYIDS["KEY_2"]: ("2",),
--		KEYIDS["KEY_3"]: ("3",),
--		KEYIDS["KEY_4"]: ("4",),
--		KEYIDS["KEY_5"]: ("5",),
--		KEYIDS["KEY_6"]: ("6",),
--		KEYIDS["KEY_7"]: ("7",),
--		KEYIDS["KEY_8"]: ("8",),
--		KEYIDS["KEY_9"]: ("9",),
--		KEYIDS["KEY_EXIT"]: ("EXIT",),
--		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",),
--		KEYIDS["KEY_BOOKMARKS"]: ("PORTAL",),
--		KEYIDS["KEY_VMODE"]: ("VMODE",),
--		KEYIDS["KEY_PROGRAM"]: ("TIMER",),
--		KEYIDS["KEY_SLEEP"]: ("SLEEP",),
--		KEYIDS["KEY_EPG"]: ("EPG",),
--	},
--	{       # Formuler F1
--		KEYIDS["BTN_0"]: ("UP", "fp"),
--		KEYIDS["BTN_1"]: ("DOWN", "fp"),
--		KEYIDS["KEY_OK"]: ("OK", ""),
--		KEYIDS["KEY_UP"]: ("UP",),
--		KEYIDS["KEY_DOWN"]: ("DOWN",),
--		KEYIDS["KEY_POWER"]: ("POWER",),
--		KEYIDS["KEY_RED"]: ("RED",),
--		KEYIDS["KEY_BLUE"]: ("BLUE",),
--		KEYIDS["KEY_GREEN"]: ("GREEN",),
--		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
--		KEYIDS["KEY_MENU"]: ("MENU",),
--		KEYIDS["KEY_LEFT"]: ("LEFT",),
--		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
--		KEYIDS["KEY_VIDEO"]: ("PVR",),
--		KEYIDS["KEY_INFO"]: ("INFO",),
--		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
--		KEYIDS["KEY_TV"]: ("TV",),
--		KEYIDS["KEY_RADIO"]: ("RADIO",),
--		KEYIDS["KEY_TEXT"]: ("TEXT",),
--		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
--		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
--		KEYIDS["KEY_REWIND"]: ("REWIND",),
--		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
--		KEYIDS["KEY_PLAY"]: ("PLAY",),
--		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
--		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
--		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
--		KEYIDS["KEY_0"]: ("0",),
--		KEYIDS["KEY_1"]: ("1",),
--		KEYIDS["KEY_2"]: ("2",),
--		KEYIDS["KEY_3"]: ("3",),
--		KEYIDS["KEY_4"]: ("4",),
--		KEYIDS["KEY_5"]: ("5",),
--		KEYIDS["KEY_6"]: ("6",),
--		KEYIDS["KEY_7"]: ("7",),
--		KEYIDS["KEY_8"]: ("8",),
--		KEYIDS["KEY_9"]: ("9",),
--		KEYIDS["KEY_EXIT"]: ("EXIT",),
--		KEYIDS["KEY_STOP"]: ("STOP",),
--		KEYIDS["KEY_RECORD"]: ("RECORD",),
-+		KEYIDS["KEY_F"]: ("FAST",),
-+		KEYIDS["KEY_SLOW"]: ("SLOW",),
-+		KEYIDS["KEY_P"]: ("PLAY_MODE",),
-+		KEYIDS["KEY_CLOSE"]: ("USB",),
-+		KEYIDS["KEY_T"]: ("Tms",),
- 		KEYIDS["KEY_F1"]: ("F1",),
- 		KEYIDS["KEY_F2"]: ("F2",),
- 		KEYIDS["KEY_F3"]: ("F3",),
--		KEYIDS["KEY_BACK"]: ("RECALL",),
--		KEYIDS["KEY_CONTEXT_MENU"]: ("CONTEXT",),
--		KEYIDS["KEY_EPG"]: ("EPG",),
--		KEYIDS["KEY_BOOKMARKS"]: ("PLAYLIST",),
-+		KEYIDS["KEY_F3"]: ("F3",),
-+		KEYIDS["KEY_OPEN"]: ("PORTAL",),
-+		# Topfield keys (evremote2, not on Spark)
-+		KEYIDS["KEY_ZOOM"]: ("V.FORMAT",),
-+		KEYIDS["KEY_SCREEN"]: ("A/R",),
-+		KEYIDS["KEY_AUX"]: ("AUX",),
-+		KEYIDS["KEY_BACK"]: ("BACK",),
-+		KEYIDS["KEY_HELP"]: ("INFO",), #wrongly assigned in evremote2
-+		KEYIDS["KEY_LANGUAGE"]: ("AUDIO",),
-+		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
-+		KEYIDS["KEY_TEXT"]: ("TEXT",),
-+		KEYIDS["KEY_DOWN"]: ("DOWN/P-",),
-+		KEYIDS["KEY_UP"]: ("UP/P+",),
-+		KEYIDS["KEY_RIGHT"]: ("RIGHT/V+",),
-+		KEYIDS["KEY_LEFT"]: ("LEFT/V-",),
-+		KEYIDS["KEY_OK"]: ("OK/LIST",),
-+		KEYIDS["KEY_EPG"]: ("GUIDE",),
-+		KEYIDS["KEY_SLOW"]: ("SLOWMOTION",),
-+		KEYIDS["KEY_LIST"]: ("RECORDLIST",),
-+		KEYIDS["KEY_PREVIOUS"]: ("STEPBACK",),
-+		KEYIDS["KEY_NEXT"]: ("STEPFORWARD",),
-+		KEYIDS["KEY_EPG"]: ("MARK",),
-+		KEYIDS["KEY_ARCHIVE"]: ("USB",),
-+		KEYIDS["KEY_TIME"]: ("TIMER",),
-+		# Fortis keys (evremote2, not on Spark or Topfield)
-+		KEYIDS["KEY_VOLUMEUP"]: ("VOLUMEUP",),
-+		KEYIDS["KEY_VOLUMEDOWN"]: ("VOLUMEDOWN",),
-+		KEYIDS["KEY_PAGEUP"]: ("CHANNELUP",),
-+		KEYIDS["KEY_PAGEDOWN"]: ("CHANNELDOWN",),
-+		KEYIDS["KEY_MODE"]: ("TVRADIO",),
-+		KEYIDS["KEY_MEMO"]: ("RECALL",),
-+		KEYIDS["KEY_ZOOM"]: ("ZOOM",),
-+		KEYIDS["KEY_ANGLE"]: ("VFORMAT",),
-+		KEYIDS["KEY_SCREEN"]: ("RESOLUTION",),
-+		KEYIDS["KEY_SLOW"]: ("SLEEP",),
-+		KEYIDS["KEY_FAVORITES"]: ("FAV",),
-+		KEYIDS["KEY_SELECT"]: ("CHECK",),
-+		KEYIDS["KEY_TEEN"]: ("UPUP",),
-+		KEYIDS["KEY_TWEN"]: ("DOWNDOWN",),
-+		KEYIDS["KEY_PREVIOUS"]: ("LAST",),
-+		KEYIDS["KEY_NEXT"]: ("NEXT",),
-+#		KEYIDS["KEY_PIP"]: ("PIP",),
-+		KEYIDS["KEY_OPTION"]: ("PIP",),
-+#		KEYIDS["KEY_PIPSWAP"]: ("PIP_SWAP",), #PIP swap
-+		KEYIDS["KEY_GOTO"]: ("SWAP",), #PIP swap
-+#		KEYIDS["KEY_PIPSEL"]: ("PIP_SEL",),
-+		KEYIDS["KEY_SUBTITLE"]: ("LIST",),
-+		KEYIDS["KEY_DIRECTORY"]: ("OPEN",),
-+		KEYIDS["KEY_SLOW"]: ("SLEEP",),
-+		# for compatibility (not on Spark, Topfield or Fortis remote)
-+		KEYIDS["KEY_TV"]: ("TV",),
-+		KEYIDS["KEY_RADIO"]: ("RADIO",),
-+		KEYIDS["KEY_PLAYPAUSE"]: ("PAUSE",),
-+		KEYIDS["KEY_NEXTSONG"]: ("FASTFORWARD",),
-+		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
-+		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
-+		KEYIDS["KEY_EXIT"]: ("EXIT",)
- 	},
- ]
- 
-@@ -245,13 +224,7 @@
- 	if rc_model.rcIsDefault():
- 		idx = config.misc.rcused.value
- 	else:
--		rctype = config.plugins.remotecontroltype.rctype.value
--		if rctype == 14:	# XP1000
--			idx = 3
--		elif rctype == 18:	# F1
--			idx = 4
--		else:
--			idx = 2
-+		idx = 2
- 	if key in keyDescriptions[idx]:
- 		return keyDescriptions[idx].get(key, [ ])
- 
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Tools/Makefile.am enigma2-nightly/lib/python/Tools/Makefile.am
 --- enigma2-nightly.org/lib/python/Tools/Makefile.am	2014-06-13 21:45:21.820535788 +0200
 +++ enigma2-nightly/lib/python/Tools/Makefile.am	2014-06-21 13:05:30.095088431 +0200
@@ -9188,8 +8732,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicem
  	if (m_state == stStopped)
  		return -1;
  
--	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
-+//	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
 +#ifdef ENABLE_MEDIAFWGSTREAMER
  	eDebug("[eServiceMP3] stop %s", m_ref.path.c_str());
  	gst_element_set_state(m_gst_playbin, GST_STATE_NULL);
@@ -9404,7 +8946,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicem
  RESULT eServiceMP3::trickSeek(gdouble ratio)
  {
  	if (!m_gst_playbin)
-@@ -943,21 +1311,33 @@
+@@ -942,22 +1310,33 @@
+ 	m_prev_decoder_time = -1;
  	m_decoder_time_valid_state = 0;
  	return 0;
 +#endif
@@ -10117,7 +9660,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigma
  #define INFOFILE "/maintainer.info"
  
  #define RINGBUFFER_SIZE 16384
-@@ -237,7 +240,7 @@
+@@ -224,7 +227,7 @@
  	gPainter p(my_dc);
  	p.resetOffset();
  	p.resetClip(eRect(ePoint(0, 0), my_dc->size()));
@@ -10126,7 +9669,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigma
  	p.setForegroundColor(gRGB(0xFFFFFF));
  
  	int hd =  my_dc->size().width() == 1920;
-@@ -252,7 +255,7 @@
+@@ -239,7 +242,7 @@
  	os << "We are really sorry. Your STB encountered "
  		"a software problem, and needs to be restarted.\n"
  		"Please send the logfile " << crashlog_name << " to " << crash_emailaddr << ".\n"
@@ -10135,7 +9678,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigma
  		"Component: " << crash_component;
  
  	p.renderText(usable_area, os.str().c_str(), gPainter::RT_WRAP|gPainter::RT_HALIGN_LEFT);
-@@ -262,7 +265,7 @@
+@@ -249,7 +252,7 @@
  	int i;
  
  	start = std::string::npos + 1;
@@ -10144,7 +9687,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigma
  	{
  		start = lines.rfind('\n', start - 1);
  		if (start == std::string::npos)
-@@ -272,12 +275,12 @@
+@@ -259,12 +2262,12 @@
  		}
  	}
  
@@ -10231,10 +9774,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp enig
 +	vfd->init();
 +	delete vfd;
 +#endif
-+
+ 
  	printf("[MAIN] executing main\n");
  
- 	bsodCatchSignals();
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/Makefile.am enigma2-nightly/main/Makefile.am
 --- enigma2-nightly.org/main/Makefile.am	2015-08-07 17:31:49.849972682 +0200
 +++ enigma2-nightly/main/Makefile.am	2015-08-19 23:14:08.363487370 +0200
@@ -10293,20 +9835,24 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/mytest.py enigma2-ni
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Screens/InstallWizard.py enigma2-nightly.patched/lib/python/Screens/InstallWizard.py
 --- enigma2-nightly.org/lib/python/Screens/InstallWizard.py	2013-12-08 20:19:00.000000000 +0100
 +++ enigma2-nightly.patched/lib/python/Screens/InstallWizard.py	2013-12-08 20:19:00.000000000 +0100
-@@ -46,5 +46,5 @@
+@@ -45,7 +45,7 @@
+ 			if is_found is False:
  				self.createMenu()
  		elif self.index == self.STATE_CHOISE_CHANNELLIST:
 -			self.enabled = ConfigYesNo(default = True)
 +			self.enabled = ConfigYesNo(default = False)
- 			modes = {"19e": "Astra 1", "23e": "Astra 3", "19e-23e": "Astra 1 Astra 3", "19e-23e-28e": "Astra 1 Astra 2 Astra 3", "13e-19e-23e-28e": "Astra 1 Astra 2 Astra 3 Hotbird"}
- 			self.channellist_type = ConfigSelection(choices = modes, default = "19e")
-@@ -51,5 +51,5 @@
+ 			modes = {"19e": "Astra 1", "23e": "Astra 3", "19e-23e": "Astra 1 Astra 3", "19e-23e-28e": "Astra 1 Astra 2 Astra 3", "13e-19e-23e-28e": "Astra 1 Astra 2 Astra 3 Hotbird", "ziggo": "ZiggoNL"}
+ 			self.channellist_type = ConfigSelection(choices = modes, default = "19e-23e")
+ 			self.createMenu()
+@@ -50,7 +50,7 @@
+ 			self.channellist_type = ConfigSelection(choices = modes, default = "19e-23e")
  			self.createMenu()
  		elif self.index == self.STATE_CHOISE_SOFTCAM:
 -			self.enabled = ConfigYesNo(default = True)
 +			self.enabled = ConfigYesNo(default = False)
- 			modes = {"cccam": _("default") + " (CCcam)", "scam": "scam"}
- 			self.softcam_type = ConfigSelection(choices = modes, default = "cccam")
+ 			modes = {"oscam": _("default") + " (Oscam)", "cccam": "CCcam", "scam": "scam"}
+ 			self.softcam_type = ConfigSelection(choices = modes, default = "oscam")
+ 			self.createMenu()
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/data/startwizard.xml enigma2-nightly.patched/data/startwizard.xml
 --- enigma2-nightly.org/data/startwizard.xml	2013-12-08 20:29:00.000000000 +0100
 +++ enigma2-nightly.patched/data/startwizard.xml	2013-12-08 20:29:00.000000000 +0100
@@ -10398,116 +9944,432 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 # 	except:
 # 		return _("undefined")
 # 
-#diff -Nur --exclude=.git --exclude=tuxtxt driver/frontends/spark7162/spark7162.c driver/frontends/spark7162/spark7162.c
-#--- driver/frontends/spark7162/spark7162.c	2013-12-18 20:00:00.000000000 +0100
-#+++ driver/frontends/spark7162/spark7162.c	2014-02-02 20:03:13.000000000 +0100
-#@@ -41,11 +41,5 @@
-# #include "dvb_frontend.h"
-# #include "dvb_demux.h"
-#-
-#-#include "dvb_dummy_fe.h"
-#+//#include "dvb_dummy_fe.h"
-#-
-#-
-#-//#include "git_version.h" // file is missing
-#-
-# #include "spark7162.h"
-# #include "D3501_ext.h"
-#@@ -301,5 + 295,5 @@
-# 	if (spark_dvb_attach_s(dvb_adap, &d3501config, &pFrontend))
-# 	{
-#-		pFrontend = dvb_dummy_fe_qpsk_attach();
-#+		i2c_put_adapter(pI2c);
-# 		return -1;
-# 	}
-#@@ -416,4 +411,5 @@
-# 	if (spark_dvb_attach_t(dvb_adap, *ppI2c, &pFrontend))
-# 	{
-#-		pFrontend = dvb_dummy_fe_ofdm_attach();
-#+		i2c_put_adapter(*ppI2c);
-#+		return -1;
-# 	}
-#@@ -535,4 +531,5 @@
-#	if (spark_dvb_attach_c(dvb_adap, pI2c, &pFrontend))
-#	{
-#-		pFrontend = dvb_dummy_fe_qam_attach();
-#+		i2c_put_adapter(pI2c);
-#+		return -1;
-# 	}
-#@@ -571,3 +568,4
-# };
-# 
-#+#if 0
-# int spark_dvb_register_dummy_t(struct dvb_adapter *dvb_adap,
-#@@ -618,4 + +616,5 @@
-# 	return 0;
-# }
-#+#endif
-# 
-# int spark_dvb_AutoRegister_TER(struct dvb_adapter *dvb_adap,
-#@@ -644,15 +643,16 @@
-# 	}
-# 
-#+#if 0
-# 	if (MAX_TER_DEMOD_TYPES == i)
-# 	{
-# 		*ppI2c = pI2c;
-# 
-# 		ret = spark_dvb_register_dummy_t(dvb_adap, ppFrontend, ppI2c);
-# 	}
-#-
-#+#endif
-# 	return ret;
-# 
-# }
-# 
-# 
-# int spark_dvb_AutoRegister_Cab(struct dvb_adapter *dvb_adap,
-#@@ -682,15 +682,16 @@
-# 	}
-# 
-# 
-#+#if 0
-# 	if (MAX_TER_DEMOD_TYPES == i)
-# 	{
-# 		*ppI2c = pI2c;
-# 
-# 		ret = spark_dvb_register_dummy_c(dvb_adap, ppFrontend, ppI2c);
-# 	}
-#-
-#+#endif 
-# 	return ret;
-# 
-# }
-# 
-# int  spark_dvb_register_tc_by_type(struct dvb_adapter *dvb_adap,
-#@@ -837,24, +838,23 @@
-# int spark7162_register_frontend(struct dvb_adapter *dvb_adap)
-# {
-# 	struct spark_dvb_adapter_adddata *pDvbAddData;
-# 
-# 	pDvbAddData = kzalloc(sizeof(struct spark_dvb_adapter_adddata), GFP_KERNEL);
-# 
-#// 	memset(pDvbAddData, 0, sizeof(struct spark_dvb_adapter_adddata));
-# 
-# 	dvb_adap->priv = (void *)pDvbAddData;
-# 
-#-	eUnionTunerType = UnionTunerConfig(UnionTunerType);
-#-
-#-	spark_dvb_register_tc_by_type(dvb_adap, eUnionTunerType);
-#- 
-#- 	#if 1
-# 	spark_dvb_register_s1(dvb_adap,
-# 							&pDvbAddData->pD3501_frontend_2,
-# 							&pDvbAddData->qpsk_i2c_adap_2);
-# 	spark_dvb_register_s0(dvb_adap,
-# 							&pDvbAddData->pD3501_frontend,
-# 							&pDvbAddData->qpsk_i2c_adap);
-#- 	#endif  /* 0 */
-#+
-#+	eUnionTunerType = UnionTunerConfig(UnionTunerType);
-#+
-#+ 	spark_dvb_register_tc_by_type(dvb_adap, eUnionTunerType);
-#+
-# 	return 0;
-# }
+--- enigma2-nightly.org/lib/python/Tools/KeyBindings.py
++++ enigma2-nightly/lib/python/Tools/KeyBindings.py
+@@ -5,7 +5,7 @@
+ from Components.config import config
+ from Components.RcModel import rc_model
+ 
+-keyDescriptions = [{
++keyDescriptions = [{ # for remotes with ID 0 (DMM)
+ 		KEYIDS["BTN_0"]: ("UP", "fp"),
+ 		KEYIDS["BTN_1"]: ("DOWN", "fp"),
+ 		KEYIDS["KEY_OK"]: ("OK", ""),
+@@ -47,7 +47,7 @@
+ 		KEYIDS["KEY_STOP"]: ("STOP",),
+ 		KEYIDS["KEY_RECORD"]: ("RECORD",)
+ 	},
+-	{
++	{  # for remotes with ID 1 (DMM advanced)
+ 		KEYIDS["BTN_0"]: ("UP", "fp"),
+ 		KEYIDS["BTN_1"]: ("DOWN", "fp"),
+ 		KEYIDS["KEY_OK"]: ("OK", ""),
+@@ -87,9 +87,12 @@
+ 		KEYIDS["KEY_9"]: ("9",),
+ 		KEYIDS["KEY_EXIT"]: ("EXIT",),
+ 		KEYIDS["KEY_STOP"]: ("TV", "SHIFT"),
+-		KEYIDS["KEY_RECORD"]: ("RADIO", "SHIFT")
+-	},
+-	{
++		KEYIDS["KEY_RECORD"]: ("RADIO", "SHIFT"),
++		KEYIDS["KEY_EPG"]: ("EPG",),
++		KEYIDS["KEY_REWIND"]: ("REWIND",),
++		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",)
++	},
++	{ # for remotes with ID 2 (default)
+ 		KEYIDS["BTN_0"]: ("UP", "fp"),
+ 		KEYIDS["BTN_1"]: ("DOWN", "fp"),
+ 		KEYIDS["KEY_OK"]: ("OK", ""),
+@@ -131,36 +134,12 @@
+ 		KEYIDS["KEY_STOP"]: ("STOP",),
+ 		KEYIDS["KEY_RECORD"]: ("RECORD",)
+ 	},
+-	{       # XP1000
+-		KEYIDS["BTN_0"]: ("UP", "fp"),
+-		KEYIDS["BTN_1"]: ("DOWN", "fp"),
+-		KEYIDS["KEY_OK"]: ("OK", ""),
+-		KEYIDS["KEY_UP"]: ("UP",),
+-		KEYIDS["KEY_DOWN"]: ("DOWN",),
++	{  # for remotes with ID 3 (Spark RC12)
+ 		KEYIDS["KEY_POWER"]: ("POWER",),
+-		KEYIDS["KEY_RED"]: ("RED",),
+-		KEYIDS["KEY_BLUE"]: ("BLUE",),
+-		KEYIDS["KEY_GREEN"]: ("GREEN",),
+-		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
+-		KEYIDS["KEY_MENU"]: ("MENU",),
+-		KEYIDS["KEY_LEFT"]: ("LEFT",),
+-		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
+-		KEYIDS["KEY_VIDEO"]: ("PVR",),
+-		KEYIDS["KEY_INFO"]: ("INFO",),
+-		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
+-		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
+-		KEYIDS["KEY_TV"]: ("TV",),
+-		KEYIDS["KEY_RADIO"]: ("RADIO",),
+-		KEYIDS["KEY_TEXT"]: ("TEXT",),
+-		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
+-		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
+-		KEYIDS["KEY_PREVIOUSSONG"]: ("SKIPBACK",),
+-		KEYIDS["KEY_REWIND"]: ("REWIND",),
+-		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
+-		KEYIDS["KEY_NEXTSONG"]: ("SKIPFORWARD",),
+-		KEYIDS["KEY_PLAYPAUSE"]: ("PLAYPAUSE",),
+-		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
+-		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
++		KEYIDS["KEY_V"]: ("V.FORMAT",),
++		KEYIDS["KEY_AUX"]: ("TV/SAT",),
++		KEYIDS["KEY_TIME"]: ("TIME",),
++		KEYIDS["KEY_MUTE"]: ("MUTE",),
+ 		KEYIDS["KEY_0"]: ("0",),
+ 		KEYIDS["KEY_1"]: ("1",),
+ 		KEYIDS["KEY_2"]: ("2",),
+@@ -171,63 +150,204 @@
+ 		KEYIDS["KEY_7"]: ("7",),
+ 		KEYIDS["KEY_8"]: ("8",),
+ 		KEYIDS["KEY_9"]: ("9",),
+-		KEYIDS["KEY_EXIT"]: ("EXIT",),
+-		KEYIDS["KEY_STOP"]: ("STOP",),
++		KEYIDS["KEY_TV2"]: ("TV/RADIO",),
++		KEYIDS["KEY_BACK"]: ("RECALL",),
++		KEYIDS["KEY_PAGEUP"]: ("PAGE+",),
++		KEYIDS["KEY_PAGEDOWN"]: ("PAGE-",),
++		KEYIDS["KEY_FIND"]: ("FIND",),
++		KEYIDS["KEY_ARCHIVE"]: ("FOLDER",),
++		KEYIDS["KEY_VOLUMEUP"]: ("VOL+",),
++		KEYIDS["KEY_VOLUMEDOWN"]: ("VOL-",),
++		KEYIDS["KEY_MENU"]: ("MENU",),
++		KEYIDS["KEY_INFO"]: ("INFO",),
++		KEYIDS["KEY_UP"]: ("UP",),
++		KEYIDS["KEY_DOWN"]: ("DOWN",),
++		KEYIDS["KEY_LEFT"]: ("LEFT",),
++		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
++		KEYIDS["KEY_OK"]: ("OK", ""),
++		KEYIDS["KEY_HOME"]: ("EXIT",),
++		KEYIDS["KEY_EPG"]: ("EPG",),
++		KEYIDS["KEY_FAVORITES"]: ("FAV",),
++		KEYIDS["KEY_SAT"]: ("SAT",),
++		KEYIDS["KEY_RED"]: ("RED",),
++		KEYIDS["KEY_GREEN"]: ("GREEN",),
++		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
++		KEYIDS["KEY_BLUE"]: ("BLUE",),
+ 		KEYIDS["KEY_RECORD"]: ("RECORD",),
+-		KEYIDS["KEY_BOOKMARKS"]: ("PORTAL",),
+-		KEYIDS["KEY_VMODE"]: ("VMODE",),
+-		KEYIDS["KEY_PROGRAM"]: ("TIMER",),
+-		KEYIDS["KEY_SLEEP"]: ("SLEEP",),
+-		KEYIDS["KEY_EPG"]: ("EPG",),
+-	},
+-	{       # Formuler F1
+-		KEYIDS["BTN_0"]: ("UP", "fp"),
+-		KEYIDS["BTN_1"]: ("DOWN", "fp"),
+-		KEYIDS["KEY_OK"]: ("OK", ""),
+-		KEYIDS["KEY_UP"]: ("UP",),
+-		KEYIDS["KEY_DOWN"]: ("DOWN",),
+-		KEYIDS["KEY_POWER"]: ("POWER",),
+-		KEYIDS["KEY_RED"]: ("RED",),
+-		KEYIDS["KEY_BLUE"]: ("BLUE",),
+-		KEYIDS["KEY_GREEN"]: ("GREEN",),
+-		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
+-		KEYIDS["KEY_MENU"]: ("MENU",),
+-		KEYIDS["KEY_LEFT"]: ("LEFT",),
+-		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
+-		KEYIDS["KEY_VIDEO"]: ("PVR",),
+-		KEYIDS["KEY_INFO"]: ("INFO",),
+-		KEYIDS["KEY_AUDIO"]: ("AUDIO",),
+-		KEYIDS["KEY_TV"]: ("TV",),
+-		KEYIDS["KEY_RADIO"]: ("RADIO",),
+-		KEYIDS["KEY_TEXT"]: ("TEXT",),
++		KEYIDS["KEY_STOP"]: ("STOP",),
++		KEYIDS["KEY_PLAY"]: ("PLAY",),
++		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
++		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
++		KEYIDS["KEY_REWIND"]: ("REWIND",),
++		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
+ 		KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
+-		KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
+-		KEYIDS["KEY_REWIND"]: ("REWIND",),
+-		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
+-		KEYIDS["KEY_PLAY"]: ("PLAY",),
+-		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
+-		KEYIDS["KEY_CHANNELUP"]: ("BOUQUET+",),
+-		KEYIDS["KEY_CHANNELDOWN"]: ("BOUQUET-",),
+-		KEYIDS["KEY_0"]: ("0",),
+-		KEYIDS["KEY_1"]: ("1",),
+-		KEYIDS["KEY_2"]: ("2",),
+-		KEYIDS["KEY_3"]: ("3",),
+-		KEYIDS["KEY_4"]: ("4",),
+-		KEYIDS["KEY_5"]: ("5",),
+-		KEYIDS["KEY_6"]: ("6",),
+-		KEYIDS["KEY_7"]: ("7",),
+-		KEYIDS["KEY_8"]: ("8",),
+-		KEYIDS["KEY_9"]: ("9",),
+-		KEYIDS["KEY_EXIT"]: ("EXIT",),
+-		KEYIDS["KEY_STOP"]: ("STOP",),
+-		KEYIDS["KEY_RECORD"]: ("RECORD",),
++		KEYIDS["KEY_F"]: ("FAST",),
++		KEYIDS["KEY_SLOW"]: ("SLOW",),
++		KEYIDS["KEY_P"]: ("PLAY_MODE",),
++		KEYIDS["KEY_CLOSE"]: ("USB",),
++		KEYIDS["KEY_T"]: ("Tms",),
+ 		KEYIDS["KEY_F1"]: ("F1",),
+ 		KEYIDS["KEY_F2"]: ("F2",),
+ 		KEYIDS["KEY_F3"]: ("F3",),
+-		KEYIDS["KEY_BACK"]: ("RECALL",),
+-		KEYIDS["KEY_CONTEXT_MENU"]: ("CONTEXT",),
++		KEYIDS["KEY_OPEN"]: ("PORTAL",),
++	},
++	{  # for remotes with ID 4 (All Fortis)
++		KEYIDS["KEY_MUTE"]: ("MUTE",),
++		KEYIDS["KEY_POWER"]: ("STANDBY",),
++		KEYIDS["KEY_ANGLE"]: ("VFORMAT",),
++		KEYIDS["KEY_SCREEN"]: ("RESOLUTION",),
++		KEYIDS["KEY_1"]: ("1BUTTON",),
++		KEYIDS["KEY_2"]: ("2BUTTON",),
++		KEYIDS["KEY_3"]: ("3BUTTON",),
++		KEYIDS["KEY_4"]: ("4BUTTON",),
++		KEYIDS["KEY_5"]: ("5BUTTON",),
++		KEYIDS["KEY_6"]: ("6BUTTON",),
++		KEYIDS["KEY_7"]: ("7BUTTON",),
++		KEYIDS["KEY_8"]: ("8BUTTON",),
++		KEYIDS["KEY_9"]: ("9BUTTON",),
++		KEYIDS["KEY_HELP"]: ("INFO",),
++		KEYIDS["KEY_0"]: ("0BUTTON",),
++		KEYIDS["KEY_MEMO"]: ("RECALL",),
++		KEYIDS["KEY_VOLUMEUP"]: ("VOLUMEUP",),
++		KEYIDS["KEY_MENU"]: ("MENU",),
++		KEYIDS["KEY_PAGEUP"]: ("CHANNELUP",),
++		KEYIDS["KEY_VOLUMEDOWN"]: ("VOLUMEDOWN",),
++		KEYIDS["KEY_HOME"]: ("EXIT",),
++		KEYIDS["KEY_PAGEDOWN"]: ("CHANNELDOWN",),
++		KEYIDS["KEY_UP"]: ("UP",),
++		KEYIDS["KEY_LEFT"]: ("LEFT",),
++		KEYIDS["KEY_OK"]: ("OK",),
++		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
++		KEYIDS["KEY_DOWN"]: ("DOWN",),
++		KEYIDS["KEY_TEEN"]: ("UPUP",),
+ 		KEYIDS["KEY_EPG"]: ("EPG",),
+-		KEYIDS["KEY_BOOKMARKS"]: ("PLAYLIST",),
++		KEYIDS["KEY_TWEN"]: ("DOWNDOWN",),
++		KEYIDS["KEY_REWIND"]: ("REWIND",),
++		KEYIDS["KEY_PLAY"]: ("PLAY",),
++		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
++		KEYIDS["KEY_PREVIOUS"]: ("LAST",),
++		KEYIDS["KEY_RECORD"]: ("RECORD",),
++		KEYIDS["KEY_NEXT"]: ("NEXT",),
++		KEYIDS["KEY_DIRECTORY"]: ("OPEN",),
++		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
++		KEYIDS["KEY_STOP"]: ("STOP",),
++		KEYIDS["KEY_SELECT"]: ("CHECK",),
++		KEYIDS["KEY_RED"]: ("RED",),
++		KEYIDS["KEY_GREEN"]: ("GREEN",),
++		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
++		KEYIDS["KEY_BLUE"]: ("BLUE",),
++		KEYIDS["KEY_OPTION"]: ("PIP",),
++		KEYIDS["KEY_GOTO"]: ("SWAP",),
++#		KEYIDS["KEY_PIPSEL"]: ("PIP_SEL",), # PIP list
++		KEYIDS["KEY_SLOW"]: ("SLEEP",),
++		KEYIDS["KEY_FAVORITES"]: ("FAV",),
++		KEYIDS["KEY_MODE"]: ("TVRADIO",),
++		KEYIDS["KEY_SUBTITLE"]: ("LIST",),
++		KEYIDS["KEY_TEXT"]: ("TEXT",),
++		KEYIDS["KEY_ZOOM"]: ("ZOOM",),
++	},
++	{  # for remotes with ID 5 (Topfield TF77X0HDPVR)
++		KEYIDS["KEY_POWER"]: ("STANDBY",),
++		KEYIDS["KEY_MUTE"]: ("MUTE",),
++		KEYIDS["KEY_ZOOM"]: ("V.FORMAT",),
++		KEYIDS["KEY_SCREEN"]: ("A/R",),
++		KEYIDS["KEY_AUX"]: ("AUX",),
++		KEYIDS["KEY_1"]: ("1BUTTON",),
++		KEYIDS["KEY_2"]: ("2BUTTON",),
++		KEYIDS["KEY_3"]: ("3BUTTON",),
++		KEYIDS["KEY_4"]: ("4BUTTON",),
++		KEYIDS["KEY_5"]: ("5BUTTON",),
++		KEYIDS["KEY_6"]: ("6BUTTON",),
++		KEYIDS["KEY_7"]: ("7BUTTON",),
++		KEYIDS["KEY_8"]: ("8BUTTON",),
++		KEYIDS["KEY_9"]: ("9BUTTON",),
++		KEYIDS["KEY_BACK"]: ("BACK",),
++		KEYIDS["KEY_0"]: ("0BUTTON",),
++		KEYIDS["KEY_HELP"]: ("INFO",),
++		KEYIDS["KEY_LANGUAGE"]: ("AUDIO",),
++		KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
++		KEYIDS["KEY_TEXT"]: ("TEXT",),
++		KEYIDS["KEY_MENU"]: ("MENU",),
++		KEYIDS["KEY_EPG"]: ("GUIDE",),
++		KEYIDS["KEY_UP"]: ("UP/P+",),
++		KEYIDS["KEY_LEFT"]: ("LEFT/V-",),
++		KEYIDS["KEY_OK"]: ("OK/LIST",),
++		KEYIDS["KEY_RIGHT"]: ("RIGHT/V+",),
++		KEYIDS["KEY_DOWN"]: ("DOWN/P-",),
++		KEYIDS["KEY_HOME"]: ("EXIT",),
++		KEYIDS["KEY_FAVORITES"]: ("FAV",),
++		KEYIDS["KEY_RED"]: ("RED",),
++		KEYIDS["KEY_GREEN"]: ("GREEN",),
++		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
++		KEYIDS["KEY_BLUE"]: ("BLUE",),
++		KEYIDS["KEY_REWIND"]: ("REWIND",),
++		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
++		KEYIDS["KEY_PLAY"]: ("PLAY",),
++		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
++		KEYIDS["KEY_RECORD"]: ("RECORD",),
++		KEYIDS["KEY_STOP"]: ("STOP",),
++		KEYIDS["KEY_SLOW"]: ("SLOWMOTION",),
++		KEYIDS["KEY_LIST"]: ("RECORDLIST" ,),
++		KEYIDS["KEY_SAT"]: ("SAT",),
++		KEYIDS["KEY_PREVIOUS"]: ("STEPBACK",),
++		KEYIDS["KEY_NEXT"]: ("STEPFORWARD",),
++		KEYIDS["KEY_OPTION"]: ("MARK",),
++		KEYIDS["KEY_TV2"]: ("TV/RADIO",),
++		KEYIDS["KEY_ARCHIVE"]: ("USB",),
++		KEYIDS["KEY_TIME"]: ("TIMER",),
++		# Frontpanel keys
++		KEYIDS["KEY_PAGEDOWN"]: ("CHANNELDOWN",),
++		KEYIDS["KEY_PAGEUP"]: ("CHANNELUP",),
++		KEYIDS["KEY_VOLUMEDOWN"]: ("VOLUMEDOWN",),
++		KEYIDS["KEY_VOLUMEUP"]: ("VOLUMEUP",),
++		KEYIDS["KEY_POWER"]: ("STANDBY",),
++	},
++	{  # for remotes with ID 6 (Kathrein UFS912)
++		KEYIDS["KEY_MEDIA"]: ("MEDIA",),
++		KEYIDS["KEY_ARCHIVE"]: ("ARCHIVE",),
++		KEYIDS["KEY_MENU"]: ("MENU",),
++		KEYIDS["KEY_RED"]: ("RED",),
++		KEYIDS["KEY_GREEN"]: ("GREEN",),
++		KEYIDS["KEY_YELLOW"]: ("YELLOW",),
++		KEYIDS["KEY_BLUE"]: ("BLUE",),
++		KEYIDS["KEY_HOME"]: ("EXIT",),
++		KEYIDS["KEY_TEXT"]: ("TEXT",),
++		KEYIDS["KEY_EPG"]: ("EPG",),
++		KEYIDS["KEY_REWIND"]: ("REWIND",),
++		KEYIDS["KEY_FASTFORWARD"]: ("FASTFORWARD",),
++		KEYIDS["KEY_PLAY"]: ("PLAY",),
++		KEYIDS["KEY_PAUSE"]: ("PAUSE",),
++		KEYIDS["KEY_RECORD"]: ("RECORD",),
++		KEYIDS["KEY_STOP"]: ("STOP",),
++		KEYIDS["KEY_POWER"]: ("STANDBY",),
++		KEYIDS["KEY_MUTE"]: ("MUTE",),
++		KEYIDS["KEY_PAGEUP"]: ("CHANNELUP",),
++		KEYIDS["KEY_PAGEDOWN"]: ("CHANNELDOWN",),
++		KEYIDS["KEY_VOLUMEUP"]: ("VOLUMEUP",),
++		KEYIDS["KEY_VOLUMEDOWN"]: ("VOLUMEDOWN",),
++		KEYIDS["KEY_HELP"]: ("HELP",),
++		KEYIDS["KEY_INFO"]: ("INFO",),
++		KEYIDS["KEY_OK"]: ("OK",),
++		KEYIDS["KEY_UP"]: ("UP",),
++		KEYIDS["KEY_RIGHT"]: ("RIGHT",),
++		KEYIDS["KEY_DOWN"]: ("DOWN",),
++		KEYIDS["KEY_LEFT"]: ("LEFT",),
++		KEYIDS["KEY_0"]: ("0BUTTON",),
++		KEYIDS["KEY_1"]: ("1BUTTON",),
++		KEYIDS["KEY_2"]: ("2BUTTON",),
++		KEYIDS["KEY_3"]: ("3BUTTON",),
++		KEYIDS["KEY_4"]: ("4BUTTON",),
++		KEYIDS["KEY_5"]: ("5BUTTON",),
++		KEYIDS["KEY_6"]: ("6BUTTON",),
++		KEYIDS["KEY_7"]: ("7BUTTON",),
++		KEYIDS["KEY_8"]: ("8BUTTON",),
++		KEYIDS["KEY_9"]: ("9BUTTON",),
++		# Front panel keys
++		KEYIDS["KEY_MEDIA"]: ("FP_MEDIA",),
++		KEYIDS["KEY_POWER"]: ("FP_ON_OFF",),
++		KEYIDS["KEY_DOWN"]: ("FP_MINUS",),
++		KEYIDS["KEY_UP"]: ("FP_PLUS",),
++		KEYIDS["KEY_OK"]: ("FP_TV_R",),
+ 	},
+ ]
+ 
+@@ -246,10 +366,24 @@
+ 		idx = config.misc.rcused.value
+ 	else:
+ 		rctype = config.plugins.remotecontroltype.rctype.value
+-		if rctype == 14:	# XP1000
++		print "[Keybindings.py] RC type is:", rctype
++		rctype = 11
++		if rctype == 10:	# Spark
+ 			idx = 3
+-		elif rctype == 18:	# F1
++		elif rctype == 7:	# Fortis FS9000/FS9200/HS8200
+ 			idx = 4
++		elif rctype == 8:	# Fortis HS9510/HS7810A/HS7819
++			idx = 4
++		elif rctype == 9:	# Fortis HS7110/HS7119
++			idx = 4
++		elif rctype == 11:	# Topfield TF77X0HDPVR
++			idx = 5
++#		elif rctype == 12:	# Kathrein UFS912
++#			idx = 6
++#		elif rctype == 13:	# Cuberevo
++#			idx = 7
++#		elif rctype == 14:	# ...
++#			idx = 8
+ 		else:
+ 			idx = 2
+ 	if key in keyDescriptions[idx]:
+--- enigma2-nightly.org/data/rc_models/rc_models.cfg	2014-04-03 08:38:53.154073324 +0200
++++ enigma2-nightly/data/rc_models/rc_models.cfg	2014-05-28 20:18:22.000000000 +0200
+@@ -19,35 +19,14 @@
+ #
+ # When no entry matches at all, 'default' will be used as remoteName
+ #
+-et10000  et8000
+-et10000.4   dmm
+-et10000.6   dmmadv
+-et4000   et4x00
+-et6500   et6x00
+-et6500.4   dmm
+-et6500.6   dmmadv
+-et8000   et8000
+-et8000.4   dmm
+-et8000.6   dmmadv
+-et9000   et9x00
+-et9000.4   dmm
+-et9000.6   dmmadv
+-et9000.9  et9500
+-et9200   et9x00
+-et9500   et9500
+-vuduo2   vuduo2
+-vuduo    vu
+-vusolo2  vu
+-vusolo   vu
+-vuultimo vuultimo
+-vuuno    vu
+-xp1000   xp1000
+-vusolose vu
+-vuzero   vu
+-formuler1   formuler1
+-et7000 et7x00
+-et7500 et7x00
+-et8500 et8000
+-hd2400	hd2400
+-hd1100	hd1100
+-fusionhd  xsarius
++hdbox       fs9000
++octagon1008 hs9510
++atevio7500  fs9000
++hs7110      hs7110
++hs7119      hs7110
++hs7810a     hs9510
++hs7819      hs9510
++spark       spark
++spark7162   spark
++tf7700hdpvr tf7700
++
+--- enigma2-nightly.org/data/rc_models/Makefile.am
++++ enigma2-nightly/data/rc_models/Makefile.am
+@@ -2,9 +2,9 @@
+ 
+ dist_install_DATA = \
+ 	rc_models.cfg \
+-	dmmadv.png  et4x00.png  et8000.png  et9x00.png  vu.png        xp1000.png \
+-	dmm.png     et6x00.png  et9500.png  vuduo2.png  vuultimo.png  et7x00.png    formuler1.png \
+-	hd2400.png  hd1100.png \
+-	dmmadv.xml  et4x00.xml  et8000.xml  et9x00.xml  vuultimo.xml  xp1000.xml \
+-	dmm.xml     et6x00.xml  et9500.xml  et7x00.xml  vuduo2.xml    vu.xml        formuler1.xml \
+-	hd2400.xml  hd1100.xml 	xsarius.xml  xsarius.png
++	dmmadv.png \
++	fs9000.png  hs7110.png  hs9510.png  spark.png tf7700.png \
++	dmm.png \
++	fs9000.xml  hs7110.xml  hs9510.xml  spark.xml tf7700.xml \
++	dmmadv.xml  \
++	dmm.xml
+
