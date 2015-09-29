@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 150831.1
+#Version 150928.1
 
 echo "Fortis HS8200 Tvheadend"
 
@@ -58,11 +58,7 @@ fi
 
 echo "Load audio firmware (LOAD 8)"
 echo "Load 8" > /dev/vfd
-if [ -e /lib/firmware/audio_dts.elf ]; then
-   /bin/ustslave /dev/st231-1 /lib/firmware/audio_dts.elf > /dev/null
-else
-   /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
-fi
+/bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
 
 echo "Load video firmware (LOAD 7)"
 echo "Load 7" > /dev/vfd

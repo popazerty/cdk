@@ -15,12 +15,16 @@
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
  
-@@ -768,4 +768,14 @@
+@@ -768,4 +768,18 @@
  #define PRItime_t       "ld"
  #endif
  
 +/* VFD output */
++#if defined(PLATFORM_TF7700)
++#define VFD_DEVICE "/dev/fplarge"
++#else
 +#define VFD_DEVICE "/dev/vfd"
++#endif
 +#define VFDDISPLAYCHARS 0xc0425a00
 +
 +struct vfd_ioctl_data {
@@ -32,7 +36,7 @@
  #endif /* TVHEADEND_H */
 --- tvheadend.org/src/config.c
 +++ tvheadend/src/config.c
-@@ -1334,7 +1334,7 @@
+@@ -1334,7 +1338,7 @@
  {
    char outfile[PATH_MAX], cwd[PATH_MAX];
    const char *argv[] = {
@@ -41,7 +45,7 @@
      "--exclude", "backup", "--exclude", "epggrab/*.sock",
      ".", NULL
    };
-@@ -1373,7 +1373,7 @@
+@@ -1373,7 +1377,7 @@
      goto fatal;
    }
  
@@ -153,7 +157,7 @@
           hts_settings_get_root());
  
 +/* Sign on to VFD */
-+//#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162)
++//#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162) || defined(PLATFORM_TF7700)
 +	char txtstr[] = "Tvheadend";
 +//#elif defined(PLATFORM_HS7810A) || defined(PLATFORM_HS7119) || defined(PLATFORM_HS7819) || defined(PLATFORM_SPARK)
 +//	char txtstr[] = "TvhE";

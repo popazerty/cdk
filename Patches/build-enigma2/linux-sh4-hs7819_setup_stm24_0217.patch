@@ -15,7 +15,7 @@
 +		char mac[] = "00:00:00:00:00:00";
 +		int i;
 +
-+		for(i = 0; i < (command_line_len - 7); i++)
++		for (i = 0; i < (command_line_len - 7); i++)
 +		{
 +			if (!strncmp(command_line + i, "ethaddr", 7))
 +			{

@@ -143,7 +143,7 @@ stfbcontrol a 0
 echo "Init remote control (LOAD 2)"
 echo "   2" > /dev/fpsmall
 insmod $MODDIR/boxtype.ko
-insmod $MODDIR/tfswich.ko
+insmod $MODDIR/tfswitch.ko
 /bin/evremote2 110 10 &
 
 stfbcontrol a 255

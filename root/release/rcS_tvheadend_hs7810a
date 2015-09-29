@@ -114,7 +114,6 @@ insmod $MODDIR/silencegen.ko
 insmod $MODDIR/bpamem.ko
 mknod /dev/bpamem c 153 0
 
-#echo "Init HDMI-CEC"
 #if [ -e $MODDIR/cec.ko ];then
 #   insmod $MODDIR/cec.ko activemode=1
 #fi

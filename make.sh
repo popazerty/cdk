@@ -1,12 +1,12 @@
 #!/bin/bash
-# Version 20150923.1
+# Version 20150928.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 1: target system (1-35)"
  echo "Parameter 2: kernel (1-5)"
  echo "Parameter 3: debug (y/N)"
  echo "Parameter 4: player (1-2)"
- echo "Parameter 5: Media Framework (1-4)"
+ echo "Parameter 5: Media Framework (1-3)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
  echo "Parameter 8: Neutrino variant (1-5)"
@@ -270,23 +270,23 @@ cd $CURDIR
 
 ##############################################
 
-case $5 in
-	[1-4])	REPLY=$5;;
-	*)	echo -e "\nMedia Framework:"
-		echo "   1) eplayer3"
-		echo "   2) gstreamer"
-		echo "   3) use built-in (required for Neutrino)"
-		echo "   4) gstreamer+eplayer3 (recommended for OpenPLi)"
-		read -p "Select media framework (1-4)? ";;
-esac
-
-case "$REPLY" in
-#	1) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
-	2) MEDIAFW="--enable-mediafwgstreamer";MFWORK="gstreamer";;
-	3) MEDIAFW="--enable-buildinplayer";MFWORK="built-in";;
-	4) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer";MFWORK="gstreamer & eplayer3";;
-	*) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
-esac
+#case $5 in
+#	[1-4])	REPLY=$5;;
+#	*)	echo -e "\nMedia Framework:"
+#		echo "   1) eplayer3"
+#		echo "   2) gstreamer"
+#		echo "   3) use built-in (required for Neutrino)"
+#		echo "   4) gstreamer+eplayer3 (recommended for OpenPLi)"
+#		read -p "Select media framework (1-4)? ";;
+#esac
+#
+#case "$REPLY" in
+##	1) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
+#	2) MEDIAFW="--enable-mediafwgstreamer";MFWORK="gstreamer";;
+#	3) MEDIAFW="--enable-buildinplayer";MFWORK="built-in";;
+#	4) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer";MFWORK="gstreamer & eplayer3";;
+#	*) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
+#esac
 
 ##############################################
 
@@ -331,12 +331,13 @@ esac
 
 case "$IMAGEN" in
 	Neutrino)
-	 	if [ "$MFWORK" != "built-in" ]; then
-			echo "You did not select built-in as the Media Framework."
-			echo "This is required for Neutrino."
-			echo "Exiting..."
-			exit
-		fi
+#	 	if [ "$MFWORK" != "built-in" ]; then
+#			echo "You did not select built-in as the Media Framework."
+#			echo "This is required for Neutrino."
+#			echo "Exiting..."
+#			exit
+#		fi
+		MEDIAFW="--enable-buildinplayer";MFWORK="built-in"
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
 			[1-5])	REPLY=$8;;
@@ -367,6 +368,7 @@ case "$IMAGEN" in
 			fi
 		fi;;
 	Tvheadend)
+		MEDIAFW="--enable-buildinplayer";MFWORK="built-in"
 		CONFIGPARAM="$CONFIGPARAM --enable-tvheadend"
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
@@ -384,6 +386,29 @@ case "$IMAGEN" in
 			echo "Exiting..."
 			exit
 		fi
+		case $5 in
+			[1-3])	REPLY=$5;;
+			*)	echo -e "\nMedia Framework:"
+				echo "   1) eplayer3"
+				echo "   2) gstreamer"
+				echo "   3) gstreamer+eplayer3 (recommended)"
+#				echo "   4) use built-in (required for Neutrino)"
+			read -p "Select media framework (1-3)? ";;
+		esac
+#		if [ "$MFWORK" == "built-in" ]; then
+#			echo "You selected built-in as the Media Framework."
+#			echo "You cannot build Enigma2 with that."
+#			echo "Exiting..."
+#			exit
+#		fi
+
+		case "$REPLY" in
+		1) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
+		2) MEDIAFW="--enable-mediafwgstreamer";MFWORK="gstreamer";;
+		3) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer";MFWORK="gstreamer & eplayer3";;
+#		4) MEDIAFW="--enable-buildinplayer";MFWORK="built-in";;
+		*) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
+		esac
 		CONFIGPARAM="$CONFIGPARAM --enable-enigma2"
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`

@@ -71,7 +71,7 @@
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/data/rc_models/hs9510/rcpositions.xml enigma2-nightly.patched/data/rc_models/hs9510/rcpositions.xml
 --- enigma2-nightly.org/data/rc_models/hs9510/rcpositions.xml	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/data/rc_models/hs9510.xml	2013-12-18 20:00:00.000000000 +0100
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,57 @@
 +<rcs>
 +	<!-- Fortis HS9510/HS7810A/HS7819-->
 +	<rc id="2">
@@ -205,7 +205,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/data/rc_models/spa
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/data/rc_models/spark/rcpositions.xml enigma2-nightly.patched/data/rc_models/spark/rcpositions.xml
 --- enigma2-nightly.org/data/rc_models/spark/rcpositions.xml	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/data/rc_models/spark.xml	2013-12-18 20:00:00.000000000 +0100
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,61 @@
 +<rcs>
 +	<!-- Spark RC12-->
 +	<rc id="2">
@@ -278,7 +278,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/data/rc_models/tf7
 +++ enigma2-nightly/data/rc_models/tf7700.xml	2013-12-18 20:00:00.000000000 +0100
 @@ -0,0 +1,53 @@
 +<rcs>
-+	<!-- Topfield TD77X0HDPVR-->
++	<!-- Topfield TF77X0HDPVR-->
 +	<rc id="2">
 +		<button name="STANDBY"     pos="31,35" />	<!-- KEY_POWER-->
 +		<button name="MUTE"        pos="81,35" />	<!-- KEY_MUTE-->

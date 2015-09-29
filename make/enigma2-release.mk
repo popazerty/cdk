@@ -1090,7 +1090,6 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION).egg-info
 
 # delete mips remote control files
-# old rc_models scheme
 	if [ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00/*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00/*; \
@@ -1104,11 +1103,7 @@ endif
 		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et9500; \
 		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/vu; \
 		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000; \
-	fi
-#
-# delete mips remote control files
-# new rc_models scheme
-	if [ -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+	else \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et7x00.*; \
@@ -1121,35 +1116,54 @@ endif
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu*.*; \
 		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000.*; \
 	fi
-
 #
-# delete unnecessary remote control file and VFD plugins
+# delete unnecessary remote control files and VFD plugins
 # old rc_models scheme
-		if [ ! ENABLE_SPARK7162 && ! ENABLE_SPARK && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+	if [ -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+		cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark.png; \
+		cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000.png; \
+		cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510.png; \
+		cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110.png; \
+		cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700.png; \
+		if [ ! ENABLE_SPARK7162 && ! ENABLE_SPARK ]; then \
 			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/spark/*; \
 			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/spark; \
-		fi
-
-		if [ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500  && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+		fi; \
+		if [ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500 ]; then \
 			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/*; \
 			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000; \
-		fi
-
-		if [ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7810A && ! ENABLE_HS7819  && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+		fi; \
+		if [ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7810A && ! ENABLE_HS7819 ]; then \
 			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/*; \
 			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510; \
-		fi
-
-		if [ ! ENABLE_HS7110 && ! ENABLE_HS7119  && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+		fi; \
+		if [ ! ENABLE_HS7110 && ! ENABLE_HS7119 ]; then \
 			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
 			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
-		fi
-
-		if [ ! ENABLE_TF7700 && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
+		fi; \
+		if [ ! ENABLE_TF7700 ]; then \
 			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/*; \
 			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700; \
-		fi
-
+		fi; \
+	else \
+		if [ ! ENABLE_SPARK7162 && ! ENABLE_SPARK ]; then \
+			rm -rf $(prefix)/release/usr/local/share/enigma2/spark.*; \
+		fi; \
+		if [ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500 ]; then \
+			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000.*; \
+		fi; \
+		if [ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7810A && ! ENABLE_HS7819 ]; then \
+			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/*; \
+		fi; \
+		if [ ! ENABLE_HS7110 && ! ENABLE_HS7119 ]; then \
+			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
+			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
+		fi; \
+		if [ ! ENABLE_TF7700 ]; then \
+			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/*; \
+			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700; \
+		fi; \
+	fi
 #
 # Complete the videomode selection picture set
 #
