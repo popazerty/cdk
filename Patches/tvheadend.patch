@@ -1,3 +1,13 @@
+--- tvheadend.org/Makefile
++++ tvheadend/Makefile
+@@ -36,6 +36,7 @@
+ CFLAGS  += -Wmissing-prototypes
+ CFLAGS  += -fms-extensions -funsigned-char -fno-strict-aliasing
+ CFLAGS  += -D_FILE_OFFSET_BITS=64
++CFLAGS  += -DPLATFORM_X
+ CFLAGS  += -I${BUILDDIR} -I${ROOTDIR}/src -I${ROOTDIR}
+ ifeq ($(CONFIG_ANDROID),yes)
+ LDFLAGS += -ldl -lm
 --- tvheadend.org/src/tvheadend.h
 +++ tvheadend/src/tvheadend.h
 @@ -65,12 +65,12 @@
@@ -34,26 +44,6 @@
 +};
 +
  #endif /* TVHEADEND_H */
---- tvheadend.org/src/config.c
-+++ tvheadend/src/config.c
-@@ -1334,7 +1338,7 @@
- {
-   char outfile[PATH_MAX], cwd[PATH_MAX];
-   const char *argv[] = {
--    "/usr/bin/tar", "cjf", outfile,
-+    "/usr/bin/tar", "cf", outfile,
-     "--exclude", "backup", "--exclude", "epggrab/*.sock",
-     ".", NULL
-   };
-@@ -1373,7 +1377,7 @@
-     goto fatal;
-   }
- 
--  snprintf(outfile, sizeof(outfile), "%s/backup/%s.tar.bz2",
-+  snprintf(outfile, sizeof(outfile), "%s/backup/%s.tar.gz",
-                                      root, oldver);
-   tvhinfo("config", "backup: running, output file %s", outfile);
- 
 --- tvheadend.org/src/input/mpegts.c
 +++ tvheadend/src/input/mpegts.c
 @@ -20,8 +20,8 @@
@@ -157,12 +147,12 @@
           hts_settings_get_root());
  
 +/* Sign on to VFD */
-+//#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162) || defined(PLATFORM_TF7700)
++#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162) || defined(PLATFORM_TF7700)
 +	char txtstr[] = "Tvheadend";
-+//#elif defined(PLATFORM_HS7810A) || defined(PLATFORM_HS7119) || defined(PLATFORM_HS7819) || defined(PLATFORM_SPARK)
-+//	char txtstr[] = "TvhE";
-+//#endif
-+//#if !defined(PLATFORM_HS7110) //models without front panel display
++#elif defined(PLATFORM_HS7810A) || defined(PLATFORM_HS7119) || defined(PLATFORM_HS7819) || defined(PLATFORM_SPARK)
++	char txtstr[] = "tvHE";
++#endif
++#if !defined(PLATFORM_HS7110) //models without front panel display
 +	vfddata.start = 0;
 +	vfddata.length = strlen(txtstr);
 +	memset(vfddata.data, 0, 64);
@@ -178,7 +168,7 @@
 +		close(file_vfd);
 +		file_vfd = -1;
 +	}
-+//#endif
++#endif
    if(opt_abort)
      abort();
  
