@@ -279,3 +279,22 @@ $(D)/udpxy: $(D)/bootstrap @DEPENDS_udpxy@
 	@CLEANUP_udpxy@
 	touch $@
 
+#
+# openvpn
+#
+$(D)/openvpn: $(D)/bootstrap $(OPENSSL) $(D)/lzo @DEPENDS_openvpn@
+	@PREPARE_openvpn@
+	cd @DIR_openvpn@ && \
+		$(CONFIGURE) \
+			--build=$(build) \
+			--host=$(target) \
+			--target=$(target) \
+			--prefix=/usr \
+			--disable-plugin-auth-pam \
+			--enable-password-save \
+		&& \
+		$(MAKE) all && \
+		@INSTALL_openvpn@
+	@CLEANUP_openvpn@
+	touch $@
+

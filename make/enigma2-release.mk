@@ -837,8 +837,9 @@ release_enigma2_base:
 	cp -dp $(targetprefix)/sbin/blkid $(prefix)/release/sbin/ && \
 	cp -p $(targetprefix)/usr/bin/ffmpeg $(prefix)/release/sbin/ && \
 	cp -p $(targetprefix)/usr/bin/opkg-cl $(prefix)/release/usr/bin/opkg && \
-	cp -p $(targetprefix)/usr/bin/python $(prefix)/release/usr/bin/ && \
+	cp -dp $(targetprefix)/usr/bin/python* $(prefix)/release/usr/bin/ && \
 	cp -p $(targetprefix)/usr/sbin/ethtool $(prefix)/release/usr/sbin/ && \
+	cp -p $(targetprefix)/usr/sbin/livestreamersrv $(prefix)/release/usr/sbin/ && \
 	cp -dp $(targetprefix)/sbin/mkfs $(prefix)/release/sbin/
 if !ENABLE_UFS910
 if !ENABLE_UFS922
@@ -1063,6 +1064,7 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/unittest/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah/Tests
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/livestreamer_cli
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/lxml
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxml2mod.so
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxsltmod.so

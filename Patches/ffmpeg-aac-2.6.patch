@@ -1,5 +1,3 @@
-diff --git a/libavcodec/aacdec.c b/libavcodec/aacdec.c
-index daec5bc..d20b945 100644
 --- a/libavcodec/aacdec.c
 +++ b/libavcodec/aacdec.c
 @@ -2354,7 +2354,7 @@ static int decode_extension_payload(AACContext *ac, GetBitContext *gb, int cnt,
@@ -11,8 +9,6 @@ index daec5bc..d20b945 100644
                        IndividualChannelStream *ics, int decode)
  {
      const int mmm = FFMIN(ics->tns_max_bands, ics->max_sfb);
-diff --git a/libavcodec/mdct_template.c b/libavcodec/mdct_template.c
-index 7fa8bcc..5f9d9fc 100644
 --- a/libavcodec/mdct_template.c
 +++ b/libavcodec/mdct_template.c
 @@ -96,7 +96,7 @@ av_cold int ff_mdct_init(FFTContext *s, int nbits, int inverse, double scale)
@@ -32,8 +28,6 @@ index 7fa8bcc..5f9d9fc 100644
      n = 1 << s->mdct_bits;
      n2 = n >> 1;
      n4 = n >> 2;
-diff --git a/libavcodec/aacps.c b/libavcodec/aacps.c
-index ea5a5d2..79ae203 100644
 --- a/libavcodec/aacps.c
 +++ b/libavcodec/aacps.c
 @@ -626,7 +626,7 @@ static void map_val_20_to_34(float par[PS_MAX_NR_IIDICC])
@@ -45,4 +39,23 @@ index ea5a5d2..79ae203 100644
  {
      LOCAL_ALIGNED_16(float, power, [34], [PS_QMF_TIME_SLOTS]);
      LOCAL_ALIGNED_16(float, transient_gain, [34], [PS_QMF_TIME_SLOTS]);
-
+--- a/libavcodec/fft_template.c
++++ b/libavcodec/fft_template.c
+@@ -452,7 +452,7 @@
+     pass(z,FFT_NAME(ff_cos_##n),n4/2);\
+ }
+ 
+-static void fft4(FFTComplex *z)
++static void __attribute__((optimize(0))) fft4(FFTComplex *z)
+ {
+     FFTDouble t1, t2, t3, t4, t5, t6, t7, t8;
+ 
+@@ -466,7 +466,7 @@
+     BF(z[2].im, z[0].im, t2, t5);
+ }
+ 
+-static void fft8(FFTComplex *z)
++static void __attribute__((optimize(0))) fft8(FFTComplex *z)
+ {
+     FFTDouble t1, t2, t3, t4, t5, t6;
+ 

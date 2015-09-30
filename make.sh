@@ -6,7 +6,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 2: kernel (1-5)"
  echo "Parameter 3: debug (y/N)"
  echo "Parameter 4: player (1-2)"
- echo "Parameter 5: Media Framework (1-3)"
+ echo "Parameter 5: Media Framework (1-3, ignored for Neutrino/Tvheadend)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
  echo "Parameter 8: Neutrino variant (1-5)"

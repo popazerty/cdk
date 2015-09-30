@@ -305,3 +305,59 @@ $(D)/python_zope_interface: $(D)/bootstrap $(D)/python $(D)/python_setuptools @D
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_zope_interface@
 	touch $@
+
+#
+# python_requests
+#
+$(D)/python_requests: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_requests@
+	@PREPARE_python_requests@
+	cd @DIR_python_requests@ && \
+		$(PYTHON_INSTALL)
+	@CLEANUP_python_requests@
+	touch $@
+
+#
+# python_requests
+#
+$(D)/python_futures: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_futures@
+	@PREPARE_python_futures@
+	cd @DIR_python_futures@ && \
+		$(PYTHON_INSTALL)
+	@CLEANUP_python_futures@
+	touch $@
+
+#
+# python_singledispatch
+#
+$(D)/python_singledispatch: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_singledispatch@
+	@PREPARE_python_singledispatch@
+	cd @DIR_python_singledispatch@ && \
+		$(PYTHON_INSTALL)
+	@CLEANUP_python_singledispatch@
+	touch $@
+
+#
+# python_livestreamer
+#
+$(D)/python_livestreamer: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_livestreamer@
+	@PREPARE_python_livestreamer@
+	[ -d "$(archivedir)/livestreamer.git" ] && \
+	(cd $(archivedir)/livestreamer.git; git pull; cd "$(buildprefix)";); \
+	cd @DIR_python_livestreamer@ && \
+		$(PYTHON_INSTALL)
+	@CLEANUP_python_livestreamer@
+	touch $@
+
+#
+# python_livestreamersrv
+#
+$(D)/python_livestreamersrv: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_livestreamer @DEPENDS_python_livestreamersrv@
+	@PREPARE_python_livestreamersrv@
+	[ -d "$(archivedir)/livestreamersrv.git" ] && \
+	(cd $(archivedir)/livestreamersrv.git; git pull; cd "$(buildprefix)";); \
+	cd @DIR_python_livestreamersrv@ && \
+		cp -rd livestreamersrv $(targetprefix)/usr/sbin && \
+		cp -rd offline.mp4 $(targetprefix)/usr/share
+	@CLEANUP_python_livestreamersrv@
+	touch $@
+

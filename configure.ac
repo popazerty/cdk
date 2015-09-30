@@ -958,6 +958,11 @@ TUXBOX_RULES_MAKE(python_wifi)
 TUXBOX_RULES_MAKE(python_cheetah)
 TUXBOX_RULES_MAKE(python_mechanize)
 TUXBOX_RULES_MAKE(python_zope_interface)
+TUXBOX_RULES_MAKE(python_requests)
+TUXBOX_RULES_MAKE(python_futures)
+TUXBOX_RULES_MAKE(python_singledispatch)
+TUXBOX_RULES_MAKE(python_livestreamer)
+TUXBOX_RULES_MAKE(python_livestreamersrv)
 
 #
 # gstreamer
@@ -1043,6 +1048,7 @@ TUXBOX_RULES_MAKE(ethtool)
 TUXBOX_RULES_MAKE(xupnpd)
 TUXBOX_RULES_MAKE(udpxy)
 TUXBOX_RULES_MAKE(glibnetworking)
+TUXBOX_RULES_MAKE(openvpn)
 
 #
 # TVHEADEND

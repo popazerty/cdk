@@ -180,6 +180,11 @@ pyasn1-0.1.8.tar.gz;https://pypi.python.org/packages/source/p/pyasn1
 pyasn1-modules-0.0.7.tar.gz;https://pypi.python.org/packages/source/p/pyasn1-modules
 pycparser-2.14.tar.gz;https://pypi.python.org/packages/source/p/pycparser
 cryptography-0.8.1.tar.gz;https://pypi.python.org/packages/source/c/cryptography
+requests-2.7.0.tar.gz;https://pypi.python.org/packages/source/r/requests
+futures-2.1.6.tar.gz;https://pypi.python.org/packages/source/f/futures
+singledispatch-3.4.0.3.tar.gz;https://pypi.python.org/packages/source/s/singledispatch
+livestreamer.git;git://github.com/chrippa/livestreamer
+livestreamersrv.git;git://github.com/athoik/livestreamersrv
 
 #
 # GSTREAMER
@@ -267,3 +272,4 @@ ethtool-6.tar.gz;http://downloads.openwrt.org/sources
 xupnpd.git;git://github.com/clark15b/xupnpd
 udpxy.1.0.23-0-prod.tar.gz;http://www.udpxy.com/download/1_23
 glib-networking-2.45.1.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/2.45
+openvpn-2.3.4.tar.xz;http://swupdate.openvpn.org/community/releases

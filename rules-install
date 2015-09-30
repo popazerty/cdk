@@ -253,6 +253,7 @@ ethtool;make:install:DESTDIR=TARGET
 xupnpd;make:install:DESTDIR=TARGET
 udpxy;make:install:INSTALLROOT=TARGET/usr
 glibnetworking;make:install:INSTALLROOT=TARGET
+openvpn;make:install:DESTDIR=TARGET
 
 
 >>?;rules-install-local

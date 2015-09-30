@@ -197,6 +197,11 @@ python_pyasn1;0.1.8;pyasn1-0.1.8;pyasn1-0.1.8.tar.gz;extract:pyasn1-0.1.8.tar.gz
 python_pyasn1_modules;0.0.7;pyasn1-modules-0.0.7;pyasn1-modules-0.0.7.tar.gz;extract:pyasn1-modules-0.0.7.tar.gz
 python_pycparser;2.14;pycparser-2.14;pycparser-2.14.tar.gz;extract:pycparser-2.14.tar.gz
 python_cryptography;0.8.1;cryptography-0.8.1;cryptography-0.8.1.tar.gz;extract:cryptography-0.8.1.tar.gz
+python_requests;2.7.0;requests-2.7.0;requests-2.7.0.tar.gz;extract:requests-2.7.0.tar.gz
+python_futures;2.1.6;futures-2.1.6;futures-2.1.6.tar.gz;extract:futures-2.1.6.tar.gz
+python_singledispatch;3.4.0.3;singledispatch-3.4.0.3;singledispatch-3.4.0.3.tar.gz;extract:singledispatch-3.4.0.3.tar.gz
+python_livestreamer;1.0;livestreamer-1.0;livestreamer.git;extract:livestreamer.git
+python_livestreamersrv;1.0;livestreamersrv-1.0;livestreamersrv.git;extract:livestreamersrv.git
 
 #
 # GSTREAMER
@@ -288,6 +293,7 @@ ethtool;6;ethtool-6;ethtool-6.tar.gz;extract:ethtool-6.tar.gz
 xupnpd;1.0;xupnpd-1.0;xupnpd.git;extract:xupnpd.git;patch:xupnpd.patch
 udpxy;1.0.23-0;udpxy-1.0.23-0;udpxy.1.0.23-0-prod.tar.gz;extract:udpxy.1.0.23-0-prod.tar.gz;patch:udpxy-1.0.23-0.patch
 glibnetworking;2.45.1;glib-networking-2.45.1;glib-networking-2.45.1.tar.xz;extract:glib-networking-2.45.1.tar.xz
+openvpn;2.3.4;openvpn-2.3.4;openvpn-2.3.4.tar.xz;extract:openvpn-2.3.4.tar.xz
 
 
 >>?;rules-make-local
