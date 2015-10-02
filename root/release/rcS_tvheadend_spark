@@ -161,9 +161,9 @@ else
 fi
 #Allow network to wake up and initialize
 sleep 2
-#Show IP address on frontpanel
-ip=`ifconfig eth0 | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p'`
-echo "IP $ip" > /dev/vfd
+#Show last octet of IP address on frontpanel
+ip=`ifconfig eth0 | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p' | cut -d. -f4`
+echo ".$ip" > /dev/vfd
 sleep 3
 
 # Do own extras

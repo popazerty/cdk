@@ -56,11 +56,11 @@
 +	self->use_set_encoding = TRUE;
 +#else
 +	self->use_set_encoding = FALSE;
-+#endif	
++#endif
  #ifdef VUPLUS
  	gst_base_sink_set_sync(GST_BASE_SINK(self), TRUE);
  	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), FALSE);
-@@ -721,10 +755,23 @@
+@@ -721,10 +760,23 @@
  		if (self->fd >= 0) ioctl(self->fd, AUDIO_STOP, 0);
  		self->playing = FALSE;
  	}
@@ -88,7 +88,7 @@
  	}
  	if (self->fd >= 0) ioctl(self->fd, AUDIO_PLAY);
  	self->playing = TRUE;
-@@ -782,6 +829,9 @@
+@@ -782,6 +834,9 @@
  	{
  		gboolean pass_eos = FALSE;
  		struct pollfd pfd[2];
@@ -98,7 +98,7 @@
  		pfd[0].fd = self->unlockfd[0];
  		pfd[0].events = POLLIN;
  		pfd[1].fd = self->fd;
-@@ -957,12 +1007,16 @@
+@@ -957,12 +1012,16 @@
  		{
  			GST_LOG_OBJECT(self, "going into poll, have %d bytes to write", len - written);
  		}
@@ -115,18 +115,17 @@
  		if (pfd[0].revents & POLLIN)
  		{
  			/* read all stop commands */
-diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
 --- a/gstdvbaudiosink.h
 +++ b/gstdvbaudiosink.h
-@@ -133,6 +133,8 @@
- 	gint64 lastpts;
+@@ -134,6 +134,8 @@
  	gint64 timestamp_offset;
  	gint8 ok_to_write;
-+ 
-+        gboolean use_set_encoding;
  
++	gboolean use_set_encoding;
++
  	queue_entry_t *queue;
  };
+ 
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
 @@ -64,6 +64,10 @@
@@ -183,10 +182,7 @@ diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
  static void gst_dvbvideosink_init(GstDVBVideoSink *self);
  static void gst_dvbvideosink_dispose(GObject *obj);
  static void gst_dvbvideosink_reset(GObject *obj);
-
- 
- #define DEBUG_INIT \
-@@ -317,6 +357,11 @@
+@@ -333,6 +373,11 @@
  	self->unlockfd[0] = self->unlockfd[1] = -1;
  	self->saved_fallback_framerate[0] = 0;
  	self->rate = 1.0;
@@ -198,7 +194,7 @@ diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
  
  	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
  	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
-@@ -424,6 +469,10 @@
+@@ -467,6 +512,9 @@
  		pfd[1].fd = self->fd;
  		pfd[1].events = POLLIN;
  
@@ -208,7 +204,7 @@ diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
  		GST_BASE_SINK_PREROLL_UNLOCK(sink);
  		while (1)
  		{
-@@ -1558,9 +1607,22 @@
+@@ -1601,9 +1649,22 @@
  			if (self->fd >= 0) ioctl(self->fd, VIDEO_STOP, 0);
  			self->playing = FALSE;
  		}
@@ -234,16 +230,15 @@ diff --git a/gstdvbaudiosink.h b/gstdvbaudiosink.h
  		}
  		if (self->fd >= 0) 
  		{
-diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
-@@ -133,6 +133,8 @@
- 	gint64 timestamp_offset;
+@@ -134,6 +134,8 @@
  	gboolean must_send_header;
  	gint8 ok_to_write;
-+
-+	gboolean use_set_encoding;
  
++	gboolean use_set_encoding;
++
  	queue_entry_t *queue;
  };
+ 
 
