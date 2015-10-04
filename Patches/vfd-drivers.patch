@@ -4575,7 +4575,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/plugin.py enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/plugin.py
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/plugin.py	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/plugin.py	2013-12-18 20:00:00.000000000 +0100
-@@ -0,0 +1,388 @@
+@@ -0,0 +1,389 @@
 +# -*- coding: utf-8 -*-
 +from Plugins.Plugin import PluginDescriptor
 +from ServiceReference import ServiceReference
@@ -4908,6 +4908,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +		if config.plugins.vfdicon.stbdisplayshow.value == "time":
 +			self.timer.stop() # stop second timer
 +			self.timer.start(59998, False) # start minute timer
++			Console().ePopen("fp_control -l 0 0") #Red LED off
 +		self.standby = False
 +
 +	def onEnterStandby(self, configElement):

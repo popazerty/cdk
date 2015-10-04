@@ -7014,36 +7014,36 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  		print "leave standby"
 +		if stb.lower() == 'spark' or stb.lower() == 'spark7162':
 +			#apply CPU clock frequency
-+			if config.plugins.systemoptions.freq.value:
-+				if config.plugins.systemoptions.freq.value == "200":
-+					overclk=5123
-+				elif config.plugins.systemoptions.freq.value == "300":
-+					overclk=2561
-+				elif config.plugins.systemoptions.freq.value == "450":
-+					overclk=3841
-+				elif config.plugins.systemoptions.freq.value == "500":
-+					overclk=12803
-+				elif config.plugins.systemoptions.freq.value == "540":
-+					overclk=4609
-+				elif config.plugins.systemoptions.freq.value == "600":
-+					overclk=5121
-+				elif config.plugins.systemoptions.freq.value == "630":
-+					overclk=5377
-+				elif config.plugins.systemoptions.freq.value == "650":
-+					overclk=16643
-+				elif config.plugins.systemoptions.freq.value == "700":
-+					overclk=17923
-+				elif config.plugins.systemoptions.freq.value == "710":
-+					overclk=18179
-+				elif config.plugins.systemoptions.freq.value == "750":
-+					overclk=19203
-+				elif config.plugins.systemoptions.freq.value == "775":
-+					overclk=39686
-+				elif config.plugins.systemoptions.freq.value == "800":
-+					overclk=20483
-+			else:
-+				overclk=4609
-+			print "Clockspeed =", config.plugins.systemoptions.freq.value, "PLL = ", str(overclk)
++#			if config.plugins.systemoptions.freq.value:
++#				if config.plugins.systemoptions.freq.value == "200":
++#					overclk=5123
++#				elif config.plugins.systemoptions.freq.value == "300":
++#					overclk=2561
++#				elif config.plugins.systemoptions.freq.value == "450":
++#					overclk=3841
++#				elif config.plugins.systemoptions.freq.value == "500":
++#					overclk=12803
++#				elif config.plugins.systemoptions.freq.value == "540":
++#					overclk=4609
++#				elif config.plugins.systemoptions.freq.value == "600":
++#					overclk=5121
++#				elif config.plugins.systemoptions.freq.value == "630":
++#					overclk=5377
++#				elif config.plugins.systemoptions.freq.value == "650":
++#					overclk=16643
++#				elif config.plugins.systemoptions.freq.value == "700":
++#					overclk=17923
++#				elif config.plugins.systemoptions.freq.value == "710":
++#					overclk=18179
++#				elif config.plugins.systemoptions.freq.value == "750":
++#					overclk=19203
++#				elif config.plugins.systemoptions.freq.value == "775":
++#					overclk=39686
++#				elif config.plugins.systemoptions.freq.value == "800":
++#					overclk=20483
++#			else:
++			overclk=4609
++#			print "Clockspeed =", config.plugins.systemoptions.freq.value, "PLL = ", str(overclk)
 +			open(pll0, 'w').write(str(overclk))
 +#+++>
 +		open("/proc/stb/hdmi/output", "w").write("on")
@@ -7057,36 +7057,36 @@ diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/
  
 +		if stb.lower() == 'spark' or stb.lower() == 'spark7162':
 +			#apply standby CPU clock frequency
-+			if config.plugins.systemoptions.stbyfreq.value:
-+				if config.plugins.systemoptions.stbyfreq.value == "200":
-+					overclk=5123
-+				elif config.plugins.systemoptions.stbyfreq.value == "300":
-+					overclk=2561
-+				elif config.plugins.systemoptions.stbyfreq.value == "450":
-+					overclk=3841
-+				elif config.plugins.systemoptions.stbyfreq.value == "500":
-+					overclk=12803
-+				elif config.plugins.systemoptions.stbyfreq.value == "540":
-+					overclk=4609
-+				elif config.plugins.systemoptions.stbyfreq.value == "600":
-+					overclk=5121
-+				elif config.plugins.systemoptions.stbyfreq.value == "630":
-+					overclk=5377
-+				elif config.plugins.systemoptions.stbyfreq.value == "650":
-+					overclk=16643
-+				elif config.plugins.systemoptions.stbyfreq.value == "700":
-+					overclk=17923
-+				elif config.plugins.systemoptions.stbyfreq.value == "710":
-+					overclk=18179
-+				elif config.plugins.systemoptions.stbyfreq.value == "750":
-+					overclk=19203
-+				elif config.plugins.systemoptions.stbyfreq.value == "775":
-+					overclk=39686
-+				elif config.plugins.systemoptions.stbyfreq.value == "800":
-+					overclk=20483
-+			else:
-+				overclk=4609
-+			print "STBY Clockspeed =", config.plugins.systemoptions.stbyfreq.value, "PLL = ", str(overclk)
++#			if config.plugins.systemoptions.stbyfreq.value:
++#				if config.plugins.systemoptions.stbyfreq.value == "200":
++#					overclk=5123
++#				elif config.plugins.systemoptions.stbyfreq.value == "300":
++#					overclk=2561
++#				elif config.plugins.systemoptions.stbyfreq.value == "450":
++#					overclk=3841
++#				elif config.plugins.systemoptions.stbyfreq.value == "500":
++#					overclk=12803
++#				elif config.plugins.systemoptions.stbyfreq.value == "540":
++#					overclk=4609
++#				elif config.plugins.systemoptions.stbyfreq.value == "600":
++#					overclk=5121
++#				elif config.plugins.systemoptions.stbyfreq.value == "630":
++#					overclk=5377
++#				elif config.plugins.systemoptions.stbyfreq.value == "650":
++#					overclk=16643
++#				elif config.plugins.systemoptions.stbyfreq.value == "700":
++#					overclk=17923
++#				elif config.plugins.systemoptions.stbyfreq.value == "710":
++#					overclk=18179
++#				elif config.plugins.systemoptions.stbyfreq.value == "750":
++#					overclk=19203
++#				elif config.plugins.systemoptions.stbyfreq.value == "775":
++#					overclk=39686
++#				elif config.plugins.systemoptions.stbyfreq.value == "800":
++#					overclk=20483
++#			else:
++			overclk=4609
++#			print "STBY Clockspeed =", config.plugins.systemoptions.stbyfreq.value, "PLL = ", str(overclk)
 +			open(pll0, 'w').write(str(overclk))
 +
  		self.paused_service = None
