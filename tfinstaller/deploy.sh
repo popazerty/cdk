@@ -260,7 +260,7 @@ if [ $format = "1" ]; then
     echo "   8" > /dev/fpsmall
     echo "HDD PART" > /dev/fplarge
     dd if=/dev/zero of=$HDD bs=512 count=64 2> /dev/null
-    sfdisk --re-read -L $HDD
+    sfdisk --re-read -L -q $HDD
     if [ "$createmini" != "1" ]; then
       # Erase the disk and create 3 partitions
       #  1:   2GB Linux
@@ -323,7 +323,7 @@ if [ "$useext2e2" = "1" ]; then
   fs="ext2"
 fi
   
-mkfs.$fs -L MINI9 $ROOTFS
+mkfs.$fs -F -L MINI9 $ROOTFS
 
 if [ "$partition" = "1" ]; then
   if [ "$createmini" = "1" ]; then
