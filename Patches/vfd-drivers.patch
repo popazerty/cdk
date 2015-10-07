@@ -1017,7 +1017,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 @@ -0,0 +1,2 @@
 +
 +
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7110VFD/vfddisplay.png enigma2-nightly/lib/python/Plugins/Extensions/hs7110VFD/vfddisplay.png
+diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7110VFD/leddisplay.png enigma2-nightly/lib/python/Plugins/Extensions/hs7110VFD/vfddisplay.png
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/hs7110VFD/vfddisplay.png	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/python/Plugins/Extensions/hs7110VFD/vfddisplay.png	2012-03-08 20:35:00.000000000 +0100
 @@ -0,0 +1,2 @@
@@ -1036,7 +1036,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +	plugin.py
 +
 +dist_install_DATA = \
-+	vfddisplay.png
++	leddisplay.png
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7110VFD/plugin.py enigma2-nightly/lib/python/Plugins/Extensions/hs7110VFD/plugin.py
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/hs7110VFD/plugin.py	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/python/Plugins/Extensions/hs7110VFD/plugin.py	2013-12-18 20:00:00.000000000 +0100
@@ -1231,7 +1231,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			name = _("LED display"),
 +			description = _("LED control for Fortis HS7110"),
 +			where = PluginDescriptor.WHERE_PLUGINMENU,
-+			icon = _("vfddisplay.png"),
++			icon = _("leddisplay.png"),
 +			fnc = opencfg))
 +	return l
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7110VFD/meta/Makefile.am enigma2-nightly/lib/python/Plugins/Extensions/hs7110VFD/meta/Makefile.am
@@ -2916,7 +2916,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 @@ -0,0 +1,2 @@
 +
 +
-diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/vfddisplay.png enigma2-nightly/lib/python/Plugins/Extensions/hs7810aVFD/vfddisplay.png
+diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/leddisplay.png enigma2-nightly/lib/python/Plugins/Extensions/hs7810aVFD/vfddisplay.png
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/vfddisplay.png	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/python/Plugins/Extensions/hs7810aVFD/vfddisplay.png	2012-03-08 20:35:00.000000000 +0100
 @@ -0,0 +1,2 @@
@@ -2935,7 +2935,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +	plugin.py
 +
 +dist_install_DATA = \
-+	vfddisplay.png
++	leddisplay.png
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py enigma2-nightly/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/python/Plugins/Extensions/hs7810aVFD/plugin.py	2013-12-18 20:00:00.000000000 +0100
@@ -3345,7 +3345,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			name = _("LED display"),
 +			description = _("LED display configuration for Fortis HS7119/HS7810A/HS7819"),
 +			where = PluginDescriptor.WHERE_PLUGINMENU,
-+			icon = _("vfddisplay.png"),
++			icon = _("leddisplay.png"),
 +			fnc = opencfg))
 +	return l
 +
@@ -4555,7 +4555,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +
 +
 --- /dev/null
-+++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/vfddisplay.png	2012-03-08 20:35:00.000000000 +0100
++++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/leddisplay.png	2012-03-08 20:35:00.000000000 +0100
 @@ -0,0 +1,2 @@
 +
 +
@@ -4571,7 +4571,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +	plugin.py
 +
 +dist_install_DATA = \
-+	vfddisplay.png
++	leddisplay.png
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/plugin.py enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/plugin.py
 --- enigma2-nightly.org/lib/python/Plugins/Extensions/sparkVFD/plugin.py	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/python/Plugins/Extensions/sparkVFD/plugin.py	2013-12-18 20:00:00.000000000 +0100
@@ -4962,7 +4962,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			name = _("LED display"),
 +			description = _("LED display configuration for Spark"),
 +			where = PluginDescriptor.WHERE_PLUGINMENU,
-+			icon = _("vfddisplay.png"),
++			icon = _("leddisplay.png"),
 +			fnc = opencfg))
 +	return l
 --- /dev/null

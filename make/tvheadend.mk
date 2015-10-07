@@ -6,7 +6,8 @@ TVHEADEND_DEPS = bootstrap openssl python
 
 TVHEADEND_PATCHES = tvheadend.patch
 
-T_CONFIG_OPTS = --enable-duckbox
+T_CONFIG_OPTS = -DPLATFORM_$(BOXTYPE)
+
 
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend

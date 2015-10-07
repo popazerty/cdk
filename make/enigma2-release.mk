@@ -1,4 +1,3 @@
-#
 # auxiliary targets for model-specific builds
 #
 
@@ -280,7 +279,7 @@ release_enigma2_spark: release_enigma2_common_utils
 	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png; \
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD/plugin.pyo ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD; \
 		sync; \
@@ -430,7 +429,7 @@ release_enigma2_hs7110: release_enigma2_common_utils
 	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png; \
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD; \
 		sync; \
@@ -457,7 +456,7 @@ release_enigma2_hs7810a: release_enigma2_common_utils
 	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		sync; \
@@ -484,7 +483,7 @@ release_enigma2_hs7119: release_enigma2_common_utils
 	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png; \
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		sync; \
@@ -511,7 +510,7 @@ release_enigma2_hs7819: release_enigma2_common_utils
 	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		sync; \
