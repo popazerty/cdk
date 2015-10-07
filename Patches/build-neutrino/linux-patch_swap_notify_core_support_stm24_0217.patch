@@ -1,9 +1,3 @@
- include/linux/blkdev.h |    2 ++
- mm/swapfile.c          |    3 +++
- 2 files changed, 5 insertions(+), 0 deletions(-)
-
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 5c80189..af027de 100644
 --- a/include/linux/blkdev.h
 +++ b/include/linux/blkdev.h
 @@ -1278,6 +1278,8 @@
@@ -15,8 +9,6 @@ index 5c80189..af027de 100644
  	struct module *owner;
  };
  
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 6c0585b..0c373bc 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
 @@ -579,6 +579,7 @@
