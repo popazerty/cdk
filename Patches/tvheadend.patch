@@ -25,7 +25,7 @@
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
  
-@@ -768,4 +768,18 @@
+@@ -790,4 +790,18 @@
  #define PRItime_t       "ld"
  #endif
  
@@ -50,9 +50,9 @@
  #include "mpegts/fastscan.h"
  
  void
--mpegts_init ( int linuxdvb_mask, str_list_t *satip_client,
+-mpegts_init ( int linuxdvb_mask, int nosatip, str_list_t *satip_client,
 -              str_list_t *tsfiles, int tstuners )
-+mpegts_init ( int linuxdvb_mask, strg_list_t *satip_client,
++mpegts_init ( int linuxdvb_mask, int nosatip, strg_list_t *satip_client,
 +              strg_list_t *tsfiles, int tstuners )
  {
    /* Register classes (avoid API 400 errors due to not yet defined) */
@@ -63,16 +63,16 @@
   * Setup / Tear down
   * *************************************************************************/
  
--void mpegts_init ( int linuxdvb_mask, str_list_t *satip_client,
+-void mpegts_init ( int linuxdvb_mask, int nosatip, str_list_t *satip_client,
 -                   str_list_t *tsfiles, int tstuners );
-+void mpegts_init ( int linuxdvb_mask, strg_list_t *satip_client,
++void mpegts_init ( int linuxdvb_mask, int nosatip, strg_list_t *satip_client,
 +                   strg_list_t *tsfiles, int tstuners );
  void mpegts_done ( void );
  
  /* **************************************************************************
 --- tvheadend.org/src/input/mpegts/satip/satip.c
 +++ tvheadend/src/input/mpegts/satip/satip.c
-@@ -728,7 +728,7 @@
+@@ -745,7 +745,7 @@
  static gtimer_t satip_discovery_static_timer;
  static gtimer_t satip_discovery_timerq;
  static gtimer_t satip_discovery_msearch_timer;
@@ -81,23 +81,23 @@
  
  static void
  satip_discovery_destroy(satip_discovery_t *d, int unlink)
-@@ -1191,7 +1191,7 @@
+@@ -1210,7 +1210,7 @@
   * Initialization
   */
  
--void satip_init ( str_list_t *clients )
-+void satip_init ( strg_list_t *clients )
+-void satip_init ( int nosatip, str_list_t *clients )
++void satip_init ( int nosatip, strg_list_t *clients )
  {
+   satip_enabled = !nosatip;
    TAILQ_INIT(&satip_discoveries);
-   satip_static_clients = clients;
 --- tvheadend.org/src/input/mpegts/satip/satip.h
 +++ tvheadend/src/input/mpegts/satip/satip.h
 @@ -22,7 +22,7 @@
  
  void satip_device_discovery_start( void );
  
--void satip_init( str_list_t *clients );
-+void satip_init( strg_list_t *clients );
+-void satip_init( int nosatip, str_list_t *clients );
++void satip_init( int nosatip, strg_list_t *clients );
  void satip_done( void );
  
  #endif /* __TVH_SATIP_H__ */
@@ -111,7 +111,7 @@
  
  pthread_t main_tid;
  
-@@ -587,6 +588,10 @@
+@@ -597,6 +598,10 @@
    } randseed;
    extern int dvb_bouquets_parse;
  
@@ -122,7 +122,7 @@
    main_tid = pthread_self();
  
    /* Setup global mutexes */
-@@ -643,8 +648,8 @@
+@@ -654,8 +659,8 @@
               *opt_bindaddr     = NULL,
               *opt_subscribe    = NULL,
               *opt_user_agent   = NULL;
@@ -133,7 +133,7 @@
    cmdline_opt_t cmdline_opts[] = {
      {   0, NULL,        N_("Generic Options"),         OPT_BOOL, NULL         },
      { 'h', "help",      N_("Show this page"),          OPT_BOOL, &opt_help    },
-@@ -765,7 +770,7 @@
+@@ -778,7 +783,7 @@
      else if (opt->type == OPT_INT)
        *((int*)opt->param) = atoi(argv[i]);
      else if (opt->type == OPT_STR_LIST) {
@@ -142,17 +142,17 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1079,6 +1084,29 @@
+@@ -1098,6 +1103,29 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  
 +/* Sign on to VFD */
-+#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162) || defined(PLATFORM_TF7700)
-+	char txtstr[] = "Tvheadend";
-+#elif defined(PLATFORM_HS7810A) || defined(PLATFORM_HS7119) || defined(PLATFORM_HS7819) || defined(PLATFORM_SPARK)
++//#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162) || defined(PLATFORM_TF7700)
++//	char txtstr[] = "Tvheadend";
++//#elif defined(PLATFORM_HS7810A) || defined(PLATFORM_HS7119) || defined(PLATFORM_HS7819) || defined(PLATFORM_SPARK)
 +	char txtstr[] = "tvHE";
-+#endif
-+#if !defined(PLATFORM_HS7110) //models without front panel display
++//#endif
++//#if !defined(PLATFORM_HS7110) //models without front panel display
 +	vfddata.start = 0;
 +	vfddata.length = strlen(txtstr);
 +	memset(vfddata.data, 0, 64);
@@ -168,7 +168,7 @@
 +		close(file_vfd);
 +		file_vfd = -1;
 +	}
-+#endif
++//#endif
    if(opt_abort)
      abort();
  
