@@ -36,6 +36,7 @@ $(D)/tvheadend.config.status:
 			--disable-libav \
 			--disable-dvben50221 \
 			--disable-dbus_1 \
+			--disable-uriparser \
 			--with-boxtype=$(BOXTYPE) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
