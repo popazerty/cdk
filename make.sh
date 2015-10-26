@@ -270,26 +270,6 @@ cd $CURDIR
 
 ##############################################
 
-#case $5 in
-#	[1-4])	REPLY=$5;;
-#	*)	echo -e "\nMedia Framework:"
-#		echo "   1) eplayer3"
-#		echo "   2) gstreamer"
-#		echo "   3) use built-in (required for Neutrino)"
-#		echo "   4) gstreamer+eplayer3 (recommended for OpenPLi)"
-#		read -p "Select media framework (1-4)? ";;
-#esac
-#
-#case "$REPLY" in
-##	1) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
-#	2) MEDIAFW="--enable-mediafwgstreamer";MFWORK="gstreamer";;
-#	3) MEDIAFW="--enable-buildinplayer";MFWORK="built-in";;
-#	4) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer";MFWORK="gstreamer & eplayer3";;
-#	*) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
-#esac
-
-##############################################
-
 case $6 in
 	[1-2])	REPLY=$6;;
 	*)	echo -e "\nExternal LCD support:"
@@ -427,7 +407,26 @@ CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD"
 
 ##############################################
 
+echo -n "Checking the .elf files in $CURDIR/root/boot..."
+set='audio audio_7100 audio_7105 audio_7109 audio_7111 video video_7100 video_7105 video_7109 video_7111'
+for i in $set;
+do
+  if [ ! -e $CURDIR/root/boot/$i.elf ]; then
+    echo -e "\nOne of more .elf files are missing in ./root/boot!"
+    echo "($i.elf is one of them)"
+    echo
+    echo "Correct this and retry."
+    exit
+  fi
+done
+echo " [OK]"
+if [ -e $CURDIR/root/boot/put_your_elf_files_here ]; then
+  rm $CURDIR/root/boot/put_your_elf_files_here
+fi
+
+##############################################
 echo && \
+
 echo "Performing autogen.sh..." && \
 echo "------------------------" && \
 ./autogen.sh && \
