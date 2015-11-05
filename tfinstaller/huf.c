@@ -18,8 +18,8 @@ ushort left[2 * NC - 1], right[2 * NC - 1];
 static uchar *buf, c_len[NC], pt_len[NPT];
 static uint   bufsiz = 0, blocksize;
 static ushort c_freq[2 * NC - 1], c_table[4096], c_code[NC],
-			  p_freq[2 * NP - 1], pt_table[256], pt_code[NPT],
-			  t_freq[2 * NT - 1];
+              p_freq[2 * NP - 1], pt_table[256], pt_code[NPT],
+              t_freq[2 * NT - 1];
 
 /***** encoding *****/
 
@@ -32,22 +32,26 @@ static void count_t_freq(void)
 		t_freq[i] = 0;
 	}
 	n = NC;
+
 	while (n > 0 && c_len[n - 1] == 0)
 	{
 		n--;
 	}
 	i = 0;
+
 	while (i < n)
 	{
 		k = c_len[i++];
 		if (k == 0)
 		{
 			count = 1;
+
 			while (i < n && c_len[i] == 0)
 			{
 				i++;
 				count++;
 			}
+
 			if (count <= 2)
 			{
 				t_freq[0] += count;
@@ -122,11 +126,13 @@ static void write_c_len(void)
 		if (k == 0)
 		{
 			count = 1;
+
 			while (i < n && c_len[i] == 0)
 			{
 				i++;
 				count++;
 			}
+
 			if (count <= 2)
 			{
 				for (k = 0; k < count; k++)
@@ -169,12 +175,14 @@ static void encode_p(uint p)
 
 	c = 0;
 	q = p;
+
 	while (q)
 	{
 		q >>= 1;
 		c++;
 	}
 	putbits(pt_len[c], pt_code[c]);
+
 	if (c > 1)
 	{
 		putbits(c - 1, p & (0xFFFFU >> (17 - c)));
@@ -186,7 +194,8 @@ static void send_block(void)
 	uint i, k, flags, root, pos, size;
 
 	root = make_tree(NC, c_freq, c_len, c_code);
-	size = c_freq[root];  putbits(16, size);
+	size = c_freq[root];
+	putbits(16, size);
 	if (root >= NC)
 	{
 		count_t_freq();
@@ -197,7 +206,8 @@ static void send_block(void)
 		}
 		else
 		{
-			putbits(TBIT, 0);  putbits(TBIT, root);
+			putbits(TBIT, 0);
+			putbits(TBIT, root);
 		}
 		write_c_len();
 	}
@@ -209,13 +219,15 @@ static void send_block(void)
 		putbits(CBIT, root);
 	}
 	root = make_tree(NP, p_freq, pt_len, pt_code);
+
 	if (root >= NP)
 	{
 		write_pt_len(NP, PBIT, -1);
 	}
 	else
 	{
-		putbits(PBIT, 0);  putbits(PBIT, root);
+		putbits(PBIT, 0);
+		putbits(PBIT, root);
 	}
 	pos = 0;
 	for (i = 0; i < size; i++)
@@ -231,7 +243,8 @@ static void send_block(void)
 		if (flags & (1U << (CHAR_BIT - 1)))
 		{
 			encode_c(buf[pos++] + (1U << CHAR_BIT));
-			k = buf[pos++] << CHAR_BIT;  k += buf[pos++];
+			k = buf[pos++] << CHAR_BIT;
+			k += buf[pos++];
 			encode_p(k);
 		}
 		else
@@ -265,12 +278,18 @@ void output(uint c, uint p)
 		if (output_pos >= bufsiz - 3 * CHAR_BIT)
 		{
 			send_block();
-			if (unpackable) return;
+			if (unpackable)
+			{
+				return;
+			}
 			output_pos = 0;
 		}
-		cpos = output_pos++;  buf[cpos] = 0;
+		cpos = output_pos++;
+		buf[cpos] = 0;
 	}
-	buf[output_pos++] = (uchar) c;  c_freq[c]++;
+	buf[output_pos++] = (uchar) c;
+	c_freq[c]++;
+
 	if (c >= (1U << CHAR_BIT))
 	{
 		buf[cpos] |= output_mask;
@@ -293,7 +312,7 @@ void huf_encode_start(void)
 	if (bufsiz == 0)
 	{
 		bufsiz = 16 * 1024U;
-		while ((buf = malloc(bufsiz)) == NULL)
+		while ((buf = (uchar *)malloc(bufsiz)) == NULL)
 		{
 			bufsiz = (bufsiz / 10U) * 9U;
 			if (bufsiz < 4 * 1024U)
@@ -303,10 +322,12 @@ void huf_encode_start(void)
 		}
 	}
 	buf[0] = 0;
+
 	for (i = 0; i < NC; i++)
 	{
 		c_freq[i] = 0;
 	}
+
 	for (i = 0; i < NP; i++)
 	{
 		p_freq[i] = 0;
@@ -335,8 +356,14 @@ static void read_pt_len(int nn, int nbit, int i_special)
 	if (n == 0)
 	{
 		c = getbits(nbit);
-		for (i = 0; i < nn; i++) pt_len[i] = 0;
-		for (i = 0; i < 256; i++) pt_table[i] = c;
+		for (i = 0; i < nn; i++)
+		{
+			pt_len[i] = 0;
+		}
+		for (i = 0; i < 256; i++)
+		{
+			pt_table[i] = c;
+		}
 	}
 	else
 	{
@@ -358,6 +385,7 @@ static void read_pt_len(int nn, int nbit, int i_special)
 			if (i == i_special)
 			{
 				c = getbits(2);
+
 				while (--c >= 0)
 				{
 					pt_len[i++] = 0;
@@ -366,7 +394,7 @@ static void read_pt_len(int nn, int nbit, int i_special)
 		}
 		while (i < nn)
 		{
-			 pt_len[i++] = 0;
+			pt_len[i++] = 0;
 		}
 		make_table(nn, pt_len, 8, pt_table);
 	}
@@ -378,13 +406,16 @@ static void read_c_len(void)
 	uint mask;
 
 	n = getbits(CBIT);
+
 	if (n == 0)
 	{
 		c = getbits(CBIT);
+
 		for (i = 0; i < NC; i++)
 		{
 			c_len[i] = 0;
 		}
+
 		for (i = 0; i < 4096; i++)
 		{
 			c_table[i] = c;
@@ -459,6 +490,7 @@ uint decode_c(void)
 	}
 	blocksize--;
 	j = c_table[bitbuf >> (BITBUFSIZ - 12)];
+
 	if (j >= NC)
 	{
 		mask = 1U << (BITBUFSIZ - 1 - 12);
@@ -503,6 +535,7 @@ uint decode_p(void)
 		while (j >= NP);
 	}
 	fillbuf(pt_len[j]);
+
 	if (j != 0)
 	{
 		j = (1U << (j - 1)) + getbits(j - 1);
@@ -512,5 +545,6 @@ uint decode_p(void)
 
 void huf_decode_start(void)
 {
-	init_getbits();  blocksize = 0;
+	init_getbits();
+	blocksize = 0;
 }

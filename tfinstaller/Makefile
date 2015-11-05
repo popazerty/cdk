@@ -71,7 +71,7 @@ all:
 	mv $(TFINSTALLER_DIR)/uImage.gz.org $(KERNEL_DIR)/arch/sh/boot/uImage.gz
 
 
-TFP_OBJS = io.o encode.o decode.o maketree.o maketbl.o huf.o
+TFP_OBJS = io.o encode.o decode.o maketree.o maketbl.o huf.o tfpacker.o
 
 tfpacker: $(TFP_OBJS)
 	gcc -o $@ $(TFP_OBJS)
