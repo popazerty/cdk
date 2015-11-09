@@ -90,4 +90,24 @@
  	FP_ICON_MAX
  #endif
  } fp_icon;
+--- /home/ndv/a/source/libstb-hal-cst-next/libdvbci/descrambler.cpp.org
++++ /home/ndv/a/source/libstb-hal-cst-next/libdvbci/descrambler.cpp
+@@ -10,8 +10,6 @@
+ #include "descrambler.h"
+ 
+ static const char * FILENAME = "[descrambler]";
+-
+-/* alles im Kernel Header ca.h definiert da es der player2 auch braucht
+ 
+ enum ca_descr_data_type {
+ 	CA_DATA_IV,
+@@ -31,8 +29,6 @@
+ 	unsigned char *data;
+ };
+ #define CA_SET_DESCR_DATA _IOW('o', 137, struct ca_descr_data)
+-
+-*/
+ 
+ static int desc_fd;
+ 
 

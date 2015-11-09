@@ -10,7 +10,7 @@
  LDFLAGS += -ldl -lm
 --- tvheadend.org/src/tvheadend.h
 +++ tvheadend/src/tvheadend.h
-@@ -65,12 +65,12 @@
+@@ -76,12 +76,12 @@
  
  htsmsg_t *tvheadend_capabilities_list(int check);
  
@@ -25,7 +25,7 @@
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
  
-@@ -790,4 +790,18 @@
+@@ -801,4 +801,18 @@
  #define PRItime_t       "ld"
  #endif
  
@@ -72,7 +72,7 @@
  /* **************************************************************************
 --- tvheadend.org/src/input/mpegts/satip/satip.c
 +++ tvheadend/src/input/mpegts/satip/satip.c
-@@ -745,7 +745,7 @@
+@@ -752,7 +752,7 @@
  static gtimer_t satip_discovery_static_timer;
  static gtimer_t satip_discovery_timerq;
  static gtimer_t satip_discovery_msearch_timer;
@@ -81,7 +81,7 @@
  
  static void
  satip_discovery_destroy(satip_discovery_t *d, int unlink)
-@@ -1210,7 +1210,7 @@
+@@ -1218,7 +1218,7 @@
   * Initialization
   */
  
@@ -111,7 +111,7 @@
  
  pthread_t main_tid;
  
-@@ -597,6 +598,10 @@
+@@ -599,6 +600,10 @@
    } randseed;
    extern int dvb_bouquets_parse;
  
@@ -122,7 +122,7 @@
    main_tid = pthread_self();
  
    /* Setup global mutexes */
-@@ -654,8 +659,8 @@
+@@ -656,8 +661,8 @@
               *opt_bindaddr     = NULL,
               *opt_subscribe    = NULL,
               *opt_user_agent   = NULL;
@@ -133,7 +133,7 @@
    cmdline_opt_t cmdline_opts[] = {
      {   0, NULL,        N_("Generic Options"),         OPT_BOOL, NULL         },
      { 'h', "help",      N_("Show this page"),          OPT_BOOL, &opt_help    },
-@@ -778,7 +783,7 @@
+@@ -782,7 +787,7 @@
      else if (opt->type == OPT_INT)
        *((int*)opt->param) = atoi(argv[i]);
      else if (opt->type == OPT_STR_LIST) {
@@ -142,7 +142,7 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1098,6 +1103,29 @@
+@@ -1102,6 +1107,29 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  
