@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20150928.1
+# Version 20151112.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 1: target system (1-35)"
@@ -9,7 +9,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 5: Media Framework (1-3, ignored for Neutrino/Tvheadend)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
- echo "Parameter 8: Neutrino variant (1-5)"
+ echo "Parameter 8: Neutrino variant (1-4)"
  exit
 fi
 
@@ -311,30 +311,24 @@ esac
 
 case "$IMAGEN" in
 	Neutrino)
-#	 	if [ "$MFWORK" != "built-in" ]; then
-#			echo "You did not select built-in as the Media Framework."
-#			echo "This is required for Neutrino."
-#			echo "Exiting..."
-#			exit
-#		fi
 		MEDIAFW="--enable-buildinplayer";MFWORK="built-in"
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
-			[1-5])	REPLY=$8;;
+			[1-4])	REPLY=$8;;
 			*)	echo -e "\nWhich Neutrino variant do you want to build?"
 				echo "   1) Neutrino mp (next)"
 				echo "   2) Neutrino mp (cst-next)"
 				echo "   3) Neutrino HD2 exp"
 				echo "   4) Neutrino mp (Tangos)"
-				echo "   5) Neutrino mp (martii-github)"
-				read -p " Select Neutrino variant (1-5)? ";;
+#				echo "   5) Neutrino mp (martii-github)"
+				read -p " Select Neutrino variant (1-4)? ";;
 		esac
 		case "$REPLY" in
 			1)	IMAGEN="Neutrino mp (next)";;
 			2)	IMAGEN="Neutrino mp (cst-next)";;
 			3)	IMAGEN="Neutrino HD2 exp";;
 			4)	IMAGEN="Neutrino mp (Tangos)";;
-			5)	IMAGEN="Neutrino mp (martii-github)";;
+#			5)	IMAGEN="Neutrino mp (martii-github)";;
 			*)	IMAGEN="Neutrino mp (next)";;
 		esac
 		NEUTRINO=$REPLY
@@ -375,18 +369,11 @@ case "$IMAGEN" in
 #				echo "   4) use built-in (required for Neutrino)"
 			read -p "Select media framework (1-3)? ";;
 		esac
-#		if [ "$MFWORK" == "built-in" ]; then
-#			echo "You selected built-in as the Media Framework."
-#			echo "You cannot build Enigma2 with that."
-#			echo "Exiting..."
-#			exit
-#		fi
 
 		case "$REPLY" in
 		1) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
 		2) MEDIAFW="--enable-mediafwgstreamer";MFWORK="gstreamer";;
 		3) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer";MFWORK="gstreamer & eplayer3";;
-#		4) MEDIAFW="--enable-buildinplayer";MFWORK="built-in";;
 		*) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
 		esac
 		CONFIGPARAM="$CONFIGPARAM --enable-enigma2"
@@ -465,7 +452,7 @@ else
     2) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
     3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
     4) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
-    5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
+#    5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
     *) exit;;
   esac
 fi

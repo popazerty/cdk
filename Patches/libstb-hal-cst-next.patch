@@ -90,24 +90,32 @@
  	FP_ICON_MAX
  #endif
  } fp_icon;
---- /home/ndv/a/source/libstb-hal-cst-next/libdvbci/descrambler.cpp.org
-+++ /home/ndv/a/source/libstb-hal-cst-next/libdvbci/descrambler.cpp
-@@ -10,8 +10,6 @@
- #include "descrambler.h"
+--- libstb-hal-cst-next/libdvbci/descrambler.cpp.org
++++ libstb-hal-cst-next/libdvbci/descrambler.cpp
+@@ -11,6 +11,25 @@
  
  static const char * FILENAME = "[descrambler]";
--
--/* alles im Kernel Header ca.h definiert da es der player2 auch braucht
  
- enum ca_descr_data_type {
- 	CA_DATA_IV,
-@@ -31,8 +29,6 @@
- 	unsigned char *data;
- };
- #define CA_SET_DESCR_DATA _IOW('o', 137, struct ca_descr_data)
--
--*/
- 
++enum ca_descr_data_type {
++	CA_DATA_IV,
++	CA_DATA_KEY,
++};
++
++enum ca_descr_parity {
++	CA_PARITY_EVEN,
++	CA_PARITY_ODD,
++};
++
++struct ca_descr_data {
++	unsigned int index;
++	enum ca_descr_parity parity;
++	enum ca_descr_data_type data_type;
++	unsigned int length;
++	unsigned char *data;
++};
++#define CA_SET_DESCR_DATA _IOW('o', 137, struct ca_descr_data)
++
  static int desc_fd;
  
+ /* Byte 0 to 15 are AES Key, Byte 16 to 31 are IV */
 

@@ -17,7 +17,7 @@
  			BOXMODEL="$withval"
 --- neutrino-mp-tangos.org/src/neutrino.cpp
 +++ neutrino-mp-tangos/src/neutrino.cpp
-@@ -4111,6 +4111,9 @@
+@@ -4117,6 +4117,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
  		}
@@ -27,7 +27,7 @@
  		CVFD::getInstance()->setBacklight(g_settings.backlight_standby);
  
  		InfoClock->enableInfoClock(false);
-@@ -4142,6 +4145,9 @@
+@@ -4148,6 +4151,9 @@
  		// Active standby off
  		powerManager->SetStandby(false, false);
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
