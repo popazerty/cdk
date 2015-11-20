@@ -1,9 +1,11 @@
 #!/bin/sh
-#Version 150810.1
+#Version 151120.1
 
 echo "Spark 7162"
 
 MODDIR=/lib/modules
+
+insmod $MODDIR/e2_proc.ko
 
 echo "Init frontpanel"
 insmod $MODDIR/aotom.ko paramDebug=0
@@ -25,9 +27,6 @@ fi
 
 /etc/init.d/mountvirtfs start
 /etc/init.d/portmap start
-
-insmod $MODDIR/e2_proc.ko
-
 /etc/init.d/autofs start
 
 if [ -e "$MODDIR/cpu_frequ.ko" ]; then
@@ -74,7 +73,7 @@ insmod $MODDIR/stmcore-display-sti7105.ko
 if  grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
   insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb; #SCART
 else
-  insmod $MODDIR/stmfb.ko display0=1280x720-32@50:15m:pal:rgb:rgb; #HDMI
+  insmod $MODDIR/stmfb.ko display0=1280x720-32@50:16m:pal:rgb:rgb; #HDMI
 fi
 
 echo "Loading modules"
@@ -102,7 +101,7 @@ echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
 insmod $MODDIR/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0
 insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000
-insmod $MODDIR/mme_host.ko transport0=shm
+#insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
 echo "Load 5" > /dev/vfd
@@ -125,6 +124,13 @@ if [ ! $tunertype ]; then
    tunertype='t'
 fi
 insmod $MODDIR/spark7162.ko UnionTunerType=$tunertype
+
+if [ -e $MODDIR/dvb-it913x.ko ]; then
+  echo
+  echo "IT913X driver loading"
+  echo "---------------------"
+  insmod $MODDIR/dvb-it913x.ko
+fi
 
 if [ -e $MODDIR/pti.ko ]; then
 #   if [ ! $?=='2' ]; then
