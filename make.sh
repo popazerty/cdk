@@ -2,7 +2,7 @@
 # Version 20151112.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
- echo "Parameter 1: target system (1-35)"
+ echo "Parameter 1: target system (1-36)"
  echo "Parameter 2: kernel (1-5)"
  echo "Parameter 3: debug (y/N)"
  echo "Parameter 4: player (1-2)"
@@ -94,8 +94,9 @@ case $1 in
 		echo "   33) Ferguson Ariva @Link 200"
 		echo "   34) Fortis HS7119"
 		echo "   35) Fortis HS7819"
-#		echo "   36) Fortis DP7000 (not finished yet)"
-		read -p "Select target (1-35)? ";;
+		echo "   36) Xsarius Alpha (Cuberevo 3000HD)"
+#		echo "   37) Fortis DP7000 (not finished yet)"
+		read -p "Select target (1-36)? ";;
 esac
 
 case "$REPLY" in
@@ -133,7 +134,8 @@ case "$REPLY" in
 	33) TARGET="--enable-arivalink200";BOXTYPE="--with-boxtype=arivalink200";RECEIVER="Ariva@Link 200";;
 	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";RECEIVER="Fortis HS7119";;
 	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";RECEIVER="Fortis HS7819";;
-	36) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";RECEIVER="Fortis DP7000";;
+	36) TARGET="--enable-cuberevo_3000hd";BOXTYPE="--with-boxtype=cuberevo_3000hd";RECEIVER="Cuberevo_3000HD";;
+	37) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";RECEIVER="Fortis DP7000";;
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"

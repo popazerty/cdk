@@ -228,7 +228,7 @@ $(D)/wireless_tools: $(D)/bootstrap @DEPENDS_wireless_tools@
 #
 # libnl
 #
-$(D)/libnl: $(D)/bootstrap $(OPENSSL) @DEPENDS_libnl@
+$(D)/libnl: $(D)/bootstrap $(D)/openssl @DEPENDS_libnl@
 	@PREPARE_libnl@
 	cd @DIR_libnl@ && \
 		$(CONFIGURE) \
@@ -241,7 +241,7 @@ $(D)/libnl: $(D)/bootstrap $(OPENSSL) @DEPENDS_libnl@
 #
 # wpa_supplicant
 #
-$(D)/wpa_supplicant: $(D)/bootstrap $(OPENSSL) $(D)/wireless_tools @DEPENDS_wpa_supplicant@
+$(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools @DEPENDS_wpa_supplicant@
 	@PREPARE_wpa_supplicant@
 	cd @DIR_wpa_supplicant@/wpa_supplicant && \
 		cp -f defconfig .config && \
@@ -289,7 +289,7 @@ $(D)/udpxy: $(D)/bootstrap @DEPENDS_udpxy@
 #
 # openvpn
 #
-$(D)/openvpn: $(D)/bootstrap $(OPENSSL) $(D)/lzo @DEPENDS_openvpn@
+$(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo @DEPENDS_openvpn@
 	@PREPARE_openvpn@
 	cd @DIR_openvpn@ && \
 		$(CONFIGURE) \
@@ -310,7 +310,7 @@ $(D)/openvpn: $(D)/bootstrap $(OPENSSL) $(D)/lzo @DEPENDS_openvpn@
 	@CLEANUP_openvpn@
 	touch $@
 
-$(D)/openssh: $(D)/bootstrap $(D)/zlib $(OPENSSL) @DEPENDS_openssh@
+$(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl @DEPENDS_openssh@
 	@PREPARE_openssh@
 	cd @DIR_openssh@ && \
 		CC=$(target)-gcc && \
