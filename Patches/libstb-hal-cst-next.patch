@@ -118,4 +118,55 @@
  static const char *descrambler_filename = "/dev/dvb/adapter0/ca3";
  static int desc_fd = -1;
  static int desc_user_count = 0;
+--- libstb-hal-cst-next/tools/spark_fp.c.org
++++ libstb-hal-cst-next/tools/spark_fp.c
+@@ -30,6 +30,10 @@
+ #include <time.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ 
+ #define FP_DEV "/dev/vfd"
+@@ -129,6 +133,7 @@
+ 	struct aotom_ioctl_data aotom;
+ 	memset(&aotom, 0, sizeof(aotom));
+ 	int ret, c, val;
++	YWPANEL_Version_t version;
+ 	time_t t, t2, diff;
+ 	struct tm *tmp;
+ 	int period = LOG_ON;
+@@ -245,13 +250,13 @@
+ 				ioctl(fd, VFDICONDISPLAYONOFF, &aotom);
+ 				break;
+ 			case 'T':
+-				ret = ioctl(fd, VFDGETVERSION, &val);
++				ret = ioctl(fd, VFDGETVERSION, &version);
+ 				if (ret < 0)
+ 					perror("ioctl VFDGETVERSION");
+ 				else
+ 				{
+-					printf("%d\n", val);
+-					ret = val;
++					printf("Displaytype is %d\n", version.DisplayInfo);
++					ret = version.DisplayInfo;
+ 				}
+ 				break;
+ // Reminder to myself, here's a semi-sane default for Pingulux boxes:
+--- libstb-hal-cst-next/libspark/hardware_caps.c.org
++++ libstb-hal-cst-next/libspark/hardware_caps.c
+@@ -14,6 +14,10 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ 
+ #include <hardware_caps.h>
 

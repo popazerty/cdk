@@ -37,6 +37,18 @@
  		CVFD::getInstance()->ShowText("resume");
  		cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
  		videoDecoder->Standby(false);
+--- neutrino-mp-tangos/src/driver/simple_display.cpp.org
++++ neutrino-mp-tangos/src/driver/simple_display.cpp
+@@ -35,6 +35,9 @@
+ //#include <math.h>
+ #include <sys/stat.h>
+ #if HAVE_SPARK_HARDWARE
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ #define DISPLAY_DEV "/dev/vfd"
+ #endif
 //--- neutrino-mp-tangos.org/src/gui/vfd_setup.cpp
 //+++ neutrino-mp-tangos/src/gui/vfd_setup.cpp
 //@@ -647,6 +647,8 @@
