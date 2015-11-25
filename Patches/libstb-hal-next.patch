@@ -316,4 +316,103 @@
  #elif defined(BOXMODEL_UFS910)
  	FP_ICON_USB = 0x10,
  	FP_ICON_HD,
+--- libstb-hal-next.org/libspark/hardware_caps.c
++++ libstb-hal-next/libspark/hardware_caps.c
+@@ -14,6 +14,10 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ 
+ #include <hardware_caps.h>
+@@ -40,6 +44,7 @@
+ 	const char *tmp;
+ 	char buf[1024];
+ 	int len = -1, ret, val;
++	YWPANEL_Version_t version;
+ 	int fd = open("/proc/cmdline", O_RDONLY);
+ 	if (fd != -1) {
+ 		len = read(fd, buf, sizeof(buf) - 1);
+@@ -149,12 +154,24 @@
+ 	}
+ 	fd = open (FP_DEV, O_RDWR);
+ 	if (fd != -1) {
+-		ret = ioctl(fd, VFDGETVERSION, &val);
++		ret = ioctl(fd, VFDGETVERSION, &version);
+ 		if (ret < 0)
+ 			fprintf(stderr, "[hardware_caps] %s: VFDGETVERSION %m\n", __func__);
+-		else if (val == 1) { /* VFD, others not yet seen in the wild */
++		else if (version.DisplayInfo == 1) { /* VFD, others not yet seen in the wild */
+ 			caps.display_type = HW_DISPLAY_LINE_TEXT;
+ 			caps.display_xres = 8;
++		}
++		else if (version.DisplayInfo == 3) { /* DVFD */
++			caps.display_type = HW_DISPLAY_LINE_TEXT;
++			ret = ioctl(fd, VFDGETDISPLAYTIME, &val);
++			if (val == 1)
++			{
++				caps.display_xres = 10;
++			}
++			else
++			{
++				caps.display_xres = 16;
++			}
+ 		}
+ 		close(fd);
+ 	}
+--- libstb-hal-next.org/tools/spark_fp.c
++++ libstb-hal-next/tools/spark_fp.c
+@@ -30,6 +30,10 @@
+ #include <time.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ 
+ #define FP_DEV "/dev/vfd"
+@@ -38,7 +42,7 @@
+ {
+ 	printf("usage spark_fp <option>\n");
+ 	printf("\t-g: get wakeup reason (return code == reason)\n");
+-	printf("\t-T: get FP display type (1 = VFD, 2 = LCD, 4 = LED, 8 = LBD)\n");
++	printf("\t-T: get FP display type (1 = VFD, 2 = LCD, 3 = DVFD, 4 = LED, 8 = LBD)\n");
+ 	printf("\t-t: get current FP time\n");
+ 	printf("\t-s <time>: set FP time (time = 0: use current time)\n");
+ 	printf("\t-w <time>: set FP wakeup time (time = 1: no wakeup)\n");
+@@ -126,6 +130,7 @@
+ 	struct aotom_ioctl_data aotom;
+ 	memset(&aotom, 0, sizeof(aotom));
+ 	int ret, c, val;
++	YWPANEL_Version_t version;
+ 	time_t t, t2, diff;
+ 	struct tm *tmp;
+ 
+@@ -228,13 +233,17 @@
+ 				ioctl(fd, VFDSETLED, &aotom);
+ 				break;
+ 			case 'T':
+-				ret = ioctl(fd, VFDGETVERSION, &val);
++				ret = ioctl(fd, VFDGETVERSION, &version);
+ 				if (ret < 0)
+ 					perror("ioctl VFDGETVERSION");
+ 				else
+ 				{
+-					printf("%d\n", val);
+-					ret = val;
++					printf("Displaytype is %d\n", version.DisplayInfo);
++//					if (version.DisplayInfo == 3) //if DVFD
++//					{
++//						return 1; //return VFD
++//					}
++					ret = version.DisplayInfo;
+ 				}
+ 				break;
+ // Reminder to myself, here's a semi-sane default for Pingulux boxes:
 

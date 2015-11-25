@@ -59,6 +59,18 @@
 # elif test "$BOXMODEL" = "cuberevo"; then
 # 	AC_DEFINE(BOXMODEL_CUBEREVO, 1, [cuberevo])
 # elif test "$BOXMODEL" = "cuberevo_mini2"; then
+--- neutrino-mp-cst-next.org/src/driver/simple_display.cpp
++++ neutrino-mp-cst-next/src/driver/simple_display.cpp
+@@ -35,6 +35,9 @@
+ //#include <math.h>
+ #include <sys/stat.h>
+ #if HAVE_SPARK_HARDWARE
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ #define DISPLAY_DEV "/dev/vfd"
+ #endif
 --- neutrino-mp-cst-next/src/gui/vfd_setup.cpp
 +++ neutrino-mp-cst-next/src/gui/vfd_setup.cpp
 @@ -187,6 +187,15 @@
