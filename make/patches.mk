@@ -6,9 +6,9 @@ neutrino-mp-next-patch \
 neutrino-mp-tangos-patch \
 neutrino-mp-cst-next-patch \
 neutrino-mp-martii-github-patch \
+neutrino-mp-cst-next-max-patch \
 libstb-hal-next-patch \
-libstb-hal-cst-next-patch \
-libstb-hal-github-old-patch :
+libstb-hal-cst-next-patch :
 	cd $(sourcedir) && diff -Nur --exclude-from=$(buildprefix)/scripts/diff-exclude $(subst -patch,,$@).org $(subst -patch,,$@) > $(cvsdir)/$@ ; [ $$? -eq 1 ]
 
 # keeping all patches together in one file

@@ -1047,6 +1047,7 @@ endif
 	rm -rf $(prefix)/release/usr/lib/m4-nofpu/
 	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
 	rm -rf $(prefix)/release/usr/lib/gcc
+	rm -f $(prefix)/release/usr/lib/libc.so
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/DemoPlugins
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/FrontprocessorUpgrade
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/NFIFlash
@@ -1296,6 +1297,10 @@ endif
 		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/as102/dvb-as102.ko $(prefix)/release/lib/modules/; \
 		cp $(buildprefix)/root/firmware/as102_data1_st.hex $(prefix)/release/lib/firmware/; \
 		cp $(buildprefix)/root/firmware/as102_data2_st.hex $(prefix)/release/lib/firmware/; \
+	fi
+	if [ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/ ]; then \
+		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/* $(prefix)/release/lib/modules/; \
+		cp $(buildprefix)/root/firmware/dvb_nova_12mhz_b0.inp $(prefix)/release/lib/firmware/; \
 	fi
 
 	if [ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko]; then \
