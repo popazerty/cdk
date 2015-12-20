@@ -95,7 +95,6 @@ case $1 in
 		echo "   34) Fortis HS7119"
 		echo "   35) Fortis HS7819"
 		echo "   36) Xsarius Alpha (Cuberevo 3000HD)"
-#		echo "   37) Fortis DP7000 (not finished yet)"
 		read -p "Select target (1-36)? ";;
 esac
 
@@ -135,7 +134,6 @@ case "$REPLY" in
 	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";RECEIVER="Fortis HS7119";;
 	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";RECEIVER="Fortis HS7819";;
 	36) TARGET="--enable-cuberevo_3000hd";BOXTYPE="--with-boxtype=cuberevo_3000hd";RECEIVER="Cuberevo_3000HD";;
-	37) TARGET="--enable-fortis_dp7000";BOXTYPE="--with-boxtype=fortis_dp7000";RECEIVER="Fortis DP7000";;
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"

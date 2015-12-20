@@ -248,9 +248,6 @@ ARIVALINK200_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-ipbox_bdinfo_stm24$(PATCH_STR).patch \
 		linux-sh4-ipbox_dvb_ca_stm24$(PATCH_STR).patch
 
-FORTIS_DP7000_PATCHES_24 = $(COMMONPATCHES_24) \
-		linux-sh4-fortis_dp7000_setup_stm24$(PATCH_STR).patch
-
 KERNELPATCHES_24 = \
 		$(if $(UFS910),$(UFS910_PATCHES_24)) \
 		$(if $(UFS912),$(UFS912_PATCHES_24)) \
@@ -287,7 +284,6 @@ KERNELPATCHES_24 = \
 		$(if $(VITAMIN_HD5000),$(VITAMIN_HD5000_PATCHES_24)) \
 		$(if $(SAGEMCOM88),$(SAGEMCOM88_PATCHES_24)) \
 		$(if $(ARIVALINK200),$(ARIVALINK200_PATCHES_24)) \
-		$(if $(FORTIS_DP7000),$(FORTIS_DP7000_PATCHES_24))
 
 if ENABLE_ENIGMA2
 BUILDCONFIG=build-enigma2
@@ -331,7 +327,6 @@ endif
 HOST_KERNEL_PATCHES = $(KERNELPATCHES_24)
 HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,_,$(KERNELVERSION))_$(MODNAME).config$(DEBUG_STR)
 
-##make -C $(KERNEL_DIR) headers_install ARCH=sh INSTALL_HDR_PATH=$(targetprefix)/usr
 $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS) \
 	$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=$(PATCHES)/$(BUILDCONFIG)/%))
 	rm -rf linux-sh4*
