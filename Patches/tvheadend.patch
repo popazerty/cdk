@@ -24,8 +24,8 @@
 +} strg_list_t;
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
- 
-@@ -801,4 +801,18 @@
+ #define PTS_MASK  INT64_C(0x00000001ffffffff)
+@@ -822,4 +822,18 @@
  #define PRItime_t       "ld"
  #endif
  
@@ -59,7 +59,7 @@
    idclass_register(&mpegts_network_class);
 --- tvheadend.org/src/input/mpegts.h
 +++ tvheadend/src/input/mpegts.h
-@@ -70,8 +70,8 @@
+@@ -71,8 +71,8 @@
   * Setup / Tear down
   * *************************************************************************/
  
@@ -72,7 +72,7 @@
  /* **************************************************************************
 --- tvheadend.org/src/input/mpegts/satip/satip.c
 +++ tvheadend/src/input/mpegts/satip/satip.c
-@@ -752,7 +752,7 @@
+@@ -797,7 +797,7 @@
  static gtimer_t satip_discovery_static_timer;
  static gtimer_t satip_discovery_timerq;
  static gtimer_t satip_discovery_msearch_timer;
@@ -81,7 +81,7 @@
  
  static void
  satip_discovery_destroy(satip_discovery_t *d, int unlink)
-@@ -1218,7 +1218,7 @@
+@@ -1263,7 +1263,7 @@
   * Initialization
   */
  
@@ -122,7 +122,7 @@
    main_tid = pthread_self();
  
    /* Setup global mutexes */
-@@ -656,8 +661,8 @@
+@@ -657,8 +662,8 @@
               *opt_bindaddr     = NULL,
               *opt_subscribe    = NULL,
               *opt_user_agent   = NULL;
@@ -131,9 +131,9 @@
 +  strg_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
 +  strg_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
    cmdline_opt_t cmdline_opts[] = {
-     {   0, NULL,        N_("Generic Options"),         OPT_BOOL, NULL         },
+     {   0, NULL,        N_("Generic options"),         OPT_BOOL, NULL         },
      { 'h', "help",      N_("Show this page"),          OPT_BOOL, &opt_help    },
-@@ -782,7 +787,7 @@
+@@ -784,7 +789,7 @@
      else if (opt->type == OPT_INT)
        *((int*)opt->param) = atoi(argv[i]);
      else if (opt->type == OPT_STR_LIST) {
@@ -142,7 +142,7 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1102,6 +1107,29 @@
+@@ -1106,6 +1111,29 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  
