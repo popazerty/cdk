@@ -153,7 +153,7 @@ $(D)/neutrino-mp-cst-next.config.status:
 			--enable-ffmpegdec \
 			--enable-giflib \
 			--with-tremor \
-			--with-lua \
+			--enable-lua \
 			--with-libdir=/usr/lib \
 			--with-datadir=/usr/share/tuxbox \
 			--with-fontdir=/usr/share/fonts \

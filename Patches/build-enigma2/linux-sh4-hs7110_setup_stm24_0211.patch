@@ -264,7 +264,7 @@
 
 --- linux-sh4/arch/sh/include/asm/irq-ilc.h	2012-03-31 15:26:54.634523363 +0200
 +++ linux-sh4/arch/sh/include/asm/irq-ilc.h.patched	2012-03-31 15:26:54.084558439 +0200
-@@ -40,7 +40,7 @@
+@@ -44,7 +44,7 @@
  #define ILC_IRQ(x)	(ILC_FIRST_IRQ + (x))
  #elif	defined(CONFIG_CPU_SUBTYPE_STX7111)
  #define ILC_FIRST_IRQ	176
@@ -291,7 +291,7 @@
  	},
  };
 @@ -125,8 +125,8 @@
- 		/* .id set in stx7111_configure_asc() */ 
+ 		/* .id set in stx7111_configure_asc() */
  		.num_resources	= 4,
  		.resource	= (struct resource[]) {
 -			STM_PLAT_RESOURCE_MEM(0xfd033000, 0x2c),
@@ -454,7 +454,7 @@
 *** linux-sh4/drivers/net/phy/phy_device.c	2012-03-31 15:26:54.440157990 +0300
 --- linux-sh4/drivers/net/phy/phy_device.c.patched	2012-03-31 15:26:54.308158605 +0300
 ***************
-*** 962,968 ****
+*** 1098,1104 ****
   		return retval;
   	}
   
@@ -462,7 +462,7 @@
   
   	return 0;
   }
---- 962,968 ----
+--- 1098,1104 ----
   		return retval;
   	}
   
@@ -474,8 +474,8 @@
 *** linux-sh4/drivers/net/stmmac/stmmac_mdio.c	2012-03-31 15:26:54.233314199 +0300
 --- linux-sh4/drivers/net/stmmac/stmmac_mdio.c.patched	2012-03-31 15:26:54.531239690 +0300
 ***************
-*** 169,174 ****
---- 169,175 ----
+*** 170,175 ****
+--- 170,176 ----
   	priv->mii = new_bus;
   
   	found = 0;
@@ -484,7 +484,7 @@
   		struct phy_device *phydev = new_bus->phy_map[addr];
   		if (phydev) {
 ***************
-*** 191,202 ****
+*** 194,205 ****
   			 * and no PHY number was provided to the MAC,
   			 * use the one probed here.
   			 */
@@ -497,7 +497,7 @@
   			switch (phydev->irq) {
   			case PHY_POLL:
   				irq_str = "POLL";
---- 192,213 ----
+--- 195,216 ----
   			 * and no PHY number was provided to the MAC,
   			 * use the one probed here.
   			 */

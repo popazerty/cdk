@@ -4,10 +4,13 @@ yaud-tvheadend: yaud-none \
 
 TVHEADEND_DEPS = bootstrap openssl python
 
+if ENABLE_SPARK7162
+TVHEADEND_DEPS += ntp
+endif
+
 TVHEADEND_PATCHES = tvheadend.patch
 
 T_CONFIG_OPTS = -DPLATFORM_$(BOXTYPE)
-
 
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
