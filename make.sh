@@ -2,7 +2,7 @@
 # Version 20151112.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
- echo "Parameter 1: target system (1-36)"
+ echo "Parameter 1: target system (1-38)"
  echo "Parameter 2: kernel (1-5)"
  echo "Parameter 3: debug (y/N)"
  echo "Parameter 4: player (1-2)"
@@ -95,7 +95,9 @@ case $1 in
 		echo "   34) Fortis HS7119"
 		echo "   35) Fortis HS7819"
 		echo "   36) Xsarius Alpha (Cuberevo 3000HD)"
-		read -p "Select target (1-36)? ";;
+		echo "   37) Fortis HS7420"
+		echo "   38) Fortis HS7429"
+		read -p "Select target (1-38)? ";;
 esac
 
 case "$REPLY" in
@@ -134,6 +136,8 @@ case "$REPLY" in
 	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";RECEIVER="Fortis HS7119";;
 	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";RECEIVER="Fortis HS7819";;
 	36) TARGET="--enable-cuberevo_3000hd";BOXTYPE="--with-boxtype=cuberevo_3000hd";RECEIVER="Cuberevo_3000HD";;
+	37) TARGET="--enable-hs7420";BOXTYPE="--with-boxtype=hs7420";RECEIVER="Fortis HS7420";;
+	38) TARGET="--enable-hs7429";BOXTYPE="--with-boxtype=hs7429";RECEIVER="Fortis HS7429";;
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
@@ -394,12 +398,12 @@ CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD"
 
 ##############################################
 
-echo -n "Checking the .elf files in $CURDIR/root/boot..."
+echo -ne "\nChecking the .elf files in $CURDIR/root/boot..."
 set='audio audio_7100 audio_7105 audio_7109 audio_7111 video video_7100 video_7105 video_7109 video_7111'
 for i in $set;
 do
   if [ ! -e $CURDIR/root/boot/$i.elf ]; then
-    echo -e "\nOne of more .elf files are missing in ./root/boot!"
+    echo -e "\n\nERROR: One or more .elf files are missing in ./root/boot!"
     echo "($i.elf is one of them)"
     echo
     echo "Correct this and retry."

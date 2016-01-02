@@ -194,6 +194,14 @@ AC_ARG_ENABLE(hs7110,
 AM_CONDITIONAL(ENABLE_HS7110,test "$enable_hs7110" = "yes")
 AC_SUBST(HS7110)
 
+AC_ARG_ENABLE(hs7420,
+	AS_HELP_STRING(--enable-hs7420, enable fortis hs7420 stuff),
+	[case "${enableval}" in
+		yes) HS7420=hs7420 ;;
+	esac],[enable_hs7420=no])
+AM_CONDITIONAL(ENABLE_HS7420,test "$enable_hs7420" = "yes")
+AC_SUBST(HS7420)
+
 AC_ARG_ENABLE(hs7810a,
 	AS_HELP_STRING(--enable-hs7810a, enable fortis hs7810a stuff),
 	[case "${enableval}" in
@@ -209,6 +217,14 @@ AC_ARG_ENABLE(hs7119,
 	esac],[enable_hs7119=no])
 AM_CONDITIONAL(ENABLE_HS7119,test "$enable_hs7119" = "yes")
 AC_SUBST(HS7119)
+
+AC_ARG_ENABLE(hs7429,
+	AS_HELP_STRING(--enable-hs7429, enable fortis hs7429 stuff),
+	[case "${enableval}" in
+		yes) HS7429=hs7429 ;;
+	esac],[enable_hs7429=no])
+AM_CONDITIONAL(ENABLE_HS7429,test "$enable_hs7429" = "yes")
+AC_SUBST(HS7429)
 
 AC_ARG_ENABLE(hs7819,
 	AS_HELP_STRING(--enable-hs7819, enable fortis hs7819 stuff),

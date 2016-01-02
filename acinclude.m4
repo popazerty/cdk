@@ -43,8 +43,8 @@ target_alias="sh4-linux"
 AC_ARG_WITH(boxtype,
 	[  --with-boxtype    valid values: ufs910, ufs912, ufs913, ufs922, ufc960
                              valid values: ipbox55, ipbox99, ipbox9900, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_mini_fta, cuberevo_250hd, cuberevo_2000hd, cuberevo_9500hd, cuberevo_3000hd
-                             valid values: tf7700, fortis_hdbox, octagon1008, atevio7500, spark, spark7162, hl101, hs7110, hs7810a, hs7119, hs7819, adb_box, atemio520, atemio530, vip, homecast5101
-                             valid values: vitamin_hd5000, sagemcom88, arivalink200, fortis_dp7000],
+                             valid values: tf7700, fortis_hdbox, octagon1008, atevio7500, spark, spark7162, hl101, hs7110, hs7420, hs7810a, hs7119, hs7429, hs7819, adb_box, atemio520, atemio530
+                             valid values: vip, homecast5101, vitamin_hd5000, sagemcom88, arivalink200, fortis_dp7000],
 	[case "${withval}" in
 dnl		To-Do: extend CPU types and kernel versions when needed
 		ufs910)
@@ -119,10 +119,16 @@ dnl		To-Do: extend CPU types and kernel versions when needed
 		hs7110)
 			BOXTYPE="$withval"
 			;;
+		hs7420)
+			BOXTYPE="$withval"
+			;;
 		hs7810a)
 			BOXTYPE="$withval"
 			;;
 		hs7119)
+			BOXTYPE="$withval"
+			;;
+		hs7429)
 			BOXTYPE="$withval"
 			;;
 		hs7819)
@@ -186,8 +192,10 @@ AM_CONDITIONAL(BOXTYPE_SPARK, test "$BOXTYPE" = "spark")
 AM_CONDITIONAL(BOXTYPE_SPARK7162, test "$BOXTYPE" = "spark7162")
 AM_CONDITIONAL(BOXTYPE_HL101, test "$BOXTYPE" = "hl101")
 AM_CONDITIONAL(BOXTYPE_HS7110, test "$BOXTYPE" = "hs7110")
+AM_CONDITIONAL(BOXTYPE_HS7420, test "$BOXTYPE" = "hs7420")
 AM_CONDITIONAL(BOXTYPE_HS7810A, test "$BOXTYPE" = "hs7810a")
 AM_CONDITIONAL(BOXTYPE_HS7119, test "$BOXTYPE" = "hs7119")
+AM_CONDITIONAL(BOXTYPE_HS7429, test "$BOXTYPE" = "hs7429")
 AM_CONDITIONAL(BOXTYPE_HS7819, test "$BOXTYPE" = "hs7819")
 AM_CONDITIONAL(BOXTYPE_ADB_BOX, test "$BOXTYPE" = "adb_box")
 AM_CONDITIONAL(BOXTYPE_ATEMIO520, test "$BOXTYPE" = "atemio520")
@@ -247,10 +255,14 @@ elif test "$BOXTYPE" = "hl101"; then
 	AC_DEFINE(HAVE_HL101_HARDWARE, 1, [building for a hl101])
 elif test "$BOXTYPE" = "hs7110"; then
 	AC_DEFINE(HAVE_HS7110_HARDWARE, 1, [building for a hs7110])
+elif test "$BOXTYPE" = "hs7420"; then
+	AC_DEFINE(HAVE_HS7420_HARDWARE, 1, [building for a hs7420])
 elif test "$BOXTYPE" = "hs7810a"; then
-	AC_DEFINE(HAVE_HS7810A_HARDWARE, 1, [building for a hs7810a])
+	AC_DEFINE(HAVE_HS7420_HARDWARE, 1, [building for a hs7810a])
 elif test "$BOXTYPE" = "hs7119"; then
 	AC_DEFINE(HAVE_HS7119_HARDWARE, 1, [building for a hs7119])
+elif test "$BOXTYPE" = "hs7429"; then
+	AC_DEFINE(HAVE_HS7429_HARDWARE, 1, [building for a hs7429])
 elif test "$BOXTYPE" = "hs7819"; then
 	AC_DEFINE(HAVE_HS7819_HARDWARE, 1, [building for a hs7819])
 elif test "$BOXTYPE" = "adb_box"; then

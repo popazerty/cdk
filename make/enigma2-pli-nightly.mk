@@ -42,12 +42,20 @@ if ENABLE_HS7110
 E_CONFIG_OPTS += --enable-hs7110
 endif
 
+if ENABLE_HS7420
+E_CONFIG_OPTS += --enable-hs7420
+endif
+
 if ENABLE_HS7810A
 E_CONFIG_OPTS += --enable-hs7810a
 endif
 
 if ENABLE_HS7119
 E_CONFIG_OPTS += --enable-hs7119
+endif
+
+if ENABLE_HS7429
+E_CONFIG_OPTS += --enable-hs7429
 endif
 
 if ENABLE_HS7819
