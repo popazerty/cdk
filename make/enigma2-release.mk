@@ -1356,11 +1356,11 @@ endif
 		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/* $(prefix)/release/lib/modules/; \
 		cp $(buildprefix)/root/firmware/dvb_nova_12mhz_b0.inp $(prefix)/release/lib/firmware/; \
 	fi
-
 	if [ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko]; then \
 		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko $(prefix)/release/lib/modules/; \
 		cp $(buildprefix)/root/firmware/dvb-usb-it9135-01.fw $(prefix)/release/lib/firmware/; \
 		cp $(buildprefix)/root/firmware/dvb-usb-it9135-02.fw $(prefix)/release/lib/firmware/; \
+		cp $(buildprefix)/root/firmware/dvb-usb-it9137.fw $(prefix)/release/lib/firmware/; \
 	fi
 
 #
