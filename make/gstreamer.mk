@@ -267,6 +267,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 	[ -d "$(archivedir)/gst-plugins-dvbmediasink.git" ] && \
 	(cd $(archivedir)/gst-plugins-dvbmediasink.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_gst_plugins_dvbmediasink@ && \
+	patch -p1 < "../Patches/gst-1.0-plugins-dvbmediasink-sh4.patch"; \
 		aclocal --force -I m4 && \
 		libtoolize --copy --force && \
 		autoconf --force && \
