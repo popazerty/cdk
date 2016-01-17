@@ -230,6 +230,8 @@ $(D)/gst_plugins_fluendo_mpegdemux: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugi
 #
 $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly @DEPENDS_gst_plugin_subsink@
 	@PREPARE_gst_plugin_subsink@
+	[ -d "$(archivedir)/gst-plugin-subsink.git" ] && \
+	(cd $(archivedir)/gst-plugin-subsink.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_gst_plugin_subsink@ && \
 		aclocal --force -I m4 && \
 		libtoolize --copy --ltdl --force && \
