@@ -87,7 +87,7 @@
  	}
  	if (self->fd >= 0) ioctl(self->fd, AUDIO_PLAY);
  	self->playing = TRUE;
-@@ -781,6 +833,9 @@
+@@ -779,6 +831,9 @@
  	{
  		gboolean pass_eos = FALSE;
  		struct pollfd pfd[2];
@@ -97,7 +97,7 @@
  		pfd[0].fd = self->unlockfd[0];
  		pfd[0].events = POLLIN;
  		pfd[1].fd = self->fd;
-@@ -956,12 +1011,16 @@
+@@ -916,12 +971,16 @@
  		{
  			GST_LOG_OBJECT(self, "going into poll, have %d bytes to write", len - written);
  		}
@@ -138,7 +138,7 @@
  #include <gst/gst.h>
  #include <gst/base/gstbasesink.h>
  
-@@ -282,6 +286,42 @@
+@@ -275,6 +279,42 @@
  	)
  );
  
@@ -181,7 +181,7 @@
  static void gst_dvbvideosink_init(GstDVBVideoSink *self);
  static void gst_dvbvideosink_dispose(GObject *obj);
  static void gst_dvbvideosink_reset(GObject *obj);
-@@ -380,6 +420,11 @@
+@@ -373,6 +413,11 @@
  	self->saved_fallback_framerate[0] = 0;
  	self->rate = 1.0;
  	self->wmv_asf = FALSE;
@@ -191,9 +191,9 @@
 +	self->use_set_encoding = FALSE;
 +#endif
  
+ #ifdef VUPLUS
  	gst_base_sink_set_sync(GST_BASE_SINK(self), FALSE);
- 	gst_base_sink_set_async_enabled(GST_BASE_SINK(self), TRUE);
-@@ -514,6 +559,9 @@
+@@ -510,6 +555,9 @@
  		pfd[1].fd = self->fd;
  		pfd[1].events = POLLIN;
  
@@ -203,7 +203,7 @@
  		GST_BASE_SINK_PREROLL_UNLOCK(sink);
  		while (1)
  		{
-@@ -1736,9 +1784,22 @@
+@@ -1680,9 +1728,22 @@
  			if (self->fd >= 0) ioctl(self->fd, VIDEO_STOP, 0);
  			self->playing = FALSE;
  		}
