@@ -16,11 +16,13 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
 	rm -rf $(sourcedir)/tvheadend.org
 	rm -rf $(N_OBJDIR)
+	REVISION="fc6c36332e4b07aa22d351f0c6e31d12751d2b40"; \
 	[ -d "$(archivedir)/tvheadend.git" ] && \
-	(cd $(archivedir)/tvheadend.git; git pull; cd "$(buildprefix)";); \
+	(cd $(archivedir)/tvheadend.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/tvheadend.git" ] || \
-	git clone https://github.com/tvheadend/tvheadend.git $(archivedir)/tvheadend.git; \
+	git clone -b master https://github.com/tvheadend/tvheadend.git $(archivedir)/tvheadend.git; \
 	cp -ra $(archivedir)/tvheadend.git $(sourcedir)/tvheadend; \
+	(cd $(sourcedir)/tvheadend; cd $(sourcedir)/tvheadend; git checkout "$$REVISION"; cd "$(buildprefix)";); \
 	cp -ra $(sourcedir)/tvheadend $(sourcedir)/tvheadend.org
 	for i in $(TVHEADEND_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
@@ -37,6 +39,8 @@ $(D)/tvheadend.config.status:
 			--disable-avahi \
 			--disable-tvhcsa \
 			--disable-libav \
+			--disable-libffmpeg_static \
+			--disable-hdhomerun_static \
 			--disable-dvben50221 \
 			--disable-dbus_1 \
 			--disable-uriparser \
