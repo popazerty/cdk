@@ -1,23 +1,6 @@
---- neutrino-mp-tangos.org/acinclude.m4
-+++ neutrino-mp-tangos/acinclude.m4
-@@ -490,6 +490,14 @@
- 			BOXTYPE="duckbox"
- 			BOXMODEL="$withval"
- 			;;
-+		hs7*)
-+			BOXTYPE="duckbox"
-+			BOXMODEL="$withval"
-+			;;
-+		dp*)
-+			BOXTYPE="duckbox"
-+			BOXMODEL="$withval"
-+			;;
- 		cuberevo*)
- 			BOXTYPE="duckbox"
- 			BOXMODEL="$withval"
 --- neutrino-mp-tangos.org/src/neutrino.cpp
 +++ neutrino-mp-tangos/src/neutrino.cpp
-@@ -4117,6 +4117,9 @@
+@@ -4149,6 +4149,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
  		}
@@ -27,7 +10,7 @@
  		CVFD::getInstance()->setBacklight(g_settings.backlight_standby);
  
  		InfoClock->enableInfoClock(false);
-@@ -4148,6 +4151,9 @@
+@@ -4180,6 +4183,9 @@
  		// Active standby off
  		powerManager->SetStandby(false, false);
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
@@ -49,45 +32,15 @@
  #include <aotom_main.h>
  #define DISPLAY_DEV "/dev/vfd"
  #endif
-//--- neutrino-mp-tangos.org/src/gui/vfd_setup.cpp
-//+++ neutrino-mp-tangos/src/gui/vfd_setup.cpp
-//@@ -647,6 +647,8 @@
-// 				ShowIcon(ICON_COLON2, true);
-// #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_CUBEREVO_250HD)
-// 				strftime(timestr, 5, "%H%M", t);
-//+#elif defined (BOXMODEL_TF7700
-//+				strftime(timestr, 6, "%H.%M", t);
-// #else
-// 				strftime(timestr, 6, "%H:%M", t);
-// #endif
-//@@ -1082,6 +1084,9 @@
-// #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
-// 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 7)
-// 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 7;
-//+#elif defined (BOXMODEL_TF7700)
-//+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 5)
-//+		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 5;
-// #else
-// 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
-// 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 15;
-//@@ -1104,6 +1109,9 @@
-// #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
-// 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 7)
-// 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 7;
-//+#elif defined (BOXMODEL_TF7700)
-//+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 5)
-//+		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 5;
-// #else
-// 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 15)
-// 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 15;
-//@@ -1125,6 +1133,9 @@
-// #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
-// 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 7)
-// 		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 7;
-//+#elif defined (BOXMODEL_TF7700
-//+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 5)
-//+		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 5;
-// #else
-// 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 15)
-// 		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 15;
-//
+--- neutrino-mp-tangos/data/icons/Makefile.am.org
++++ neutrino-mp-tangos/data/icons/Makefile.am
+@@ -263,7 +263,7 @@
+ 	shell.png \
+ 	shutdown.jpg \
+ 	softupdate.png \
+-	star-off \
++	star-off.png \
+ 	star-on.png \
+ 	start.jpg \
+ 	streaming.png \
+
