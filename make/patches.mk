@@ -26,8 +26,8 @@ NEUTRINO_MP_LIBSTB_CST_NEXT_PATCHES += $(PATCHES)/libstb-hal-cst-next.patch
 NEUTRINO_MP_CST_NEXT_PATCHES += $(PATCHES)/neutrino-mp-cst-next.patch
 
 # Neutrino HD2
-NEUTRINO_HD2_PATCHES += $(PATCHES)/neutrino-hd2-exp.diff $(PATCHES)/nhd2-exp.patch
-NEUTRINO_HD2_PLUGINS_PATCHES += 
+NEUTRINO_HD2_PATCHES +=
+NEUTRINO_HD2_PLUGINS_PATCHES +=
 
 # Neutrino MP from martii
 #NEUTRINO_MP_MARTII_GH_PATCHES += $(PATCHES)/neutrino-mp-martii-github.patch

@@ -47,6 +47,7 @@ libjpeg;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libjpeg.la
 libjpeg_turbo;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libjpeg.la
 #libpng12;rewrite-pkgconfig:libpng12.pc;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libpng.la:TARGET/usr/lib/libpng12.la
 libpng;rewrite-pkgconfig:libpng16.pc;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libpng.la:TARGET/usr/lib/libpng16.la
+pngpp;make:install-headers:PREFIX=TARGET/usr
 tiff;make:install:prefix=/usr:DESTDIR=TARGET
 pixman;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libpixman-1.la;rewrite-pkgconfig:TARGET/usr/lib/pkgconfig/pixman-1.pc
 
@@ -210,7 +211,6 @@ libdpfax;make:install:DESTDIR=TARGET
 #
 # Security
 #
-openssl_old;rewrite-pkgconfig:libcrypto.pc:libssl.pc:openssl.pc;make:install_sw:INSTALL_PREFIX=TARGET
 openssl;rewrite-pkgconfig:libcrypto.pc:libssl.pc:openssl.pc;make:install_sw:INSTALL_PREFIX=TARGET
 gnutls;rewrite-pkgconfig:lib/gnutls.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libgnutls.la:TARGET/usr/lib/libgnutlsxx.la;rewrite-dependency:TARGET/usr/lib/libgnutlsxx.la
 nettle;rewrite-pkgconfig:nettle.pc:hogweed.pc;make:install:DESTDIR=TARGET
@@ -230,6 +230,7 @@ sdparm;make:install:DESTDIR=TARGET
 parted;make:install
 utillinux;rewrite-pkgconfig:libsmartcols/smartcols.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libsmartcols.la
 xfsprogs;make:install:prefix=TARGET/usr
+smartmontools;make:install:prefix=TARGET/usr
 
 #
 # Networking Libraries / Networking Utilities

@@ -47,28 +47,10 @@ $(D)/openssl: $(D)/bootstrap @DEPENDS_openssl@
 		./Configure -DL_ENDIAN shared no-hw linux-generic32 \
 			--prefix=/usr \
 			--openssldir=/etc/ssl \
-			--openssldir=/.remove \
 		&& \
 		$(MAKE) && \
 		@INSTALL_openssl@
 	@CLEANUP_openssl@
-	touch $@
-
-#
-# openssl_old
-#
-$(D)/openssl_old: $(D)/bootstrap @DEPENDS_openssl_old@
-	@PREPARE_openssl_old@
-	cd @DIR_openssl_old@ && \
-		$(BUILDENV) \
-		./Configure shared linux-sh no-hw \
-			--prefix=/usr \
-			--openssldir=/.remove \
-		&& \
-		$(MAKE) depend && \
-		$(MAKE) && \
-		@INSTALL_openssl_old@
-	@CLEANUP_openssl_old@
 	touch $@
 
 #
@@ -362,6 +344,16 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib @DEPENDS_libpng@
 		ECHO=echo $(MAKE) all && \
 		@INSTALL_libpng@
 	@CLEANUP_libpng@
+	touch $@
+
+#
+# pngpp
+#
+$(D)/pngpp: $(D)/bootstrap $(D)/libpng @DEPENDS_pngpp@
+	@PREPARE_pngpp@
+	cd @DIR_pngpp@ && \
+		@INSTALL_pngpp@
+	@CLEANUP_pngpp@
 	touch $@
 
 #
