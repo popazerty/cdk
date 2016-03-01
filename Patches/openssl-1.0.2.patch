@@ -1,6 +1,6 @@
 --- a/Configure.old
 +++ b/Configure
-@@ -365,7 +365,7 @@
+@@ -372,7 +372,7 @@
  ####
  # *-generic* is endian-neutral target, but ./config is free to
  # throw in -D[BL]_ENDIAN, whichever appropriate...
