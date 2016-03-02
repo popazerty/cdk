@@ -170,7 +170,7 @@ Imaging-1.1.7.tar.gz;http://effbot.org/downloads
 pycrypto-2.5.tar.gz;http://pypi.python.org/packages/source/p/pycrypto
 pyOpenSSL-0.13.1.tar.gz;http://pypi.python.org/packages/source/p/pyOpenSSL
 pyusb-1.0.0a3.tar.gz;http://pypi.python.org/packages/source/p/pyusb
-python-wifi-0.5.0.tar.bz2;http://freefr.dl.sourceforge.net/project/pythonwifi.berlios
+python-wifi-0.5.0.tar.bz2;http://pkgs.fedoraproject.org/repo/pkgs/python-wifi/python-wifi-0.5.0.tar.bz2/8fe7fd0a4edce1f9bedaff4acb7fd500
 Cheetah-2.4.4.tar.gz;http://pypi.python.org/packages/source/C/Cheetah
 mechanize-0.2.5.tar.gz;http://pypi.python.org/packages/source/m/mechanize
 zope.interface-4.1.1.tar.gz;http://pypi.python.org/packages/source/z/zope.interface
