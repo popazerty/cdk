@@ -1,6 +1,6 @@
 --- enigma2-networkbrowser/src/MountView.py.org	2013-07-28 20:28:50.837430438 +0200
 +++ enigma2-networkbrowser/src/MountView.py	2013-07-28 20:30:35.265442621 +0200
-@@ -110,7 +110,7 @@
+@@ -111,7 +111,7 @@
                  cur = self["config"].getCurrent()
                  if cur:
                          returnValue = cur[1]
@@ -79,7 +79,24 @@
  
  		self.getAutoMountPoints()
  
-@@ -43,7 +38,7 @@
+@@ -44,15 +38,7 @@
+ 		if not os.path.exists(XML_FSTAB):
+ 			return
+ 
+-		try:
+-			tree = cet_parse(XML_FSTAB).getroot()
+-		except Exception, e:
+-			print "[MountManager] Error reading /etc/enigma2/automounts.xml:", e
+-			try:
+-				os.remove(XML_FSTAB)
+-			except Exception, e:
+-				print "[MountManager] Error delete corrupt /etc/enigma2/automounts.xml:", e
+-			return
++		tree = open(XML_FSTAB, "r").read()
+ 
+ 		def getValue(definitions, default):
+ 			# Initialize Output
+-------------------------
  
  		if not os.path.exists(XML_FSTAB):
  			return
@@ -88,7 +105,7 @@
  
  		def getValue(definitions, default):
  			# Initialize Output
-@@ -52,52 +47,66 @@
+@@ -61,52 +56,66 @@
  			Len = len(definitions)
  			return Len > 0 and definitions[Len-1].text or default
  		# Config is stored in "mountmanager" element
@@ -189,7 +206,7 @@
  
  	def sanitizeOptions(self, origOptions, cifs=False):
  		options = origOptions.strip()
-@@ -116,78 +125,21 @@
+@@ -125,78 +134,21 @@
  
  	def CheckMountPoint(self, item, callback):
  		data = self.automounts[item]
@@ -275,7 +292,7 @@
  
  	def makeHDDlink(self, path):
  		hdd_dir = '/media/hdd'
-@@ -210,13 +162,6 @@
+@@ -219,13 +171,6 @@
  			except Exception, ex:
  				print "[AutoMount.py] Failed to create ", movie, "Error:", ex
  
@@ -289,7 +306,7 @@
  
  	def getMountsList(self):
  		return self.automounts
-@@ -233,27 +178,31 @@
+@@ -242,27 +187,31 @@
  
  	def writeMountsConfig(self):
  		# Generate List in RAM
@@ -339,7 +356,7 @@
  
  		# Try Saving to Flash
  		try:
-@@ -261,9 +210,6 @@
+@@ -270,9 +219,6 @@
  		except Exception, e:
  			print "[AutoMount.py] Error Saving Mounts List:", e
  
@@ -349,7 +366,7 @@
  
  	def removeMount(self, mountpoint, callback = None):
  		print "[AutoMount.py] removing mount: ",mountpoint
-@@ -273,28 +219,6 @@
+@@ -282,28 +228,6 @@
  				self.newautomounts[sharename] = sharedata
  		self.automounts.clear()
  		self.automounts = self.newautomounts
