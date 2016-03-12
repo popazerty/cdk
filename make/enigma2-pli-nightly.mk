@@ -8,12 +8,12 @@ yaud-enigma2-pli-nightly: yaud-none host_python lirc \
 #
 # enigma2-pli-nightly
 #
-ENIGMA2_DEPS  = bootstrap libncurses libcurl libid3tag libmad libpng libjpeg libgif_e2 libfreetype libfribidi libsigc_e2 libreadline
+ENIGMA2_DEPS  = bootstrap libncurses libcurl libid3tag libmad libpng libjpeg libgif libfreetype libfribidi libsigc_e2 libreadline
 ENIGMA2_DEPS += libexpat libdvbsipp python libxml2_e2 libxslt python_elementtree python_lxml libxmlccwrap python_zope_interface
 ENIGMA2_DEPS += python_twisted python_pyopenssl python_wifi python_imaging python_pyusb python_pycrypto python_pyasn1 python_mechanize python_six
 ENIGMA2_DEPS += python_requests python_futures python_singledispatch python_livestreamer python_livestreamersrv
 ENIGMA2_DEPS += libdreamdvd tuxtxt32bpp sdparm hotplug_e2 wpa_supplicant wireless_tools minidlna opkg ethtool
-ENIGMA2_DEPS += $(MEDIAFW_DEP) $(EXTERNALLCD_DEP)
+ENIGMA2_DEPS += $(MEDIAFW_DEP) $(EXTERNALLCD_DEP) $(THREEG_MODEM_DEP)
 
 E_CONFIG_OPTS = --enable-duckbox
 
@@ -109,16 +109,19 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] || \
 		git clone -b $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git; \
 		cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; \
-		[ "$$REVISION" == "" ] || (cd $(sourcedir)/enigma2-nightly; git checkout "$$REVISION"; cd "$(buildprefix)";); \
+		[ "$$REVISION" == "" ] || (cd $(sourcedir)/enigma2-nightly; echo "Checking out revision $$REVISION"; git checkout -q "$$REVISION"; cd "$(buildprefix)";); \
 		cp -ra $(sourcedir)/enigma2-nightly $(sourcedir)/enigma2-nightly.org; \
-		set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
+		echo "Applying diff-$$DIFF patch..."; \
+		set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 -s < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
 		cd $(sourcedir)/enigma2-nightly; \
-		patch -p1 < "../../cdk/Patches/vfd-drivers.patch"; \
+		echo "Building VFD-drivers..."; \
+		patch -p1 -s < "../../cdk/Patches/vfd-drivers.patch"; \
 		rm -rf $(targetprefix)/usr/local/share/enigma2/rc_models; \
+		echo "Patching remote control files..."; \
 		if [ -e $(sourcedir)/enigma2-nightly/data/rc_models/rc_models.cfg ]; then \
-			patch -p1 < "../../cdk/Patches/rc-models.patch"; \
+			patch -p1 -s < "../../cdk/Patches/rc-models.patch"; \
 		else \
-			patch -p1 < "../../cdk/Patches/rc-models_old.patch"; \
+			patch -p1 -s < "../../cdk/Patches/rc-models_old.patch"; \
 		fi; \
 	fi
 	touch $@

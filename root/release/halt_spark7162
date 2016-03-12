@@ -47,7 +47,7 @@ then
 	poweroff=""
 fi
 
-/bin/fp_control -sst 1
+/bin/fp_control -sst
 /bin/fp_control -tm 1
 /bin/fp_control -e
 

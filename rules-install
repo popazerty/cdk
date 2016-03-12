@@ -132,6 +132,8 @@ libxml2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGET;rewrite-libt
 libxml2_e2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libxml2.la;rewrite-dependency:TARGET/usr/lib/libxml2.la
 libxslt;rewrite-pkgconfig:libxslt.pc:libexslt.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libxslt.la:TARGET/usr/lib/libexslt.la;rewrite-dependency:TARGET/usr/lib/libexslt.la
 pugixml;make:install:DESTDIR=TARGET
+libudev;make:install:DESTDIR=TARGET
+libkmod;make:install:DESTDIR=TARGET
 
 #
 # contrib apps
@@ -153,6 +155,11 @@ imagemagick;rewrite-pkgconfig:magick/ImageMagick.pc:magick/MagickCore.pc:wand/Ma
 shairport;make:install:PREFIX=TARGET/usr
 mtd_utils;make:install:DESTDIR=TARGET
 wget;make:install:DESTDIR=TARGET
+usb_modeswitch;make:install:DESTDIR=TARGET
+usb_modeswitch_data;make:install:DESTDIR=TARGET
+pppd;make:install:DESTDIR=TARGET
+modem-scripts;make:install:DESTDIR=TARGET
+usbutils;make:install:DESTDIR=TARGET
 
 #
 # AirPlay

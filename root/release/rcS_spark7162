@@ -171,6 +171,17 @@ if [ -e $MODDIR/dvb-usb-rtl2832u.ko ]; then
   echo "------------------------------"
 fi
 
+if [ -e $MODDIR/usb_serial.ko ]; then
+  insmod $MODDIR/usb_serial.ko
+  if [ -e $MODDIR/option.ko ]; then
+    insmod $MODDIR/option.ko
+  fi
+  if [ -e $MODDIR/usb_wwan.ko ]; then # 3G modem
+    insmod $MODDIR/usb_wwan.ko
+  fi
+  insmod $MODDIR/option.ko
+fi
+
 echo "Init HDMI-CEC"
 insmod $MODDIR/cec.ko activemode=1
 

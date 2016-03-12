@@ -978,9 +978,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +		}
 +	}
 +	#else //modulate brightness 3 times
-+	#if defined(PLATFORM_SPARK7162) //spinner on
-+	vfd.vfd_set_icon((tvfd_icon)(47), ICON_ON, true);
-+	#endif
++//	#if defined(PLATFORM_SPARK7162) //spinner on
++//	vfd.vfd_set_icon((tvfd_icon)(47), ICON_ON, true);
++//	#endif
 +	for (int vloop = 0; vloop < 3*14; vloop++)
 +	{
 +		if (vloop%14 == 0)
@@ -1041,9 +1041,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +		}
 +		usleep(75000);
 +	}
-+	#if defined(PLATFORM_SPARK7162) //spinner off
-+	vfd.vfd_set_icon((tvfd_icon)(47), ICON_OFF, true);
-+	#endif
++//	#if defined(PLATFORM_SPARK7162) //spinner off
++//	vfd.vfd_set_icon((tvfd_icon)(47), ICON_OFF, true);
++//	#endif
 +	vfd.vfd_set_brightness(7); // set final brightness
 +	#endif
 +	vfd.vfd_clear_icons();
@@ -10185,6 +10185,32 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/mytest.py enigma2-ni
  		if not config.misc.useTransponderTime.value:
  			print "dvb time sync disabled... so set RTC now to current linux time!", strftime("%Y/%m/%d %H:%M", localtime(nowTime))
  			setRTCtime(nowTime)
+diff -Nur enigma2-nightly.org/lib/gdi/picload.cpp enigma2-nightly/lib/gdi/picload.cpp
+--- enigma2-nightly.org/lib/gdi/picload.cpp
++++ enigma2-nightly/lib/gdi/picload.cpp
+@@ -477,8 +477,9 @@
+ 	ColorMapObject *cmap;
+ 	int cmaps;
+ 	int extcode;
++	int GifLastError; 
+ 
+-	gft = DGifOpenFileName(filepara->file);
++	gft = DGifOpenFileName(filepara->file, &GifLastError); 
+ 	if (gft == NULL)
+ 		return;
+ 	do
+@@ -569,9 +569,9 @@
+ 	}
+ 	while (rt != TERMINATE_RECORD_TYPE);
+ 
+-	DGifCloseFile(gft);
++	DGifCloseFile(gft, &GifLastError);
+ 	return;
+ ERROR_R:
+ 	eDebug("[ePicLoad] <Error gif>");
+-	DGifCloseFile(gft);
++	DGifCloseFile(gft, &GifLastError);
+ }
 diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Screens/InstallWizard.py enigma2-nightly.patched/lib/python/Screens/InstallWizard.py
 --- enigma2-nightly.org/lib/python/Screens/InstallWizard.py	2013-12-08 20:19:00.000000000 +0100
 +++ enigma2-nightly.patched/lib/python/Screens/InstallWizard.py	2013-12-08 20:19:00.000000000 +0100
@@ -10734,7 +10760,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  		rctype = config.plugins.remotecontroltype.rctype.value
 -		if rctype == 14:	# XP1000
 +		print "[Keybindings.py] RC type is:", rctype
-+		rctype = 11
++#		rctype = 11
 +		if rctype == 10:	# Spark
  			idx = 3
 -		elif rctype == 18:	# F1
