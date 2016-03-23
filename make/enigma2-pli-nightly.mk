@@ -9,7 +9,7 @@ yaud-enigma2-pli-nightly: yaud-none host_python lirc \
 # enigma2-pli-nightly
 #
 ENIGMA2_DEPS  = bootstrap libncurses libcurl libid3tag libmad libpng libjpeg libgif libfreetype libfribidi libsigc_e2 libreadline
-ENIGMA2_DEPS += libexpat libdvbsipp python libxml2_e2 libxslt python_elementtree python_lxml libxmlccwrap python_zope_interface
+ENIGMA2_DEPS += libexpat libdvbsipp python libxml2_e2 libxslt python_elementtree python_lxml python_zope_interface
 ENIGMA2_DEPS += python_twisted python_pyopenssl python_wifi python_imaging python_pyusb python_pycrypto python_pyasn1 python_mechanize python_six
 ENIGMA2_DEPS += python_requests python_futures python_singledispatch python_livestreamer python_livestreamersrv
 ENIGMA2_DEPS += libdreamdvd tuxtxt32bpp sdparm hotplug_e2 wpa_supplicant wireless_tools minidlna opkg ethtool
@@ -105,9 +105,9 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		rm -rf $(sourcedir)/enigma2-nightly; \
 		rm -rf $(sourcedir)/enigma2-nightly.org; \
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] && \
-		(cd $(archivedir)/enigma2-pli-nightly.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
+		(cd $(archivedir)/enigma2-pli-nightly.git; git pull -q; git checkout -q HEAD; cd "$(buildprefix)";); \
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] || \
-		git clone -b $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git; \
+		git clone -b -q $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git; \
 		cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; \
 		[ "$$REVISION" == "" ] || (cd $(sourcedir)/enigma2-nightly; echo "Checking out revision $$REVISION"; git checkout -q "$$REVISION"; cd "$(buildprefix)";); \
 		cp -ra $(sourcedir)/enigma2-nightly $(sourcedir)/enigma2-nightly.org; \
