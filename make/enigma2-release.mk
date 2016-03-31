@@ -102,6 +102,12 @@ release_enigma2_cuberevo: release_enigma2_common_utils release_enigma2_cube_comm
 	echo "cuberevo" > $(prefix)/release/etc/hostname
 
 #
+# release_cuberevo_3000hd
+#
+release_enigma2_cuberevo_3000hd: release_enigma2_common_utils release_enigma2_cube_common release_enigma2_cube_common_tuner
+	echo "cuberevo-3000hd" > $(prefix)/release/etc/hostname
+
+#
 # release_common_ipbox
 #
 release_enigma2_common_ipbox:
@@ -916,7 +922,7 @@ endif
 endif
 
 	cp -dp $(buildprefix)/root/release/inittab$(if $(FORTIS_HDBOX)$(OCTAGON1008)$(CUBEREVO)$(CUBEREVO_MINI2)$(CUBEREVO_2000HD),_ttyAS1) $(prefix)/release/etc/inittab
-	cp $(buildprefix)/root/release/fw_env.config$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(TF7700),_$(TF7700))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000)) $(prefix)/release/etc/fw_env.config
+	cp $(buildprefix)/root/release/fw_env.config$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(HS7110),_$(HS7110))$(if $(HS7119),_$(HS7119))$(if $(HS7420),_$(HS7420))$(if $(HS7429),_$(HS7429))$(if $(HS7810A),_$(HS7810A))$(if $(HS7819),_$(HS7819))$(if $(TF7700),_$(TF7700))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000)) $(prefix)/release/etc/fw_env.config
 
 #
 # Player
@@ -1157,80 +1163,52 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION).egg-info
 
 # delete mips remote control files
-	if [ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9500/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000/*; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et9500; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/vu; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000; \
-	else \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et7x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et8000.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9500.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/formuler1.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd1100.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd2400.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu*.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000.*; \
-	fi
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et7x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et8000.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9500.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/formuler1.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd1100.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd2400.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu*.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000.*
+
 #
 # delete unnecessary remote control files and VFD plugins
-# old rc_models scheme
-	if [ -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-		cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark.png; \
-		cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000.png; \
-		cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510.png; \
-		cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110.png; \
-		cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700.png; \
-		if [ ! ENABLE_SPARK7162 && ! ENABLE_SPARK ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/spark/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/spark; \
-		fi; \
-		if [ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000; \
-		fi; \
-		if [ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7420 && ! ENABLE_HS7810A && ! ENABLE_HS7429 && ! ENABLE_HS7819 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510; \
-		fi; \
-		if [ ! ENABLE_HS7110 && ! ENABLE_HS7119 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
-		fi; \
-		if [ ! ENABLE_TF7700 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700; \
-		fi; \
-	else \
-		if [ ! ENABLE_SPARK7162 && ! ENABLE_SPARK ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/spark.*; \
-		fi; \
-		if [ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000.*; \
-		fi; \
-		if [ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7420 && ! ENABLE_HS7810A && ! ENABLE_HS7429 && ! ENABLE_HS7819 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/*; \
-		fi; \
-		if [ ! ENABLE_HS7110 && ! ENABLE_HS7119 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
-		fi; \
-		if [ ! ENABLE_TF7700 ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700; \
-		fi; \
+#
+	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark.png
+	cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000.png
+	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510.png
+	cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110.png
+	cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700.png
+
+	if [[ ! ENABLE_SPARK7162 && ! ENABLE_SPARK ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/spark/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/spark; \
 	fi
+
+	if [[ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000; \
+	fi
+
+	if [[ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7420 && ! ENABLE_HS7810A && ! ENABLE_HS7429 && ! ENABLE_HS7819 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510; \
+	fi
+
+	if [[ ! ENABLE_HS7110 && ! ENABLE_HS7119 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
+	fi
+
+	if [[ ! ENABLE_TF7700 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700; \
+	fi
+
 #
 # Complete the videomode selection picture set
 #
@@ -1367,7 +1345,7 @@ endif
 		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/* $(prefix)/release/lib/modules/; \
 		cp $(buildprefix)/root/firmware/dvb_nova_12mhz_b0.inp $(prefix)/release/lib/firmware/; \
 	fi
-	if [ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko]; then \
+	if [ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko ]; then \
 		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko $(prefix)/release/lib/modules/; \
 		cp $(buildprefix)/root/firmware/dvb-usb-it9135-01.fw $(prefix)/release/lib/firmware/; \
 		cp $(buildprefix)/root/firmware/dvb-usb-it9135-02.fw $(prefix)/release/lib/firmware/; \
