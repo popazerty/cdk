@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20151112.1
+# Version 20160414.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 1: target system (1-38)"
@@ -9,7 +9,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 5: Media Framework (1-3, ignored for Neutrino/Tvheadend)"
  echo "Parameter 6: External LCD support (1-2)"
  echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
- echo "Parameter 8: Neutrino variant (1-4)"
+ echo "Parameter 8: Neutrino variant (1-4) or Enigma2 diff (0-4)"
  exit
 fi
 
@@ -166,9 +166,9 @@ esac
 case $2 in
 	[1-5])	REPLY=$2;;
 	*)	echo -e "\nKernel:"
-		echo "   1) STM 24 P0209"
-		echo "   2) STM 24 P0211"
-		echo "   3) STM 24 P0214"
+		echo "   1) STM 24 P0209 (deprecated)"
+		echo "   2) STM 24 P0211 (deprecated)"
+		echo "   3) STM 24 P0214 (deprecated)"
 		echo "   4) STM 24 P0215"
 		echo "   5) STM 24 P0217 (recommended)"
 		read -p "Select kernel (1-5)? ";;
@@ -183,8 +183,6 @@ case "$REPLY" in
             KERNELP="2.6.32.61_stm24_214";;
 	4)  KERNEL="--enable-p0215"
             KERNELP="2.6.32.61_stm24_215";;
-#	5)  KERNEL="--enable-p0217"
-#            KERNELP="2.6.32.61_stm24_217";;
 	*)  KERNEL="--enable-p0217"
             KERNELP="2.6.32.61_stm24_217";;
 esac
@@ -375,9 +373,10 @@ case "$IMAGEN" in
 		esac
 
 		case "$REPLY" in
-			1) MEDIAFW="--enable-mediafwgstreamer"; MFWORK="gstreamer";;
-#			2) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer"; MFWORK="gstreamer+libplayer3";;
-			*) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer"; MFWORK="gstreamer+libeplayer3";;
+			1) MEDIAFW="--enable-mediafwgstreamer"
+			   MFWORK="gstreamer";;
+			*) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer"
+			   MFWORK="gstreamer+libeplayer3";;
 		esac
 
 		# Determine the OpenPLi diff-level
