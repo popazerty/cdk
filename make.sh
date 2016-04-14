@@ -315,7 +315,8 @@ esac
 
 case "$IMAGEN" in
 	Neutrino)
-		MEDIAFW="--enable-buildinplayer";MFWORK="built-in"
+		MEDIAFW="--enable-buildinplayer"
+		MFWORK="built-in"
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
 		case $8 in
 			[1-4])	REPLY=$8;;
@@ -346,7 +347,8 @@ case "$IMAGEN" in
 			fi
 		fi;;
 	Tvheadend)
-		MEDIAFW="--enable-buildinplayer";MFWORK="built-in"
+		MEDIAFW="--enable-buildinplayer"
+		MFWORK="built-in"
 		CONFIGPARAM="$CONFIGPARAM --enable-tvheadend"
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
@@ -365,22 +367,50 @@ case "$IMAGEN" in
 			exit
 		fi
 		case $5 in
-			[1-3])	REPLY=$5;;
+			[1-2])	REPLY=$5;;
 			*)	echo -e "\nMedia Framework:"
-				echo "   1) eplayer3"
-				echo "   2) gstreamer"
-				echo "   3) gstreamer+eplayer3 (recommended)"
-#				echo "   4) use built-in (required for Neutrino)"
-			read -p "Select media framework (1-3)? ";;
+				echo "   1) gstreamer"
+				echo "   2) gstreamer+libplayer3 (recommended)"
+				read -p "Select media framework (1-2)? ";;
 		esac
 
 		case "$REPLY" in
-		1) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
-		2) MEDIAFW="--enable-mediafwgstreamer";MFWORK="gstreamer";;
-		3) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer";MFWORK="gstreamer & eplayer3";;
-		*) MEDIAFW="--enable-eplayer3";MFWORK="eplayer3";;
+			1) MEDIAFW="--enable-mediafwgstreamer"; MFWORK="gstreamer";;
+#			2) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer"; MFWORK="gstreamer+libplayer3";;
+			*) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer"; MFWORK="gstreamer+libeplayer3";;
 		esac
-		CONFIGPARAM="$CONFIGPARAM --enable-enigma2"
+
+		# Determine the OpenPLi diff-level
+		case $8 in
+			[0-4])	REPLY=$8;;
+			*)	echo "Please select one of the following Enigma2 revisions (default = 0):"
+				echo "========================================================================================================="
+				echo " 0) Newest                 - E2 OpenPLi gstreamer [+libplayer3] (CAUTION: may fail due to outdated patch)"
+				echo "========================================================================================================="
+				echo " 1) Use your own Enigma2 git dir without patchfile"
+				echo "========================================================================================================="
+				echo " 2) Thu, 31 Mar 2016 21:52 - E2 OpenPLi gstreamer [+libplayer3] 7d63bf16e99741f0a5798b84a3688759317eecb3"
+				echo " 3) Mon, 17 Aug 2015 07:08 - E2 OpenPLi gstreamer [+libplayer3] cd5505a4b8aba823334032bb6fd7901557575455"
+				echo " 4) Sun, 19 Apr 2015 17:05 - E2 OpenPLi gstreamer [+libplayer3] 4f2db7ace4d9b081cbbb3c13947e05312134ed8e"
+				echo "========================================================================================================="
+				echo "Media Framework         : $MFWORK"
+				read -p "Select Enigma2 revision : ";;
+		esac
+
+		case "$REPLY" in
+			1)	DIFF="1"
+				REVISION="local";;
+			2)	DIFF="2"
+				REVISION="7d63bf16e99741f0a5798b84a3688759317eecb3";;
+			3)	DIFF="3"
+				REVISION="cd5505a4b8aba823334032bb6fd7901557575455";;
+			4)	DIFF="4"
+				REVISION="4f2db7ace4d9b081cbbb3c13947e05312134ed8e";;
+			*)	DIFF="0"
+				REVISION="newest";;
+		esac
+
+		CONFIGPARAM="$CONFIGPARAM --enable-enigma2 E2_DIFF=$DIFF E2_REVISION=$REVISION"
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
 			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
@@ -431,7 +461,8 @@ echo && \
 
 echo $CONFIGPARAM >lastChoice
 echo " "
-echo "----------------------------------------"
+echo "------------------------------------------------------------------
+"
 echo "Your build environment is ready :-)"
 echo
 echo "Selected receiver        : $RECEIVER"
@@ -439,10 +470,13 @@ echo "Selected kernel          : $KERNELP"
 echo "Debug option             : $DEBUGR"
 echo "Selected player          : $PLAYERR"
 echo "Selected media framework : $MFWORK"
-echo "External LCD support     : $LCDR"
-echo "WLAN drivers             : $WLANDR"
+echo "USB WLAN drivers         : $WLANDR"
 echo "Image                    : $IMAGEN"
-echo "----------------------------------------"
+if [ "$IMAGEN" == "Enigma2" ]; then
+  echo "Enigma2 diff             : $DIFF (revision: $REVISION)"
+fi
+echo "------------------------------------------------------------------
+"
 echo
 # Create build executable file
 cat $CURDIR/remake > $CURDIR/build

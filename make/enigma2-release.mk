@@ -1279,9 +1279,7 @@ if ENABLE_MEDIAFWGSTREAMER
 	if [ -d $(prefix)/release/usr/lib/gstreamer-1.0 ]; then \
 		rm -rf $(prefix)/release/usr/lib/gstreamer-1.0/*; \
 		cp -a $(targetprefix)/usr/bin/gst-* $(prefix)/release/usr/bin/; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/bin/gst-launch*; \
 		cp -a $(targetprefix)/usr/lib/gstreamer-1.0/libgst*.so $(prefix)/release/usr/lib/gstreamer-1.0/; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/lib/gstreamer-1.0/*; \
 	fi
 endif
 

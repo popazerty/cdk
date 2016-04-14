@@ -54,8 +54,7 @@ AM_CONDITIONAL(ENABLE_WLANDRIVER,test "$enable_wlandriver" = "yes")
 AC_SUBST(WLANDRIVER)
 
 AC_ARG_ENABLE(dvbtdriver,
--enable-dvbtdriver
-	AS_HELP_STRING(--enable-dvbtdriver, Setting up the CDK to build DVB-T drivers),
+	AS_HELP_STRING(--enable-dvbtdriver, Setting up the CDK to build USB DVB-T drivers),
 	[case "${enableval}" in
 		yes) DVBTDRIVER=dvbtdriver ;;
 	esac],[enable_dvbtdriver=no])
@@ -87,7 +86,7 @@ AM_CONDITIONAL(ENABLE_MULTICOM406,test "$enable_multicom406" = "yes")
 AC_SUBST(MULTICOM406)
 
 AC_ARG_ENABLE(p0209,
-	AS_HELP_STRING(--enable-p0209, set up the CDK to use the STLinux 2.4 with patchlevel 0209),
+	AS_HELP_STRING(--enable-p0209, set up the CDK to use STLinux 2.4 with patchlevel 0209),
 	[case "${enableval}" in
 		yes) P0209=p0209 ;;
 	esac], [enable_p0209=no])
@@ -95,7 +94,7 @@ AM_CONDITIONAL(ENABLE_P0209,test "$enable_p0209" = "yes")
 AC_SUBST(P0209)
 
 AC_ARG_ENABLE(p0211,
-	AS_HELP_STRING(--enable-p0211, set up the CDK to use the STLinux 2.4 with patchlevel 0211),
+	AS_HELP_STRING(--enable-p0211, set up the CDK to use STLinux 2.4 with patchlevel 0211),
 	[case "${enableval}" in
 		yes) P0211=p0211 ;;
 	esac], [enable_p0211=no])
@@ -103,7 +102,7 @@ AM_CONDITIONAL(ENABLE_P0211,test "$enable_p0211" = "yes")
 AC_SUBST(P0211)
 
 AC_ARG_ENABLE(p0214,
-	AS_HELP_STRING(--enable-p0214, set up the CDK to use the STLinux 2.4 with patchlevel 0214),
+	AS_HELP_STRING(--enable-p0214, set up the CDK to use STLinux 2.4 with patchlevel 0214),
 	[case "${enableval}" in
 		yes) P0214=p0214 ;;
 	esac], [enable_p0214=no])
@@ -111,7 +110,7 @@ AM_CONDITIONAL(ENABLE_P0214,test "$enable_p0214" = "yes")
 AC_SUBST(P0214)
 
 AC_ARG_ENABLE(p0215,
-	AS_HELP_STRING(--enable-p0215, set up the CDK to use the STLinux 2.4 with patchlevel 0215),
+	AS_HELP_STRING(--enable-p0215, set up the CDK to use STLinux 2.4 with patchlevel 0215),
 	[case "${enableval}" in
 		yes) P0215=p0215 ;;
 	esac], [enable_p0215=no])
@@ -119,7 +118,7 @@ AM_CONDITIONAL(ENABLE_P0215,test "$enable_p0215" = "yes")
 AC_SUBST(P0215)
 
 AC_ARG_ENABLE(p0217,
-	AS_HELP_STRING(--enable-p0217, set up the CDK to use the STLinux 2.4 with patchlevel 0217),
+	AS_HELP_STRING(--enable-p0217, set up the CDK to use STLinux 2.4 with patchlevel 0217),
 	[case "${enableval}" in
 		yes) P0217=p0217 ;;
 	esac], [enable_p0217=no])
@@ -163,7 +162,7 @@ AM_CONDITIONAL(ENABLE_BUILDINPLAYER,test "$enable_buildinplayer" = "yes")
 AC_SUBST(BUILDINPLAYER)
 
 AC_ARG_ENABLE(fortis_hdbox,
-	AS_HELP_STRING(--enable-fortis_hdbox, enable Fortis/hdbox FS9000/9200HD PVR stuff),
+	AS_HELP_STRING(--enable-fortis_hdbox, enable Fortis FS9000/9200 stuff),
 	[case "${enableval}" in
 		yes) FORTIS_HDBOX=fortis_hdbox ;;
 	esac],[enable_fortis_hdbox=no])
@@ -171,7 +170,7 @@ AM_CONDITIONAL(ENABLE_FORTIS_HDBOX,test "$enable_fortis_hdbox" = "yes")
 AC_SUBST(FORTIS_HDBOX)
 
 AC_ARG_ENABLE(atevio7500,
-	AS_HELP_STRING(--enable-atevio7500, enable Atevio 7500 PVR stuff),
+	AS_HELP_STRING(--enable-atevio7500, enable Fortis HS8200 stuff),
 	[case "${enableval}" in
 		yes) ATEVIO7500=atevio7500 ;;
 	esac],[enable_atevio7500=no])
@@ -179,7 +178,7 @@ AM_CONDITIONAL(ENABLE_ATEVIO7500,test "$enable_atevio7500" = "yes")
 AC_SUBST(ATEVIO7500)
 
 AC_ARG_ENABLE(octagon1008,
-	AS_HELP_STRING(--enable-octagon1008, enable Octagon 1008 stuff),
+	AS_HELP_STRING(--enable-octagon1008, enable Fortis HS9510 stuff),
 	[case "${enableval}" in
 		yes) OCTAGON1008=octagon1008 ;;
 	esac],[enable_octagon1008=no])
@@ -187,7 +186,7 @@ AM_CONDITIONAL(ENABLE_OCTAGON1008,test "$enable_octagon1008" = "yes")
 AC_SUBST(OCTAGON1008)
 
 AC_ARG_ENABLE(hs7110,
-	AS_HELP_STRING(--enable-hs7110, enable fortis hs7110 stuff),
+	AS_HELP_STRING(--enable-hs7110, enable Fortis HS7110 stuff),
 	[case "${enableval}" in
 		yes) HS7110=hs7110 ;;
 	esac],[enable_hs7110=no])
@@ -195,7 +194,7 @@ AM_CONDITIONAL(ENABLE_HS7110,test "$enable_hs7110" = "yes")
 AC_SUBST(HS7110)
 
 AC_ARG_ENABLE(hs7420,
-	AS_HELP_STRING(--enable-hs7420, enable fortis hs7420 stuff),
+	AS_HELP_STRING(--enable-hs7420, enable Fortis HS7420 stuff),
 	[case "${enableval}" in
 		yes) HS7420=hs7420 ;;
 	esac],[enable_hs7420=no])
@@ -203,7 +202,7 @@ AM_CONDITIONAL(ENABLE_HS7420,test "$enable_hs7420" = "yes")
 AC_SUBST(HS7420)
 
 AC_ARG_ENABLE(hs7810a,
-	AS_HELP_STRING(--enable-hs7810a, enable fortis hs7810a stuff),
+	AS_HELP_STRING(--enable-hs7810a, enable Fortis HS7810A stuff),
 	[case "${enableval}" in
 		yes) HS7810A=hs7810a ;;
 	esac],[enable_hs7810a=no])
@@ -211,7 +210,7 @@ AM_CONDITIONAL(ENABLE_HS7810A,test "$enable_hs7810a" = "yes")
 AC_SUBST(HS7810A)
 
 AC_ARG_ENABLE(hs7119,
-	AS_HELP_STRING(--enable-hs7119, enable fortis hs7119 stuff),
+	AS_HELP_STRING(--enable-hs7119, enable Fortis HS7119 stuff),
 	[case "${enableval}" in
 		yes) HS7119=hs7119 ;;
 	esac],[enable_hs7119=no])
@@ -219,7 +218,7 @@ AM_CONDITIONAL(ENABLE_HS7119,test "$enable_hs7119" = "yes")
 AC_SUBST(HS7119)
 
 AC_ARG_ENABLE(hs7429,
-	AS_HELP_STRING(--enable-hs7429, enable fortis hs7429 stuff),
+	AS_HELP_STRING(--enable-hs7429, enable Fortis HS7429 stuff),
 	[case "${enableval}" in
 		yes) HS7429=hs7429 ;;
 	esac],[enable_hs7429=no])
@@ -227,47 +226,23 @@ AM_CONDITIONAL(ENABLE_HS7429,test "$enable_hs7429" = "yes")
 AC_SUBST(HS7429)
 
 AC_ARG_ENABLE(hs7819,
-	AS_HELP_STRING(--enable-hs7819, enable fortis hs7819 stuff),
+	AS_HELP_STRING(--enable-hs7819, enable Fortis HS7819 stuff),
 	[case "${enableval}" in
 		yes) HS7819=hs7819 ;;
 	esac],[enable_hs7819=no])
 AM_CONDITIONAL(ENABLE_HS7819,test "$enable_hs7819" = "yes")
 AC_SUBST(HS7819)
 
-AC_ARG_ENABLE(dp6010,
-	AS_HELP_STRING(--enable-dp6010, enable fortis dp6010 stuff),
-	[case "${enableval}" in
-		yes) DP6010=dp6010 ;;
-	esac],[enable_dp6010=no])
-AM_CONDITIONAL(ENABLE_DP6010,test "$enable_dp6010" = "yes")
-AC_SUBST(DP6010)
-
-AC_ARG_ENABLE(dp7000,
-	AS_HELP_STRING(--enable-dp7000, enable fortis dp7000 stuff),
-	[case "${enableval}" in
-		yes) DP7000=dp7000 ;;
-	esac],[enable_dp7000=no])
-AM_CONDITIONAL(ENABLE_DP7000,test "$enable_dp7000" = "yes")
-AC_SUBST(DP7000)
-
-AC_ARG_ENABLE(dp7001,
-	AS_HELP_STRING(--enable-dp7001, enable fortis dp7001 stuff),
-	[case "${enableval}" in
-		yes) DP7001=dp7001 ;;
-	esac],[enable_dp7001=no])
-AM_CONDITIONAL(ENABLE_DP7001,test "$enable_dp7001" = "yes")
-AC_SUBST(DP7001)
-
-AC_ARG_ENABLE(epp8000,
-	AS_HELP_STRING(--enable-epp8000, enable fortis epp8000 stuff),
-	[case "${enableval}" in
-		yes) EPP8000=epp8000 ;;
-	esac],[enable_epp8000=no])
-AM_CONDITIONAL(ENABLE_EPP8000,test "$enable_epp8000" = "yes")
-AC_SUBST(EPP8000)
+#AC_ARG_ENABLE(dp7000,
+#	AS_HELP_STRING(--enable-dp7000, enable Fortis DP7000 stuff),
+#	[case "${enableval}" in
+#		yes) DP7000=dp7000 ;;
+#	esac],[enable_dp7000=no])
+#AM_CONDITIONAL(ENABLE_DP7000,test "$enable_dp7000" = "yes")
+#AC_SUBST(DP7000)
 
 AC_ARG_ENABLE(tf7700,
-	AS_HELP_STRING(--enable-tf7700, enable topfield tf7700 stuff),
+	AS_HELP_STRING(--enable-tf7700, enable Topfield TF77X0HDPVR stuff),
 	[case "${enableval}" in
 		yes) TF7700=tf7700 ;;
 	esac],[enable_tf7700=no])
@@ -299,7 +274,7 @@ AM_CONDITIONAL(ENABLE_VIP1_V2,test "$enable_vip1_v2" = "yes")
 AC_SUBST(VIP1_V2)
 
 AC_ARG_ENABLE(spark,
-	AS_HELP_STRING(--enable-spark, enable spark),
+	AS_HELP_STRING(--enable-spark, enable spark stuff),
 	[case "${enableval}" in
 		yes) SPARK=spark ;;
 	esac],[enable_spark=no])
@@ -307,7 +282,7 @@ AM_CONDITIONAL(ENABLE_SPARK,test "$enable_spark" = "yes")
 AC_SUBST(SPARK)
 
 AC_ARG_ENABLE(spark7162,
-	AS_HELP_STRING(--enable-spark7162, enable spark7162),
+	AS_HELP_STRING(--enable-spark7162, enable spark7162 stuff),
 	[case "${enableval}" in
 		yes) SPARK7162=spark7162 ;;
 	esac],[enable_spark7162=no])
@@ -758,32 +733,28 @@ if test "$enable_p0209" == "yes"; then
 	KERNELSTMLABEL="_${KERNELVERSION#*_}"
 	KERNELLABEL="209"
 	PATCH_STR="_0209"
-	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 elif test "$enable_p0211" == "yes"; then
 	KERNELVERSION="2.6.32.59_stm24_0211"
 	KERNELSTMLABEL="_${KERNELVERSION#*_}"
 	KERNELLABEL="211"
 	PATCH_STR="_0211"
-	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 elif test "$enable_p0214" == "yes"; then
 	KERNELVERSION="2.6.32.61_stm24_0214"
 	KERNELSTMLABEL="_${KERNELVERSION#*_}"
 	KERNELLABEL="214"
 	PATCH_STR="_0214"
-	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 elif test "$enable_p0215" == "yes"; then
 	KERNELVERSION="2.6.32.61_stm24_0215"
 	KERNELSTMLABEL="_${KERNELVERSION#*_}"
 	KERNELLABEL="215"
 	PATCH_STR="_0215"
-	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 elif test "$enable_p0217" == "yes"; then
 	KERNELVERSION="2.6.32.61_stm24_0217"
 	KERNELSTMLABEL="_${KERNELVERSION#*_}"
 	KERNELLABEL="217"
 	PATCH_STR="_0217"
-	KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 fi
+KERNEL_DIR="linux-sh4-${KERNELVERSION}"
 
 AC_SUBST(EXTERNALLCD_DEP)
 if test "$enable_externallcd" == "yes"; then
@@ -799,6 +770,9 @@ AC_SUBST(MEDIAFW_DEP)
 if test "$enable_mediafwgstreamer" == "yes"; then
 	MEDIAFW="gstreamer"
 	MEDIAFW_DEP="gst_plugins_dvbmediasink"
+	if test "$enable_eplayer3" == "yes"; then
+		MEDIAFW="gstreamer+libplayer3"
+	fi
 elif test "$enable_buildinplayer" == "yes"; then
 	MEDIAFW="built-in player"
 	MEDIAFW_DEP="ffmpeg"
@@ -806,6 +780,11 @@ else
 	MEDIAFW="eplayer3"
 	MEDIAFW_DEP="ffmpeg"
 fi
+
+AC_ARG_VAR([E2_DIFF], [Enigma2 diff-level, default=0])
+AS_IF([test "x$E2_DIFF" = x], [E2_DIFF="0"])
+AC_ARG_VAR(E2_REVISION, Enigma2 revision-level to check out)
+AS_IF([test "x$E2_REVISION" = x], [E2_REVISION="newest"])
 
 #
 # bootstrap sh4
@@ -1110,8 +1089,8 @@ ${srcdir}/rules-archive.pl ${srcdir}/rules-archive > Makefile-archive
 #
 AC_MSG_RESULT([
 $ccacheinfo
-summary:
-----------------------------------------
+Summary:
+------------------------------------------------------------------
 Ccache support              : $enable_ccache
 Target CPU/boxtype          : $CPU_MODEL / $BOXTYPE
 Kernelversion               : $KERNELVERSION
@@ -1132,12 +1111,11 @@ Archive directory           : $archivedir
 Player191                   : $enable_player191
 Multicom324                 : $enable_multicom324
 Multicom406                 : $enable_multicom406
-MediaFw Gstreamer           : $enable_mediafwgstreamer
 MediaFw                     : $MEDIAFW
 MediaFw dependancy          : $MEDIAFW_DEP
 External LCD                : $enable_externallcd
 External LCD dependancy     : $EXTERNALLCD_DEP
-----------------------------------------
+------------------------------------------------------------------
 ])
 
 if test "$dircheck" = "fail"; then

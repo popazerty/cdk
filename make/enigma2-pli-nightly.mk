@@ -75,54 +75,38 @@ E_CONFIG_OPTS += --enable-mediafwgstreamer
 endif
 
 $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
-	REVISION=""; \
 	HEAD="master"; \
-	DIFF="0"; \
+	DIFF=$(E2_DIFF); \
+	REVISION=$(E2_REVISION); \
 	clear; \
-	echo ""; \
-	echo "Choose between the following revisions:"; \
-	echo "========================================================================================================"; \
-	echo " 0) Newest                 - E2 OpenPli gstreamer / libplayer3    (Can fail due to outdated patch)     "; \
-	echo "========================================================================================================"; \
-	echo " 1) Use your own e2 git dir without patchfile"; \
-	echo "========================================================================================================"; \
-	echo " 2) Mon, 17 Aug 2015 07:08 - E2 OpenPli gstreamer / libplayer3 cd5505a4b8aba823334032bb6fd7901557575455"; \
-	echo " 3) Sun, 19 Apr 2015 17:05 - E2 OpenPli gstreamer / libplayer3 4f2db7ace4d9b081cbbb3c13947e05312134ed8e"; \
-	echo "========================================================================================================"; \
+	echo "Starting Enigma2 build"; \
+	echo "----------------------"; \
 	echo "Media Framework : $(MEDIAFW)"; \
 	echo "External LCD    : $(EXTERNALLCD)"; \
-	read -p "Select          : "; \
-	[ "$$REPLY" == "0" ] && DIFF="0"; \
-	[ "$$REPLY" == "1" ] && DIFF="1" && REVISION="unknown"; \
-	[ "$$REPLY" == "2" ] && DIFF="2" && REVISION="cd5505a4b8aba823334032bb6fd7901557575455"; \
-	[ "$$REPLY" == "3" ] && DIFF="3" && REVISION="4f2db7ace4d9b081cbbb3c13947e05312134ed8e"; \
-	if [ "$$REPLY" != "1" ]; then \
-		echo "Revision        : "$$REVISION; \
-	fi; \
+	echo "Revision        : $$REVISION"; \
+	echo "Diff            : $$DIFF"; \
 	echo ""; \
-	if [ "$$REPLY" != "1" ]; then \
+	if [ "$$DIFF" != "1" ]; then \
 		REPO="https://github.com/OpenPLi/enigma2.git"; \
 		rm -rf $(sourcedir)/enigma2-nightly; \
 		rm -rf $(sourcedir)/enigma2-nightly.org; \
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] && \
-		(cd $(archivedir)/enigma2-pli-nightly.git; git pull -q; git checkout -q HEAD; cd "$(buildprefix)";); \
+		(cd $(archivedir)/enigma2-pli-nightly.git; echo "Pulling archived OpenPLi git..."; git pull -q; echo "Checking out HEAD..."; git checkout -q HEAD; cd "$(buildprefix)";); \
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] || \
-		git clone -b -q $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git; \
-		cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; \
-		[ "$$REVISION" == "" ] || (cd $(sourcedir)/enigma2-nightly; echo "Checking out revision $$REVISION"; git checkout -q "$$REVISION"; cd "$(buildprefix)";); \
+		(echo "Cloning remote OpenPLi git..."; git clone -b -q $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git;); \
+		echo "Copying local git content to build environment..."; cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; \
+		[ "$$DIFF" == "0" ] || (cd $(sourcedir)/enigma2-nightly; echo "Checking out revision $$REVISION..."; git checkout -q "$$REVISION"; cd "$(buildprefix)";); \
 		cp -ra $(sourcedir)/enigma2-nightly $(sourcedir)/enigma2-nightly.org; \
 		echo "Applying diff-$$DIFF patch..."; \
-		set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 -s < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
+		set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
+		echo "Patching to diff-$$DIFF completed."; echo; \
 		cd $(sourcedir)/enigma2-nightly; \
 		echo "Building VFD-drivers..."; \
 		patch -p1 -s < "../../cdk/Patches/vfd-drivers.patch"; \
 		rm -rf $(targetprefix)/usr/local/share/enigma2/rc_models; \
 		echo "Patching remote control files..."; \
-		if [ -e $(sourcedir)/enigma2-nightly/data/rc_models/rc_models.cfg ]; then \
-			patch -p1 -s < "../../cdk/Patches/rc-models.patch"; \
-		else \
-			patch -p1 -s < "../../cdk/Patches/rc-models_old.patch"; \
-		fi; \
+		patch -p1 -s < "../../cdk/Patches/rc-models.patch"; \
+		echo "Build preparation for OpenPLi complete."; echo;  \
 	fi
 	touch $@
 
