@@ -10248,6 +10248,64 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  		else:
  			idx = 2
  	if key in keyDescriptions[idx]:
+--- enigma2-nightly.org/lib/python/Screens/InputDeviceSetup.py
++++ enigma2-nightly/lib/python/Screens/InputDeviceSetup.py
+@@ -296,45 +296,21 @@
+ class RemoteControlType(Screen, ConfigListScreen):
+ 	rcList = [
+ 			("0", _("Default")),
+-			("11", _("et9200/9500/6500")),
+-			("13", _("et4000")),
+-			("7", _("et5000/6000")),
+-			("9", _("et8000/et10000")),
+ 			("4", _("DMM normal")),
+-			("5", _("et9000/et9100")),
+ 			("6", _("DMM advanced")),
+-			("14", _("xp1000")),
+-			("8", _("VU+")),
+-			("18", _("F1/F3")),
+-			("16", _("HD1100/HD1200/et7x00/et8500")),
+-			("19", _("HD2400")),
+-			("20", _("Zgemma Star S/2S/H1/H2")),
+-			("21", _("Zgemma H.S/H.2S/H.2H/H5"))
++			("7", _("fs9000")),
++			("8", _("hs9510")),
++			("9", _("hs7110")),
++			("10", _("spark")),
++			("11", _("tf7700")),
+ 		]
+ 
+ 	defaultRcList = [
+-			("et4000", 13),
+-			("et5000", 7),
+-			("et6000", 7),
+-			("et6500", 11),
+-			("et8000", 9),
+-			("et9000", 5),
+-			("et9100", 5),
+-			("et9200", 11),
+-			("et9500", 11),
+-			("et10000", 9),
+-			("formuler1", 18),
+-			("formuler3", 18),
+-			("xp1000", 14),
+-			("hd1200", 16),
+-			("hd1100", 16),
+-			("hd2400", 19),
+-			("et7000", 16),
+-			("et7500", 16),
+-			("et8500", 16),
+-			("sh1", 20),
+-			("h3", 21),
+-			("h5", 21)
++			("fs9000", 7),
++			("hs9510", 8),
++			("hs7110", 9),
++			("spark", 10),
++			("tf7700", 11),
+ 		]
+ 
+ 	def __init__(self, session):
 --- enigma2-nightly.org/data/rc_models/rc_models.cfg	2014-04-03 08:38:53.154073324 +0200
 +++ enigma2-nightly/data/rc_models/rc_models.cfg	2014-05-28 20:18:22.000000000 +0200
 @@ -19,42 +19,15 @@
