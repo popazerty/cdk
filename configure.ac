@@ -786,6 +786,11 @@ AS_IF([test "x$E2_DIFF" = x], [E2_DIFF="0"])
 AC_ARG_VAR(E2_REVISION, Enigma2 revision-level to check out)
 AS_IF([test "x$E2_REVISION" = x], [E2_REVISION="newest"])
 
+if test "$E2_DIFF" == "4"; then
+	AC_DEFINE(WITH_XMLCCWRAP, 1, [enables build of xmlccwrap with certain diff levels])
+fi
+AM_CONDITIONAL(WITH_XMLCCWRAP, test "$E2_DIFF" = "4")
+
 #
 # bootstrap sh4
 #
@@ -1092,10 +1097,10 @@ $ccacheinfo
 Summary:
 ------------------------------------------------------------------
 Ccache support              : $enable_ccache
-Target CPU/boxtype          : $CPU_MODEL / $BOXTYPE
+Target CPU                  : $CPU_MODEL
 Kernelversion               : $KERNELVERSION
 Patchlevel                  : P0$KERNELLABEL
-DEBUG                       : $enable_debug
+#DEBUG                       : $enable_debug
 Boot prefix                 : $bootprefix
 Serversupport               : $serversupport
 Host prefix                 : $hostprefix

@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 151120.1
+#Version 160420.1
 
 echo "Spark 7162 Enigma2"
 
@@ -232,10 +232,6 @@ echo "Init FTP (LOAD 1)"
 echo "Load 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
-
-mknod /dev/dvb/adapter0/frontend1 c 212 19  #SAT1
-mknod /dev/dvb/adapter0/frontend2 c 212 35  #SAT2
-mknod /dev/dvb/adapter0/frontend3 c 212 51  #T/C
 
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
