@@ -135,7 +135,7 @@ case "$REPLY" in
 	33) TARGET="--enable-arivalink200";BOXTYPE="--with-boxtype=arivalink200";RECEIVER="Ariva@Link 200";;
 	34) TARGET="--enable-hs7119";BOXTYPE="--with-boxtype=hs7119";RECEIVER="Fortis HS7119";;
 	35) TARGET="--enable-hs7819";BOXTYPE="--with-boxtype=hs7819";RECEIVER="Fortis HS7819";;
-	36) TARGET="--enable-cuberevo_3000hd";BOXTYPE="--with-boxtype=cuberevo_3000hd";RECEIVER="Cuberevo_3000HD";;
+	36) TARGET="--enable-cuberevo_3000hd";BOXTYPE="--with-boxtype=cuberevo_3000hd";RECEIVER="Cuberevo 3000HD";;
 	37) TARGET="--enable-hs7420";BOXTYPE="--with-boxtype=hs7420";RECEIVER="Fortis HS7420";;
 	38) TARGET="--enable-hs7429";BOXTYPE="--with-boxtype=hs7429";RECEIVER="Fortis HS7429";;
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
@@ -143,8 +143,7 @@ esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
 
 case "$REPLY" in
-	8)	REPLY=$3
-		echo -e "\nModels:"
+	8)	echo -e "\nModels:"
 		echo " 1) VIP1 v1 [ single tuner + 2 CI + 2 USB ]"
 		echo " 2) VIP1 v2 [ single tuner + 2 CI + 1 USB + plug & play tuner (dvb-s2/t/c) ]"
 		echo " 3) VIP2 v1 [ twin tuner ]"
@@ -365,15 +364,18 @@ case "$IMAGEN" in
 			exit
 		fi
 		case $5 in
-			[1-2])	REPLY=$5;;
+			[1-3])	REPLY=$5;;
 			*)	echo -e "\nMedia Framework:"
-				echo "   1) gstreamer"
-				echo "   2) gstreamer+libplayer3 (recommended)"
-				read -p "Select media framework (1-2)? ";;
+				echo "   1) eplayer3 (experimental)"
+				echo "   2) gstreamer"
+				echo "   3) gstreamer+libplayer3 (recommended)"
+				read -p "Select media framework (1-3)? ";;
 		esac
 
 		case "$REPLY" in
-			1) MEDIAFW="--enable-mediafwgstreamer"
+			1) MEDIAFW="--enable-eplayer3"
+			   MFWORK="eplayer3";;
+			2) MEDIAFW="--enable-mediafwgstreamer"
 			   MFWORK="gstreamer";;
 			*) MEDIAFW="--enable-eplayer3 --enable-mediafwgstreamer"
 			   MFWORK="gstreamer+libeplayer3";;
@@ -383,15 +385,15 @@ case "$IMAGEN" in
 		case $8 in
 			[0-4])	REPLY=$8;;
 			*)	echo "Please select one of the following Enigma2 revisions (default = 0):"
-				echo "========================================================================================================="
-				echo " 0) Newest                 - E2 OpenPLi gstreamer [+libplayer3] (CAUTION: may fail due to outdated patch)"
-				echo "========================================================================================================="
+				echo "================================================================================================="
+				echo " 0) Newest                 - E2 OpenPLi  any framework  (CAUTION: may fail due to outdated patch)"
+				echo "================================================================================================="
 				echo " 1) Use your own Enigma2 git dir without patchfile"
-				echo "========================================================================================================="
-				echo " 2) Thu, 31 Mar 2016 21:52 - E2 OpenPLi gstreamer [+libplayer3] 7d63bf16e99741f0a5798b84a3688759317eecb3"
-				echo " 3) Mon, 17 Aug 2015 07:08 - E2 OpenPLi gstreamer [+libplayer3] cd5505a4b8aba823334032bb6fd7901557575455"
-				echo " 4) Sun, 19 Apr 2015 17:05 - E2 OpenPLi gstreamer [+libplayer3] 4f2db7ace4d9b081cbbb3c13947e05312134ed8e"
-				echo "========================================================================================================="
+				echo "================================================================================================="
+				echo " 2) Thu, 31 Mar 2016 21:52 - E2 OpenPLi  any framework  7d63bf16e99741f0a5798b84a3688759317eecb3"
+				echo " 3) Mon, 17 Aug 2015 07:08 - E2 OpenPLi  any framework  cd5505a4b8aba823334032bb6fd7901557575455"
+				echo " 4) Sun, 19 Apr 2015 17:05 - E2 OpenPLi  any framework  4f2db7ace4d9b081cbbb3c13947e05312134ed8e"
+				echo "================================================================================================="
 				echo "Media Framework         : $MFWORK"
 				read -p "Select Enigma2 revision : ";;
 		esac

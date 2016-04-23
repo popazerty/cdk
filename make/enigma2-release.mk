@@ -45,7 +45,6 @@ release_enigma2_cube_common:
 	chmod 777 $(prefix)/release/etc/init.d/reboot
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
-	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp $(targetprefix)/bin/eeprom $(prefix)/release/bin
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/ipbox/micom.ko $(prefix)/release/lib/modules/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx21143}.fw
@@ -255,7 +254,6 @@ release_enigma2_ufc960: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
-	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
@@ -630,6 +628,7 @@ release_enigma2_hl101: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/proton/proton.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf	
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
 	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp $(targetprefix)/lib/firmware/dvb-fe-avl2108.fw $(prefix)/release/lib/firmware/
@@ -1176,6 +1175,9 @@ endif
 	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu*.*
 	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000.*
 
+# delete unneccesaary OpenWebif files
+	rm $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/{adb2849,adb2850,atemio*,dm500hd,dm7020hd,dm80*,dsi87,duo2,duo,e3hd,elite,esi88,et??00*,formuler?,gb800ueplus,gbquad,hd2400,ini-?000,ixus*,me,minime,miraclebox,nbox,nbox_white,optimussos*,premium,premium+,sf108,sf3038,solo2,solo,solose,uhd88,ultimo,ultra,uno,xcombo,xp1000,xpeed*,zero}.jpg
+	rm $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/public/images/remotes/{atemio,dm_normal,e3hd,elite,et??00,et_rc13_normal,et_rc?_normal,formuler1,gbquadplus,gigablue_black,hd2400,ini-?000,ixus*,me,miraclebox,nbox,optimuss,ow_remote,premium,sf3038,vu_duo2,vu_normal,vu_ultimo,xcombo,xpeedlxc,xpeedlx,xp_rc14_normal}.png
 #
 # delete unnecessary remote control files and VFD plugins
 #

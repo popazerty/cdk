@@ -1,12 +1,21 @@
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2-nightly/configure.ac
 --- enigma2-nightly.org/configure.ac	2015-08-07 17:31:49.665972690 +0200
 +++ enigma2-nightly/configure.ac	2015-08-19 23:14:08.327487372 +0200
-@@ -34,10 +34,149 @@
+@@ -34,10 +34,158 @@
  	AS_HELP_STRING([--with-gstversion],[use gstreamer version (major.minor)]),
  	[GST_MAJORMINOR=$withval],[GST_MAJORMINOR=0.10])
  
 -PKG_CHECK_MODULES(GSTREAMER, gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR)
 -PKG_CHECK_MODULES(BASE, [freetype2 fribidi gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
++AC_ARG_ENABLE(duckbox,
++	[  --enable-duckbox          enable duckbox options],
++	[AC_DEFINE(ENABLE_DUCKBOX,1,[enable duckbox options])])
++
++AM_CONDITIONAL(ENABLE_DUCKBOX,test "$enable_duckbox" = "yes")
++if test "$enable_duckbox" = "yes"; then
++	AC_DEFINE(ENABLE_DUCKBOX,1,[include TDT duckbox options])
++fi
++
 +AC_ARG_ENABLE(libeplayer3,
 +	[  --enable-libeplayer3          enable TDT libeplayer3 as player engine support],
 +	[AC_DEFINE(ENABLE_LIBEPLAYER3,1,[enable TDT libeplayer3 as player engine support])])
@@ -71,7 +80,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_SPARK7162], [test x$enable_spark7162 = xtrue])
 +
 +AC_ARG_ENABLE([octagon1008],
-+	[AS_HELP_STRING(--enable-octagon1008,    enable Fortis HS-9510 stuff)],
++	[AS_HELP_STRING(--enable-octagon1008,    enable Fortis HS9510 stuff)],
 +	[case "${enableval}" in
 +		yes) enable_octagon1008=true ;;
 +		no) enable_octagon1008=false ;;
@@ -89,7 +98,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_ATEVIO7500], [test x$enable_atevio7500 = xtrue])
 +
 +AC_ARG_ENABLE([fortis_hdbox],
-+	[AS_HELP_STRING(--enable-fortis_hdbox,    enable Fortis FS-9000/9200 stuff)],
++	[AS_HELP_STRING(--enable-fortis_hdbox,    enable Fortis FS9000/9200 stuff)],
 +	[case "${enableval}" in
 +		yes) enable_fortis_hdbox=true ;;
 +		no) enable_fortis_hdbox=false ;;
@@ -98,7 +107,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_FORTIS_HDBOX], [test x$enable_fortis_hdbox = xtrue])
 +
 +AC_ARG_ENABLE([hs7110],
-+	[AS_HELP_STRING(--enable-hs7110,    enable Fortis HS-7110 stuff)],
++	[AS_HELP_STRING(--enable-hs7110,    enable Fortis HS7110 stuff)],
 +	[case "${enableval}" in
 +		yes) enable_hs7110=true ;;
 +		no) enable_hs7110=false ;;
@@ -107,7 +116,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_HS7110], [test x$enable_hs7110 = xtrue])
 +
 +AC_ARG_ENABLE([hs7119],
-+	[AS_HELP_STRING(--enable-hs7119,    enable Fortis HS-7119 stuff)],
++	[AS_HELP_STRING(--enable-hs7119,    enable Fortis HS7119 stuff)],
 +	[case "${enableval}" in
 +		yes) enable_hs7119=true ;;
 +		no) enable_hs7119=false ;;
@@ -116,7 +125,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_HS7119], [test x$enable_hs7119 = xtrue])
 +
 +AC_ARG_ENABLE([hs7420],
-+	[AS_HELP_STRING(--enable-hs7420,    enable Fortis HS-7420 stuff)],
++	[AS_HELP_STRING(--enable-hs7420,    enable Fortis HS7420 stuff)],
 +	[case "${enableval}" in
 +		yes) enable_hs7420=true ;;
 +		no) enable_hs7420=false ;;
@@ -125,7 +134,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_HS7420], [test x$enable_hs7420 = xtrue])
 +
 +AC_ARG_ENABLE([hs7429],
-+	[AS_HELP_STRING(--enable-hs7429,    enable Fortis HS-7429 stuff)],
++	[AS_HELP_STRING(--enable-hs7429,    enable Fortis HS7429 stuff)],
 +	[case "${enableval}" in
 +		yes) enable_hs7429=true ;;
 +		no) enable_hs7429=false ;;
@@ -134,7 +143,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_HS7429], [test x$enable_hs7429 = xtrue])
 +
 +AC_ARG_ENABLE([hs7810a],
-+	[AS_HELP_STRING(--enable-hs7810a,    enable Fortis HS-7810A stuff)],
++	[AS_HELP_STRING(--enable-hs7810a,    enable Fortis HS7810A stuff)],
 +	[case "${enableval}" in
 +		yes) enable_hs7810a=true ;;
 +		no) enable_hs7810a=false ;;
@@ -143,7 +152,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +AM_CONDITIONAL([ENABLE_HS7810A], [test x$enable_hs7810a = xtrue])
 +
 +AC_ARG_ENABLE([hs7819],
-+	[AS_HELP_STRING(--enable-hs7819,    enable Fortis HS-7819 stuff)],
++	[AS_HELP_STRING(--enable-hs7819,    enable Fortis HS7819 stuff)],
 +	[case "${enableval}" in
 +		yes) enable_hs7819=true ;;
 +		no) enable_hs7819=false ;;
@@ -153,7 +162,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  
  AC_CHECK_LIB([dl], [dlopen], [LIBDL_LIBS="-ldl"], [AC_MSG_ERROR([Could not find libdl])])
  AC_SUBST(LIBDL_LIBS)
-@@ -182,6 +331,15 @@
+@@ -182,6 +330,22 @@
  	PKG_CHECK_MODULES(DVBCSA, libdvbcsa)
  fi
  
@@ -166,10 +175,17 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +	AC_DEFINE(HAVE_GRAPHLCD, 1,[Define when using a GraphLCD color display device])
 +fi
 +AM_CONDITIONAL(HAVE_GRAPHLCD, test x"$withgraphlcd" != xno)
++
++PKG_CHECK_MODULES([AVFORMAT], [libavformat >= 53.21.1])
++PKG_CHECK_MODULES([AVCODEC], [libavcodec >= 54.28.0])
++# do not know which version is exactly needed here...
++PKG_CHECK_MODULES([AVUTIL], [libavutil])
++PKG_CHECK_MODULES([SWSCALE], [libswscale])
++PKG_CHECK_MODULES([SWRESAMPLE], [libswresample])
  
  ENIGMA2_CFLAGS="-fno-rtti -fno-exceptions"
  AC_SUBST(ENIGMA2_CFLAGS)
-@@ -243,8 +391,6 @@
+@@ -243,8 +407,6 @@
  lib/python/Plugins/Extensions/TuxboxPlugins/Makefile
  lib/python/Plugins/Extensions/TuxboxPlugins/meta/Makefile
  lib/python/Plugins/PLi/Makefile
@@ -178,7 +194,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/Makefile
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/meta/Makefile
  lib/python/Plugins/SystemPlugins/DiseqcTester/Makefile
-@@ -274,6 +420,45 @@
+@@ -274,6 +436,50 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
@@ -193,6 +209,11 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +lib/python/Plugins/Extensions/hs7110VFD/locale/Makefile
 +lib/python/Plugins/Extensions/hs7110VFD/locale/nl/Makefile
 +lib/python/Plugins/Extensions/hs7110VFD/locale/nl/LC_MESSAGES/Makefile
++lib/python/Plugins/Extensions/hs742xVFD/Makefile
++lib/python/Plugins/Extensions/hs742xVFD/meta/Makefile
++lib/python/Plugins/Extensions/hs742xVFD/locale/Makefile
++lib/python/Plugins/Extensions/hs742xVFD/locale/nl/Makefile
++lib/python/Plugins/Extensions/hs742xVFD/locale/nl/LC_MESSAGES/Makefile
 +lib/python/Plugins/Extensions/hs7810aVFD/Makefile
 +lib/python/Plugins/Extensions/hs7810aVFD/meta/Makefile
 +lib/python/Plugins/Extensions/hs7810aVFD/locale/Makefile
@@ -422,6 +443,46 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/data/skin_display_de
 +		<widget source="parent.selectedChoice" render="Label" position="bottom" size="*,44" font="FdLcD;44" halign="center" valign="center" />
  	</screen>
  </skin>
+--- enigma2-nightly.org/lib/base/httpstream.cpp
++++ enigma2-nightly/lib/base/httpstream.cpp
+@@ -1,4 +1,8 @@
+ #include <cstdio>
++
++#if not defined ENABLE_MEDIAFWGSTREAMER
++#include <openssl/evp.h>
++#endif
+ 
+ #include <lib/base/httpstream.h>
+ #include <lib/base/eerror.h>
+@@ -76,8 +77,28 @@
+ 	int authenticationindex = hostname.find("@");
+ 	if (authenticationindex > 0)
+ 	{
++#if defined ENABLE_MEDIAFWGSTREAMER
+ 		authorizationData =  base64encode(hostname.substr(0, authenticationindex));
++#else
++		BIO *mbio, *b64bio, *bio;
++		char *p = (char*)NULL;
++		int length = 0;
++		authorizationData = hostname.substr(0, authenticationindex);
+ 		hostname = hostname.substr(authenticationindex + 1);
++		mbio = BIO_new(BIO_s_mem());
++		b64bio = BIO_new(BIO_f_base64());
++		bio = BIO_push(b64bio, mbio);
++		BIO_write(bio, authorizationData.c_str(), authorizationData.length());
++		BIO_flush(bio);
++		length = BIO_ctrl(mbio, BIO_CTRL_INFO, 0, (char*)&p);
++		authorizationData = "";
++		if (p && length > 0)
++		{
++			/* base64 output contains a linefeed, which we ignore */
++			authorizationData.append(p, length - 1);
++		}
++		BIO_free_all(bio);
++#endif
+ 	}
+ 	int customportindex = hostname.find(":");
+ 	if (customportindex > 0)
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/ioprio.cpp enigma2-nightly/lib/base/ioprio.cpp
 --- enigma2-nightly.org/lib/base/ioprio.cpp	2015-08-07 17:31:49.745972687 +0200
 +++ enigma2-nightly/lib/base/ioprio.cpp	2015-08-19 23:14:08.327487372 +0200
@@ -499,6 +560,45 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/smartptr.h 
  };
  #endif
  
+--- enigma2-nightly.org/lib/base/wrappers.cpp
++++ enigma2-nightly/lib/base/wrappers.cpp
+@@ -4,8 +4,9 @@
+ #include <sys/select.h>
+ #include <arpa/inet.h>
+ #include <netdb.h>
+-#include <glib.h>
+-
++#if defined ENABLE_MEDIAFWGSTREAMER
++#include <glib.h>
++#endif
+ #include <vector>
+ #include <string>
+ 
+@@ -261,6 +262,7 @@
+ 	return handledcount;
+ }
+ 
++#if defined ENABLE_MEDIAFWGSTREAMER
+ std::string base64encode(const std::string str)
+ {
+ 	if(str.empty())
+@@ -303,3 +305,4 @@
+ 
+ 	return ret;
+ }
++#endif
+--- enigma2-nightly.org/lib/base/wrappers.h
++++ enigma2-nightly/lib/base/wrappers.h
+@@ -7,7 +7,8 @@
+ ssize_t writeAll(int fd, const void *buf, size_t count);
+ int Select(int maxfd, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+ int Connect(const char *hostname, int port, int timeoutsec);
++#if defined ENABLE_MEDIAFWGSTREAMER
+ std::string base64encode(const std::string str);
+ std::string base64decode(const std::string hash);
+-
+ #endif
++#endif
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/Makefile.inc enigma2-nightly/lib/driver/Makefile.inc
 --- enigma2-nightly.org/lib/driver/Makefile.inc	2015-08-07 17:31:49.745972687 +0200
 +++ enigma2-nightly/lib/driver/Makefile.inc	2015-08-19 23:14:08.331487372 +0200
@@ -1606,7 +1706,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  	::close(frontend);
  	frontend = -1;
  
-@@ -408,9 +395,6 @@
+@@ -411,9 +398,6 @@
  #define VTUNER_SET_ADAPTER 33
  	ioctl(vtunerFd, VTUNER_SET_NAME, name);
  	ioctl(vtunerFd, VTUNER_SET_TYPE, type);
@@ -1616,7 +1716,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  	ioctl(vtunerFd, VTUNER_SET_HAS_OUTPUTS, "no");
  	ioctl(vtunerFd, VTUNER_SET_ADAPTER, nr);
  
-@@ -932,12 +916,13 @@
+@@ -935,12 +919,13 @@
  	if (i == m_demux.end())
  		return -1;
  
@@ -1633,7 +1733,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  	// find first unused demux which is on same adapter as frontend
  	while (i != m_demux.end())
  	{
-@@ -965,52 +950,49 @@
+@@ -968,52 +953,49 @@
  		}
  		i++;
  	}
@@ -1722,7 +1822,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  		}
  	}
  #endif
-@@ -1019,10 +1001,10 @@
+@@ -1022,10 +1004,10 @@
  	{
  		unused->m_demux->getCAAdapterID(a);
  		unused->m_demux->getCADemuxID(d);
@@ -1736,7 +1836,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  		else
  			demux->get().setSourcePVR(0);
  		return 0;
-@@ -1062,14 +1044,14 @@
+@@ -1065,14 +1047,14 @@
  	if (!simulate && m_cached_channel)
  	{
  		eDVBChannel *cache_chan = (eDVBChannel*)&(*m_cached_channel);
@@ -1753,7 +1853,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  		m_cached_channel_state_changed_conn.disconnect();
  		m_cached_channel=0;
  		m_releaseCachedChannelTimer->stop();
-@@ -2119,6 +2101,12 @@
+@@ -2122,6 +2104,12 @@
  
  	if (m_pvr_fd_dst < 0)
  	{
@@ -1766,7 +1866,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  		ePtr<eDVBAllocatedDemux> &demux = m_demux ? m_demux : m_decoder_demux;
  		if (demux)
  		{
-@@ -2134,6 +2122,7 @@
+@@ -2137,6 +2125,7 @@
  			eDebug("[eDVBChannel] no demux allocated yet.. so its not possible to open the dvr device!!");
  			return -ENODEV;
  		}
@@ -1875,6 +1975,47 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/pmt.cpp enig
  		if (!ref.getServiceID().get() /* incorrect sid in meta file or recordings.epl*/ )
  		{
  			eDVBTSTools tstools;
+--- enigma2-nightly.org/lib/dvb/streamserver.cpp
++++ enigma2-nightly/lib/dvb/streamserver.cpp
+@@ -1,6 +1,9 @@
+ #include <sys/select.h>
+ #include <unistd.h>
+ #include <string.h>
++#if not defined ENABLE_MEDIAFWGSTREAMER
++#include <openssl/evp.h>
++#endif
+ #include <sys/types.h>
+ #include <pwd.h>
+ #include <shadow.h>
+@@ -81,7 +82,28 @@
+ 				std::string hash = request.substr(pos + 21);
+ 				pos = hash.find('\r');
+ 				hash = hash.substr(0, pos);
++#if defined ENABLE_MEDIAFWGSTREAMER
+ 				authentication = base64decode(hash);
++#else
++				hash += "\n";
++				{
++					char *in, *out;
++					in = strdup(hash.c_str());
++					out = (char*)calloc(1, hash.size());
++					if (in && out)
++					{
++						BIO *b64, *bmem;
++						b64 = BIO_new(BIO_f_base64());
++						bmem = BIO_new_mem_buf(in, hash.size());
++						bmem = BIO_push(b64, bmem);
++						BIO_read(bmem, out, hash.size());
++						BIO_free_all(bmem);
++						authentication.append(out, hash.size());
++					}
++					free(in);
++					free(out);
++				}
++#endif
+ 				pos = authentication.find(':');
+ 				if (pos != std::string::npos)
+ 				{
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/volume.cpp enigma2-nightly/lib/dvb/volume.cpp
 --- enigma2-nightly.org/lib/dvb/volume.cpp	2015-08-07 17:31:49.757972686 +0200
 +++ enigma2-nightly/lib/dvb/volume.cpp	2015-08-19 23:14:08.339487371 +0200
@@ -3527,18 +3668,33 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/stmfb.cpp en
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/Makefile.am enigma2-nightly/lib/Makefile.am
 --- enigma2-nightly.org/lib/Makefile.am	2015-08-07 17:31:49.741972687 +0200
 +++ enigma2-nightly/lib/Makefile.am	2015-08-19 23:14:08.343487371 +0200
-@@ -7,6 +7,11 @@
+@@ -6,6 +6,18 @@
+ 	-I$(top_srcdir)/include \
  	-include Python.h \
  	-include $(top_builddir)/enigma2_config.h
- 
++
++if ENABLE_MEDIAFWGSTREAMER
 +if ENABLE_LIBEPLAYER3
 +AM_CPPFLAGS += \
 +	-I$(top_srcdir)/../../apps/tools/libeplayer3/include
 +endif
-+
++else
++AM_CPPFLAGS += \
++	-D__STDC_CONSTANT_MACROS \
++	-D__STDC_FORMAT_MACROS \
++	-I$(top_srcdir)/lib/libeplayer3/include
++endif
+ 
  # initialize these, to be filled with targets in the included files
  noinst_LIBRARIES=
- BUILT_SOURCES=
+@@ -32,3 +44,7 @@
+ 
+ # Build the subdirs without parallellism
+ SUBDIRS = python
++
++if !ENABLE_MEDIAFWGSTREAMER
++SUBDIRS += libeplayer3
++endif
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/Converter/RemainingToText.py enigma2-nightly/lib/python/Components/Converter/RemainingToText.py
 --- enigma2-nightly.org/lib/python/Components/Converter/RemainingToText.py	2015-08-07 17:31:49.769972686 +0200
 +++ enigma2-nightly/lib/python/Components/Converter/RemainingToText.py	2015-08-19 23:14:08.347487371 +0200
@@ -3620,14 +3776,14 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
 +			self.dev_path = '/dev/' + self.device
 +			self.disk_path = self.dev_path
 +#+++<
- 
- 		print "[Harddisk] new device", self.device, '->', self.dev_path, '->', self.disk_path
- 		if not removable:
- 			self.startIdle()
+
+		print "[Harddisk] new device", self.device, '->', self.dev_path, '->', self.disk_path
+		if not removable and not self.card:
+			self.startIdle()
 +	Console().ePopen(("mount", "mount", "-a"))
- 
- 	def __lt__(self, ob):
- 		return self.device < ob.device
+
+	def __lt__(self, ob):
+		return self.device < ob.device
 @@ -141,8 +130,8 @@
  		cap = 0
  		try:
@@ -6461,12 +6617,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  		InfoBarServiceErrorPopupSupport, InfoBarExtensions, InfoBarPlugins, InfoBarPiP, InfoBarHDMI, InfoBarHotkey):
  
  	ENABLE_RESUME_SUPPORT = True
-@@ -150,12 +270,14 @@
- 	def __init__(self, session, service, slist=None, lastservice=None, infobar=None):
- 		Screen.__init__(self, session)
+@@ -152,10 +272,10 @@
  
-+		InfoBarAspectSelection.__init__(self)
-+
  		self["actions"] = HelpableActionMap(self, "MoviePlayerActions",
  			{
 -				"leavePlayer": (self.leavePlayer, _("leave movie player...")),
@@ -6480,7 +6632,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
  			})
  
  		self["DirectionActions"] = HelpableActionMap(self, "DirectionActions",
-@@ -533,3 +655,7 @@
+@@ -533,3 +653,7 @@
  
  	def ref2HumanName(self, ref):
  		return enigma.eServiceCenter.getInstance().info(ref).getName(ref)
@@ -6723,29 +6875,44 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/listboxs
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/Makefile.inc enigma2-nightly/lib/service/Makefile.inc
 --- enigma2-nightly.org/lib/service/Makefile.inc	2015-08-07 17:31:49.845972683 +0200
 +++ enigma2-nightly/lib/service/Makefile.inc	2015-08-19 23:14:08.359487370 +0200
-@@ -18,6 +18,13 @@
+@@ -10,13 +10,22 @@
+ 	service/servicedvb.cpp \
+ 	service/servicedvbrecord.cpp \
+ 	service/servicefs.cpp \
+-	service/servicemp3.cpp \
+-	service/servicemp3record.cpp \
+ 	service/servicem2ts.cpp \
+ 	service/servicedvbstream.cpp \
+ 	service/servicehdmi.cpp \
  	service/servicets.cpp \
  	service/servicewebts.cpp
- 
-+if ENABLE_LIBEPLAYER3 
++
 +if ENABLE_MEDIAFWGSTREAMER
++service_libenigma_service_a_SOURCES += \
++	service/servicemp3.cpp \
++	service/servicemp3record.cpp
++endif
++
++if ENABLE_LIBEPLAYER3 
 +service_libenigma_service_a_SOURCES += \
 +	service/serviceeplayer3.cpp
 +endif
-+endif
-+
+ 
  serviceincludedir = $(pkgincludedir)/lib/service
  serviceinclude_HEADERS = \
- 	service/event.h \
-@@ -35,6 +42,13 @@
+@@ -35,6 +44,17 @@
  	service/servicets.h \
  	service/servicewebts.h
  
-+if ENABLE_LIBEPLAYER3 
 +if ENABLE_MEDIAFWGSTREAMER
-+serviceinclude_HEADERS += \
-+	service/serviceeplayer3.h
++service_libenigma_service_a_SOURCES += \
++	service/servicemp3.h \
++	service/servicemp3record.h
 +endif
++
++if ENABLE_LIBEPLAYER3 
++service_libenigma_service_a_SOURCES += \
++	service/serviceeplayer3.h
 +endif
 +
  if HAVE_LIBXINE
@@ -6825,7 +6992,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviced
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviceeplayer3.cpp enigma2-nightly/lib/service/serviceeplayer3.cpp
 --- enigma2-nightly.org/lib/service/serviceeplayer3.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/service/serviceeplayer3.cpp	2015-08-19 23:14:08.359487370 +0200
-@@ -0,0 +1,1156 @@
+@@ -0,0 +1,1303 @@
 +	/* note: this requires gstreamer 0.10.x and a big list of plugins. */
 +	/* it's currently hardcoded to use a big-endian alsasink as sink. */
 +#include <lib/base/ebase.h>
@@ -6843,6 +7010,10 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +#include <string>
 +#include <sys/stat.h>
++
++#if not defined ENABLE_MEDIAFWGSTREAMER
++#include <player.h>
++#endif 
 +
 +#define HTTP_TIMEOUT 60
 +
@@ -6873,6 +7044,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	fbClass *fb = fbClass::getInstance();
 +	fb->blit();
 +}
++
 +
 +eServiceFactoryEPlayer3::eServiceFactoryEPlayer3()
 +{
@@ -7164,6 +7336,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	if (!ext)
 +		ext = filename + strlen(filename);
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	player = (Context_t*) malloc(sizeof(Context_t));
 +
 +	if (player)
@@ -7182,7 +7355,11 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +		player->output->Command(player,OUTPUT_ADD, (void*)"video");
 +		player->output->Command(player,OUTPUT_ADD, (void*)"subtitle");
 +	}
++#else
++	player = new Player();
++#endif
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->output && player->output->subtitle)
 +	{
 +		fbClass *fb = fbClass::getInstance();
@@ -7196,6 +7373,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +		out.framebufferBlit = ep3Blit;
 +		player->output->subtitle->Command(player, (OutputCmd_t)OUTPUT_SET_SUBTITLE_OUTPUT, (void*) &out);
 +	}
++#endif
 +
 +	//create playback path
 +	char file[800] = {""};
@@ -7227,15 +7405,21 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	strcat(file, m_ref.path.c_str());
 +
 +	//try to open file
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback && player->playback->Command(player, PLAYBACK_OPEN, file) >= 0)
++#else
++	if (player->Open(file))
++#endif
 +	{
 +		//VIDEO
 +		//We dont have to register video tracks, or do we ?
 +		//AUDIO
++#if defined ENABLE_MEDIAFWGSTREAMER
 +		if (player && player->manager && player->manager->audio)
 +		{
 +			char ** TrackList = NULL;
 +			player->manager->audio->Command(player, MANAGER_LIST, &TrackList);
++
 +			if (TrackList != NULL)
 +			{
 +				printf("AudioTrack List\n");
@@ -7307,12 +7491,20 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +				free(TrackList);
 +			}
 +		}
++#else
++		if (player)
++		{
++			std::vector<Track> tracks = player->manager.getAudioTracks();
++		}
++		m_state = stRunning;
++#endif
 +		m_event(this, evStart);
 +	}
 +	else
 +	{
 +		//Creation failed, no playback support for insert file, so delete playback context
 +		//FIXME: How to tell e2 that we failed?
++#if defined ENABLE_MEDIAFWGSTREAMER
 +		if (player && player->output)
 +		{
 +			player->output->Command(player,OUTPUT_DEL, (void*)"audio");
@@ -7326,6 +7518,11 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +		if (player)
 +			free(player);
 +		player = NULL;
++#else
++		player->Stop();
++		player->output.Close();
++		player->Close();
++#endif
 +	}
 +	//m_state = stRunning;
 +	eDebug("eServiceEPlayer3-<\n");
@@ -7338,6 +7535,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +	if (m_state == stRunning)
 +		stop();
++#if not defined ENABLE_MEDIAFWGSTREAMER
++	delete player;
++#endif
 +}
 +
 +DEFINE_REF(eServiceEPlayer3);
@@ -7359,11 +7559,19 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +	m_state = stRunning;
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->output && player->playback)
 +	{
 +		player->output->Command(player, OUTPUT_OPEN, NULL);
 +		player->playback->Command(player, PLAYBACK_PLAY, NULL);
 +	}
++#else
++	if (player)
++	{
++		player->output.Open();
++		player->Play();
++ 	}
++#endif
 +
 +	m_event(this, evStart);
 +
@@ -7389,6 +7597,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +	eDebug("eServiceEPlayer3::stop %s", m_ref.path.c_str());
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback && player->output)
 +	{
 +		player->playback->Command(player, PLAYBACK_STOP, NULL);
@@ -7410,6 +7619,15 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +	if (player != NULL)
 +		player = NULL;
++
++#else
++	if (player)
++	{
++		player->Stop();
++		player->output.Close();
++		player->Close();
++	}
++#endif
 +
 +	m_state = stStopped;
 +
@@ -7463,11 +7681,20 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +{
 +// konfetti: in libeplayer3 we changed this because I dont like application specific stuff in a library
 +	int speed = getSpeed(ratio);
++
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback && (speed != -1))
++#else
++	if (player && (speed != -1))
++#endif
 +	{
 +		int result = 0;
 +		if (ratio > 1)
++#if defined ENABLE_MEDIAFWGSTREAMER
 +			result = player->playback->Command(player, PLAYBACK_SLOWMOTION, (void*)&speed);
++#else
++			result = player->SlowMotion(speed);
++#endif
 +
 +		if (result != 0)
 +			return -1;
@@ -7479,18 +7706,34 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +{
 +// konfetti: in libeplayer3 we changed this because I dont like application specific stuff in a library
 +	int speed = getSpeed(ratio);
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback && (speed != -1))
++#else
++	if (player && (speed != -1))
++#endif
 +	{
 +		int result = 0;
 +		if (ratio > 1)
++#if defined ENABLE_MEDIAFWGSTREAMER
 +			result = player->playback->Command(player, PLAYBACK_FASTFORWARD, (void*)&speed);
++#else
++			result = player->FastForward(speed);
++#endif
 +		else if (ratio < -1)
 +		{
 +			//speed = speed * -1;
++#if defined ENABLE_MEDIAFWGSTREAMER
 +			result = player->playback->Command(player, PLAYBACK_FASTBACKWARD, (void*)&speed);
++#else
++			result = player->FastBackward(speed);
++#endif
 +		}
 +		else
++#if defined ENABLE_MEDIAFWGSTREAMER
 +			result = player->playback->Command(player, PLAYBACK_CONTINUE, NULL);
++#else
++			result = player->Continue();
++#endif
 +
 +		if (result != 0)
 +			return -1;
@@ -7501,16 +7744,25 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +		// iPausableService
 +RESULT eServiceEPlayer3::pause()
 +{
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_PAUSE, NULL);
-+
++#else
++	if (player)
++		player->Pause();
++#endif
 +	return 0;
 +}
 +
 +RESULT eServiceEPlayer3::unpause()
 +{
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_CONTINUE, NULL);
++#else
++	if (player)
++		player->Continue();
++#endif
 +
 +	return 0;
 +}
@@ -7524,10 +7776,17 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +RESULT eServiceEPlayer3::getLength(pts_t &pts)
 +{
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	double length = 0;
 +
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_LENGTH, &length);
++#else
++	int64_t length = 0;
++
++	if (player)
++		player->GetDuration(length);
++#endif
 +
 +	if (length <= 0)
 +		return -1;
@@ -7546,8 +7805,13 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	RESULT ret = -1;
 +
 +	float pos = (to/90000.0)-10;
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_SEEK, (void*)&pos);
++#else
++	if (player)
++		player->Seek(pos,true);
++#endif
 +
 +	ret =0;
 +	return ret;
@@ -7562,15 +7826,24 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +		ppos = 0;
 +
 +	float pos = direction*(to/90000.0);
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_SEEK, (void*)&pos);
++#else
++	if (player)
++		player->Seek(pos,true);
++#endif
 +
 +	return 0;
 +}
 +
 +RESULT eServiceEPlayer3::getPlayPosition(pts_t &pts)
 +{
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback && !player->playback->isPlaying)
++#else
++	if (player && !player->isPlaying)
++#endif
 +	{
 +		eDebug("eServiceEPlayer3::%s !!!!EOF!!!! < -1", __func__);
 +		if(m_state == stRunning)
@@ -7579,6 +7852,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +		return -1;
 +	}
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	unsigned long long int vpts = 0;
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_PTS, &vpts);
@@ -7588,6 +7862,10 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +	/* len is in nanoseconds. we have 90 000 pts per second. */
 +	pts = vpts>0?vpts:pts;;
++#else
++	if (player)
++		player->GetPts((int64_t &) pts);
++#endif
 +
 +	return 0;
 +}
@@ -7687,7 +7965,12 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +std::string eServiceEPlayer3::getInfoString(int w)
 +{
 +	char * tag = NULL;
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	char * res_str = NULL;
++#else
++	std::vector<std::string> keys, values;
++	std::string res = "";
++#endif
 +	switch (w)
 +	{
 +	case sTagTitle:
@@ -7721,6 +8004,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +		return "";
 +	}
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback)
 +	{
 +		/*Hellmaster1024: we need to save the adress of tag to free the strduped mem
@@ -7742,9 +8026,24 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +			return "";
 +		}
 +	}
++#else
++	if (player)
++		player->input.GetMetadata(keys, values);
++
++	for (int i = 0; i < keys.size(); i++)
++	{
++		if (tag == keys[i])
++			res = values[i];
++	}	
++
++#endif
 +	free(tag);
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	return "";
++#else
++	return res;
++#endif
 +}
 +
 +RESULT eServiceEPlayer3::audioChannel(ePtr<iAudioChannelSelection> &ptr)
@@ -7792,8 +8091,13 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +{
 +	if (i != m_currentAudioStream)
 +	{
++#if defined ENABLE_MEDIAFWGSTREAMER
 +		if (player && player->playback)
 +			player->playback->Command(player, PLAYBACK_SWITCH_AUDIO, (void*)&i);
++#else
++		if (player)
++			player->SwitchAudio(i);
++#endif
 +		m_currentAudioStream = i;
 +		return 0;
 +	}
@@ -7874,8 +8178,13 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +	}
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_SWITCH_SUBTITLE, (void*)&track.pid);
++#else
++	if (player)
++		player->SwitchSubtitle(track.pid);
++#endif
 +
 +	return 0;
 +}
@@ -7892,8 +8201,13 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	m_subtitle_widget = 0;
 +
 +	int pid = -1;
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	if (player && player->playback)
 +		player->playback->Command(player, PLAYBACK_SWITCH_SUBTITLE, (void*)&pid);
++#else
++	if (player)
++		player->SwitchSubtitle(pid);
++#endif
 +
 +	return 0;
 +}
@@ -7985,7 +8299,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviceeplayer3.h enigma2-nightly/lib/service/serviceeplayer3.h
 --- enigma2-nightly.org/lib/service/serviceeplayer3.h	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/service/serviceeplayer3.h	2015-08-19 23:14:08.359487370 +0200
-@@ -0,0 +1,301 @@
+@@ -0,0 +1,313 @@
 +#ifndef __serviceeplayer3_h
 +#define __serviceeplayer3_h
 +
@@ -7995,18 +8309,25 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +#include <lib/dvb/subtitle.h>
 +#include <lib/dvb/teletext.h>
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +#include <common.h>
 +#include <subtitle.h>
++#endif
 +#define gint int
 +#define gint64 int64_t
++#if defined ENABLE_MEDIAFWGSTREAMER
 +extern OutputHandler_t		OutputHandler;
 +extern PlaybackHandler_t	PlaybackHandler;
 +extern ContainerHandler_t	ContainerHandler;
 +extern ManagerHandler_t	ManagerHandler;
++#endif
 +
 +/* for subtitles */
 +#include <lib/gui/esubtitle.h>
 +
++#if not defined ENABLE_MEDIAFWGSTREAMER
++class Player;
++#endif
 +class eStaticServiceEPlayer3Info;
 +
 +class eServiceFactoryEPlayer3: public iServiceHandler
@@ -8212,6 +8533,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	};
 +
 +private:
++#if not defined ENABLE_MEDIAFWGSTREAMER
++	Player *player;
++#endif
 +	static int pcm_delay;
 +	static int ac3_delay;
 +	int m_currentAudioStream;
@@ -8239,7 +8563,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	};
 +	int m_state;
 +
++#if defined ENABLE_MEDIAFWGSTREAMER
 +	Context_t * player;
++#endif
 +
 +	struct Message
 +	{
@@ -9635,11 +9961,16 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/bsod.cpp enigma
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp enigma2-nightly/main/enigma.cpp
 --- enigma2-nightly.org/main/enigma.cpp	2015-08-07 17:31:49.849972682 +0200
 +++ enigma2-nightly/main/enigma.cpp	2015-08-19 23:14:08.363487370 +0200
-@@ -30,10 +30,15 @@
+@@ -30,10 +30,20 @@
  #include <lib/python/python.h>
  #include <lib/python/pythonconfig.h>
  
-+#if defined(__sh__)
++#ifndef ENABLE_MEDIAFWGSTREAMER
++#include <fstream>
++#include <sstream>
++#endif
++
++#if defined(__sh__) // vfd class
 +#include <lib/driver/vfd.h>
 +#endif
  #include "bsod.h"
@@ -9651,7 +9982,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp enig
  
  #ifdef OBJECT_DEBUG
  int object_total_remaining;
-@@ -178,7 +183,9 @@
+@@ -178,7 +188,9 @@
  	atexit(object_dump);
  #endif
  
@@ -9661,7 +9992,19 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp enig
  
  	// set pythonpath if unset
  	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
-@@ -257,19 +264,25 @@
+@@ -216,6 +228,11 @@
+ 	eWidgetDesktop dsk_lcd(my_lcd_dc->size());
+ 
+ 	dsk.setStyleID(0);
++#ifdef HAVE_GRAPHLCD
++	dsk_lcd.setStyleID(my_lcd_dc->size().width() == 320 ? 1 : 2);
++#else
++ 	dsk_lcd.setStyleID(my_lcd_dc->size().width() == 96 ? 2 : 1);
++#endif
+ 	dsk_lcd.setStyleID(1);
+ 
+ /*	if (double_buffer)
+@@ -257,19 +274,25 @@
  				if (!i)
  					eDebug("[MAIN] failed to load %s: %m", rfilename.c_str());
  				else
@@ -9690,6 +10033,18 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/enigma.cpp enig
  
  	printf("[MAIN] executing main\n");
  
+@@ -334,7 +357,11 @@
+ 
+ const char *getGStreamerVersionString()
+ {
++#if defined ENABLE_MEDIAFWGSTREAMER
+ 	return gst_version_string();
++#else
++	return "ePlayer3";
++#endif
+ }
+ 
+ #include <malloc.h>
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/Makefile.am enigma2-nightly/main/Makefile.am
 --- enigma2-nightly.org/main/Makefile.am	2015-08-07 17:31:49.849972682 +0200
 +++ enigma2-nightly/main/Makefile.am	2015-08-19 23:14:08.363487370 +0200
@@ -9702,13 +10057,26 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/Makefile.am eni
  
  enigma2_SOURCES = \
  	bsod.cpp \
-@@ -47,6 +49,15 @@
+@@ -47,6 +49,28 @@
  	@DVBCSA_LIBS@ \
  	-ltuxtxt -ltuxtxt32bpp -lcrypt -lrt
  
++if ENABLE_MEDIAFWGSTREAMER
 +if ENABLE_LIBEPLAYER3
 +enigma2_LDADD += \
 +	-leplayer3
++endif
++else
++if ENABLE_LIBEPLAYER3
++enigma2_LDADD_WHOLE += \
++	$(top_builddir)/lib/libeplayer3/libeplayer3.a
++enigma2_LDADD += \
++	@AVFORMAT_LIBS@ \
++	@AVUTIL_LIBS@ \
++	@AVCODEC_LIBS@ \
++	@SWSCALE_LIBS@ \
++	@SWRESAMPLE_LIBS@
++endif
 +endif
 +
 +if HAVE_GRAPHLCD
@@ -9887,6 +10255,17 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  		if os.path.isfile('/proc/stb/fp/temp_sensor_avs'):
  			temperature = open("/proc/stb/fp/temp_sensor_avs").readline().replace('\n','')
  			return "%s %s MHz (%s) %s°C" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count, temperature)
+--- enigma2-nightly.org/lib/python/Screens/About.py
++++ enigma2-nightly/lib/python/Screens/About.py
+@@ -35,7 +35,7 @@
+ 		AboutText += EnigmaVersion + "\n"
+ 		AboutText += _("Enigma (re)starts: %d\n") % config.misc.startCounter.value
+ 
+-		GStreamerVersion = "GStreamer: " + about.getGStreamerVersionString().replace("GStreamer","")
++		GStreamerVersion = "Media framework: " + about.getGStreamerVersionString()
+ 		self["GStreamerVersion"] = StaticText(GStreamerVersion)
+ 		AboutText += GStreamerVersion + "\n"
+ 
 --- enigma2-nightly.org/lib/python/Tools/KeyBindings.py
 +++ enigma2-nightly/lib/python/Tools/KeyBindings.py
 @@ -5,7 +5,7 @@
@@ -10308,7 +10687,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  	def __init__(self, session):
 --- enigma2-nightly.org/data/rc_models/rc_models.cfg	2014-04-03 08:38:53.154073324 +0200
 +++ enigma2-nightly/data/rc_models/rc_models.cfg	2014-05-28 20:18:22.000000000 +0200
-@@ -19,42 +19,15 @@
+@@ -19,43 +19,15 @@
  #
  # When no entry matches at all, 'default' will be used as remoteName
  #
@@ -10339,6 +10718,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 -vusolose vu
 -vuzero   vu
 -formuler1   formuler1
+-formuler3   formuler1
 -et7000 et7x00
 -et7500 et7x00
 -et8500 et8000
