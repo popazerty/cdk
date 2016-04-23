@@ -1,6 +1,6 @@
 --- neutrino-mp-tangos.org/src/neutrino.cpp
 +++ neutrino-mp-tangos/src/neutrino.cpp
-@@ -4149,6 +4149,9 @@
+@@ -4225,6 +4225,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
  		}
@@ -10,7 +10,7 @@
  		CVFD::getInstance()->setBacklight(g_settings.backlight_standby);
  
  		InfoClock->enableInfoClock(false);
-@@ -4180,6 +4183,9 @@
+@@ -4256,6 +4259,9 @@
  		// Active standby off
  		powerManager->SetStandby(false, false);
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
@@ -32,15 +32,4 @@
  #include <aotom_main.h>
  #define DISPLAY_DEV "/dev/vfd"
  #endif
---- neutrino-mp-tangos/data/icons/Makefile.am.org
-+++ neutrino-mp-tangos/data/icons/Makefile.am
-@@ -263,7 +263,7 @@
- 	shell.png \
- 	shutdown.jpg \
- 	softupdate.png \
--	star-off \
-+	star-off.png \
- 	star-on.png \
- 	start.jpg \
- 	streaming.png \
 

@@ -1,6 +1,6 @@
 --- neutrino-mp-cst-next/acinclude.m4
 +++ neutrino-mp-cst-next/acinclude.m4
-@@ -490,6 +490,10 @@
+@@ -483,6 +483,10 @@
  			BOXTYPE="duckbox"
  			BOXMODEL="$withval"
  			;;
@@ -73,7 +73,7 @@
  #endif
 --- neutrino-mp-cst-next/src/gui/vfd_setup.cpp
 +++ neutrino-mp-cst-next/src/gui/vfd_setup.cpp
-@@ -187,6 +187,15 @@
+@@ -191,6 +191,15 @@
  
  int CVfdSetup::showBrightnessSetup()
  {
@@ -89,7 +89,7 @@
  	CMenuOptionNumberChooser * nc;
  	CMenuForwarder * mf;
  
-@@ -206,18 +215,18 @@
+@@ -210,18 +219,18 @@
  	brightnessstandby = CVFD::getInstance()->getBrightnessStandby();
  	brightnessdeepstandby = CVFD::getInstance()->getBrightnessDeepStandby();
  
