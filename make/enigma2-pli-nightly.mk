@@ -98,7 +98,7 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] && \
 		(cd $(archivedir)/enigma2-pli-nightly.git; echo "Pulling archived OpenPLi git..."; git pull -q; echo "Checking out HEAD..."; git checkout -q HEAD; cd "$(buildprefix)";); \
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] || \
-		(echo "Cloning remote OpenPLi git..."; git clone -b -q $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git;); \
+		(echo "Cloning remote OpenPLi git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git;); \
 		echo "Copying local git content to build environment..."; cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; \
 		[ "$$DIFF" == "0" ] || (cd $(sourcedir)/enigma2-nightly; echo "Checking out revision $$REVISION..."; git checkout -q "$$REVISION"; cd "$(buildprefix)";); \
 		cp -ra $(sourcedir)/enigma2-nightly $(sourcedir)/enigma2-nightly.org; \
@@ -112,7 +112,7 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 			[ -d "$(archivedir)/enigma2-tango.git" ] && \
 			(cd $(archivedir)/enigma2-tango.git; echo "Pulling archived enigma2-tango git..."; git pull -q; echo "Checking out HEAD..."; git checkout -q HEAD; cd "$(buildprefix)";); \
 			[ -d "$(archivedir)/enigma2-tango.git" ] || \
-			(echo "Cloning remote enigma2-tango.git..."; git clone -b -q $$HEAD $$REPO $(archivedir)/enigma2-tango.git;); \
+			(echo "Cloning remote enigma2-tango.git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-tango.git;); \
 			cp -ra $(archivedir)/enigma2-tango.git/lib/libeplayer3 $(sourcedir)/enigma2-nightly/lib; \
 			set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/libeplayer3.$$DIFF.patch"; \
 		else \
