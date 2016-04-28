@@ -165,9 +165,15 @@ esac
 case $2 in
 	[1-5])	REPLY=$2;;
 	*)	echo -e "\nKernel:"
+<<<<<<< HEAD
 		echo "   1) STM 24 P0209 (deprecated)"
 		echo "   2) STM 24 P0211 (deprecated)"
 		echo "   3) STM 24 P0214 (deprecated)"
+=======
+		echo "   1) STM 24 P0209 (outdated)"
+		echo "   2) STM 24 P0211 (outdated)"
+		echo "   3) STM 24 P0214 (outdated)"
+>>>>>>> upstream/master
 		echo "   4) STM 24 P0215"
 		echo "   5) STM 24 P0217 (recommended)"
 		read -p "Select kernel (1-5)? ";;
