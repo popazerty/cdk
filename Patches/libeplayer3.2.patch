@@ -8,6 +8,28 @@
  lib/python/Makefile
  lib/python/Components/Makefile
  lib/python/Components/Converter/Makefile
+--- enigma2-tango.git/lib/libeplayer3/input.cpp
++++ enigma2-nightly/lib/libeplayer3/input.cpp
+@@ -440,13 +440,13 @@
+ 	avfc->iformat->flags |= AVFMT_SEEK_TO_PTS;
+ 	avfc->flags = AVFMT_FLAG_GENPTS;
+ 	if (player->noprobe || player->isHttp) {
+-#if (LIBAVFORMAT_VERSION_MAJOR <  55) || \
+-    (LIBAVFORMAT_VERSION_MAJOR == 55 && LIBAVFORMAT_VERSION_MINOR <  43) || \
+-    (LIBAVFORMAT_VERSION_MAJOR == 55 && LIBAVFORMAT_VERSION_MINOR == 43 && LIBAVFORMAT_VERSION_MICRO < 100)
++//#if (LIBAVFORMAT_VERSION_MAJOR <  55) || \
++//    (LIBAVFORMAT_VERSION_MAJOR == 55 && LIBAVFORMAT_VERSION_MINOR <  43) || \
++//    (LIBAVFORMAT_VERSION_MAJOR == 55 && LIBAVFORMAT_VERSION_MINOR == 43 && LIBAVFORMAT_VERSION_MICRO < 100)
+ 		avfc->max_analyze_duration = 1;
+-#else
+-		avfc->max_analyze_duration2 = 1;
+-#endif
++//#else
++//		avfc->max_analyze_duration2 = 1;
++//#endif
+ 		avfc->probesize = 131072;
+ 	}
+ 
 --- enigma2-nightly.org/lib/python/Screens/InfoBar.py
 +++ enigma2-nightly/lib/python/Screens/InfoBar.py
 @@ -186,19 +186,21 @@
