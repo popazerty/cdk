@@ -192,12 +192,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  
  ENIGMA2_CFLAGS="-fno-rtti -fno-exceptions"
  AC_SUBST(ENIGMA2_CFLAGS)
-@@ -202,11 +366,7 @@
- lib/python/Plugins/Extensions/SocketMMI/Makefile
- lib/python/Plugins/Extensions/SocketMMI/meta/Makefile
- lib/python/Plugins/Extensions/SocketMMI/src/Makefile
--lib/python/Plugins/Extensions/TuxboxPlugins/Makefile
--lib/python/Plugins/Extensions/TuxboxPlugins/meta/Makefile
+@@ -205,8 +369,6 @@
+ lib/python/Plugins/Extensions/TuxboxPlugins/Makefile
+ lib/python/Plugins/Extensions/TuxboxPlugins/meta/Makefile
  lib/python/Plugins/PLi/Makefile
 -lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
 -lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
@@ -672,7 +669,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp en
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp enigma2-nightly/lib/driver/vfd.cpp
 --- enigma2-nightly.org/lib/driver/vfd.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.cpp	2015-08-19 23:14:08.331487372 +0200
-@@ -0,0 +1,790 @@
+@@ -0,0 +1,791 @@
 +/*
 + * vfd.cpp
 + *
@@ -712,6 +709,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 + *                          displaylength.
 + * 20140221 Audioniek       Fortis HS7119 and HS7819 added.
 + * 20140527 Audioniek       Spark7162 spins circle on init.
++ * 20150316 Audioniek       Spark7162 circle spin on init removed.
 + * 20160101 Audioniek       Fortis HS7420 and HS7429 added.
 + *
 + ****************************************************************************/
@@ -8555,7 +8553,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviceeplayer3.h enigma2-nightly/lib/service/serviceeplayer3.h
 --- enigma2-nightly.org/lib/service/serviceeplayer3.h	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/service/serviceeplayer3.h	2015-08-19 23:14:08.359487370 +0200
-@@ -0,0 +1,313 @@
+@@ -0,0 +1,312 @@
 +#ifndef __serviceeplayer3_h
 +#define __serviceeplayer3_h
 +
@@ -8789,9 +8787,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +	};
 +
 +private:
-+#if not defined ENABLE_MEDIAFWGSTREAMER
-+	Player *player;
-+#endif
 +	static int pcm_delay;
 +	static int ac3_delay;
 +	int m_currentAudioStream;
@@ -8821,6 +8816,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicee
 +
 +#if defined ENABLE_MEDIAFWGSTREAMER
 +	Context_t * player;
++#else
++	Player *player;
 +#endif
 +
 +	struct Message

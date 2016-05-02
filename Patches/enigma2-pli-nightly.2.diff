@@ -1960,6 +1960,109 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cpp
  }
  
  #if ENABLE_FREESAT
+diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.cpp enigma2-nightly/lib/base/filepush.cpp
+--- enigma2-nightly.org/lib/base/filepush.cpp	2015-08-07 17:31:49.745972687 +0200
++++ enigma2-nightly/lib/dvb/filepush.cpp	2015-08-19 23:14:08.327487372 +0200
+@@ -4,6 +4,15 @@
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+ 
++#if defined(__sh__) // this allows filesystem tasks to be prioritised
++#include <sys/vfs.h>
++#define USBDEVICE_SUPER_MAGIC 0x9fa2
++#define EXT2_SUPER_MAGIC      0xEF53
++#define EXT3_SUPER_MAGIC      0xEF53
++#define SMB_SUPER_MAGIC       0x517B
++#define NFS_SUPER_MAGIC       0x6969
++#define MSDOS_SUPER_MAGIC     0x4d44 /* MD */
++#endif
+ //#define SHOW_WRITE_TIME
+ 
+ eFilePushThread::eFilePushThread(int blocksize, size_t buffersize):
+@@ -55,11 +64,30 @@
+ 	size_t bytes_read = 0;
+ 	off_t current_span_offset = 0;
+ 	size_t current_span_remaining = 0;
++#if defined(__sh__)
++// opens video device for the reverse playback workaround
++// Changes in this file are cause e2 does not tell the player to play reverse
++	int fd_video = open("/dev/dvb/adapter0/video0", O_RDONLY);
++// Fix to ensure that event evtEOF is called at end of playbackl part 1/3
++	bool already_empty = false;
++#endif
+ 
+ 	while (!m_stop)
+ 	{
+ 		if (m_sg && !current_span_remaining)
+ 		{
++#if defined(__sh__) // tells the player to play in reverse
++#define VIDEO_DISCONTINUITY                   _IO('o', 84)
++#define DVB_DISCONTINUITY_SKIP                0x01
++#define DVB_DISCONTINUITY_CONTINUOUS_REVERSE  0x02
++			if ((m_sg->getSkipMode() != 0))
++			{
++				// inform the player about the jump in the stream data
++				// this only works if the video device allows the discontinuity ioctl in read-only mode (patched)
++				int param = DVB_DISCONTINUITY_SKIP; // | DVB_DISCONTINUITY_CONTINUOUS_REVERSE;
++				int rc = ioctl(fd_video, VIDEO_DISCONTINUITY, (void*)param);
++			}
++#endif
+ 			m_sg->getNextSourceSpan(m_current_position, bytes_read, current_span_offset, current_span_remaining, m_blocksize);
+ 			ASSERT(!(current_span_remaining % m_blocksize));
+ 			m_current_position = current_span_offset;
+@@ -126,7 +154,19 @@
+ 				{
+ 					case 0:
+ 						eDebug("[eFilePushThread] wait for driver eof timeout");
++#if defined(__sh__) // Fix to ensure that event evtEOF is called at end of playbackl part 2/3
++						if (already_empty)
++						{
++							break;
++						}
++						else
++						{
++							already_empty = true;
++							continue;
++						}
++#else
+ 						continue;
++#endif
+ 					case 1:
+ 						eDebug("[eFilePushThread] wait for driver eof ok");
+ 						break;
+@@ -189,12 +229,18 @@
+ 			}
+ 
+ 			eofcount = 0;
++#if defined(__sh__) // Fix to ensure that event evtEOF is called at end of playbackl part 3/3
++			already_empty = false;
++#endif
+ 			m_current_position += buf_end;
+ 			bytes_read += buf_end;
+ 			if (m_sg)
+ 				current_span_remaining -= buf_end;
+ 		}
+ 	}
++#if defined(__sh__) // closes video device for the reverse playback workaround
++	close(fd_video);
++#endif
+ 	sendEvent(evtStopped);
+ 
+ 	{ /* mutex lock scope */
+diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.h enigma2-nightly/lib/base/filepush.h
+--- enigma2-nightly.org/lib/base/filepush.h	2015-08-07 17:31:49.745972687 +0200
++++ enigma2-nightly/lib/dvb/filepush.h	2015-08-19 23:14:08.327487372 +0200
+@@ -13,6 +13,10 @@
+ public:
+ 	virtual void getNextSourceSpan(off_t current_offset, size_t bytes_read, off_t &start, size_t &size, int blocksize)=0;
+ 	virtual ~iFilePushScatterGather() {}
++#if defined(__sh__)
++	//Changes in this file are cause e2 doesnt tell the player to play reverse
++	virtual int getSkipMode() = 0;
++#endif
+ };
+ 
+ class eFilePushThread: public eThread, public Object
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/pmt.cpp enigma2-nightly/lib/dvb/pmt.cpp
 --- enigma2-nightly.org/lib/dvb/pmt.cpp	2015-08-07 17:31:49.753972687 +0200
 +++ enigma2-nightly/lib/dvb/pmt.cpp	2015-08-19 23:14:08.339487371 +0200
@@ -3033,7 +3136,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  }
  
  fbClass::~fbClass()
-@@ -235,6 +354,45 @@
+@@ -235,6 +354,25 @@
  	}
  	else
  		locked = 1;
@@ -3056,30 +3159,10 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
 +	if (ioctl( fbFd, STMFBIO_GET_VAR_SCREENINFO_EX, &infoex ) < 0)
 +		perror("STMFBIO_GET_VAR_SCREENINFO_EX\n");
 +#endif
-+
-+#if defined(__sh__)
-+	outcfg.outputid = STMFBIO_OUTPUTID_MAIN;
-+	if (ioctl( fbFd, STMFBIO_GET_OUTPUT_CONFIG, &outcfg ) < 0)
-+		perror("STMFBIO_GET_OUTPUT_CONFIG\n");
-+
-+	outinfo.outputid = STMFBIO_OUTPUTID_MAIN;
-+	if (ioctl( fbFd, STMFBIO_GET_OUTPUTINFO, &outinfo ) < 0)
-+		perror("STMFBIO_GET_OUTPUTINFO\n");
-+
-+	//if (ioctl( fbFd, STMFBIO_GET_VAR_SCREENINFO_EX, &infoex ) < 0)
-+	//	printf("ERROR\n");
-+
-+	planemode.layerid = 0;
-+	if (ioctl( fbFd, STMFBIO_GET_PLANEMODE, &planemode ) < 0)
-+		perror("STMFBIO_GET_PLANEMODE\n");
-+
-+	if (ioctl( fbFd, STMFBIO_GET_VAR_SCREENINFO_EX, &infoex ) < 0)
-+		perror("STMFBIO_GET_VAR_SCREENINFO_EX\n");
-+#endif
  	return fbFd;
  }
  
-@@ -245,27 +403,89 @@
+@@ -245,27 +383,89 @@
  	if (locked == 2)  // re-enable manualBlit
  		enableManualBlit();
  	locked=0;
@@ -3171,7 +3254,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
 +	if(-bottom > yRes) bottom = -yRes;
 +	bottomDiff = bottom;
 +}
-
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.h enigma2-nightly/lib/gdi/fb.h
 --- enigma2-nightly.org/lib/gdi/fb.h	2015-08-07 17:31:49.761972686 +0200
 +++ enigma2-nightly/lib/gdi/fb.h	2015-08-19 23:14:08.343487371 +0200
@@ -3780,7 +3862,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		print "[Harddisk] new device", self.device, '->', self.dev_path, '->', self.disk_path
  		if not removable:
  			self.startIdle()
-+	Console().ePopen(("mount", "mount", "-a"))
++		Console().ePopen(("mount", "mount", "-a"))
  
  	def __lt__(self, ob):
  		return self.device < ob.device
@@ -3796,7 +3878,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  			dev = self.findMount()
  			if dev:
 @@ -155,12 +144,12 @@
- 		return cap
+ 			return cap
  
  	def capacity(self):
 -		cap = self.diskSize()

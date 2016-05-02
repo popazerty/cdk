@@ -580,8 +580,8 @@
 +#		INCLUDES += -I/usr/include/freetype -I/usr/local/include/freetype
 +#		LIBS += -lfreetype
 +#	endif
-+	INCLUDES += -I$(DESTDIR)/include/freetype
-+	LIBS += -L$(DESTDIR)/lib -lfreetype
++	INCLUDES += -I$(DESTDIR)/usr/include/freetype
++	LIBS += -L$(DESTDIR)/usr/lib -lfreetype
  	DEFINES += -DHAVE_FREETYPE2
  endif
  
