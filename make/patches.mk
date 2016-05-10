@@ -34,3 +34,7 @@ NEUTRINO_HD2_PLUGINS_PATCHES +=
 
 # Neutrino MP Tango
 NEUTRINO_MP_TANGOS_PATCHES += $(PATCHES)/neutrino-mp-tangos.patch
+
+# lcd4linux
+LCD4LINUX_PATCHES +=
+

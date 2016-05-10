@@ -1458,8 +1458,14 @@ $(D)/graphlcd: $(D)/bootstrap $(D)/libfreetype $(D)/libusb @DEPENDS_graphlcd@
 #
 # LCD4LINUX
 #--with-python
+LCD4LINUX_PATCHES =
+
 $(D)/lcd4_linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd2 $(D)/libusb @DEPENDS_lcd4_linux@
 	@PREPARE_lcd4_linux@
+	for i in $(LCD4LINUX_PATCHES); do \
+		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		set -e; cd $(buildprefix)/@DIR_lcd4_linux@ && patch -p1 -i $$i; \
+	done;
 	cd @DIR_lcd4_linux@ && \
 		aclocal && \
 		libtoolize -f -c && \
