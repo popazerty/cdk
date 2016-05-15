@@ -415,4 +415,22 @@
  				}
  				break;
  // Reminder to myself, here's a semi-sane default for Pingulux boxes:
+--- libstb-hal-next.org/libeplayer3/Makefile.am
++++ libstb-hal-next/libeplayer3/Makefile.am
+@@ -1,3 +1,4 @@
++AUTOMAKE_OPTIONS = subdir-objects
+ noinst_LTLIBRARIES = libeplayer3.la
+ 
+ CXXFLAGS = -Wall
+--- libstb-hal-next.org/libeplayer3/container/container_ffmpeg.c
++++ libstb-hal-next/libeplayer3/container/container_ffmpeg.c
+@@ -507,7 +507,7 @@
+ 		    while (packet_size > 0) {
+ 			int got_frame = 0;
+ 			if (!decoded_frame) {
+-			    if (!(decoded_frame = avcodec_alloc_frame())) {
++			    if (!(decoded_frame = av_frame_alloc())) {
+ 				fprintf(stderr, "out of memory\n");
+ 				exit(1);
+ 			    }
 

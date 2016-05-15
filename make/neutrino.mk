@@ -402,11 +402,13 @@ NEUTRINO_HD2_PATCHES =
 
 $(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2) libflac
 	rm -rf $(sourcedir)/nhd2-exp
+	rm -rf $(sourcedir)/nhd2-exp.org
 	[ -d "$(archivedir)/neutrino-hd2-exp.git" ] && \
 	(cd $(archivedir)/neutrino-hd2-exp.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-hd2-exp.git" ] || \
 	git clone -b nhd2-exp https://github.com/mohousch/neutrinohd2.git $(archivedir)/neutrino-hd2-exp.git; \
-	cp -ra $(archivedir)/neutrino-hd2-exp.git $(sourcedir)/nhd2-exp;
+	cp -ra $(archivedir)/neutrino-hd2-exp.git $(sourcedir)/nhd2-exp; \
+	cp -ra $(sourcedir)/nhd2-exp $(sourcedir)/nhd2-exp.org
 	for i in $(NEUTRINO_HD2_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/nhd2-exp && patch -p1 -i $$i; \

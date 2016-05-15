@@ -71,6 +71,60 @@
  #include <aotom_main.h>
  #define DISPLAY_DEV "/dev/vfd"
  #endif
+--- neutrino-mp-next.org/lib/libdvbsub/dvbsubtitle.cpp
++++ neutrino-mp-next/lib/libdvbsub/dvbsubtitle.cpp
+@@ -21,9 +21,16 @@
+ #include <libavformat/avformat.h>
+ #include <libavcodec/avcodec.h>
+ #include <libavutil/avutil.h>
++#include <libavcodec/version.h>
+ }
+ #include <driver/framebuffer.h>
+ #include "Debug.hpp"
++
++#if LIBAVCODEC_VERSION_INT <= AV_VERSION_INT(57, 1, 99)
++	#define CODEC_DVB_SUB CODEC_ID_DVB_SUBTITLE
++#else
++	#define CODEC_DVB_SUB AV_CODEC_ID_DVB_SUBTITLE
++#endif
+ 
+ // Set these to 'true' for debug output:
+ static bool DebugConverter = true;
+@@ -206,7 +213,7 @@
+ 	avcodec = NULL;
+ 
+ 	avcodec_register_all();
+-	avcodec = avcodec_find_decoder(CODEC_ID_DVB_SUBTITLE);
++	avcodec = avcodec_find_decoder(CODEC_DVB_SUB);//CODEC_ID_DVB_SUBTITLE or AV_CODEC_ID_DVB_SUBTITLE from 57.1.100
+ 	if (!avcodec) {
+ 		dbgconverter("cDvbSubtitleConverter: unable to get dvb subtitle codec!\n");
+ 		return;
+--- neutrino-mp-next.org/src/driver/audiodec/ffmpegdec.cpp
++++ neutrino-mp-next/src/driver/audiodec/ffmpegdec.cpp
+@@ -318,12 +318,12 @@
+ 		while (packet.size > 0) {
+ 			int got_frame = 0;
+ 			if (!frame) {
+-				if (!(frame = avcodec_alloc_frame())) {
++				if (!(frame = av_frame_alloc())) {
+ 					Status=DATA_ERR;
+ 					break;
+ 				}
+ 			} else
+-				avcodec_get_frame_defaults(frame);
++				av_frame_unref(frame);
+ 
+ 			int len = avcodec_decode_audio4(c, frame, &got_frame, &packet);
+ 			if (len < 0) {
+@@ -378,7 +378,7 @@
+ 	swr_free(&swr);
+ 	av_free(outbuf);
+ 	av_free_packet(&rpacket);
+-	avcodec_free_frame(&frame);
++	av_frame_free(&frame);
+ 	avcodec_close(c);
+ 	//av_free(avcc);
+ 
 --- neutrino-mp-next.org/src/gui/vfd_setup.cpp
 +++ neutrino-mp-next/src/gui/vfd_setup.cpp
 @@ -186,6 +186,17 @@

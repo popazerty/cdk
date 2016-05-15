@@ -11,54 +11,50 @@
  		cuberevo*)
  			BOXTYPE="duckbox"
  			BOXMODEL="$withval"
-#@@ -514,7 +518,7 @@
-# 	[  --with-boxmodel         valid for coolstream: nevis, apollo
-#                           valid for dreambox: dm500, dm500plus, dm600pvr, dm56x0, dm7000, dm7020, dm7025
-#                           valid for ipbox: ip200, ip250, ip350, ip400
-#-                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, cuberevo, cuberevo_mini2, cuberevo_mini, cuberevo_250hd, cuberevo_2000hd, tf7700],
-#+                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700
-#                           valid for spark: spark, spark7162],
-# 	[case "${withval}" in
-# 		nevis|apollo)
-#@@ -538,7 +542,7 @@
-# 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
-# 			fi
-# 			;;
-#-		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|cuberevo|cuberevo_mini2|cuberevo_mini|cuberevo_250hd|cuberevo_2000hd|tf7700)
-#+		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|dp7000|cuberevo|cuberevo_mini2|cuberevo_mini|cuberevo_250hd|cuberevo_2000hd|tf7700)
-# 			if test "$BOXTYPE" = "duckbox"; then
-# 				BOXMODEL="$withval"
-# 			else
-#@@ -603,6 +607,12 @@
-# AM_CONDITIONAL(BOXMODEL_ATEVIO7500,test "$BOXMODEL" = "atevio7500")
-# AM_CONDITIONAL(BOXMODEL_FORTIS_HDBOX,test "$BOXMODEL" = "fortis_hdbox")
-# AM_CONDITIONAL(BOXMODEL_OCTAGON1008,test "$BOXMODEL" = "octagon1008")
-#+AM_CONDITIONAL(BOXMODEL_HS7110,test "$BOXMODEL" = "hs7110")
-#+AM_CONDITIONAL(BOXMODEL_HS7810A,test "$BOXMODEL" = "hs7810a")
-#+AM_CONDITIONAL(BOXMODEL_HS7119,test "$BOXMODEL" = "hs7119")
-#+AM_CONDITIONAL(BOXMODEL_HS7819,test "$BOXMODEL" = "hs7819")
-#+AM_CONDITIONAL(BOXMODEL_DP7000,test "$BOXMODEL" = "dp7000")
-#+
-# AM_CONDITIONAL(BOXMODEL_CUBEREVO,test "$BOXMODEL" = "cuberevo")
-# AM_CONDITIONAL(BOXMODEL_CUBEREVO_MINI2,test "$BOXMODEL" = "cuberevo_mini2")
-# AM_CONDITIONAL(BOXMODEL_CUBEREVO_MINI,test "$BOXMODEL" = "cuberevo_mini")
-#@@ -675,6 +685,16 @@
-# 	AC_DEFINE(BOXMODEL_FORTIS_HDBOX, 1, [fortis_hdbox])
-# elif test "$BOXMODEL" = "octagon1008"; then
-# 	AC_DEFINE(BOXMODEL_OCTAGON1008, 1, [octagon1008])
-#+elif test "$BOXMODEL" = "hs7110"; then
-#+	AC_DEFINE(BOXMODEL_HS7110, 1, [hs7110])
-#+elif test "$BOXMODEL" = "hs7810a"; then
-#+	AC_DEFINE(BOXMODEL_HS7810A, 1, [hs7810a])
-#+elif test "$BOXMODEL" = "hs7119"; then
-#+	AC_DEFINE(BOXMODEL_HS7119, 1, [hs7119])
-#+elif test "$BOXMODEL" = "hs7819"; then
-#+	AC_DEFINE(BOXMODEL_HS7819, 1, [hs7819])
-#+elif test "$BOXMODEL" = "dp7000"; then
-#+	AC_DEFINE(BOXMODEL_DP7000, 1, [dp7000])
-# elif test "$BOXMODEL" = "cuberevo"; then
-# 	AC_DEFINE(BOXMODEL_CUBEREVO, 1, [cuberevo])
-# elif test "$BOXMODEL" = "cuberevo_mini2"; then
+@@ -511,7 +515,7 @@
+ 	[  --with-boxmodel         valid for coolstream: nevis, apollo
+                           valid for dreambox: dm500, dm500plus, dm600pvr, dm56x0, dm7000, dm7020, dm7025
+                           valid for ipbox: ip200, ip250, ip350, ip400
+-                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700, hl101
++                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7420, hs7810a, hs7119, hs7429, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700, hl101
+                           valid for spark: spark, spark7162],
+ 	[case "${withval}" in
+ 		nevis|apollo)
+@@ -535,7 +539,7 @@
+ 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
+ 			fi
+ 			;;
+-		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|dp7000|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|cuberevo_3000hd|ipbox9900|ipbox99|ipbox55|arivalink200|tf7700|hl101)
++		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7420|hs7810a|hs7119|hs7429|hs7819|dp7000|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|cuberevo_3000hd|ipbox9900|ipbox99|ipbox55|arivalink200|tf7700|hl101)
+ 			if test "$BOXTYPE" = "duckbox"; then
+ 				BOXMODEL="$withval"
+ 			else
+@@ -601,8 +605,10 @@
+ AM_CONDITIONAL(BOXMODEL_FORTIS_HDBOX,test "$BOXMODEL" = "fortis_hdbox")
+ AM_CONDITIONAL(BOXMODEL_OCTAGON1008,test "$BOXMODEL" = "octagon1008")
+ AM_CONDITIONAL(BOXMODEL_HS7110,test "$BOXMODEL" = "hs7110")
++AM_CONDITIONAL(BOXMODEL_HS7420,test "$BOXMODEL" = "hs7420")
+ AM_CONDITIONAL(BOXMODEL_HS7810A,test "$BOXMODEL" = "hs7810a")
+ AM_CONDITIONAL(BOXMODEL_HS7119,test "$BOXMODEL" = "hs7119")
++AM_CONDITIONAL(BOXMODEL_HS7429,test "$BOXMODEL" = "hs7429")
+ AM_CONDITIONAL(BOXMODEL_HS7819,test "$BOXMODEL" = "hs7819")
+ AM_CONDITIONAL(BOXMODEL_DP7000,test "$BOXMODEL" = "dp7000")
+ 
+@@ -676,10 +682,14 @@
+ 	AC_DEFINE(BOXMODEL_OCTAGON1008, 1, [octagon1008])
+ elif test "$BOXMODEL" = "hs7110"; then
+ 	AC_DEFINE(BOXMODEL_HS7110, 1, [hs7110])
++elif test "$BOXMODEL" = "hs7420"; then
++	AC_DEFINE(BOXMODEL_HS7420, 1, [hs7420])
+ elif test "$BOXMODEL" = "hs7810a"; then
+ 	AC_DEFINE(BOXMODEL_HS7810A, 1, [hs7810a])
+ elif test "$BOXMODEL" = "hs7119"; then
+ 	AC_DEFINE(BOXMODEL_HS7119, 1, [hs7119])
++elif test "$BOXMODEL" = "hs7429"; then
++	AC_DEFINE(BOXMODEL_HS7429, 1, [hs7429])
+ elif test "$BOXMODEL" = "hs7819"; then
+ 	AC_DEFINE(BOXMODEL_HS7819, 1, [hs7819])
+ elif test "$BOXMODEL" = "dp7000"; then
 --- neutrino-mp-cst-next.org/src/driver/simple_display.cpp
 +++ neutrino-mp-cst-next/src/driver/simple_display.cpp
 @@ -35,6 +35,9 @@
@@ -73,14 +69,16 @@
  #endif
 --- neutrino-mp-cst-next/src/gui/vfd_setup.cpp
 +++ neutrino-mp-cst-next/src/gui/vfd_setup.cpp
-@@ -191,6 +191,15 @@
+@@ -191,6 +191,17 @@
  
  int CVfdSetup::showBrightnessSetup()
  {
 +#if defined(BOXMODEL_FORTIS_HDBOX) \
 + || defined(BOXMODEL_OCTAGON1008) \
 + || defined(BOXMODEL_ATEVIO7500) \
++ || defined(BOXMODEL_HS7420) \
 + || defined(BOXMODEL_HS7119) \
++ || defined(BOXMODEL_HS7429) \
 + || defined(BOXMODEL_HS7819)
 +#define MAXBRIGHT 7
 +#else
@@ -89,7 +87,7 @@
  	CMenuOptionNumberChooser * nc;
  	CMenuForwarder * mf;
  
-@@ -210,18 +219,18 @@
+@@ -210,18 +221,18 @@
  	brightnessstandby = CVFD::getInstance()->getBrightnessStandby();
  	brightnessdeepstandby = CVFD::getInstance()->getBrightnessDeepStandby();
  
@@ -111,4 +109,39 @@
  		nc->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESSDEEPSTANDBY);
  		nc->setActivateObserver(this);
  		mn_widget->addItem(nc);
+--- neutrino-mp-cst-next.org/src/gui/movieplayer.cpp
++++ neutrino-mp-cst-next/src/gui/movieplayer.cpp
+@@ -437,8 +437,10 @@
+  && !defined(BOXMODEL_FORTIS_HDBOX) \
+  && !defined(BOXMODEL_OCTAGON1008) \
+  && !defined(BOXMODEL_HS7110) \
++ && !defined(BOXMODEL_HS7420) \
+  && !defined(BOXMODEL_HS7810A) \
+  && !defined(BOXMODEL_HS7119) \
++ && !defined(BOXMODEL_HS7429) \
+  && !defined(BOXMODEL_HS7819) \
+  && !defined(BOXMODEL_IPBOX9900) \
+  && !defined(BOXMODEL_IPBOX99) \
+@@ -459,8 +461,10 @@
+  && !defined(BOXMODEL_UFS922) \
+  && !defined(BOXMODEL_OCTAGON1008) \
+  && !defined(BOXMODEL_HS7110) \
++ && !defined(BOXMODEL_HS7420) \
+  && !defined(BOXMODEL_HS7810A) \
+  && !defined(BOXMODEL_HS7119) \
++ && !defined(BOXMODEL_HS7429) \
+  && !defined(BOXMODEL_HS7819) \
+  && !defined(BOXMODEL_IPBOX9900) \
+  && !defined(BOXMODEL_IPBOX99) \
+@@ -490,8 +494,10 @@
+  && !defined(BOXMODEL_FORTIS_HDBOX) \
+  && !defined(BOXMODEL_OCTAGON1008) \
+  && !defined(BOXMODEL_HS7110) \
++ && !defined(BOXMODEL_HS7420) \
+  && !defined(BOXMODEL_HS7810A) \
+  && !defined(BOXMODEL_HS7119) \
++ && !defined(BOXMODEL_HS7429) \
+  && !defined(BOXMODEL_HS7819) \
+  && !defined(BOXMODEL_CUBEREVO_MINI2) \
+  && !defined(BOXMODEL_IPBOX9900) \
 

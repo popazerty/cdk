@@ -134,25 +134,25 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 
 $(sourcedir)/enigma2-pli-nightly/config.status:
 	cd $(sourcedir)/enigma2-nightly && \
-	./autogen.sh && \
-	sed -e 's|#!/usr/bin/python|#!$(hostprefix)/bin/python|' -i po/xml2po.py && \
-	$(BUILDENV) \
-	./configure \
-		--build=$(build) \
-		--host=$(target) \
-		--with-libsdl=no \
-		--datadir=/usr/local/share \
-		--libdir=/usr/lib \
-		--bindir=/usr/bin \
-		--prefix=/usr \
-		--sysconfdir=/etc \
-		--with-boxtype=none \
-		--with-gstversion=1.0 \
-		PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
-		PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
-		PY_PATH=$(targetprefix)/usr \
-		$(PLATFORM_CPPFLAGS) \
-		$(E_CONFIG_OPTS)
+		./autogen.sh && \
+		sed -e 's|#!/usr/bin/python|#!$(hostprefix)/bin/python|' -i po/xml2po.py && \
+		$(BUILDENV) \
+		./configure \
+			--build=$(build) \
+			--host=$(target) \
+			--with-libsdl=no \
+			--datadir=/usr/local/share \
+			--libdir=/usr/lib \
+			--bindir=/usr/bin \
+			--prefix=/usr \
+			--sysconfdir=/etc \
+			--with-boxtype=none \
+			--with-gstversion=1.0 \
+			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
+			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
+			PY_PATH=$(targetprefix)/usr \
+			$(PLATFORM_CPPFLAGS) \
+			$(E_CONFIG_OPTS)
 
 $(D)/enigma2-pli-nightly.do_compile: $(sourcedir)/enigma2-pli-nightly/config.status
 	cd $(sourcedir)/enigma2-nightly && \
@@ -160,16 +160,20 @@ $(D)/enigma2-pli-nightly.do_compile: $(sourcedir)/enigma2-pli-nightly/config.sta
 	touch $@
 
 $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_compile
-	$(MAKE) -C $(sourcedir)/enigma2-nightly install DESTDIR=$(targetprefix); \
-	[ -e $(targetprefix)/usr/bin/enigma2 ] && $(target)-strip $(targetprefix)/usr/bin/enigma2; \
-	[ -e $(targetprefix)/usr/local/bin/enigma2 ] && $(target)-strip $(targetprefix)/usr/local/bin/enigma2; \
-	echo; echo "Adding PLi-HD skin"; \
-	REPO="https://github.com/littlesat/skin-PLiHD.git"; \
+	$(MAKE) -C $(sourcedir)/enigma2-nightly install DESTDIR=$(targetprefix)
+	if [ -e $(targetprefix)/usr/bin/enigma2 ]; then \
+		$(target)-strip $(targetprefix)/usr/bin/enigma2; \
+	fi
+	if [ -e $(targetprefix)/usr/local/bin/enigma2 ]; then \
+		$(target)-strip $(targetprefix)/usr/local/bin/enigma2; \
+	fi
+	echo; echo "Adding PLi-HD skin"
+	REPO="https://github.com/littlesat/skin-PLiHD.git"
 	[ -d "$(archivedir)/PLi-HD_skin.git" ] && \
-	(cd $(archivedir)/PLi-HD_skin.git; git pull -q; git checkout -q HEAD; cd "$(buildprefix)";); \
+	(cd $(archivedir)/PLi-HD_skin.git; git pull -q; git checkout -q HEAD; cd "$(buildprefix)";)
 	[ -d "$(archivedir)/PLi-HD_skin.git" ] || \
-	git clone $$REPO $(archivedir)/PLi-HD_skin.git; \
-	cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2; \
+	git clone $$REPO $(archivedir)/PLi-HD_skin.git
+	cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2
 	cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 < "../../../../../../cdk/Patches/PLi-HD_skin.patch"
 	touch $@
 
