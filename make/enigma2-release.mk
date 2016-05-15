@@ -822,7 +822,7 @@ release_enigma2_fortis_dp7000: release_enigma2_common_utils
 release_enigma2_base:
 	rm -rf $(prefix)/release || true
 	$(INSTALL_DIR) $(prefix)/release && \
-	$(INSTALL_DIR) $(prefix)/release/{bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,share,sys,tmp,usr,var} && \
+	$(INSTALL_DIR) $(prefix)/release/{autofs,bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,share,sys,tmp,usr,var} && \
 	$(INSTALL_DIR) $(prefix)/release/etc/{enigma2,init.d,network,tuxbox,tuxtxt} && \
 	$(INSTALL_DIR) $(prefix)/release/etc/network/{if-down.d,if-post-down.d,if-pre-up.d,if-up.d} && \
 	$(INSTALL_DIR) $(prefix)/release/lib/{modules,firmware} && \
@@ -1363,7 +1363,7 @@ $(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(V
 #
 # FOR YOUR OWN CHANGES use these folder in cdk/own_build/enigma2
 #
-#	default for all receiver
+#	default for all receivers
 	find $(buildprefix)/own_build/enigma2/ -mindepth 1 -maxdepth 1 -exec cp -at$(prefix)/release/ -- {} +
 #	receiver specific (only if directory exist)
 	[ -d "$(buildprefix)/own_build/enigma2.$(BOXTYPE)" ] && find $(buildprefix)/own_build/enigma2.$(BOXTYPE)/ -mindepth 1 -maxdepth 1 -exec cp -at$(prefix)/release/ -- {} + || true
@@ -1374,6 +1374,11 @@ $(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(V
 #
 	find $(prefix)/release/ -name '*' -exec sh4-linux-strip --strip-unneeded {} &>/dev/null \;
 
+#	echo "********************************************************"
+#	echo -e "\033[01;32m"
+#	echo " Build of Enigma2 for $(BOXTYPE) succesfully completed."
+#	echo -e "\033[00m"
+#	echo "********************************************************"
 #
 # release-clean
 #
