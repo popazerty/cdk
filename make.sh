@@ -384,7 +384,7 @@ case "$IMAGEN" in
 		# Determine the OpenPLi diff-level
 		case $8 in
 			[0-4])	REPLY=$8;;
-			*)	echo "Please select one of the following Enigma2 revisions (default = 0):"
+			*)	echo "Please select one of the following Enigma2 revisions (default = 2):"
 				echo "================================================================================================="
 				echo " 0) Newest                 - E2 OpenPLi  any framework  (CAUTION: may fail due to outdated patch)"
 				echo "================================================================================================="
@@ -401,14 +401,14 @@ case "$IMAGEN" in
 		case "$REPLY" in
 			1)	DIFF="1"
 				REVISION="local";;
-			2)	DIFF="2"
-				REVISION="7d63bf16e99741f0a5798b84a3688759317eecb3";;
 			3)	DIFF="3"
 				REVISION="cd5505a4b8aba823334032bb6fd7901557575455";;
 			4)	DIFF="4"
 				REVISION="4f2db7ace4d9b081cbbb3c13947e05312134ed8e";;
-			*)	DIFF="0"
+			0)	DIFF="0"
 				REVISION="newest";;
+			*)	DIFF="2"
+				REVISION="7d63bf16e99741f0a5798b84a3688759317eecb3";;
 		esac
 
 		CONFIGPARAM="$CONFIGPARAM --enable-enigma2 E2_DIFF=$DIFF E2_REVISION=$REVISION"
