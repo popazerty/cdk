@@ -1193,6 +1193,17 @@ diff -Naur graphlcd-base-touchcol.git/graphlcd.conf graphlcd-base-touchcol/graph
  	
  uninstall:
  	rm -f $(BINDIR)/$(PRGNAME)
+#--- a/glcdgraphics/Makefile
+#+++ b/glcdgraphics/Makefile
+#@@ -48,7 +48,7 @@
+# #		INCLUDES += -I/usr/include/freetype -I/usr/local/include/freetype
+# #		LIBS += -lfreetype
+# #	endif
+#-	INCLUDES += -I$(DESTDIR)/include/freetype
+#+	INCLUDES += -I$(DESTDIR)/usr/include/freetype
+# 	LIBS += -L$(DESTDIR)/lib -lfreetype
+# 	DEFINES += -DHAVE_FREETYPE2
+# endif
 --- a/tools/lcdtestpattern/Makefile
 +++ b/tools/lcdtestpattern/Makefile
 @@ -33,7 +33,7 @@

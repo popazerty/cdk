@@ -376,7 +376,7 @@ release_neutrino_hs7110: release_neutrino_common_utils
 #
 release_neutrino_hs7420: release_neutrino_common_utils
 	echo "hs7420" > $(prefix)/release/etc/hostname
-	cp $(buildprefix)/root/release/halt_hs7420 $(prefix)/release/etc/init.d/halt
+	cp $(buildprefix)/root/release/halt_hs7810a $(prefix)/release/etc/init.d/halt
 	chmod 755 $(prefix)/release/etc/init.d/halt
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
@@ -427,7 +427,7 @@ release_neutrino_hs7119: release_neutrino_common_utils
 #
 release_neutrino_hs7429: release_neutrino_common_utils
 	echo "hs7429" > $(prefix)/release/etc/hostname
-	cp $(buildprefix)/root/release/halt_hs7429 $(prefix)/release/etc/init.d/halt
+	cp $(buildprefix)/root/release/halt_hs7819 $(prefix)/release/etc/init.d/halt
 	chmod 755 $(prefix)/release/etc/init.d/halt
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/

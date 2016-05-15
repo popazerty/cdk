@@ -366,7 +366,11 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 		echo "Archiving patched kernel source"; \
 		tar --exclude=.git -czf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz .; \
 	fi
-	$(if $(HOST_KERNEL_PATCHES),cd $(KERNEL_DIR) && cat $(HOST_KERNEL_PATCHES:%=$(buildprefix)/Patches/$(BUILDCONFIG$)/%) | patch -p1)
+	set -e; cd $(KERNEL_DIR); \
+		for i in $(HOST_KERNEL_PATCHES); do \
+			echo -e "==> \033[31mApplying Patch:\033[0m $$i"; \
+			patch -p1 -i $(buildprefix)/Patches/$(BUILDCONFIG)/$$i; \
+		done
 	$(INSTALL) -m644 Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
 	ln -s $(KERNEL_DIR) $(buildprefix)/linux-sh4
 	-rm $(KERNEL_DIR)/localversion*

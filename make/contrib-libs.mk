@@ -1076,6 +1076,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @
 			--enable-protocol=rtmpte \
 			--enable-protocol=rtmpts \
 			--enable-protocol=rtp \
+			--enable-protocol=rtsp \
 			--enable-protocol=tcp \
 			--enable-protocol=udp \
 			\
