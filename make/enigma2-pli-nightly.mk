@@ -128,7 +128,7 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 	else \
 		rm -rf $(sourcedir)/enigma2-nightly; \
 		(cd $(archivedir)/enigma2-own.git; echo "Pulling archived own git..."; git pull -q; echo "Checking out HEAD..."; git checkout -q HEAD; cd "$(buildprefix)";); \
-		echo "Copying local git content to build environment..."; cp -ra $(archivedir)/enigma2-own.git $(sourcedir)/enigma2-pli-nightly; \
+		echo "Copying local git content to build environment..."; cp -ra $(archivedir)/enigma2-own.git $(sourcedir)/enigma2-nightly; \
 	fi
 	touch $@
 
