@@ -1,11 +1,13 @@
 #!/bin/sh
-#Version 140831.1
+#Version 160526.1
 
 echo "Fortis FS9000/9200 Tvheadend"
 
 MODDIR=/lib/modules
 
-echo "Init frontpanel"
+insmod $MODDIR/e2_proc.ko
+
+echo "[rcS] Init frontpanel"
 insmod $MODDIR/nuvoton.ko
 insmod $MODDIR/simu_button.ko
 
@@ -20,72 +22,65 @@ else
    echo "Start (LOAD 10)"
 fi
 
-if [ -d /dev/sda1/Recordings ]; then
-   fsck.jfs -a /dev/sda1
-fi
-
 /etc/init.d/mountvirtfs start
 
-insmod $MODDIR/e2_proc.ko
-
-## Start automounter with umount timeout of 5 seconds
+# Start automounter with umount timeout of 5 seconds
+#mkdir -p /tmp/autofs
 #if [ -e $MODDIR/autofs4.ko ]; then
 #   insmod $MODDIR/autofs4.ko
 #fi
-#/usr/sbin/automount --timeout=5 /autofs file /etc/auto.usb
+#if [ -e /etc/init.d/automount ]; then
+#   /usr/sbin/automount --timeout=5 --ghost /tmp/autofs file /etc/auto.usb
+#fi
 
-echo "Starting DEBUG Interface"
+echo "[rcS] Starting DEBUG Interface"
 /etc/init.d/mountall start
 /etc/init.d/hostname start
 
-if [ -d /dev/sda1/Recordings ]; then
-   echo "[rcS] Recordings directory found on /dev/sda1, checking..."
-   fsck.jfs -a /dev/sda1
-fi
+#if [ -d /dev/sda1/Recordings ]; then
+#   echo "[rcS] Recordings directory found on /dev/sda1, checking..."
+#   fsck.jfs -a /dev/sda1
+#fi
 
-echo -n "Starting telnetd "
+echo -n "[rcS] Starting telnetd "
 /usr/sbin/telnetd -l /bin/autologin
 echo "with autologin"
 
-echo "Init stmfb (LOAD 9)"
+echo "[rcS] Init stmfb (LOAD 9)"
 echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-stx7109c3.ko
-insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:yuv:yuv
+insmod $MODDIR/stmfb.ko display0=1280x720-32@50:12m:pal:rgb:rgb
 
-echo "Loading modules"
+echo "[rcS] Loading modules"
 
 if [ ! -e /lib/firmware/audio.elf ] || [ ! -e /lib/firmware/video.elf ]; then
-   echo "FIRMWARE MISSING!"
+   echo "[rcS] Firmware(s) missing!"
    echo "FW MISSING!" > /dev/vfd
+   sleep 5
 fi
 
-echo "Load audio firmware (LOAD 8)"
-echo "Load 8" > /dev/vfd
-if [ -e /lib/firmware/audio_dts.elf ]; then
-   /bin/ustslave /dev/st231-1 /lib/firmware/audio_dts.elf > /dev/null
-else
-   /bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
-fi
-
-echo "Load video firmware (LOAD 7)"
-echo "Load 7" > /dev/vfd
+echo "[rcS] Load video firmware (LOAD 8)"
+echo "LOAD 8" > /dev/vfd
 /bin/ustslave /dev/st231-0 /lib/firmware/video.elf > /dev/null
 
-echo "Init embx (LOAD 6)"
+echo "[rcS] Load audio firmware (LOAD 7)"
+echo "Load 7" > /dev/vfd
+/bin/ustslave /dev/st231-1 /lib/firmware/audio.elf > /dev/null
+
+echo "[rcS] Init embx (LOAD 6)"
 echo "Load 6" > /dev/vfd
 insmod $MODDIR/embxshell.ko
 insmod $MODDIR/embxmailbox.ko mailbox0=0xb9211000:136:set2 mailbox1=0xb9212000:0
 insmod $MODDIR/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:1024:0xa4000000:0x10000000
 insmod $MODDIR/mme_host.ko transport0=shm
 
-echo "Init AVS (LOAD 5)"
+echo "[rcS] Init AVS (LOAD 5)"
 echo "Load 5" > /dev/vfd
 insmod $MODDIR/avs.ko type=stv6412
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
-echo "Init player $player (LOAD 4)"
+echo "[rcS] Init player $player (LOAD 4)"
 echo "Load 4" > /dev/vfd
-
 insmod $MODDIR/mmelog.ko
 insmod $MODDIR/mpeg2hw.ko mmeName=MPEG2_TRANSFORMER1
 insmod $MODDIR/ksound.ko
@@ -93,23 +88,19 @@ insmod $MODDIR/p2div64.ko
 insmod $MODDIR/stm_v4l2.ko
 insmod $MODDIR/stmvout.ko
 insmod $MODDIR/stmvbi.ko
-
 insmod $MODDIR/pseudocard.ko
 
+echo "[rcS] Init frontends"
 insmod $MODDIR/stv090x.ko
 insmod $MODDIR/starci.ko
 insmod $MODDIR/smartcard.ko
 
-#pti_arg="waitMS=20 videoMem=4096"
-#echo "Full feature pti"
-pti_arg=""
-echo "Simple pti"
-insmod $MODDIR/pti.ko $pti_arg
+insmod $MODDIR/pti.ko
 insmod $MODDIR/stm_monitor.ko
 insmod $MODDIR/stmsysfs.ko
 insmod $MODDIR/stmdvb.ko
 
-echo "Init player2 (LOAD 3)"
+echo "[rcS] Init player2 (LOAD 3)"
 echo "Load 3" > /dev/vfd
 insmod $MODDIR/player2.ko discardlateframe=0
 insmod $MODDIR/sth264pp.ko
@@ -137,13 +128,6 @@ echo "Load 2" > /dev/vfd
 ##   sleep 3
 #fi
 
-# Start automounter with umount timeout of 5 seconds
-mkdir -p /tmp/autofs
-insmod $MODDIR/autofs4.ko
-if [ -e /etc/init.d/automount ]; then
-   /usr/sbin/automount --ghost --timeout=5 /tmp/autofs file /etc/auto.usb
-fi
-
 if [ -e $MODDIR/exportfs.ko ]; then
    insmod $MODDIR/exportfs.ko
 fi
@@ -158,22 +142,16 @@ fi
 
 insmod $MODDIR/boxtype.ko
 
-echo "Init FTP (LOAD 1)"
-echo "Load 1" > /dev/vfd
-#/etc/init.d/portmap start
-/etc/init.d/vsftpd start
-/usr/sbin/inetd
-
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
-   echo "Booting from nfs, don't set network"
+   echo "[rcS] Booting from nfs, don't set network"
 else
    if [ -e /etc/network/interfaces ]; then
       ip addr flush eth0
       /etc/init.d/networking stop
-      DHCP=`grep -c 'iface eth0 inet dhcp' /etc/network/interfaces`
+      DHCP=`grep -c dhcp /etc/network/interfaces`
       if [ "$DHCP" -eq "1" ]; then
-         echo "Starting DHCP on eth0"
+         echo "[rcS] Starting DHCP"
          /etc/init.d/udhcpc start
       fi
       /etc/init.d/networking start
@@ -186,17 +164,12 @@ ip=`ifconfig eth0 | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p'`
 echo "IP $ip" > /dev/vfd
 sleep 3
 
-# Do own extras
-if [ -e /etc/ownscript.sh ]; then
-   /etc/ownscript.sh &
-fi
-
 #timefix tvheadend
-date -s "201509011200"
+date -s "201605011200"
 # Try and synchronise time
 if [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
-   (/sbin/ntpdate de.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
+   (/sbin/ntpdate de.pool.ntp.org; /bin/fp_control -sst) &
 else
    if [ -e /usr/sbin/time.sh ]; then
       echo "Use transponder time"
@@ -204,26 +177,29 @@ else
    fi
 fi
 
+echo "[rcS] Init portmap & ftp (LOAD 1)"
+echo "LOAD 1" > /dev/vfd
+/etc/init.d/portmap start
+/etc/init.d/vsftpd start
+/usr/sbin/inetd
+
 echo "Start Tvheadend" > /dev/vfd
 echo "Start Tvheadend"
 
 until false
 do
-   echo "Entering Tvheadend main loop"
+   echo "[rcS] Entering Tvheadend main loop"
    /usr/local/bin/tvheadend --http_port 80 -C
    rtv=$?
-   echo "Tvheadend ended <- RTV: " $rtv
+   echo "[rcS] Tvheadend ended <- RTV: " $rtv
    case "$rtv" in
-      0) echo "0"
-         echo "SHUTDOWN"
+      0) echo "SHUTDOWN"
          echo "Shutdown" > /dev/vfd
          init 0;;
-      1) echo "1"
-         echo "REBOOT"
+      1) echo "REBOOT"
          echo "Reboot" > /dev/vfd
          init 6;;
-      *) echo "*"
-         echo "ERROR"
+      *) echo "ERROR"
          echo "Error" > /dev/vfd
          init 6;;
    esac

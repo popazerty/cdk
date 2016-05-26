@@ -205,6 +205,28 @@
  
  	if (!avcodec) 
  	{
+--- nhd2-exp.org/src/neutrino.h
++++ nhd2-exp/src/neutrino.h
+@@ -201,13 +201,13 @@
+ 		void StartSubtitles(bool show = true);
+ 		void SelectSubtitles();
+ 		
+-		// 0 - restart 
+-		// 1 - halt
+-		// 2 - reboot
++		// 0 - halt
++		// 1 - reboot
++		// 2 - restart 
+ 		enum {
+-			RESTART = 0,
+-			SHUTDOWN,
+-			REBOOT
++			SHUTDOWN = 0,
++			REBOOT,
++			RESTART
+ 		};
+ 		
+ 		void ExitRun(int retcode = SHUTDOWN);
 --- nhd2-exp.org/lib/libeplayer3/container/container_ffmpeg.c
 +++ nhd2-exp/lib/libeplayer3/container/container_ffmpeg.c
 @@ -146,75 +146,75 @@
