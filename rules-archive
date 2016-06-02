@@ -17,13 +17,13 @@ lzma465.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/sevenzip
 cramfs-1.1.tar.gz;http://heanet.dl.sourceforge.net/sourceforge/cramfs
 mtd-utils-1.5.2.tar.bz2;ftp://ftp.infradead.org/pub/mtd-utils
 ipkg-utils-050831.tar.gz;ftp://ftp.gwdg.de/linux/handhelds/packages/ipkg-utils
-pkg-config-0.28.tar.gz;http://pkgconfig.freedesktop.org/releases
+pkg-config-0.28.tar.gz;https://pkg-config.freedesktop.org/releases
 u-boot-1.3.1.tar.bz2;ftp://ftp.denx.de/pub/u-boot
 
 #
 # root
 #
-busybox-1.24.1.tar.bz2;http://www.busybox.net/downloads
+busybox-1.24.1.tar.bz2;https://busybox.net/downloads
 lsb_3.2-20.tar.gz;http://debian.sdinet.de/etch/sdinet/lsb
 ipkg-0.99.163.tar.gz;ftp://ftp.gwdg.de/linux/handhelds/packages/ipkg
 module-init-tools-3.16.tar.bz2;http://ftp.be.debian.org/pub/linux/utils/kernel/module-init-tools
@@ -36,7 +36,7 @@ freetype-2.6.1.tar.bz2;http://prdownloads.sourceforge.net/sourceforge/freetype
 fontconfig-2.8.0.tar.gz;http://www.freedesktop.org/software/fontconfig/release
 fribidi-0.19.7.tar.bz2;http://fribidi.org/download
 giflib-4.1.6.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
-giflib-5.1.2.tar.bz2;http://downloads.sourceforge.net/project/giflib
+giflib-5.1.2.tar.bz2;http://iweb.dl.sourceforge.net/project/giflib
 libungif-4.1.4.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
 libjpeg-turbo-1.4.2.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.4.2
@@ -59,8 +59,8 @@ libbluray-0.5.0.tar.bz2;http://download.videolan.org/pub/videolan/libbluray/0.5.
 libdvdcss-1.2.13.tar.bz2;http://download.videolan.org/pub/libdvdcss/1.2.13
 libdvdnav-4.2.1.tar.xz;http://dvdnav.mplayerhq.hu/releases
 libdvdread-4.9.9.tar.xz;http://dvdnav.mplayerhq.hu/releases
-libid3tag-0.15.1b.tar.gz;http://download.sf.net/mad
-libmad-0.15.1b.tar.gz;http://download.sf.net/mad
+libid3tag-0.15.1b.tar.gz;https://sourceforge.net/projects/mad/files/libid3tag/0.15.1b
+libmad-0.15.1b.tar.gz;https://sourceforge.net/projects/mad/files/libmad/0.15.1b
 libmpeg2-0.5.1.tar.gz;http://libmpeg2.sourceforge.net/files
 libogg-1.3.2.tar.gz;http://downloads.xiph.org/releases/ogg
 libsamplerate-0.1.8.tar.gz;http://www.mega-nerd.com/SRC
@@ -98,7 +98,7 @@ sqlite-autoconf-3080600.tar.gz;http://www.sqlite.org/2014
 enchant-1.5.0.tar.gz;http://www.abisource.com/downloads/enchant/1.5.0
 lite-0.9.0+git0.7982ccc.tar.bz2;http://www.duckbox.info/files/packages
 cairo-1.8.10.tar.gz;http://cairographics.org/releases
-expat-2.1.0.tar.gz;http://prdownloads.sourceforge.net/sourceforge/expat
+expat-2.1.0.tar.gz;https://sourceforge.net/projects/expat/files/expat/2.1.0
 ffmpeg-3.0.1.tar.bz2;http://ffmpeg.org/releases
 fdk-aac.git;git://github.com/mstorsjo/fdk-aac.git
 libcap-2.22.tar.bz2;http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2
@@ -112,11 +112,11 @@ libcdio-0.83.tar.gz;http://ftp.gnu.org/gnu/libcdio
 jasper-1.900.1.zip;http://www.ece.uvic.ca/~frodo/jasper/software
 mysql-5.1.40.tar.gz;http://downloads.mysql.com/archives/mysql-5.1
 libmicrohttpd-0.9.19.tar.gz;http://ftp.halifax.rwth-aachen.de/gnu/libmicrohttpd
-libexif-0.6.20.tar.gz;http://sourceforge.net/projects/libexif/files/libexif/0.6.20
-minidlna-1.1.5.tar.gz;http://sourceforge.net/projects/minidlna/files/minidlna/1.1.5
-djmount-0.71.tar.gz;http://sourceforge.net/projects/djmount/files/djmount/0.71
-libupnp-1.6.17.tar.bz2;http://sourceforge.net/projects/pupnp/files/latest/download
-rarfs-0.1.0.tar.gz;http://downloads.sourceforge.net/project/rarfs/rarfs/0.1.0
+libexif-0.6.20.tar.gz;https://sourceforge.net/projects/libexif/files/libexif/0.6.20
+minidlna-1.1.5.tar.gz;https://sourceforge.net/projects/minidlna/files/minidlna/1.1.5
+djmount-0.71.tar.gz;https://sourceforge.net/projects/djmount/files/djmount/0.71
+libupnp-1.6.17.tar.bz2;https://sourceforge.net/projects/pupnp/files/latest/download
+rarfs-0.1.0.tar.gz;https://downloads.sourceforge.net/project/rarfs/rarfs/0.1.0
 sshfs-fuse-2.4.tar.bz2;http://fossies.org/linux/misc
 tinyxml_2_6_2.tar.gz;http://ignum.dl.sourceforge.net/project/tinyxml/tinyxml/2.6.2
 taglib-1.8.tar.gz;https://github.com/downloads/taglib/taglib
@@ -161,21 +161,21 @@ libplist-1.10.tar.gz;http://cgit.sukimashita.com/libplist.git/snapshot
 #
 # PYTHON
 #
-Python-2.7.9.tar.xz;http://www.python.org/ftp/python/2.7.9
+Python-2.7.9.tar.xz;https://www.python.org/ftp/python/2.7.9
 gdata-2.0.18.tar.gz;https://gdata-python-client.googlecode.com/files
 elementtree-1.2.6-20050316.tar.gz;http://effbot.org/media/downloads
-lxml-2.2.8.tgz;http://launchpad.net/lxml/2.2/2.2.8/+download
+lxml-2.2.8.tgz;https://launchpadlibrarian.net/54848077
 libxmlccwrap-0.0.12.tar.gz;http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwrap/download
-setuptools-5.2.tar.gz;http://pypi.python.org/packages/source/s/setuptools
-Twisted-16.0.0.tar.bz2;http://pypi.python.org/packages/source/T/Twisted
-Imaging-1.1.7.tar.gz;http://effbot.org/downloads
-pycrypto-2.6.1.tar.gz;http://pypi.python.org/packages/source/p/pycrypto
+setuptools-5.2.tar.gz;https://pypi.python.org/packages/source/s/setuptools
+Twisted-16.0.0.tar.bz2;https://pypi.python.org/packages/source/T/Twisted
+Imaging-1.1.7.tar.gz;http://effbot.org/media/downloads
+pycrypto-2.6.1.tar.gz;https://pypi.python.org/packages/source/p/pycrypto
 pyOpenSSL-0.13.1.tar.gz;http://pypi.python.org/packages/source/p/pyOpenSSL
 pyusb-1.0.0a3.tar.gz;http://pypi.python.org/packages/source/p/pyusb
 python-wifi-0.6.1.tar.bz2;http://pypi.python.org/packages/source/p/python-wifi
 Cheetah-2.4.4.tar.gz;http://pypi.python.org/packages/source/C/Cheetah
-mechanize-0.2.5.tar.gz;http://pypi.python.org/packages/source/m/mechanize
-zope.interface-4.1.1.tar.gz;http://pypi.python.org/packages/source/z/zope.interface
+mechanize-0.2.5.tar.gz;https://pypi.python.org/packages/source/m/mechanize
+zope.interface-4.1.1.tar.gz;https://pypi.python.org/packages/source/z/zope.interface
 six-1.9.0.tar.gz;https://pypi.python.org/packages/source/s/six
 cffi-1.2.1.tar.gz;https://pypi.python.org/packages/source/c/cffi
 enum34-1.0.4.tar.gz;https://pypi.python.org/packages/source/e/enum34
@@ -253,8 +253,8 @@ smartmontools-6.4.tar.gz;http://sourceforge.net/projects/smartmontools/files/sma
 #
 # Networking Libraries / Networking Utilities
 #
-autofs-4.1.4.tar.gz;http://kernel.org/pub/linux/daemons/autofs/v4
-curl-7.48.0.tar.bz2;http://curl.haxx.se/download
+autofs-4.1.4.tar.gz;https://kernel.org/pub/linux/daemons/autofs/v4
+curl-7.48.0.tar.bz2;https://curl.haxx.se/download
 portmap_6.0.0.orig.tar.gz;http://ftp.gnome.org/mirror/cdimage/snapshot/Debian/pool/main/p/portmap/
 portmap_6.0.0-2.diff.gz ;http://ftp.gnome.org/mirror/cdimage/snapshot/Debian/pool/main/p/portmap/
 nfs-utils-1.3.3.tar.bz2;http://downloads.sourceforge.net/project/nfs/nfs-utils/1.3.3
@@ -267,9 +267,9 @@ samba-3.6.12.tar.gz;http://www.samba.org/samba/ftp/stable
 netio126.zip;http://bnsmb.de/files/public/windows
 lighttpd-1.4.15.tar.gz;http://www.lighttpd.net/download
 zd1211lnxdrv_2_15_0_0.tar.gz;http://www.lutec.eu/treiber
-wireless_tools.29.tar.gz;http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux
+wireless_tools.29.tar.gz;http://www.labs.hpe.com/personal/Jean_Tourrilhes/Linux/
 libnl-2.0.tar.gz;http://www.carisma.slowglass.com/~tgr/libnl/files
-wpa_supplicant-0.7.3.tar.gz;http://hostap.epitest.fi/releases
+wpa_supplicant-0.7.3.tar.gz;http://w1.fi/releases
 ethtool-6.tar.gz;http://downloads.openwrt.org/sources
 xupnpd.git;git://github.com/clark15b/xupnpd
 udpxy.1.0.23-0-prod.tar.gz;http://www.udpxy.com/download/1_23

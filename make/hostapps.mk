@@ -9,6 +9,7 @@ $(D)/host_pkgconfig: @DEPENDS_host_pkgconfig@
 			--program-prefix=$(target)- \
 			--disable-host-tool \
 			--with-pc_path=$(targetprefix)/usr/lib/pkgconfig \
+			--with-internal-glib \
 		&& \
 		$(MAKE) && \
 		@INSTALL_host_pkgconfig@

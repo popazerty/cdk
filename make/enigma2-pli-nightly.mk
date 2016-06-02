@@ -167,13 +167,15 @@ $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_
 	if [ -e $(targetprefix)/usr/local/bin/enigma2 ]; then \
 		$(target)-strip $(targetprefix)/usr/local/bin/enigma2; \
 	fi
-	echo; echo "Adding PLi-HD skin"
-	REPO="https://github.com/littlesat/skin-PLiHD.git"
-	[ -d "$(archivedir)/PLi-HD_skin.git" ] && \
-	(cd $(archivedir)/PLi-HD_skin.git; git pull -q; git checkout -q HEAD; cd "$(buildprefix)";)
-	[ -d "$(archivedir)/PLi-HD_skin.git" ] || \
-	git clone $$REPO $(archivedir)/PLi-HD_skin.git
-	cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2
+	echo; \
+	echo "Adding PLi-HD skin"; \
+	HEAD="master"; \
+	REPO="https://github.com/littlesat/skin-PLiHD.git"; \
+	[ -d $(archivedir)/PLi-HD_skin.git ] && \
+		(echo "Pulling archived PLi-HD skin git..."; cd $(archivedir)/PLi-HD_skin.git; git pull -q; git checkout -q $$HEAD; cd "$(buildprefix)";); \
+	[ -d $(archivedir)/PLi-HD_skin.git ] || \
+		(echo "Cloning PLi-HD skin git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/PLi-HD_skin.git;);
+	cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2; \
 	cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 < "../../../../../../cdk/Patches/PLi-HD_skin.patch"
 	touch $@
 
