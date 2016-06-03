@@ -32,13 +32,13 @@
 		<key id="KEY_7" mapto="7" flags="m" />
 		<key id="KEY_8" mapto="8" flags="m" />
 		<key id="KEY_9" mapto="9" flags="m" />
-		<key id="KEY_0" mapto="0" flags="m" /> 
+		<key id="KEY_0" mapto="0" flags="m" />
 	</map>
 
 	<map context="SetupActions">
 		<key id="KEY_ENTER" mapto="ok" flags="m" />
 		<key id="KEY_OK" mapto="ok" flags="m" />
-		<key id="KEY_EXIT" mapto="cancel" flags="m" /> 
+		<key id="KEY_EXIT" mapto="cancel" flags="m" />
 		<key id="KEY_HOME" mapto="cancel" flags="m" />
 		<key id="KEY_LEFT" mapto="left" flags="mr" />
 		<key id="KEY_RIGHT" mapto="right" flags="mr" />
@@ -81,7 +81,7 @@
 		<!--key id="KEY_INFO" mapto="showEventInfo" flags="l"/-->
 		<key id="KEY_EPG" mapto="showEventInfoPlugin" flags="l" />
 		<key id="KEY_EPG" mapto="showEventInfo" flags="b" />
-		<key id="KEY_INFO" mapto="showSimpleInfo" flags="l"/>
+		<key id="KEY_INFO" mapto="showSimpleInfo" flags="l" />
 	</map>
 	
 	<map context="InfobarInstantRecord">
@@ -124,7 +124,7 @@
 		<key id="KEY_DOWN" mapto="down" flags="mr" />
 		<key id="KEY_OK" mapto="ok" flags="m" />
 		<key id="KEY_ENTER" mapto="ok" flags="m" />
-		<key id="KEY_EXIT" mapto="cancel" flags="m" /> 
+		<key id="KEY_EXIT" mapto="cancel" flags="m" />
 		<key id="KEY_HOME" mapto="cancel" flags="m" />
 	</map>
 
@@ -139,7 +139,7 @@
 		<key id="KEY_RIGHT" mapto="right" flags="mr" />
 		<key id="KEY_OK" mapto="ok" flags="m" />
 		<key id="KEY_ENTER" mapto="ok" flags="m" />
-		<key id="KEY_EXIT" mapto="back" flags="m" /> 
+		<key id="KEY_EXIT" mapto="back" flags="m" />
 		<key id="KEY_HOME" mapto="back" flags="m" />
 
 		<key id="KEY_FASTFORWARD" mapto="deleteForward" flags="mr" />
@@ -164,8 +164,8 @@
 		<key id="KEY_DOWN" mapto="down" flags="mr" />
 		<key id="KEY_OK" mapto="ok" flags="m" />
 		<key id="KEY_ENTER" mapto="ok" flags="m" />
+		<key id="KEY_EXIT" mapto="back" flags="m" />
 		<key id="KEY_HOME" mapto="back" flags="m" />
-		<key id="KEY_EXIT" mapto="back" flags="m" /> 
 	</map>
 	
 	<map context="InfobarMenuActions">
@@ -213,13 +213,13 @@
 		<key id="KEY_VOLUMEUP" mapto="volumeUp" flags="mr" />
 		<key id="KEY_VOLUMEDOWN" mapto="volumeDown" flags="mr" /> 
 	</map>
-        
+
 	<map context="InfobarSubserviceQuickzapActions">
 		<key id="KEY_PREVIOUS" mapto="prevSubservice" flags="m" />
 		<key id="KEY_NEXT" mapto="nextSubservice" flags="m" />
 		<key id="KEY_BACK" mapto="prevSubservice" flags="m" />
 		<key id="KEY_FORWARD" mapto="nextSubservice" flags="m" />
-		<key id="KEY_EXIT" mapto="exit" flags="m" /> 
+		<key id="KEY_EXIT" mapto="exit" flags="m" />
 		<key id="KEY_HOME" mapto="exit" flags="m" />
 	</map>
 
@@ -433,14 +433,10 @@
 	</map>
 
 	<map context="OkCancelActions">
-		<key id="\x0a" mapto="ok" flags="m" />
-		<key id="\x1b" mapto="cancel" flags="m" />
-
-		<!-- use this on rcu, ok? -->
 		<key id="KEY_OK" mapto="ok" flags="m" />
-		<key id="KEY_HOME" mapto="cancel" flags="m" />
 		<key id="KEY_EXIT" mapto="cancel" flags="m" />
 		<key id="KEY_ENTER" mapto="ok" flags="m" />
+		<key id="KEY_HOME" mapto="cancel" flags="m" />
 	</map>
 	
 	<map context="DirectionActions">
