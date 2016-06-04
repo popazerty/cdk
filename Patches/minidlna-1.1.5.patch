@@ -1,6 +1,33 @@
+--- a/configure.ac
++++ a/configure.ac
+@@ -121,6 +121,12 @@
+         if test -f /etc/redhat-release; then
+             INCLUDE_DIR="/usr/include/ffmpeg"
+         fi
++        if test -f /etc/fedora-release; then
++            INCLUDE_DIR="/usr/include/ffmpeg"
++	fi
++        if test -f /etc/centos-release; then
++            INCLUDE_DIR="/usr/include/ffmpeg"
++	fi
+         ;;
+ esac
+ 
+--- a/configure
++++ a/configure
+@@ -2601,7 +2601,7 @@
+
+   test "$program_prefix$program_suffix$program_transform_name" = \
+     NONENONEs,x,x, &&
+   program_prefix=${target_alias}-
+-am__api_version='1.14'
++am__api_version='1.13'
+
+ # Find a good install program.  We prefer a C program (faster),
+ # so one script is as good as another.  But avoid the broken or
 --- a/minidlna.c
 +++ b/minidlna.c
-@@ -324,10 +324,8 @@
+@@ -295,10 +295,8 @@
  	if (sq3)
  		*sq3 = db;
  	sqlite3_busy_timeout(db, 5000);
