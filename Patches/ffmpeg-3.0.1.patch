@@ -32,7 +32,7 @@
      s->buffer_size = buffer_size;
      s->buf_ptr     = buffer;
      s->opaque      = opaque;
-@@ -471,16 +471,16 @@
+@@ -471,16 +470,16 @@
      }
  
      /* make buffer smaller in case it ended up large after probing */
@@ -53,7 +53,7 @@
      }
  
      if (s->read_packet)
-@@ -857,7 +857,6 @@
+@@ -858,7 +857,6 @@
  
      av_free(s->buffer);
      s->buffer = buffer;

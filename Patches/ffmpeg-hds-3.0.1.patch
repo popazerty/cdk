@@ -1,6 +1,6 @@
 --- a/configure
 +++ b/configure
-@@ -275,6 +275,7 @@
+@@ -290,6 +290,7 @@
    --enable-x11grab         enable X11 grabbing (legacy) [no]
    --disable-xlib           disable xlib [autodetect]
    --disable-zlib           disable zlib [autodetect]
@@ -8,15 +8,15 @@
  
  Toolchain options:
    --arch=ARCH              select architecture [$arch]
-@@ -1413,6 +1414,7 @@
-     sdl
+@@ -1507,6 +1508,7 @@
+     securetransport
      x11grab
      xlib
 +    xml2
      zlib
  "
  
-@@ -2437,6 +2439,7 @@
+@@ -2683,6 +2685,7 @@
  eac3_demuxer_select="ac3_parser"
  f4v_muxer_select="mov_muxer"
  flac_demuxer_select="flac_parser"
@@ -24,7 +24,7 @@
  hds_muxer_select="flv_muxer"
  hls_muxer_select="mpegts_muxer"
  image2_alias_pix_demuxer_select="image2_demuxer"
-@@ -4885,6 +4888,11 @@
+@@ -5426,6 +5429,11 @@
  disabled bzlib || check_lib2 bzlib.h BZ2_bzlibVersion -lbz2 || disable bzlib
  disabled  lzma || check_lib2  lzma.h lzma_version_number -llzma || disable lzma
  
@@ -38,7 +38,7 @@
  
 --- a/libavformat/allformats.c
 +++ b/libavformat/allformats.c
-@@ -141,7 +141,7 @@
+@@ -149,7 +149,7 @@
      REGISTER_MUXDEMUX(H261,             h261);
      REGISTER_MUXDEMUX(H263,             h263);
      REGISTER_MUXDEMUX(H264,             h264);
@@ -1186,7 +1186,7 @@
 +int ff_free_manifest(F4MManifest *manifest);
 --- a/libavformat/flvdec.c
 +++ b/libavformat/flvdec.c
-@@ -298,6 +298,11 @@
+@@ -305,6 +305,11 @@
      return length;
  }
  
@@ -2702,7 +2702,7 @@
 +};
 --- a/libavformat/Makefile
 +++ b/libavformat/Makefile
-@@ -178,6 +178,7 @@
+@@ -189,6 +189,7 @@
  OBJS-$(CONFIG_H263_MUXER)                += rawenc.o
  OBJS-$(CONFIG_H264_DEMUXER)              += h264dec.o rawdec.o
  OBJS-$(CONFIG_H264_MUXER)                += rawenc.o
