@@ -90,6 +90,40 @@
  	FP_ICON_MAX
  #endif
  } fp_icon;
+--- libstb-hal-cst-next.org/libduckbox/hardware_caps.c
++++ libstb-hal-cst-next/libduckbox/hardware_caps.c
+@@ -114,6 +114,15 @@
+ 			caps.can_cec = 1;
+ 			caps.has_fan = 0;
+ 		}
++		else if (!strncmp(buf, "hs7420", 6)) {
++			strcpy(caps.boxvendor, "DUCKBOX");
++			strcpy(caps.boxname, buf);
++			caps.can_shutdown = 1;
++			caps.has_HDMI = 1;
++			caps.has_SCART = 1;
++			caps.can_cec = 1;
++			caps.has_fan = 0;
++		}
+ 		else if (!strncmp(buf, "hs7810a", 7)) {
+ 			strcpy(caps.boxvendor, "DUCKBOX");
+ 			strcpy(caps.boxname, buf);
+@@ -124,6 +133,15 @@
+ 			caps.has_fan = 0;
+ 		}
+ 		else if (!strncmp(buf, "hs7119", 6)) {
++			strcpy(caps.boxvendor, "DUCKBOX");
++			strcpy(caps.boxname, buf);
++			caps.can_shutdown = 1;
++			caps.has_HDMI = 1;
++			caps.has_SCART = 1;
++			caps.can_cec = 1;
++			caps.has_fan = 0;
++		}
++		else if (!strncmp(buf, "hs7429", 6)) {
+ 			strcpy(caps.boxvendor, "DUCKBOX");
+ 			strcpy(caps.boxname, buf);
+ 			caps.can_shutdown = 1;
 --- libstb-hal-cst-next/tools/spark_fp.c.org
 +++ libstb-hal-cst-next/tools/spark_fp.c
 @@ -30,6 +30,10 @@
