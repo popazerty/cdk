@@ -258,4 +258,3 @@ diff --git a/Makefile b/Makefile
  		return 1;
  	name = conf_get_autoconfig_name();
  	/*
-

@@ -1,5 +1,5 @@
---- linux-sh4/arch/sh/kernel/setup.c.org
-+++ linux-sh4/arch/sh/kernel/setup.c
+--- linux-sh4-2.6.32.61_stm24_0217.org/arch/sh/kernel/setup.c
++++ linux-sh4-2.6.32.61_stm24_0217/arch/sh/kernel/setup.c
 @@ -389,6 +389,34 @@
  #endif
  #endif
@@ -11,17 +11,17 @@
 +		int command_line_len = strlen(command_line);
 +		int org_command_line_len = strlen(org_command_line);
 +
-+		if(command_line_len >= org_command_line_len && !strncmp(command_line, org_command_line, org_command_line_len))
++		if (command_line_len >= org_command_line_len && !strncmp(command_line, org_command_line, org_command_line_len))
 +		{
 +			int i;
-+			for(i = 0; i < (command_line_len - 7); i++)
++			for (i = 0; i < (command_line_len - 7); i++)
 +			{
-+				if(!strncmp(command_line + i, "ethaddr", 7))
++				if (!strncmp(command_line + i, "ethaddr", 7))
 +				{
 +					strlcpy(mac, command_line + i + 8, sizeof(mac));
 +					break;
 +				}
-+				if(!strncmp(command_line + i, "hwaddr", 6))
++				if (!strncmp(command_line + i, "hwaddr", 6))
 +				{
 +					strlcpy(mac, command_line + i + 7, sizeof(mac));
 +					break;
@@ -39,12 +39,12 @@
  	seq_printf(m, "cpu family\t: %s\n", init_utsname()->machine);
  	seq_printf(m, "cpu variant\t: %s\n", get_cpu_variant(c));
  	seq_printf(m, "cpu type\t: %s\n", get_cpu_subtype(c));
-+	seq_printf(m, "cpu MHz\t: 540\n");
++	seq_printf(m, "cpu MHz\t\t: 540\n");
  	if (c->cut_major == -1)
  		seq_printf(m, "cut\t\t: unknown\n");
  	else if (c->cut_minor == -1)
---- linux-sh4/arch/sh/boards/mach-sat7111/setup.c.org	2012-03-08 08:58:51.000000000 -0800
-+++ linux-sh4/arch/sh/boards/mach-sat7111/setup.c	2012-03-28 01:30:08.000000000 -0700
+--- linux-sh4/arch/sh/boards/mach-sat7111/setup.c.org
++++ linux-sh4/arch/sh/boards/mach-sat7111/setup.c
 @@ -33,126 +33,102 @@
  #include <asm/irq-ilc.h>
  #include <asm/irl.h>
@@ -306,8 +306,8 @@
  	return platform_add_devices(sat7111_devices,
  				    ARRAY_SIZE(sat7111_devices));
  }
-*** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 22:22:25.000000000 +0200
---- linux-sh4/drivers/net/stmmac/stmmac_mdio.c	2011-11-24 23:33:55.732873713 +0200
+*** linux-sh4-2.6.32.46_stm24_0209.orig/drivers/net/stmmac/stmmac_mdio.c
+--- linux-sh4/drivers/net/stmmac/stmmac_mdio.c
 ***************
 *** 170,175 ****
 --- 170,176 ----
@@ -421,4 +421,4 @@
 +				chip->pagebuf = realpage;
  				memcpy(buf, chip->buffers->databuf + col, bytes);
  			}
-
+ 
