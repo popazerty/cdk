@@ -1,6 +1,23 @@
 --- libstb-hal-cst-next.org/include/cs_frontpanel.h
 +++ libstb-hal-cst-next/include/cs_frontpanel.h
-@@ -60,11 +60,11 @@
+@@ -28,7 +28,7 @@
+ 
+ typedef enum {
+ #if defined(BOXMODEL_OCTAGON1008)
+-	ICON_DOLBY = 0x10,
++	ICON_DOLBY = 0x1,
+ 	ICON_DTS,
+ 	ICON_VIDEO,
+ 	ICON_AUDIO,
+@@ -49,6 +49,7 @@
+ 	ICON_PLAY,
+ 	ICON_REWIND,
+ 	ICON_PAUSE,
++	ICON_NONE,
+ 	ICON_FF,
+ 	ICON_REC,
+ 	ICON_ARROW,
+@@ -60,11 +61,11 @@
  	FP_ICON_HD = ICON_16_9,
  	FP_ICON_HDD = ICON_HDD,
  	FP_ICON_LOCK = ICON_CRYPTED,
@@ -16,7 +33,7 @@
  	FP_ICON_MUTE = ICON_TIME,
  	FP_ICON_PLAY = ICON_PLAY,
  	FP_ICON_PAUSE = ICON_PAUSE,
-@@ -72,6 +72,7 @@
+@@ -72,18 +73,19 @@
  	FP_ICON_FR = ICON_REWIND,
  	FP_ICON_REC = ICON_REC,
  	FP_ICON_CLOCK = ICON_TIMER,
@@ -24,7 +41,53 @@
  	FP_ICON_RADIO = ICON_AUDIO,
  	FP_ICON_TV = ICON_VIDEO,
  	FP_ICON_DOWNLOAD = ICON_LINK,
-@@ -137,6 +138,80 @@
+ 	FP_ICON_CAM1 = ICON_REC,
+ #elif defined(BOXMODEL_FORTIS_HDBOX)
+-	ICON_USB = 0x10,
+-	ICON_STANDBY,
++	ICON_STANDBY = 0x1,
+ 	ICON_SAT,
+ 	ICON_REC,
+ 	ICON_TIMESHIFT,
+ 	ICON_TIMER,
+ 	ICON_HD,
++	ICON_USB,
+ 	ICON_SCRAMBLED,
+ 	ICON_DOLBY,
+ 	ICON_MUTE,
+@@ -92,15 +94,6 @@
+ 	ICON_MP3,
+ 	ICON_REPEAT,
+ 	ICON_Play,
+-	ICON_TER,
+-	ICON_FILE,
+-	ICON_480i,
+-	ICON_480p,
+-	ICON_576i,
+-	ICON_576p,
+-	ICON_720p,
+-	ICON_1080i,
+-	ICON_1080p,
+ 	ICON_Circ0,
+ 	ICON_Circ1,
+ 	ICON_Circ2,
+@@ -110,6 +103,15 @@
+ 	ICON_Circ6,
+ 	ICON_Circ7,
+ 	ICON_Circ8,
++	ICON_FILE,
++	ICON_TER,
++	ICON_480i,
++	ICON_480p,
++	ICON_576i,
++	ICON_576p,
++	ICON_720p,
++	ICON_1080i,
++	ICON_1080p,
+ 	ICON_COLON1,
+ 	ICON_COLON2,
+ 	ICON_COLON3,
+@@ -137,6 +139,80 @@
  	FP_ICON_RADIO = ICON_RADIO,
  	FP_ICON_TV = ICON_TV,
  	FP_ICON_MUSIC = ICON_RADIO,
@@ -105,7 +168,7 @@
  	FP_ICON_MAX = ICON_MAX
  #elif defined(BOXMODEL_UFS910) || defined(BOXMODEL_UFS922) || defined(BOXMODEL_UFS912) || defined(BOXMODEL_UFS913)
  	FP_ICON_USB = 0x10,
-@@ -243,7 +318,7 @@
+@@ -243,7 +319,7 @@
  	FP_ICON_DOWNLOAD,
  	FP_ICON_TIMESHIFT,
  #endif
