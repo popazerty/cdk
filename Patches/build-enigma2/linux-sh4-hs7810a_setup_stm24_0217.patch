@@ -92,7 +92,7 @@
  static void __init sat7111_setup(char** cmdline_p)
  {
 -	printk(KERN_INFO "STMicroelectronics sat7111 reference board initialisation\n");
-+	printk(KERN_INFO "Fortis HS7110 main board initialisation\n");
++	printk(KERN_INFO "Fortis HS7810A main board initialisation\n");
  
  	stx7111_early_device_init();
  
