@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20160414.1
+# Version 20160612.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 1: target system (1-38)"
@@ -16,7 +16,11 @@ fi
 CURDIR=`pwd`
 CURRENT_PATH=${CURDIR%/cdk}
 
+#CPU_CORES=1
+CPU_CORES=`getconf _NPROCESSORS_ONLN`
+
 CONFIGPARAM=" \
+ MAKE_JOBS=$CPU_CORES \
  --enable-maintainer-mode \
  --prefix=$CURRENT_PATH/tufsbox \
  --with-cvsdir=$CURRENT_PATH \
@@ -24,7 +28,7 @@ CONFIGPARAM=" \
  --with-flashscriptdir=$CURRENT_PATH/flash \
  --with-archivedir=$HOME/Archive \
  --with-maxcachesize=3 \
- --enable-ccache"
+ --enable-ccache" \
 
 ##############################################
 
@@ -457,7 +461,6 @@ echo "Performing configure..." && \
 echo "-----------------------" && \
 echo && \
 ./configure $CONFIGPARAM
-
 ##############################################
 
 echo $CONFIGPARAM >lastChoice

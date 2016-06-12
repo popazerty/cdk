@@ -375,13 +375,13 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 	ln -s $(KERNEL_DIR) $(buildprefix)/linux-sh4
 	-rm $(KERNEL_DIR)/localversion*
 	echo "$(KERNELSTMLABEL)" > $(KERNEL_DIR)/localversion-stm
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh oldconfig
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/asm
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/linux/version.h
-	$(MAKE) -C $(KERNEL_DIR) uImage modules \
+	 $(MAKE) -j$(MAKE_JOBS) -C $(KERNEL_DIR) ARCH=sh oldconfig
+	 $(MAKE) -j$(MAKE_JOBS) -C $(KERNEL_DIR) ARCH=sh include/asm
+	 $(MAKE) -j$(MAKE_JOBS) -C $(KERNEL_DIR) ARCH=sh include/linux/version.h
+	 $(MAKE) -j$(MAKE_JOBS) -C $(KERNEL_DIR) uImage modules \
 		ARCH=sh \
 		CROSS_COMPILE=$(target)-
-	$(MAKE) -C $(KERNEL_DIR) modules_install \
+	 $(MAKE) -j$(MAKE_JOBS) -C $(KERNEL_DIR) modules_install \
 		ARCH=sh \
 		CROSS_COMPILE=$(target)- \
 		DEPMOD=$(DEPMOD) \
@@ -397,7 +397,7 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 
 $(D)/tfkernel.do_compile:
 	cd $(KERNEL_DIR) && \
-		$(MAKE) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(target)- uImage
+		 $(MAKE) -j$(MAKE_JOBS) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(target)- uImage
 	touch $@
 
 linux-kernel-clean:
@@ -408,7 +408,7 @@ linux-kernel-clean:
 #
 linux-kernel.menuconfig linux-kernel.xconfig: \
 linux-kernel.%:
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=sh4-linux- $*
+	 $(MAKE) -j$(MAKE_JOBS) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=sh4-linux- $*
 	@echo
 	@echo "You have to edit m a n u a l l y Patches/linux-$(KERNELVERSION).config to make changes permanent !!!"
 	@echo ""

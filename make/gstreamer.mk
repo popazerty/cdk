@@ -19,7 +19,7 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 $(D)/glibnetworking @D
 			--enable-introspection=no \
 			ac_cv_func_register_printf_function=no \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gstreamer@
 	@CLEANUP_gstreamer@
 	touch $@
@@ -40,7 +40,7 @@ $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/li
 			--disable-examples \
 			--disable-debug \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_plugins_base@
 	@CLEANUP_gst_plugins_base@
 	touch $@
@@ -59,7 +59,7 @@ $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/
 			--disable-examples \
 			--disable-debug \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_plugins_good@
 	@CLEANUP_gst_plugins_good@
 	touch $@
@@ -135,7 +135,7 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmod
 			--disable-debug \
 			--enable-orc \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_plugins_bad@
 	@CLEANUP_gst_plugins_bad@
 	touch $@
@@ -156,7 +156,7 @@ $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPE
 			--disable-debug \
 			--enable-orc \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_plugins_ugly@
 	@CLEANUP_gst_plugins_ugly@
 	touch $@
@@ -205,7 +205,7 @@ $(D)/gst_libav: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst
 			--enable-pthreads \
 			--enable-bzlib" \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_libav@
 	@CLEANUP_gst_libav@
 	touch $@
@@ -220,7 +220,7 @@ $(D)/gst_plugins_fluendo_mpegdemux: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugi
 			--prefix=/usr \
 			--with-check=no \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_plugins_fluendo_mpegdemux@
 	@CLEANUP_gst_plugins_fluendo_mpegdemux@
 	touch $@
@@ -241,7 +241,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_plugin_subsink@
 	@CLEANUP_gst_plugin_subsink@
 	touch $@
@@ -256,7 +256,7 @@ $(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp
 			--prefix=/usr \
 			--with-libupnp=$(targetprefix)/usr \
 		&& \
-		$(MAKE) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_gst_gmediarender@
 	@CLEANUP_gst_gmediarender@
 	touch $@
@@ -284,7 +284,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 			--with-mpeg4v2 \
 			--with-gstversion=1.0 \
 		&& \
-		$(MAKE) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gst_plugins_dvbmediasink@
 	@CLEANUP_gst_plugins_dvbmediasink@
 	touch $@

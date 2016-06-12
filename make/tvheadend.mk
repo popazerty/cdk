@@ -53,11 +53,11 @@ $(D)/tvheadend.config.status:
 
 $(D)/tvheadend.do_compile: tvheadend.config.status
 	cd $(sourcedir)/tvheadend && \
-		$(MAKE) all
+		 $(MAKE) -j$(MAKE_JOBS) all
 	touch $@
 
 $(D)/tvheadend: tvheadend.do_prepare tvheadend.do_compile
-	$(MAKE) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
+	 $(MAKE) -j$(MAKE_JOBS) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
 	if [ -e $(targetprefix)/usr/bin/tvheadend ]; then \
 		$(target)-strip $(targetprefix)/usr/bin/tvheadend; \
 	fi
@@ -70,7 +70,7 @@ tvheadendclean:
 	rm -f $(D)/tvheadend
 	rm -f $(D)/tvheadend.do_compile
 	cd $(sourcedir)/tvheadend && \
-		$(MAKE) distclean
+		 $(MAKE) -j$(MAKE_JOBS) distclean
 
 tvheadend-distclean:
 	rm -f $(D)/tvheadend

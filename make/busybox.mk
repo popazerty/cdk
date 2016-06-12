@@ -11,7 +11,7 @@ $(D)/busybox: $(D)/bootstrap @DEPENDS_busybox@ $(buildprefix)/Patches/busybox.co
 		sed -i -e 's#^CONFIG_PREFIX.*#CONFIG_PREFIX="$(targetprefix)"#' .config
 	cd @DIR_busybox@ && \
 		export CROSS_COMPILE=$(target)- && \
-		$(MAKE) all \
+		$(MAKE) -j$(MAKE_JOBS) all \
 			CROSS_COMPILE=$(target)- \
 			CONFIG_EXTRA_CFLAGS="$(TARGET_CFLAGS)" \
 		&& \
