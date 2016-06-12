@@ -89,7 +89,7 @@
  static void __init sat7111_setup(char** cmdline_p)
  {
 -	printk(KERN_INFO "STMicroelectronics sat7111 reference board initialisation\n");
-+	printk(KERN_INFO "Fortis HS7110 main board initialisation\n");
++	printk(KERN_INFO "Fortis HS7420 main board initialisation\n");
  
  	stx7111_early_device_init();
  
@@ -125,7 +125,7 @@
  static struct platform_device sat7111_nor_flash = {
  	.name		= "physmap-flash",
  	.id		= -1,
-@@ -118,75 +151,58 @@
+@@ -118,75 +151,59 @@
  	},
  	.dev.platform_data = &(struct physmap_flash_data) {
  		.width		= 2,
@@ -159,6 +159,7 @@
 +				.size   = 0x006C0000,      //6.75M (squashfs)
 +				.offset = 0x00220000       //2.125M, 128k hole at end is for checksum
 +			},
++
 +			{
 +				.name   = "ROOT_FS",       //mtd3
 +				.size   = 0x00F00000,      // 15M  (squashfs)
@@ -251,7 +252,7 @@
  			},
  		},
  	},
-@@ -216,15 +232,9 @@
+@@ -216,15 +244,9 @@
  
  static int __init sat7111_devices_init(void)
  {
@@ -269,7 +270,7 @@
  	stx7111_configure_ssc_i2c(3, NULL);
  
  	stx7111_configure_usb(&(struct stx7111_usb_config) {
-@@ -246,14 +256,6 @@
+@@ -246,14 +268,6 @@
  
  	gpio_direction_output(SAT7111_PHY_RESET, 0);
  
@@ -373,7 +374,7 @@
  	stm_pad_release_gpio(stm_gpio(pin->port_no, pin->pin_no));
  }
  EXPORT_SYMBOL(stpio_free_pin);
-@@ -624,6 +637,86 @@
+@@ -624,6 +637,85 @@
  	set_irq_type(irq, triggertype);
  }
  EXPORT_SYMBOL(stpio_set_irq_type);

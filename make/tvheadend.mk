@@ -16,7 +16,7 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
 	rm -rf $(sourcedir)/tvheadend.org
 	rm -rf $(N_OBJDIR)
-	REVISION="fc6c36332e4b07aa22d351f0c6e31d12751d2b40"; \
+	REVISION="f59669c92ce0a67924e72d150cbe881663e499bf"; \
 	[ -d "$(archivedir)/tvheadend.git" ] && \
 	(cd $(archivedir)/tvheadend.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/tvheadend.git" ] || \
@@ -39,11 +39,8 @@ $(D)/tvheadend.config.status:
 			--disable-avahi \
 			--disable-tvhcsa \
 			--disable-libav \
-			--disable-libffmpeg_static \
-			--disable-hdhomerun_static \
 			--disable-dvben50221 \
 			--disable-dbus_1 \
-			--disable-uriparser \
 			--with-boxtype=$(BOXTYPE) \
 			PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 			PKG_CONFIG_PATH=$(targetprefix)/usr/lib/pkgconfig \
@@ -70,7 +67,7 @@ tvheadendclean:
 	rm -f $(D)/tvheadend
 	rm -f $(D)/tvheadend.do_compile
 	cd $(sourcedir)/tvheadend && \
-		 $(MAKE) -j$(MAKE_JOBS) distclean
+		 $(MAKE) distclean
 
 tvheadend-distclean:
 	rm -f $(D)/tvheadend

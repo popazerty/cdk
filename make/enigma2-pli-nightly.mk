@@ -114,14 +114,15 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 			[ -d "$(archivedir)/enigma2-tango.git" ] || \
 			(echo "Cloning remote enigma2-tango.git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-tango.git;); \
 			cp -ra $(archivedir)/enigma2-tango.git/lib/libeplayer3 $(sourcedir)/enigma2-nightly/lib; \
-			set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/libeplayer3.$$DIFF.patch"; \
+			set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/libeplayer3.$$DIFF.patch";  echo;\
 		else \
-			touch $(sourcedir)/enigma2-nightly/lib/libeplayer3/empty; \
+			touch $(sourcedir)/enigma2-nightly/lib/libeplayer3/empty;  echo;\
 		fi; \
 		cd $(sourcedir)/enigma2-nightly; \
 		echo "Building VFD-drivers..."; \
 		patch -p1 -s < "../../cdk/Patches/vfd-drivers.patch"; \
 		rm -rf $(targetprefix)/usr/local/share/enigma2/rc_models; \
+		echo; \
 		echo "Patching remote control files..."; \
 		patch -p1 -s < "../../cdk/Patches/rc-models.patch"; \
 		echo "Build preparation for OpenPLi complete."; echo; \

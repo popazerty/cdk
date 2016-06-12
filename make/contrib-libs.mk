@@ -26,7 +26,7 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 			--without-manpages \
 			--with-fallbacks='linux vt100 xterm' \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) libs \
+		 $(MAKE) -j$(MAKE_JOBS) libs \
 			HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)" && \
@@ -48,7 +48,7 @@ $(D)/openssl: $(D)/bootstrap @DEPENDS_openssl@
 			--prefix=/usr \
 			--openssldir=/etc/ssl \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_openssl@
 	@CLEANUP_openssl@
 	touch $@
@@ -63,7 +63,7 @@ $(D)/libbluray: $(D)/bootstrap @DEPENDS_libbluray@
 			--prefix=/usr \
 			--without-libxml2 \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libbluray@
 	@CLEANUP_libbluray@
 	touch $@
@@ -79,7 +79,7 @@ $(D)/lua: $(D)/bootstrap $(D)/libncurses $(archivedir)/luaposix.git @DEPENDS_lua
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
 		sed -i 's|man/man1|.remove|' Makefile; \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) linux CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" BUILDMODE=dynamic PKG_VERSION=5.2.4 && \
+		 $(MAKE) -j$(MAKE_JOBS) linux CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" BUILDMODE=dynamic PKG_VERSION=5.2.4 && \
 		@INSTALL_lua@
 	@CLEANUP_lua@
 	touch $@
@@ -92,7 +92,7 @@ $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua @DEPENDS_luacurl@
 	[ -d "$(archivedir)/luacurl.git" ] && \
 	(cd $(archivedir)/luacurl.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_luacurl@ && \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" \
+		 $(MAKE) -j$(MAKE_JOBS) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" \
 			LIBDIR=$(targetprefix)/usr/lib \
 			LUA_INC=$(targetprefix)/usr/include \
 		&& \
@@ -106,7 +106,7 @@ $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua @DEPENDS_luacurl@
 $(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/libexpat @DEPENDS_luaexpat@
 	@PREPARE_luaexpat@
 	cd @DIR_luaexpat@ && \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" PREFIX=$(targetprefix)/usr && \
+		 $(MAKE) -j$(MAKE_JOBS) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" PREFIX=$(targetprefix)/usr && \
 		@INSTALL_luaexpat@
 	@CLEANUP_luaexpat@
 	touch $@
@@ -122,7 +122,7 @@ $(D)/libao: $(D)/bootstrap @DEPENDS_libao@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libao@
 	@CLEANUP_libao@
 	touch $@
@@ -138,7 +138,7 @@ $(D)/howl: $(D)/bootstrap @DEPENDS_howl@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_howl@
 	@CLEANUP_howl@
 	touch $@
@@ -164,7 +164,7 @@ $(D)/zlib: $(D)/bootstrap @DEPENDS_zlib@
 			--prefix=/usr \
 			--shared \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_zlib@
 	@CLEANUP_zlib@
 	touch $@
@@ -177,7 +177,7 @@ $(D)/bzip2: $(D)/bootstrap @DEPENDS_bzip2@
 	cd @DIR_bzip2@ && \
 	mv Makefile-libbz2_so Makefile && \
 		CC=$(target)-gcc AR=$(target)-ar RANLIB=$(target)-ranlib \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_bzip2@
 	@CLEANUP_bzip2@
 	touch $@
@@ -198,7 +198,7 @@ $(D)/libreadline: $(D)/bootstrap @DEPENDS_libreadline@
 			bash_cv_have_mbstate_t=yes \
 			--prefix=/usr \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libreadline@
 	@CLEANUP_libreadline@
 	touch $@
@@ -218,7 +218,7 @@ $(D)/libfreetype: $(D)/bootstrap $(D)/zlib $(D)/bzip2 $(D)/libpng @DEPENDS_libfr
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libfreetype@
 		if [ ! -e $(targetprefix)/usr/include/freetype ] ; then \
 			ln -sf freetype2 $(targetprefix)/usr/include/freetype; \
@@ -258,7 +258,7 @@ $(D)/lirc: $(D)/bootstrap @DEPENDS_lirc@
 			--with-syslog=LOG_DAEMON \
 			--enable-sandboxed \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_lirc@
 	@CLEANUP_lirc@
 	touch $@
@@ -274,7 +274,7 @@ $(D)/libjpeg: $(D)/bootstrap @DEPENDS_libjpeg@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libjpeg@
 	@CLEANUP_libjpeg@
 	touch $@
@@ -296,7 +296,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap @DEPENDS_libjpeg_turbo@
 			--bindir=$(targetprefix)/.remove \
 			--prefix=/usr \
 			&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libjpeg_turbo@
 	cd @DIR_libjpeg_turbo@ && \
 		make clean && \
@@ -309,7 +309,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap @DEPENDS_libjpeg_turbo@
 			--bindir=$(targetprefix)/.remove \
 			--prefix=/usr \
 			&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libjpeg_turbo@
 	@CLEANUP_libjpeg_turbo@
 	touch $@
@@ -325,7 +325,7 @@ $(D)/libpng12: $(D)/bootstrap @DEPENDS_libpng12@
 			--mandir=$(targetprefix)/.remove \
 			--bindir=$(hostprefix)/bin \
 		&& \
-		ECHO=echo  $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		ECHO=echo  $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libpng@
 	@CLEANUP_libpng12@
 	touch $@
@@ -341,7 +341,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib @DEPENDS_libpng@
 			--mandir=$(targetprefix)/.remove \
 			--bindir=$(hostprefix)/bin \
 		&& \
-		ECHO=echo  $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		ECHO=echo  $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libpng@
 	@CLEANUP_libpng@
 	touch $@
@@ -367,7 +367,7 @@ $(D)/libungif: $(D)/bootstrap @DEPENDS_libungif@
 			--bindir=/.remove \
 			--without-x \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libungif@
 	@CLEANUP_libungif@
 	touch $@
@@ -383,7 +383,7 @@ $(D)/libgif: $(D)/bootstrap @DEPENDS_libgif@
 			--prefix=/usr \
 			--bindir=/.remove \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libgif@
 	@CLEANUP_libgif@
 	touch $@
@@ -398,7 +398,7 @@ $(D)/libgif_e2: $(D)/bootstrap @DEPENDS_libgif_e2@
 			--prefix=/usr \
 			--without-x \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
+		 $(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libgif_e2@
 	@CLEANUP_libgif_e2@
 	touch $@
@@ -426,7 +426,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/openssl $(D)/zlib @DEPENDS_libcurl@
 			--with-ssl=$(targetprefix) \
 			--mandir=/.remove \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < curl-config > $(hostprefix)/bin/curl-config && \
 		chmod 755 $(hostprefix)/bin/curl-config && \
 		@INSTALL_libcurl@
@@ -451,7 +451,7 @@ $(D)/libfribidi: $(D)/bootstrap @DEPENDS_libfribidi@
 			--prefix=/usr \
 			--mandir=/.remove \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libfribidi@
 	@CLEANUP_libfribidi@
 	touch $@
@@ -466,7 +466,7 @@ $(D)/libsigc_e2: $(D)/bootstrap @DEPENDS_libsigc_e2@
 			--prefix=/usr \
 			--disable-checks \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libsigc_e2@
 	@CLEANUP_libsigc_e2@
 	touch $@
@@ -482,7 +482,7 @@ $(D)/libsigc: $(D)/bootstrap @DEPENDS_libsigc@
 			--enable-shared \
 			--disable-documentation \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libsigc@
 		if [ -d $(targetprefix)/usr/include/sigc++-2.0/sigc++ ] ; then \
 			ln -sf ./sigc++-2.0/sigc++ $(targetprefix)/usr/include/sigc++; \
@@ -506,7 +506,7 @@ $(D)/libmad: $(D)/bootstrap @DEPENDS_libmad@
 			--enable-speed \
 			--enable-sso \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libmad@
 	@CLEANUP_libmad@
 	touch $@
@@ -523,7 +523,7 @@ $(D)/libid3tag: $(D)/bootstrap $(D)/zlib @DEPENDS_libid3tag@
 			--prefix=/usr \
 			--enable-shared=yes \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libid3tag@
 	@CLEANUP_libid3tag@
 	touch $@
@@ -539,7 +539,7 @@ $(D)/libvorbis: $(D)/bootstrap $(D)/libogg @DEPENDS_libvorbis@
 			--disable-docs \
 			--disable-examples \
 		&& \
-		 $(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) all && \
+		 $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libvorbis@
 	@CLEANUP_libvorbis@
 	touch $@

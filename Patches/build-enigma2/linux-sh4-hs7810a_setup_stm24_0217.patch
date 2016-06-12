@@ -128,7 +128,7 @@
  static struct platform_device sat7111_nor_flash = {
  	.name		= "physmap-flash",
  	.id		= -1,
-@@ -118,75 +151,58 @@
+@@ -118,75 +151,59 @@
  	},
  	.dev.platform_data = &(struct physmap_flash_data) {
  		.width		= 2,

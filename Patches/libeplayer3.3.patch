@@ -1,6 +1,6 @@
 --- enigma2-nightly.org/configure.ac
 +++ enigma2-nightly/configure.ac
-@@ -334,6 +341,7 @@
+@@ -372,6 +372,7 @@
  include/Makefile
  lib/Makefile
  lib/base/eenv.cpp
@@ -49,10 +49,10 @@
 +				print "sVideoPID", VideoPID
 +
 +				if VideoPID == -1:
-+					print "radio->tv"
++					print "Radio->TV"
 +					self.showTv2()
 +				else:
-+					print "tv->radio"
++					print "TV->Radio"
 +					self.showRadio2()
  
  	def serviceStarted(self):  #override from InfoBarShowHide

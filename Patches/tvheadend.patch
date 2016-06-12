@@ -1,6 +1,6 @@
 --- tvheadend.org/Makefile
 +++ tvheadend/Makefile
-@@ -36,6 +36,7 @@
+@@ -44,6 +44,7 @@
  CFLAGS  += -Wmissing-prototypes
  CFLAGS  += -fms-extensions -funsigned-char -fno-strict-aliasing
  CFLAGS  += -D_FILE_OFFSET_BITS=64
@@ -10,7 +10,7 @@
  LDFLAGS += -ldl -lm
 --- tvheadend.org/src/tvheadend.h
 +++ tvheadend/src/tvheadend.h
-@@ -76,12 +76,12 @@
+@@ -70,12 +70,12 @@
  
  htsmsg_t *tvheadend_capabilities_list(int check);
  
@@ -25,7 +25,7 @@
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
  #define PTS_MASK  INT64_C(0x00000001ffffffff)
-@@ -842,4 +842,18 @@
+@@ -864,4 +864,18 @@
  #define PRItime_t       "ld"
  #endif
  
@@ -46,8 +46,8 @@
  #endif /* TVHEADEND_H */
 --- tvheadend.org/src/input/mpegts.c
 +++ tvheadend/src/input/mpegts.c
-@@ -20,8 +20,8 @@
- #include "mpegts/fastscan.h"
+@@ -24,8 +24,8 @@
+ extern memoryinfo_t mpegts_input_table_memoryinfo;
  
  void
 -mpegts_init ( int linuxdvb_mask, int nosatip, str_list_t *satip_client,
@@ -59,7 +59,7 @@
    idclass_register(&mpegts_network_class);
 --- tvheadend.org/src/input/mpegts.h
 +++ tvheadend/src/input/mpegts.h
-@@ -71,8 +71,8 @@
+@@ -73,8 +73,8 @@
   * Setup / Tear down
   * *************************************************************************/
  
@@ -72,24 +72,24 @@
  /* **************************************************************************
 --- tvheadend.org/src/input/mpegts/satip/satip.c
 +++ tvheadend/src/input/mpegts/satip/satip.c
-@@ -795,7 +795,7 @@
- static gtimer_t satip_discovery_static_timer;
- static gtimer_t satip_discovery_timerq;
- static gtimer_t satip_discovery_msearch_timer;
+@@ -805,7 +805,7 @@
+ static mtimer_t satip_discovery_static_timer;
+ static mtimer_t satip_discovery_timerq;
+ static mtimer_t satip_discovery_msearch_timer;
 -static str_list_t *satip_static_clients;
 +static strg_list_t *satip_static_clients;
  
  static void
  satip_discovery_destroy(satip_discovery_t *d, int unlink)
-@@ -1261,7 +1261,7 @@
+@@ -1275,7 +1275,7 @@
   * Initialization
   */
  
 -void satip_init ( int nosatip, str_list_t *clients )
 +void satip_init ( int nosatip, strg_list_t *clients )
  {
-   satip_enabled = !nosatip;
-   TAILQ_INIT(&satip_discoveries);
+   idclass_register(&satip_device_class);
+ 
 --- tvheadend.org/src/input/mpegts/satip/satip.h
 +++ tvheadend/src/input/mpegts/satip/satip.h
 @@ -22,7 +22,7 @@
@@ -103,7 +103,7 @@
  #endif /* __TVH_SATIP_H__ */
 --- tvheadend.org/src/main.c
 +++ tvheadend/src/main.c
-@@ -80,6 +80,7 @@
+@@ -82,6 +82,7 @@
  #include <openssl/err.h>
  #include <openssl/rand.h>
  #include <openssl/engine.h>
@@ -111,7 +111,7 @@
  
  pthread_t main_tid;
  
-@@ -601,6 +602,10 @@
+@@ -727,6 +728,10 @@
    } randseed;
    extern int dvb_bouquets_parse;
  
@@ -122,10 +122,10 @@
    main_tid = pthread_self();
  
    /* Setup global mutexes */
-@@ -659,8 +664,8 @@
-              *opt_bindaddr     = NULL,
+@@ -788,8 +793,8 @@
               *opt_subscribe    = NULL,
-              *opt_user_agent   = NULL;
+              *opt_user_agent   = NULL,
+              *opt_satip_bindaddr = NULL;
 -  str_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
 -  str_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
 +  strg_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
@@ -133,7 +133,7 @@
    cmdline_opt_t cmdline_opts[] = {
      {   0, NULL,        N_("Generic options"),         OPT_BOOL, NULL         },
      { 'h', "help",      N_("Show this page"),          OPT_BOOL, &opt_help    },
-@@ -786,7 +791,7 @@
+@@ -917,7 +922,7 @@
      else if (opt->type == OPT_INT)
        *((int*)opt->param) = atoi(argv[i]);
      else if (opt->type == OPT_STR_LIST) {
@@ -142,12 +142,12 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1108,6 +1113,29 @@
+@@ -1255,6 +1260,29 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  
 +/* Sign on to VFD */
-+//#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_SPARK7162) || defined(PLATFORM_TF7700)
++//#if defined(PLATFORM_OCTAGON1008) || defined(PLATFORM_FORTIS_HDBOX) || defined(PLATFORM_ATEVIO7500) || defined(PLATFORM_HS7420) || defined(PLATFORM_HS7429) || defined(PLATFORM_SPARK7162) || defined(PLATFORM_TF7700)
 +//	char txtstr[] = "Tvheadend";
 +//#elif defined(PLATFORM_HS7810A) || defined(PLATFORM_HS7119) || defined(PLATFORM_HS7819) || defined(PLATFORM_SPARK)
 +	char txtstr[] = "tvHE";
