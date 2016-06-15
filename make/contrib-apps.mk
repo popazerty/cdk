@@ -12,7 +12,7 @@ $(D)/grep: $(D)/bootstrap @DEPENDS_grep@
 			--libdir=$(targetprefix)/usr/lib \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_grep@
 	@CLEANUP_grep@
 	touch $@
@@ -27,7 +27,7 @@ $(D)/console_data: $(D)/bootstrap @DEPENDS_console_data@
 			--prefix=$(targetprefix) \
 			--with-main_compressor=gzip \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_console_data@
 	@CLEANUP_console_data@
 	touch $@
@@ -39,7 +39,7 @@ $(D)/sysvinit: $(D)/bootstrap @DEPENDS_sysvinit@
 	@PREPARE_sysvinit@
 	cd @DIR_sysvinit@ && \
 		$(BUILDENV) \
-		$(MAKE) -C src SULOGINLIBS=-lcrypt \
+		$(MAKE) -j$(MAKE_JOBS) -C src SULOGINLIBS=-lcrypt \
 		&& \
 		@INSTALL_sysvinit@
 	@CLEANUP_sysvinit@
@@ -56,7 +56,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb @DEPENDS_module_init_tools@
 			--prefix= \
 			--disable-builddir \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_module_init_tools@
 	$(call adapted-etc-files,$(MODULE_INIT_TOOLS_ADAPTED_ETC_FILES))
 	@CLEANUP_module_init_tools@
@@ -82,7 +82,7 @@ $(D)/portmap: $(D)/bootstrap @DEPENDS_portmap@
 		patch -p1 <debian.patch && \
 		sed -e 's/### BEGIN INIT INFO/# chkconfig: S 41 10\n### BEGIN INIT INFO/g' -i debian/init.d && \
 		$(BUILDENV) \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_portmap@
 	$(call adapted-etc-files,$(PORTMAP_ADAPTED_ETC_FILES))
 	@CLEANUP_portmap@
@@ -100,7 +100,7 @@ $(D)/openrdate: $(D)/bootstrap @DEPENDS_openrdate@ $(OPENRDATE_ADAPTED_ETC_FILES
 			--target=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_openrdate@
 	@CLEANUP_openrdate@
 	touch $@
@@ -131,9 +131,9 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/utillinux @DEPENDS_e2fsprogs@
 			--without-libiconv-prefix \
 			--with-root-prefix="" \
 		&& \
-		$(MAKE) && \
-		$(MAKE) -C lib/uuid  install DESTDIR=$(targetprefix); \
-		$(MAKE) -C lib/blkid install DESTDIR=$(targetprefix); \
+		$(MAKE) -j$(MAKE_JOBS) && \
+		$(MAKE) -j$(MAKE_JOBS) -C lib/uuid  install DESTDIR=$(targetprefix); \
+		$(MAKE) -j$(MAKE_JOBS) -C lib/blkid install DESTDIR=$(targetprefix); \
 		@INSTALL_e2fsprogs@
 	@CLEANUP_e2fsprogs@
 	touch $@
@@ -214,7 +214,7 @@ $(D)/utillinux: $(D)/bootstrap $(D)/zlib @DEPENDS_utillinux@
 			--disable-makeinstall-chown \
 			--without-systemdsystemunitdir \
 		&& \
-		$(MAKE) ARCH=sh4 && \
+		$(MAKE) -j$(MAKE_JOBS) ARCH=sh4 && \
 		@INSTALL_utillinux@
 	@CLEANUP_utillinux@
 	touch $@
@@ -235,7 +235,7 @@ $(D)/xfsprogs: $(D)/bootstrap $(D)/e2fsprogs $(D)/libreadline @DEPENDS_xfsprogs@
 			--enable-editline=no \
 			--enable-termcap=yes \
 		&& \
-		$(MAKE) $(MAKE_OPTS) && \
+		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) && \
 		export top_builddir=`pwd` && \
 		@INSTALL_xfsprogs@
 	@CLEANUP_xfsprogs@
@@ -253,7 +253,7 @@ $(D)/mc: $(D)/bootstrap $(D)/glib2 @DEPENDS_mc@
 			--with-screen=ncurses \
 			--without-x \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_mc@
 	@CLEANUP_mc@
 	touch $@
@@ -269,7 +269,7 @@ $(D)/sdparm: $(D)/bootstrap @DEPENDS_sdparm@
 			--exec-prefix=/usr \
 			--mandir=/usr/share/man \
 		&& \
-		$(MAKE) $(MAKE_OPTS) && \
+		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) && \
 		@INSTALL_sdparm@
 	@( cd $(prefix)/$*cdkroot/usr/share/man/man8 && gzip -v9 sdparm.8 )
 	@CLEANUP_sdparm@
@@ -284,13 +284,13 @@ $(D)/ipkg: $(D)/bootstrap @DEPENDS_ipkg@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_ipkg@
 	ln -sf ipkg-cl $(prefix)/$*cdkroot/usr/bin/ipkg && \
-	$(INSTALL) -d $(prefix)/$*cdkroot/etc && $(INSTALL) -m 644 root/etc/ipkg.conf $(prefix)/$*cdkroot/etc && \
-	$(INSTALL) -d $(prefix)/$*cdkroot/etc/ipkg
-	$(INSTALL) -d $(prefix)/$*cdkroot/usr/lib/ipkg
-	$(INSTALL) -m 644 root/usr/lib/ipkg/status.initial $(prefix)/$*cdkroot/usr/lib/ipkg/status
+	$(INSTALL) -j$(MAKE_JOBS) -d $(prefix)/$*cdkroot/etc && $(INSTALL) -m 644 root/etc/ipkg.conf $(prefix)/$*cdkroot/etc && \
+	$(INSTALL) -j$(MAKE_JOBS) -d $(prefix)/$*cdkroot/etc/ipkg
+	$(INSTALL) -j$(MAKE_JOBS) -d $(prefix)/$*cdkroot/usr/lib/ipkg
+	$(INSTALL) -j$(MAKE_JOBS) -m 644 root/usr/lib/ipkg/status.initial $(prefix)/$*cdkroot/usr/lib/ipkg/status
 	@CLEANUP_ipkg@
 	touch $@
 
@@ -301,7 +301,7 @@ CONFIG_ZD1211B :=
 $(D)/zd1211: $(D)/bootstrap @DEPENDS_zd1211@
 	@PREPARE_zd1211@
 	cd @DIR_zd1211@ && \
-		$(MAKE) KERNEL_LOCATION=$(buildprefix)/$(KERNEL_DIR) \
+		$(MAKE) -j$(MAKE_JOBS) KERNEL_LOCATION=$(buildprefix)/$(KERNEL_DIR) \
 			ZD1211B=$(ZD1211B) \
 			CROSS_COMPILE=$(target)- ARCH=sh \
 			BIN_DEST=$(targetprefix)/bin \
@@ -324,7 +324,7 @@ $(D)/nano: $(D)/bootstrap @DEPENDS_nano@
 			--enable-tiny \
 			--enable-color \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_nano@
 	@CLEANUP_nano@
 	touch $@
@@ -340,7 +340,7 @@ $(D)/rsync: $(D)/bootstrap @DEPENDS_rsync@
 			--disable-debug \
 			--disable-locale \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_rsync@
 	@CLEANUP_rsync@
 	touch $@
@@ -351,7 +351,7 @@ $(D)/rsync: $(D)/bootstrap @DEPENDS_rsync@
 $(D)/rfkill: $(D)/bootstrap @DEPENDS_rfkill@
 	@PREPARE_rfkill@
 	cd @DIR_rfkill@ && \
-		$(MAKE) $(MAKE_OPTS) \
+		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) \
 		&& \
 		@INSTALL_rfkill@
 	@CLEANUP_rfkill@
@@ -385,7 +385,7 @@ $(D)/fuse: $(D)/bootstrap @DEPENDS_fuse@
 			--target=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_fuse@
 		-rm $(prefix)/$*cdkroot/etc/udev/rules.d/99-fuse.rules
 		-rmdir $(prefix)/$*cdkroot/etc/udev/rules.d
@@ -406,7 +406,7 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/fuse @DEPENDS_curlftpfs@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_curlftpfs@
 	@CLEANUP_curlftpfs@
 	touch $@
@@ -436,7 +436,7 @@ $(D)/mplayer: $(D)/bootstrap @DEPENDS_mplayer@
 			--prefix=/usr \
 			--disable-mencoder \
 		&& \
-		$(MAKE) CC="$(target)-gcc" && \
+		$(MAKE) -j$(MAKE_JOBS) CC="$(target)-gcc" && \
 		@INSTALL_mplayer@
 	@CLEANUP_mplayer@
 	touch $@
@@ -479,7 +479,7 @@ $(D)/mencoder: $(D)/bootstrap @DEPENDS_mencoder@
 			--disable-dvb \
 			--disable-mplayer \
 		&& \
-		$(MAKE) CC="$(target)-gcc" && \
+		$(MAKE) -j$(MAKE_JOBS) CC="$(target)-gcc" && \
 		@INSTALL_mencoder@
 	@CLEANUP_mencoder@
 	touch $@
@@ -495,7 +495,7 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_jfsutils@
 			--prefix= \
 			--target=$(target) \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_jfsutils@
 	@CLEANUP_jfsutils@
 	touch $@
@@ -506,7 +506,7 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_jfsutils@
 $(D)/dosfstools: $(D)/bootstrap @DEPENDS_dosfstools@
 	@PREPARE_dosfstools@
 	cd @DIR_dosfstools@ && \
-		$(MAKE) all \
+		$(MAKE) -j$(MAKE_JOBS) all \
 			CC=$(target)-gcc \
 			OPTFLAGS="$(TARGET_CFLAGS) -fomit-frame-pointer -D_FILE_OFFSET_BITS=64" \
 		&& \
@@ -524,8 +524,8 @@ $(D)/hddtemp: $(D)/bootstrap @DEPENDS_hddtemp@
 			--prefix= \
 			--with-db_path=/var/hddtemp.db \
 		&& \
-		$(MAKE) all && \
-		$(MAKE) install DESTDIR=$(targetprefix)
+		$(MAKE) -j$(MAKE_JOBS) all && \
+		$(MAKE) -j$(MAKE_JOBS) install DESTDIR=$(targetprefix)
 		$(INSTALL) -d $(targetprefix)/var/tuxbox/config
 		$(INSTALL) -m 644 root/release/hddtemp.db $(targetprefix)/var
 	@CLEANUP_hddtemp@
@@ -538,7 +538,7 @@ $(D)/hdparm: $(D)/bootstrap @DEPENDS_hdparm@
 	@PREPARE_hdparm@
 	cd @DIR_hdparm@ && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=$(target)- all \
+		$(MAKE) -j$(MAKE_JOBS) CROSS=$(target)- all \
 		&& \
 		@INSTALL_hdparm@
 	@CLEANUP_hdparm@
@@ -554,7 +554,7 @@ $(D)/fdisk: $(D)/bootstrap $(D)/parted @DEPENDS_fdisk@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_fdisk@
 	@CLEANUP_fdisk@
 	touch $@
@@ -571,7 +571,7 @@ $(D)/parted: $(D)/bootstrap $(D)/libreadline $(D)/e2fsprogs @DEPENDS_parted@
 			--disable-device-mapper \
 			--disable-nls \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_parted@
 	@CLEANUP_parted@
 	touch $@
@@ -590,7 +590,7 @@ $(D)/opkg: $(D)/bootstrap @DEPENDS_opkg@
 			--disable-gpg \
 			--with-opkglibdir=/var \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_opkg@
 	@CLEANUP_opkg@
 	touch $@
@@ -605,7 +605,7 @@ $(D)/sysstat: $(D)/bootstrap @DEPENDS_sysstat@
 			--prefix=/usr \
 			--disable-documentation \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_sysstat@
 	@CLEANUP_sysstat@
 	touch $@
@@ -621,7 +621,7 @@ $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_autofs@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all CC=$(target)-gcc STRIP=$(target)-strip SUBDIRS="lib daemon modules" && \
+		$(MAKE) -j$(MAKE_JOBS) all CC=$(target)-gcc STRIP=$(target)-strip SUBDIRS="lib daemon modules" && \
 		@INSTALL_autofs@
 	@CLEANUP_autofs@
 	touch $@
@@ -655,7 +655,7 @@ $(D)/imagemagick: $(D)/bootstrap @DEPENDS_imagemagick@
 			--enable-static \
 			--without-x \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_imagemagick@
 	@CLEANUP_imagemagick@
 	touch $@
@@ -671,7 +671,7 @@ $(D)/hotplug_e2: $(D)/bootstrap @DEPENDS_hotplug_e2@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_hotplug_e2@
 	@CLEANUP_hotplug_e2@
 	touch $@
@@ -687,7 +687,7 @@ $(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/libalsa @DEPENDS_shai
 		sed -i 's|pkg-config|$$PKG_CONFIG|g' configure && \
 		PKG_CONFIG=$(hostprefix)/bin/$(target)-pkg-config \
 		$(BUILDENV) \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_shairport@
 	@CLEANUP_shairport@
 	touch $@
@@ -713,7 +713,7 @@ $(D)/dbus: $(D)/bootstrap $(D)/libexpat @DEPENDS_dbus@
 			--disable-systemd \
 			--disable-static \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_dbus@
 	@CLEANUP_dbus@
 	touch $@
@@ -743,7 +743,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi
 			--enable-core-docs \
 			--with-distro=none \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_avahi@
 	@CLEANUP_avahi@
 	touch $@
@@ -754,7 +754,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi
 $(D)/mtd_utils: $(D)/bootstrap $(D)/zlib $(D)/lzo $(D)/e2fsprogs @DEPENDS_mtd_utils@
 	@PREPARE_mtd_utils@
 	cd @DIR_mtd_utils@ && \
-		$(BUILDENV) $(MAKE) PREFIX= CC=${target}-gcc LD=${target}-ld STRIP=${target}-strip `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(targetprefix) install && \
+		$(BUILDENV)$(MAKE) -j$(MAKE_JOBS) PREFIX= CC=${target}-gcc LD=${target}-ld STRIP=${target}-strip `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(targetprefix) install && \
 		cp -a $(targetprefix)/sbin/{mkfs.jffs2,sumtool,nandwrite} $(hostprefix)/bin && \
 		@INSTALL_mtd_utils@
 	@CLEANUP_mtd_utils@
@@ -775,7 +775,7 @@ $(D)/wget: $(D)/bootstrap $(D)/openssl @DEPENDS_wget@
 			--disable-debug \
 			--disable-nls \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_wget@
 	@CLEANUP_wget@
 	touch $@
@@ -789,7 +789,7 @@ $(D)/smartmontools: $(D)/bootstrap @DEPENDS_smartmontools@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_smartmontools@
 	@CLEANUP_smartmontools@
 	touch $@

@@ -26,7 +26,7 @@ $(D)/libncurses: $(D)/bootstrap @DEPENDS_libncurses@
 			--without-manpages \
 			--with-fallbacks='linux vt100 xterm' \
 		&& \
-		$(MAKE) libs \
+		$(MAKE) -j$(MAKE_JOBS) libs \
 			HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)" && \
@@ -48,7 +48,7 @@ $(D)/openssl: $(D)/bootstrap @DEPENDS_openssl@
 			--prefix=/usr \
 			--openssldir=/etc/ssl \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_openssl@
 	@CLEANUP_openssl@
 	touch $@
@@ -63,7 +63,7 @@ $(D)/libbluray: $(D)/bootstrap @DEPENDS_libbluray@
 			--prefix=/usr \
 			--without-libxml2 \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libbluray@
 	@CLEANUP_libbluray@
 	touch $@
@@ -79,7 +79,7 @@ $(D)/lua: $(D)/bootstrap $(D)/libncurses $(archivedir)/luaposix.git @DEPENDS_lua
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
 		sed -i 's|man/man1|.remove|' Makefile; \
-		$(MAKE) linux CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" BUILDMODE=dynamic PKG_VERSION=5.2.4 && \
+		$(MAKE) -j$(MAKE_JOBS) linux CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" BUILDMODE=dynamic PKG_VERSION=5.2.4 && \
 		@INSTALL_lua@
 	@CLEANUP_lua@
 	touch $@
@@ -92,7 +92,7 @@ $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua @DEPENDS_luacurl@
 	[ -d "$(archivedir)/luacurl.git" ] && \
 	(cd $(archivedir)/luacurl.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_luacurl@ && \
-		$(MAKE) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" \
+		$(MAKE) -j$(MAKE_JOBS) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" \
 			LIBDIR=$(targetprefix)/usr/lib \
 			LUA_INC=$(targetprefix)/usr/include \
 		&& \
@@ -106,7 +106,7 @@ $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua @DEPENDS_luacurl@
 $(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/libexpat @DEPENDS_luaexpat@
 	@PREPARE_luaexpat@
 	cd @DIR_luaexpat@ && \
-		$(MAKE) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" PREFIX=$(targetprefix)/usr && \
+		$(MAKE) -j$(MAKE_JOBS) CC=$(target)-gcc LDFLAGS="-L$(targetprefix)/usr/lib" PREFIX=$(targetprefix)/usr && \
 		@INSTALL_luaexpat@
 	@CLEANUP_luaexpat@
 	touch $@
@@ -122,7 +122,7 @@ $(D)/libao: $(D)/bootstrap @DEPENDS_libao@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libao@
 	@CLEANUP_libao@
 	touch $@
@@ -138,7 +138,7 @@ $(D)/howl: $(D)/bootstrap @DEPENDS_howl@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_howl@
 	@CLEANUP_howl@
 	touch $@
@@ -164,7 +164,7 @@ $(D)/zlib: $(D)/bootstrap @DEPENDS_zlib@
 			--prefix=/usr \
 			--shared \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_zlib@
 	@CLEANUP_zlib@
 	touch $@
@@ -177,7 +177,7 @@ $(D)/bzip2: $(D)/bootstrap @DEPENDS_bzip2@
 	cd @DIR_bzip2@ && \
 	mv Makefile-libbz2_so Makefile && \
 		CC=$(target)-gcc AR=$(target)-ar RANLIB=$(target)-ranlib \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_bzip2@
 	@CLEANUP_bzip2@
 	touch $@
@@ -198,7 +198,7 @@ $(D)/libreadline: $(D)/bootstrap @DEPENDS_libreadline@
 			bash_cv_have_mbstate_t=yes \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libreadline@
 	@CLEANUP_libreadline@
 	touch $@
@@ -218,7 +218,7 @@ $(D)/libfreetype: $(D)/bootstrap $(D)/zlib $(D)/bzip2 $(D)/libpng @DEPENDS_libfr
 			--host=$(target) \
 			--prefix=$(targetprefix)/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libfreetype@
 		if [ ! -e $(targetprefix)/usr/include/freetype ] ; then \
 			ln -sf freetype2 $(targetprefix)/usr/include/freetype; \
@@ -258,7 +258,7 @@ $(D)/lirc: $(D)/bootstrap @DEPENDS_lirc@
 			--with-syslog=LOG_DAEMON \
 			--enable-sandboxed \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_lirc@
 	@CLEANUP_lirc@
 	touch $@
@@ -274,7 +274,7 @@ $(D)/libjpeg: $(D)/bootstrap @DEPENDS_libjpeg@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libjpeg@
 	@CLEANUP_libjpeg@
 	touch $@
@@ -296,7 +296,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap @DEPENDS_libjpeg_turbo@
 			--bindir=$(targetprefix)/.remove \
 			--prefix=/usr \
 			&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libjpeg_turbo@
 	cd @DIR_libjpeg_turbo@ && \
 		make clean && \
@@ -309,7 +309,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap @DEPENDS_libjpeg_turbo@
 			--bindir=$(targetprefix)/.remove \
 			--prefix=/usr \
 			&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libjpeg_turbo@
 	@CLEANUP_libjpeg_turbo@
 	touch $@
@@ -325,7 +325,7 @@ $(D)/libpng12: $(D)/bootstrap @DEPENDS_libpng12@
 			--mandir=$(targetprefix)/.remove \
 			--bindir=$(hostprefix)/bin \
 		&& \
-		ECHO=echo $(MAKE) all && \
+		ECHO=echo $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libpng@
 	@CLEANUP_libpng12@
 	touch $@
@@ -341,7 +341,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib @DEPENDS_libpng@
 			--mandir=$(targetprefix)/.remove \
 			--bindir=$(hostprefix)/bin \
 		&& \
-		ECHO=echo $(MAKE) all && \
+		ECHO=echo $(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libpng@
 	@CLEANUP_libpng@
 	touch $@
@@ -367,7 +367,7 @@ $(D)/libungif: $(D)/bootstrap @DEPENDS_libungif@
 			--bindir=/.remove \
 			--without-x \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libungif@
 	@CLEANUP_libungif@
 	touch $@
@@ -383,7 +383,7 @@ $(D)/libgif: $(D)/bootstrap @DEPENDS_libgif@
 			--prefix=/usr \
 			--bindir=/.remove \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libgif@
 	@CLEANUP_libgif@
 	touch $@
@@ -398,7 +398,7 @@ $(D)/libgif_e2: $(D)/bootstrap @DEPENDS_libgif_e2@
 			--prefix=/usr \
 			--without-x \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libgif_e2@
 	@CLEANUP_libgif_e2@
 	touch $@
@@ -426,7 +426,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/openssl $(D)/zlib @DEPENDS_libcurl@
 			--with-ssl=$(targetprefix) \
 			--mandir=/.remove \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < curl-config > $(hostprefix)/bin/curl-config && \
 		chmod 755 $(hostprefix)/bin/curl-config && \
 		@INSTALL_libcurl@
@@ -451,7 +451,7 @@ $(D)/libfribidi: $(D)/bootstrap @DEPENDS_libfribidi@
 			--prefix=/usr \
 			--mandir=/.remove \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libfribidi@
 	@CLEANUP_libfribidi@
 	touch $@
@@ -466,7 +466,7 @@ $(D)/libsigc_e2: $(D)/bootstrap @DEPENDS_libsigc_e2@
 			--prefix=/usr \
 			--disable-checks \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libsigc_e2@
 	@CLEANUP_libsigc_e2@
 	touch $@
@@ -482,7 +482,7 @@ $(D)/libsigc: $(D)/bootstrap @DEPENDS_libsigc@
 			--enable-shared \
 			--disable-documentation \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libsigc@
 		if [ -d $(targetprefix)/usr/include/sigc++-2.0/sigc++ ] ; then \
 			ln -sf ./sigc++-2.0/sigc++ $(targetprefix)/usr/include/sigc++; \
@@ -506,7 +506,7 @@ $(D)/libmad: $(D)/bootstrap @DEPENDS_libmad@
 			--enable-speed \
 			--enable-sso \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libmad@
 	@CLEANUP_libmad@
 	touch $@
@@ -523,7 +523,7 @@ $(D)/libid3tag: $(D)/bootstrap $(D)/zlib @DEPENDS_libid3tag@
 			--prefix=/usr \
 			--enable-shared=yes \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libid3tag@
 	@CLEANUP_libid3tag@
 	touch $@
@@ -539,7 +539,7 @@ $(D)/libvorbis: $(D)/bootstrap $(D)/libogg @DEPENDS_libvorbis@
 			--disable-docs \
 			--disable-examples \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libvorbis@
 	@CLEANUP_libvorbis@
 	touch $@
@@ -553,7 +553,7 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg @DEPENDS_libvorbisidec@
 		ACLOCAL_FLAGS="-I . -I $(targetprefix)/usr/share/aclocal" \
 		$(BUILDENV) ./autogen.sh $(CONFIGURE_OPTS) --prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libvorbisidec@
 	@CLEANUP_libvorbisidec@
 	touch $@
@@ -567,7 +567,7 @@ $(D)/libdca: $(D)/bootstrap @DEPENDS_libdca@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libdca@
 	@CLEANUP_libdca@
 	touch $@
@@ -583,7 +583,7 @@ $(D)/libffi: $(D)/bootstrap @DEPENDS_libffi@
 			--disable-static \
 			--enable-builddir=libffi \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libffi@
 	@CLEANUP_libffi@
 	touch $@
@@ -597,7 +597,7 @@ $(D)/orc: $(D)/bootstrap @DEPENDS_orc@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_orc@
 	@CLEANUP_orc@
 	touch $@
@@ -623,7 +623,7 @@ $(D)/glib2: $(D)/bootstrap $(D)/host_glib2_genmarshal $(D)/zlib $(D)/libffi @DEP
 			--with-threads="posix" \
 			--enable-static \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_glib2@
 	@CLEANUP_glib2@
 	touch $@
@@ -642,7 +642,7 @@ $(D)/libiconv: $(D)/bootstrap @DEPENDS_libiconv@
 			--datarootdir=/.remove \
 			--bindir=/.remove \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		cp ./srcm4/* $(hostprefix)/share/aclocal/ && \
 		@INSTALL_libiconv@
 	@CLEANUP_libiconv@
@@ -668,7 +668,7 @@ $(D)/libmng: $(D)/bootstrap $(D)/libjpeg $(D)/lcms @DEPENDS_libmng@
 			--with-gnu-ld \
 			--with-lcms \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libmng@
 	@CLEANUP_libmng@
 	touch $@
@@ -687,7 +687,7 @@ $(D)/lcms: $(D)/bootstrap $(D)/libjpeg @DEPENDS_lcms@
 			--enable-shared \
 			--enable-static \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_lcms@
 	@CLEANUP_lcms@
 	touch $@
@@ -718,7 +718,7 @@ $(D)/directfb: $(D)/bootstrap $(D)/libfreetype @DEPENDS_directfb@
 			--enable-mme=yes && \
 			export top_builddir=`pwd` \
 		&& \
-		$(MAKE) LD=$(target)-ld && \
+		$(MAKE) -j$(MAKE_JOBS) LD=$(target)-ld && \
 		@INSTALL_directfb@
 	@CLEANUP_directfb@
 	touch $@
@@ -736,7 +736,7 @@ $(D)/dfbpp: $(D)/bootstrap $(D)/libjpeg $(D)/directfb @DEPENDS_dfbpp@
 			--prefix=/usr && \
 			export top_builddir=`pwd` \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_dfbpp@
 	@CLEANUP_dfbpp@
 	touch $@
@@ -755,7 +755,7 @@ $(D)/libstgles: $(D)/bootstrap $(D)/directfb @DEPENDS_libstgles@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libstgles@
 	@CLEANUP_libstgles@
 	touch $@
@@ -771,7 +771,7 @@ $(D)/libexpat: $(D)/bootstrap @DEPENDS_libexpat@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libexpat@
 	@CLEANUP_libexpat@
 	touch $@
@@ -793,7 +793,7 @@ $(D)/fontconfig: $(D)/bootstrap $(D)/libexpat $(D)/libfreetype @DEPENDS_fontconf
 			--disable-docs \
 			--without-add-fonts \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_fontconfig@
 	@CLEANUP_fontconfig@
 	touch $@
@@ -807,7 +807,7 @@ $(D)/a52dec: $(D)/bootstrap @DEPENDS_a52dec@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_a52dec@
 	@CLEANUP_a52dec@
 	touch $@
@@ -822,7 +822,7 @@ $(D)/libdvdcss: $(D)/bootstrap @DEPENDS_libdvdcss@
 			--prefix=/usr \
 			--disable-doc \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libdvdcss@
 	@CLEANUP_libdvdcss@
 	touch $@
@@ -842,7 +842,7 @@ $(D)/libdvdnav: $(D)/bootstrap $(D)/libdvdread @DEPENDS_libdvdnav@
 			--enable-static \
 			--enable-shared \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libdvdnav@
 	@CLEANUP_libdvdnav@
 	touch $@
@@ -858,7 +858,7 @@ $(D)/libdvdread: $(D)/bootstrap @DEPENDS_libdvdread@
 			--enable-static \
 			--enable-shared \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libdvdread@
 	@CLEANUP_libdvdread@
 	touch $@
@@ -880,7 +880,7 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav @DEPENDS_libdreamdvd@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libdreamdvd@
 	@CLEANUP_libdreamdvd@
 	touch $@
@@ -899,7 +899,7 @@ $(D)/libfdk_aac: $(D)/bootstrap @DEPENDS_libfdk_aac@
 			--disable-shared \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libfdk_aac@
 	@CLEANUP_libfdk_aac@
 	touch $@
@@ -1105,7 +1105,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/libass $(LIBXML2) $(LIBRTMPDUMP) @
 			--arch=sh4 \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_ffmpeg@
 	@CLEANUP_ffmpeg@
 	touch $@
@@ -1121,7 +1121,7 @@ $(D)/libass: $(D)/bootstrap $(D)/libfreetype $(D)/libfribidi @DEPENDS_libass@
 			--disable-fontconfig \
 			--disable-enca \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libass@
 	@CLEANUP_libass@
 	touch $@
@@ -1157,7 +1157,7 @@ $(D)/webkitdfb: $(D)/bootstrap $(D)/glib2 $(D)/icu4c $(D)/libxml2_e2 $(D)/enchan
 			--disable-web-sockets \
 			--with-networking-backend=soup \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_webkitdfb@
 	@CLEANUP_webkitdfb@
 	touch $@
@@ -1208,7 +1208,7 @@ $(D)/enchant: $(D)/bootstrap $(D)/glib2 @DEPENDS_enchant@
 			--disable-myspell \
 			--disable-zemberek \
 		&& \
-		$(MAKE) LD=$(target)-ld && \
+		$(MAKE) -j$(MAKE_JOBS) LD=$(target)-ld && \
 		@INSTALL_enchant@
 	@CLEANUP_enchant@
 	touch $@
@@ -1225,7 +1225,7 @@ $(D)/lite: $(D)/bootstrap $(D)/directfb @DEPENDS_lite@
 			--prefix=/usr \
 			--disable-debug \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_lite@
 	@CLEANUP_lite@
 	touch $@
@@ -1241,7 +1241,7 @@ $(D)/sqlite: $(D)/bootstrap @DEPENDS_sqlite@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_sqlite@
 	@CLEANUP_sqlite@
 	touch $@
@@ -1257,7 +1257,7 @@ $(D)/libsoup: $(D)/bootstrap @DEPENDS_libsoup@
 			--disable-more-warnings \
 			--without-gnome \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libsoup@
 	@CLEANUP_libsoup@
 	touch $@
@@ -1271,7 +1271,7 @@ $(D)/pixman: $(D)/bootstrap @DEPENDS_pixman@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_pixman@
 	@CLEANUP_pixman@
 	touch $@
@@ -1296,7 +1296,7 @@ $(D)/cairo: $(D)/bootstrap $(D)/libpng $(D)/pixman @DEPENDS_cairo@
 			--enable-directfb \
 			--program-suffix=-directfb \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_cairo@
 	@CLEANUP_cairo@
 	touch $@
@@ -1312,7 +1312,7 @@ $(D)/libogg: $(D)/bootstrap @DEPENDS_libogg@
 			--disable-static \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libogg@
 	@CLEANUP_libogg@
 	touch $@
@@ -1341,7 +1341,7 @@ $(D)/libflac: $(D)/bootstrap @DEPENDS_libflac@
 			--disable-thorough-tests \
 			--disable-altivec \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libflac@
 	@CLEANUP_libflac@
 	touch $@
@@ -1363,7 +1363,7 @@ $(D)/libxml2_e2: $(D)/bootstrap $(D)/zlib $(D)/python @DEPENDS_libxml2_e2@
 			--without-docbook \
 			--without-mem-debug \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < xml2-config > $(hostprefix)/bin/xml2-config && \
 		chmod 755 $(hostprefix)/bin/xml2-config && \
 		@INSTALL_libxml2_e2@
@@ -1396,7 +1396,7 @@ $(D)/libxml2: $(D)/bootstrap $(D)/zlib @DEPENDS_libxml2@
 			--without-docbook \
 			--without-mem-debug \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < xml2-config > $(hostprefix)/bin/xml2-config && \
 		chmod 755 $(hostprefix)/bin/xml2-config && \
 		@INSTALL_libxml2@
@@ -1423,7 +1423,7 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2_e2 @DEPENDS_libxslt@
 			--without-debug \
 			--without-mem-debug \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < xslt-config > $(hostprefix)/bin/xslt-config && \
 		chmod 755 $(hostprefix)/bin/xslt-config && \
 		@INSTALL_libxslt@
@@ -1451,7 +1451,7 @@ $(D)/graphlcd: $(D)/bootstrap $(D)/libfreetype $(D)/libusb @DEPENDS_graphlcd@
 		export TARGET=$(target)- && \
 		export LDFLAGS="-L$(targetprefix)/usr/lib -Wl,-rpath-link,$(targetprefix)/usr/lib" && \
 		export PKG_CONFIG_PATH="$(targetprefix)/usr/lib/pkgconfig" && \
-		$(MAKE) all DESTDIR=$(targetprefix) && \
+		$(MAKE) -j$(MAKE_JOBS) all DESTDIR=$(targetprefix) && \
 		@INSTALL_graphlcd@
 	@CLEANUP_graphlcd@
 	touch $@
@@ -1481,7 +1481,7 @@ $(D)/lcd4_linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd2 $(D)/libusb @DEPEN
 			--with-plugins='all,!apm,!asterisk,!dbus,!dvb,!gps,!hddtemp,!huawei,!imon,!isdn,!kvv,!mpd,!mpris_dbus,!mysql,!pop3,!ppp,!python,!qnaplog,!raspi,!sample,!seti,!w1retap,!wireless,!xmms' \
 			--without-ncurses \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_lcd4_linux@
 	@CLEANUP_lcd4_linux@
 	touch $@
@@ -1493,7 +1493,7 @@ $(D)/libdpfax: bootstrap libusbcompat @DEPENDS_libdpfax@
 	@PREPARE_libdpfax@
 	cd @DIR_libdpfax@ && \
 		$(BUILDENV) \
-			$(MAKE) all &&\
+			$(MAKE) -j$(MAKE_JOBS) all &&\
 		@INSTALL_libdpfax@
 	@CLEANUP_libdpfax@
 	touch $@
@@ -1505,7 +1505,7 @@ $(D)/libdpf: bootstrap libusbcompat @DEPENDS_libdpf@
 	@PREPARE_libdpf@
 	cd @DIR_libdpf@ && \
 	$(BUILDENV) \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		cp dpf.h $(targetprefix)/usr/include/ && \
 		cp sglib.h $(targetprefix)/usr/include/ && \
 		cp usbuser.h $(targetprefix)/usr/include/ && \
@@ -1524,7 +1524,7 @@ $(D)/libgd2: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype @DEPENDS_l
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libgd2@
 	@CLEANUP_libgd2@
 	touch $@
@@ -1543,7 +1543,7 @@ $(D)/libusb: $(D)/bootstrap @DEPENDS_libusb@
 			--disable-debug-log \
 			--disable-examples-build \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libusb@
 	@CLEANUP_libusb@
 	touch $@
@@ -1559,7 +1559,7 @@ $(D)/libusbcompat: $(D)/bootstrap $(D)/libusb @DEPENDS_libusbcompat@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libusbcompat@
 	@CLEANUP_libusbcompat@
 	touch $@
@@ -1582,7 +1582,7 @@ $(D)/evebrowser: $(D)/webkitdfb @DEPENDS_evebrowser@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_evebrowser@ && \
 		cp -ar enigma2/HbbTv $(targetprefix)/usr/lib/enigma2/python/Plugins/SystemPlugins/
 	@CLEANUP_evebrowser@
@@ -1595,7 +1595,7 @@ $(D)/brofs: $(D)/bootstrap @DEPENDS_brofs@
 	@PREPARE_brofs@
 	cd @DIR_brofs@ && \
 		$(BUILDENV) \
-			$(MAKE) all && \
+			$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_brofs@
 	@CLEANUP_brofs@
 	touch $@
@@ -1609,7 +1609,7 @@ $(D)/libcap: $(D)/bootstrap @DEPENDS_libcap@
 		export CROSS_BASE=$(crossprefix) && \
 		export TARGET=$(target) && \
 		export TARGETPREFIX=$(targetprefix) && \
-		$(MAKE) -C libcap LIBATTR=no INCDIR=$(targetprefix)/usr/include LIBDIR=$(targetprefix)/usr/lib install
+		$(MAKE) -j$(MAKE_JOBS) -C libcap LIBATTR=no INCDIR=$(targetprefix)/usr/include LIBDIR=$(targetprefix)/usr/lib install
 	@CLEANUP_libcap@
 	touch $@
 
@@ -1633,7 +1633,7 @@ $(D)/libalsa: $(D)/bootstrap @DEPENDS_libalsa@
 			--disable-hwdep \
 			--disable-python \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libalsa@
 	@CLEANUP_libalsa@
 	touch $@
@@ -1656,7 +1656,7 @@ $(D)/alsautils: $(D)/bootstrap @DEPENDS_alsautils@
 			--disable-alsamixer \
 			--disable-xmlto \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_alsautils@
 	@CLEANUP_alsautils@
 	touch $@
@@ -1681,7 +1681,7 @@ $(D)/libopenthreads: $(D)/bootstrap @DEPENDS_libopenthreads@
 			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE=1 && \
 			find . -name cmake_install.cmake -print0 | xargs -0 \
 			sed -i 's@SET(CMAKE_INSTALL_PREFIX "/usr/local")@SET(CMAKE_INSTALL_PREFIX "")@' && \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libopenthreads@
 	@CLEANUP_libopenthreads@
 	touch $@
@@ -1700,7 +1700,7 @@ $(D)/pugixml: $(D)/bootstrap @DEPENDS_pugixml@
 		-DCMAKE_C_COMPILER=$(target)-gcc \
 		-DCMAKE_CXX_COMPILER=$(target)-g++ \
 		scripts && \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_pugixml@
 	@CLEANUP_pugixml@
 	touch $@
@@ -1728,7 +1728,7 @@ $(D)/libdvbsipp: $(D)/bootstrap @DEPENDS_libdvbsipp@
 		$(CONFIGURE) \
 			--prefix=$(targetprefix)/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libdvbsipp@
 	@CLEANUP_libdvbsipp@
 	touch $@
@@ -1743,7 +1743,7 @@ $(D)/libmpeg2: $(D)/bootstrap @DEPENDS_libmpeg2@
 			--disable-sdl \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libmpeg2@
 	@CLEANUP_libmpeg2@
 	touch $@
@@ -1759,7 +1759,7 @@ $(D)/libsamplerate: $(D)/bootstrap @DEPENDS_libsamplerate@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libsamplerate@
 	@CLEANUP_libsamplerate@
 	touch $@
@@ -1775,7 +1775,7 @@ $(D)/libmodplug: $(D)/bootstrap @DEPENDS_libmodplug@
 			--host=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libmodplug@
 	@CLEANUP_libmodplug@
 	touch $@
@@ -1789,7 +1789,7 @@ $(D)/libtiff: $(D)/bootstrap @DEPENDS_libtiff@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libtiff@
 	@CLEANUP_libtiff@
 	touch $@
@@ -1803,7 +1803,7 @@ $(D)/lzo: $(D)/bootstrap @DEPENDS_lzo@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_lzo@
 	@CLEANUP_lzo@
 	touch $@
@@ -1818,7 +1818,7 @@ $(D)/yajl: $(D)/bootstrap @DEPENDS_yajl@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) distro && \
+		$(MAKE) -j$(MAKE_JOBS) distro && \
 		@INSTALL_yajl@
 	@CLEANUP_yajl@
 	touch $@
@@ -1834,7 +1834,7 @@ $(D)/libpcre: $(D)/bootstrap @DEPENDS_libpcre@
 			--enable-utf8 \
 			--enable-unicode-properties \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		sed -e "s,^prefix=,prefix=$(targetprefix)," < pcre-config > $(hostprefix)/bin/pcre-config && \
 		chmod 755 $(hostprefix)/bin/pcre-config && \
 		@INSTALL_libpcre@
@@ -1851,7 +1851,7 @@ $(D)/libcdio: $(D)/bootstrap @DEPENDS_libcdio@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libcdio@
 	@CLEANUP_libcdio@
 	touch $@
@@ -1865,7 +1865,7 @@ $(D)/jasper: $(D)/bootstrap @DEPENDS_jasper@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_jasper@
 	@CLEANUP_jasper@
 	touch $@
@@ -1891,7 +1891,7 @@ $(D)/mysql: $(D)/bootstrap @DEPENDS_mysql@
 			--without-docs \
 			--without-innodb \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_mysql@
 	@CLEANUP_mysql@
 	touch $@
@@ -1905,7 +1905,7 @@ $(D)/libmicrohttpd: $(D)/bootstrap @DEPENDS_libmicrohttpd@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libmicrohttpd@
 	@CLEANUP_libmicrohttpd@
 	touch $@
@@ -1919,7 +1919,7 @@ $(D)/libexif: $(D)/bootstrap @DEPENDS_libexif@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libexif@
 	@CLEANUP_libexif@
 	touch $@
@@ -1933,7 +1933,7 @@ $(D)/minidlna: $(D)/bootstrap $(D)/zlib $(D)/sqlite $(D)/libexif $(D)/libjpeg $(
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_minidlna@
 	@CLEANUP_minidlna@
 	touch $@
@@ -1947,7 +1947,7 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse @DEPENDS_djmount@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_djmount@
 	@CLEANUP_djmount@
 	touch $@
@@ -1961,7 +1961,7 @@ $(D)/libupnp: $(D)/bootstrap @DEPENDS_libupnp@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libupnp@
 	@CLEANUP_libupnp@
 	touch $@
@@ -1979,7 +1979,7 @@ $(D)/rarfs: $(D)/bootstrap $(D)/fuse @DEPENDS_rarfs@
 			--includedir=/usr/include/fuse \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_rarfs@
 	@CLEANUP_rarfs@
 	touch $@
@@ -1993,7 +1993,7 @@ $(D)/sshfs: $(D)/bootstrap $(D)/fuse @DEPENDS_sshfs@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_sshfs@
 	@CLEANUP_sshfs@
 	touch $@
@@ -2006,7 +2006,7 @@ $(D)/tinyxml: $(D)/bootstrap @DEPENDS_tinyxml@
 	cd @DIR_tinyxml@ && \
 		libtoolize -f -c && \
 		$(BUILDENV) \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_tinyxml@
 	@CLEANUP_tinyxml@
 	touch $@
@@ -2025,7 +2025,7 @@ $(D)/libnfs: $(D)/bootstrap @DEPENDS_libnfs@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libnfs@
 	@CLEANUP_libnfs@
 	touch $@
@@ -2039,7 +2039,7 @@ $(D)/taglib: $(D)/bootstrap @DEPENDS_taglib@
 		$(BUILDENV) \
 			cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_RELEASE_TYPE=Release . \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_taglib@
 	@CLEANUP_taglib@
 	touch $@
@@ -2055,7 +2055,7 @@ $(D)/libdaemon: $(D)/bootstrap @DEPENDS_libdaemon@
 			--prefix=/usr \
 			--disable-static \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libdaemon@
 	@CLEANUP_libdaemon@
 	touch $@
@@ -2076,7 +2076,7 @@ $(D)/libplist: $(D)/bootstrap @DEPENDS_libplist@
 			find . -name cmake_install.cmake -print0 | xargs -0 \
 			sed -i 's@SET(CMAKE_INSTALL_PREFIX "/usr/local")@SET(CMAKE_INSTALL_PREFIX "")@' \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j$(MAKE_JOBS) all && \
 		@INSTALL_libplist@
 	@CLEANUP_libplist@
 	touch $@
@@ -2090,7 +2090,7 @@ $(D)/gmp: $(D)/bootstrap @DEPENDS_gmp@
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gmp@
 	@CLEANUP_gmp@
 	touch $@
@@ -2105,7 +2105,7 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp @DEPENDS_nettle@
 			--prefix=/usr \
 			--with-gmp=yes \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_nettle@
 	@CLEANUP_nettle@
 	touch $@
@@ -2126,7 +2126,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle @DEPENDS_gnutls@
 			--disable-crywrap \
 			--without-p11-kit \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_gnutls@
 	@CLEANUP_gnutls@
 	touch $@
@@ -2140,7 +2140,7 @@ $(D)/glibnetworking: $(D)/bootstrap $(D)/gnutls $(D)/glib2 @DEPENDS_glibnetworki
 		$(CONFIGURE) \
 			--prefix=/usr/ \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_glibnetworking@
 	@CLEANUP_glibnetworking@
 	touch $@

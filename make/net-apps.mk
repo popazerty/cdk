@@ -13,7 +13,7 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(NFS_UTILS_ADAPTED_ETC_FILES:%=ro
 			--disable-nfsv4 \
 			--without-tcp-wrappers \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_nfs_utils@
 	( cd $(buildprefix)/root/etc && for i in $(NFS_UTILS_ADAPTED_ETC_FILES); do \
 		[ -f $$i ] && $(INSTALL) -m644 $$i $(prefix)/$*cdkroot/etc/$$i || true; \
@@ -30,7 +30,7 @@ $(D)/libevent: $(D)/bootstrap @DEPENDS_libevent@
 		$(CONFIGURE) \
 			--prefix=$(prefix)/$*cdkroot/usr/ \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libevent@
 	@CLEANUP_libevent@
 	touch $@
@@ -45,7 +45,7 @@ $(D)/libnfsidmap: $(D)/bootstrap @DEPENDS_libnfsidmap@
 		ac_cv_func_malloc_0_nonnull=yes \
 			--prefix=$(prefix)/$*cdkroot/usr/ \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libnfsidmap@
 	@CLEANUP_libnfsidmap@
 	touch $@
@@ -56,8 +56,8 @@ $(D)/libnfsidmap: $(D)/bootstrap @DEPENDS_libnfsidmap@
 $(D)/vsftpd: $(D)/bootstrap @DEPENDS_vsftpd@
 	@PREPARE_vsftpd@
 	cd @DIR_vsftpd@ && \
-		$(MAKE) clean && \
-		$(MAKE) $(MAKE_OPTS) CFLAGS="-pipe -Os -g0" && \
+		$(MAKE) -j$(MAKE_JOBS) clean && \
+		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) CFLAGS="-pipe -Os -g0" && \
 		@INSTALL_vsftpd@
 		cp $(buildprefix)/root/etc/vsftpd.conf $(targetprefix)/etc
 	@CLEANUP_vsftpd@
@@ -73,7 +73,7 @@ $(D)/ethtool: $(D)/bootstrap @DEPENDS_ethtool@
 			--libdir=$(targetprefix)/usr/lib \
 			--prefix=/usr \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_ethtool@
 	@CLEANUP_ethtool@
 	touch $@
@@ -138,8 +138,8 @@ $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samb
 			--with-swatdir=/usr/share/swat \
 			--disable-cups \
 		&& \
-		$(MAKE) $(MAKE_OPTS) && \
-		$(MAKE) $(MAKE_OPTS) installservers installbin installscripts installdat installmodules \
+		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) && \
+		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) installservers installbin installscripts installdat installmodules \
 			SBIN_PROGS="bin/smbd bin/nmbd bin/winbindd" DESTDIR=$(prefix)/$*cdkroot/ prefix=./. && \
 	( cd $(buildprefix)/root/etc && for i in $(SAMBA_ADAPTED_ETC_FILES); do \
 		[ -f $$i ] && $(INSTALL) -m644 $$i $(prefix)/$*cdkroot/etc/$$i || true; \
@@ -154,7 +154,7 @@ $(D)/netio: $(D)/bootstrap @DEPENDS_netio@
 	@PREPARE_netio@
 	cd @DIR_netio@ && \
 		$(MAKE_OPTS) \
-		$(MAKE) all O=.o X= CFLAGS="-DUNIX" LIBS="$(LDFLAGS) -lpthread" OUT=-o && \
+		$(MAKE) -j$(MAKE_JOBS) all O=.o X= CFLAGS="-DUNIX" LIBS="$(LDFLAGS) -lpthread" OUT=-o && \
 		$(INSTALL) -d $(prefix)/$*cdkroot/usr/bin && \
 		@INSTALL_netio@
 	@CLEANUP_netio@
@@ -175,7 +175,7 @@ $(D)/ntp: $(D)/bootstrap @DEPENDS_ntp@
 			--without-ntpsnmpd \
 			--disable-debugging \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_ntp@
 	@CLEANUP_ntp@
 	touch $@
@@ -197,7 +197,7 @@ $(D)/lighttpd.do_compile: $(D)/lighttpd.do_prepare
 			--exec-prefix=/usr \
 			--datarootdir=/usr/share \
 		&& \
-		$(MAKE)
+		$(MAKE) -j$(MAKE_JOBS)
 	touch $@
 
 $(D)/lighttpd: \
@@ -220,7 +220,7 @@ $(D)/%lighttpd: $(D)/lighttpd.do_compile
 $(D)/wireless_tools: $(D)/bootstrap @DEPENDS_wireless_tools@
 	@PREPARE_wireless_tools@
 	cd @DIR_wireless_tools@ && \
-		$(MAKE) CC="$(target)-gcc" CFLAGS="$(TARGET_CFLAGS) -I." && \
+		$(MAKE) -j$(MAKE_JOBS) CC="$(target)-gcc" CFLAGS="$(TARGET_CFLAGS) -I." && \
 		@INSTALL_wireless_tools@
 	@CLEANUP_wireless_tools@
 	touch $@
@@ -233,7 +233,7 @@ $(D)/libnl: $(D)/bootstrap $(D)/openssl @DEPENDS_libnl@
 	cd @DIR_libnl@ && \
 		$(CONFIGURE) \
 			--prefix=/usr \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_libnl@
 	@CLEANUP_libnl@
 	touch $@
@@ -269,7 +269,7 @@ $(D)/xupnpd: $(D)/bootstrap @DEPENDS_xupnpd@
 	@PREPARE_xupnpd@
 	cd @DIR_xupnpd@/src && \
 		$(BUILDENV) \
-		$(MAKE) TARGET=$(target) sh4 && \
+		$(MAKE) -j$(MAKE_JOBS) TARGET=$(target) sh4 && \
 		@INSTALL_xupnpd@
 	@CLEANUP_xupnpd@
 	touch $@
@@ -281,7 +281,7 @@ $(D)/udpxy: $(D)/bootstrap @DEPENDS_udpxy@
 	@PREPARE_udpxy@
 	cd @DIR_udpxy@ && \
 		$(BUILDENV) \
-		$(MAKE) $(MAKE_OPTS) && \
+		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) && \
 		@INSTALL_udpxy@
 	@CLEANUP_udpxy@
 	touch $@
@@ -305,7 +305,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo @DEPENDS_openvpn@
 			--enable-password-save \
 			--enable-small \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_openvpn@
 	@CLEANUP_openvpn@
 	touch $@
@@ -324,7 +324,7 @@ $(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl @DEPENDS_openssh@
 			--with-cppflags="-pipe -Os -I$(targetprefix)/usr/include" \
 			--with-ldflags=-"L$(targetprefix)/usr/lib" \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_openssh@
 	@CLEANUP_openssh@
 	touch $@

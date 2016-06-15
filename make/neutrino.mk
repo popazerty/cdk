@@ -69,7 +69,7 @@ $(D)/libstb-hal-cst-next.do_prepare:
 	cp -ra $(archivedir)/libstb-hal-cst-next.git $(sourcedir)/libstb-hal-cst-next;\
 	cp -ra $(sourcedir)/libstb-hal-cst-next $(sourcedir)/libstb-hal-cst-next.org
 	for i in $(NEUTRINO_MP_LIBSTB_CST_NEXT_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/libstb-hal-cst-next && patch -p1 -i $$i; \
 	done;
 	touch $@
@@ -92,17 +92,17 @@ $(D)/libstb-hal-cst-next.config.status: | $(NEUTRINO_DEPS)
 
 $(D)/libstb-hal-cst-next.do_compile: libstb-hal-cst-next.config.status
 	cd $(sourcedir)/libstb-hal-cst-next && \
-		$(MAKE) -C $(LH_OBJDIR)
+		$(MAKE) -j$(MAKE_JOBS) -C $(LH_OBJDIR)
 	touch $@
 
 $(D)/libstb-hal-cst-next: libstb-hal-cst-next.do_prepare libstb-hal-cst-next.do_compile
-	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(targetprefix)
+	$(MAKE) -j$(PROC_CORES) -C $(LH_OBJDIR) install DESTDIR=$(targetprefix)
 	touch $@
 
 libstb-hal-cst-next-clean:
 	rm -f $(D)/libstb-hal-cst-next
 	cd $(LH_OBJDIR) && \
-		$(MAKE) -C $(LH_OBJDIR) distclean
+		$(MAKE) -j$(MAKE_JOBS) -C $(LH_OBJDIR) distclean
 
 libstb-hal-cst-next-distclean:
 	rm -rf $(LH_OBJDIR)
@@ -133,7 +133,7 @@ $(D)/neutrino-mp-cst-next.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-cst-next
 	cp -ra $(archivedir)/neutrino-mp-cst-next.git $(sourcedir)/neutrino-mp-cst-next; \
 	cp -ra $(sourcedir)/neutrino-mp-cst-next $(sourcedir)/neutrino-mp-cst-next.org
 	for i in $(NEUTRINO_MP_CST_NEXT_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/neutrino-mp-cst-next && patch -p1 -i $$i; \
 	done;
 	touch $@
@@ -188,11 +188,11 @@ $(sourcedir)/neutrino-mp-cst-next/src/gui/version.h:
 
 $(D)/neutrino-mp-cst-next.do_compile: neutrino-mp-cst-next.config.status $(sourcedir)/neutrino-mp-cst-next/src/gui/version.h
 	cd $(sourcedir)/neutrino-mp-cst-next && \
-		$(MAKE) -C $(N_OBJDIR) all
+		$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) all
 	touch $@
 
 $(D)/neutrino-mp-cst-next: neutrino-mp-cst-next.do_prepare neutrino-mp-cst-next.do_compile
-	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
+	$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -205,7 +205,7 @@ neutrino-mp-cst-next-clean:
 	rm -f $(D)/neutrino-mp-cst-next
 	rm -f $(sourcedir)/neutrino-mp-cst-next/src/gui/version.h
 	cd $(N_OBJDIR) && \
-		$(MAKE) -C $(N_OBJDIR) distclean
+		$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) distclean
 
 neutrino-mp-cst-next-distclean:
 	rm -rf $(N_OBJDIR)
@@ -243,7 +243,7 @@ $(D)/libstb-hal-next.do_prepare:
 	cp -ra $(archivedir)/libstb-hal-next.git $(sourcedir)/libstb-hal-next;\
 	cp -ra $(sourcedir)/libstb-hal-next $(sourcedir)/libstb-hal-next.org
 	for i in $(NEUTRINO_MP_LIBSTB_NEXT_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/libstb-hal-next && patch -p1 -i $$i; \
 	done;
 	touch $@
@@ -266,17 +266,17 @@ $(D)/libstb-hal-next.config.status: bootstrap
 
 $(D)/libstb-hal-next.do_compile: libstb-hal-next.config.status
 	cd $(sourcedir)/libstb-hal-next && \
-		$(MAKE) -C $(LH_OBJDIR)
+		$(MAKE) -j$(MAKE_JOBS) -C $(LH_OBJDIR)
 	touch $@
 
 $(D)/libstb-hal-next: libstb-hal-next.do_prepare libstb-hal-next.do_compile
-	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(targetprefix)
+	$(MAKE) -j$(MAKE_JOBS) -C $(LH_OBJDIR) install DESTDIR=$(targetprefix)
 	touch $@
 
 libstb-hal-next-clean:
 	rm -f $(D)/libstb-hal-next
 	cd $(LH_OBJDIR) && \
-		$(MAKE) -C $(LH_OBJDIR) distclean
+		$(MAKE) -j$(MAKE_JOBS) -C $(LH_OBJDIR) distclean
 
 libstb-hal-next-distclean:
 	rm -rf $(LH_OBJDIR)
@@ -298,7 +298,7 @@ $(D)/neutrino-mp-next.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-next
 	cp -ra $(archivedir)/neutrino-mp-next.git $(sourcedir)/neutrino-mp-next; \
 	cp -ra $(sourcedir)/neutrino-mp-next $(sourcedir)/neutrino-mp-next.org
 	for i in $(NEUTRINO_MP_NEXT_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/neutrino-mp-next && patch -p1 -i $$i; \
 	done;
 	touch $@
@@ -348,11 +348,11 @@ $(sourcedir)/neutrino-mp-next/src/gui/version.h:
 
 $(D)/neutrino-mp-next.do_compile: neutrino-mp-next.config.status $(sourcedir)/neutrino-mp-next/src/gui/version.h
 	cd $(sourcedir)/neutrino-mp-next && \
-		$(MAKE) -C $(N_OBJDIR) all
+		$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) all
 	touch $@
 
 $(D)/neutrino-mp-next: neutrino-mp-next.do_prepare neutrino-mp-next.do_compile
-	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
+	$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -365,7 +365,7 @@ neutrino-mp-next-clean:
 	rm -f $(D)/neutrino-mp-next
 	rm -f $(sourcedir)/neutrino-mp-next/src/gui/version.h
 	cd $(N_OBJDIR) && \
-		$(MAKE) -C $(N_OBJDIR) distclean
+		$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) distclean
 
 neutrino-mp-next-distclean:
 	rm -rf $(N_OBJDIR)
@@ -410,7 +410,7 @@ $(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2) libflac
 	cp -ra $(archivedir)/neutrino-hd2-exp.git $(sourcedir)/nhd2-exp; \
 	cp -ra $(sourcedir)/nhd2-exp $(sourcedir)/nhd2-exp.org
 	for i in $(NEUTRINO_HD2_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/nhd2-exp && patch -p1 -i $$i; \
 	done;
 	touch $@
@@ -439,7 +439,7 @@ $(D)/neutrino-hd2-exp.config.status:
 
 
 $(D)/neutrino-hd2-exp: neutrino-hd2-exp.do_prepare neutrino-hd2-exp.do_compile
-	$(MAKE) -C $(sourcedir)/nhd2-exp install DESTDIR=$(targetprefix) && \
+	$(MAKE) -j$(MAKE_JOBS) -C $(sourcedir)/nhd2-exp install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -449,14 +449,14 @@ $(D)/neutrino-hd2-exp: neutrino-hd2-exp.do_prepare neutrino-hd2-exp.do_compile
 
 $(D)/neutrino-hd2-exp.do_compile: neutrino-hd2-exp.config.status
 	cd $(sourcedir)/nhd2-exp && \
-		$(MAKE) all
+		$(MAKE) -j$(MAKE_JOBS) all
 	touch $@
 
 neutrino-hd2-exp-clean: neutrino-cdkroot-clean
 	rm -f $(D)/neutrino-hd2-exp
 	rm -f $(D)/neutrino-hd2-exp.config.status
 	cd $(sourcedir)/nhd2-exp && \
-		$(MAKE) clean
+		$(MAKE) -j$(MAKE_JOBS) clean
 
 neutrino-hd2-exp-distclean: neutrino-cdkroot-clean
 	rm -f $(D)/neutrino-hd2-exp*
@@ -497,7 +497,7 @@ $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) libstb-hal-cst-next
 	cp -ra $(archivedir)/neutrino-mp-tangos.git $(sourcedir)/neutrino-mp-tangos; \
 	cp -ra $(sourcedir)/neutrino-mp-tangos $(sourcedir)/neutrino-mp-tangos.org
 	for i in $(NEUTRINO_MP_TANGOS_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/neutrino-mp-tangos && patch -p1 -i $$i; \
 	done;
 	touch $@
@@ -552,11 +552,11 @@ $(sourcedir)/neutrino-mp-tangos/src/gui/version.h:
 
 $(D)/neutrino-mp-tangos.do_compile: neutrino-mp-tangos.config.status $(sourcedir)/neutrino-mp-tangos/src/gui/version.h
 	cd $(sourcedir)/neutrino-mp-tangos && \
-		$(MAKE) -C $(N_OBJDIR) all
+		$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) all
 	touch $@
 
 $(D)/neutrino-mp-tangos: neutrino-mp-tangos.do_prepare neutrino-mp-tangos.do_compile
-	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
+	$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) install DESTDIR=$(targetprefix) && \
 	rm -f $(targetprefix)/var/etc/.version
 	make $(targetprefix)/var/etc/.version
 	$(target)-strip $(targetprefix)/usr/local/bin/neutrino
@@ -569,7 +569,7 @@ neutrino-mp-tangos-clean:
 	rm -f $(D)/neutrino-mp-tangos
 	rm -f $(sourcedir)/neutrino-mp-tangos/src/gui/version.h
 	cd $(N_OBJDIR) && \
-		$(MAKE) -C $(N_OBJDIR) distclean
+		$(MAKE) -j$(MAKE_JOBS) -C $(N_OBJDIR) distclean
 
 neutrino-mp-tangos-distclean:
 	rm -rf $(N_OBJDIR)

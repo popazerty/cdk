@@ -11,7 +11,7 @@ $(D)/host_pkgconfig: @DEPENDS_host_pkgconfig@
 			--with-pc_path=$(targetprefix)/usr/lib/pkgconfig \
 			--with-internal-glib \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) -j$(MAKE_JOBS) && \
 		@INSTALL_host_pkgconfig@
 	@CLEANUP_host_pkgconfig@
 	touch $@
@@ -27,7 +27,7 @@ $(D)/host_module_init_tools: @DEPENDS_host_module_init_tools@ directories
 			--prefix=$(hostprefix) \
 			--sbindir=$(hostprefix)/bin \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_host_module_init_tools@
 	@CLEANUP_host_module_init_tools@
 	touch $@
@@ -38,7 +38,7 @@ $(D)/host_module_init_tools: @DEPENDS_host_module_init_tools@ directories
 $(D)/host_mtd_utils: @DEPENDS_host_mtd_utils@
 	@PREPARE_host_mtd_utils@
 	cd @DIR_host_mtd_utils@ && \
-		$(MAKE) `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(hostprefix) && \
+		$(MAKE) -j$(MAKE_JOBS) `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(hostprefix) && \
 		@INSTALL_host_mtd_utils@
 	@CLEANUP_host_mtd_utils@
 	touch $@
@@ -53,7 +53,7 @@ $(D)/host_libffi: @DEPENDS_host_libffi@
 			--prefix=$(hostprefix) \
 			--disable-static \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j$(MAKE_JOBS) && \
 		@INSTALL_host_libffi@
 	@CLEANUP_host_libffi@
 	touch $@
@@ -71,7 +71,7 @@ $(D)/host_glib2_genmarshal: $(D)/host_libffi @DEPENDS_host_glib2_genmarshal@
 			--enable-shared=no \
 			--prefix=`pwd`/out \
 		&& \
-		$(MAKE) install && \
+		$(MAKE) -j$(MAKE_JOBS) install && \
 		cp -a out/bin/glib-* $(hostprefix)/bin
 	@CLEANUP_host_glib2_genmarshal@
 	touch $@
@@ -82,7 +82,7 @@ $(D)/host_glib2_genmarshal: $(D)/host_libffi @DEPENDS_host_glib2_genmarshal@
 $(D)/host_cramfs: @DEPENDS_host_cramfs@
 	@PREPARE_host_cramfs@
 	cd @DIR_host_cramfs@ && \
-		$(MAKE) mkcramfs && \
+		$(MAKE) -j$(MAKE_JOBS) mkcramfs && \
 		@INSTALL_host_cramfs@
 	@CLEANUP_host_cramfs@
 	touch $@
@@ -93,7 +93,7 @@ $(D)/host_cramfs: @DEPENDS_host_cramfs@
 $(D)/host_squashfs: @DEPENDS_host_squashfs@
 	@PREPARE_host_squashfs@
 	cd @DIR_host_squashfs@ && \
-		$(MAKE) -C squashfs-tools && \
-		$(MAKE) -C squashfs-tools install INSTALL_DIR=$(hostprefix)/bin
+		$(MAKE) -j$(MAKE_JOBS) -C squashfs-tools && \
+		$(MAKE) -j$(MAKE_JOBS) -C squashfs-tools install INSTALL_DIR=$(hostprefix)/bin
 	@CLEANUP_host_squashfs@
 	touch $@

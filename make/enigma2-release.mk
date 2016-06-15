@@ -804,19 +804,6 @@ release_enigma2_arivalink200: release_enigma2_common_utils
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/front_ArivaLink200/vfd.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/front_ArivaLink200/vfd.ko $(prefix)/release/lib/modules/ || true
 
 #
-# release_FORTIS_DP7000
-#
-release_enigma2_fortis_dp7000: release_enigma2_common_utils
-	echo "fortis_dp7000" > $(prefix)/release/etc/hostname
-	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/sbin/lircmd $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irexec $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irrecord $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irsend $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irw $(prefix)/release/usr/bin/
-	mkdir -p $(prefix)/release/var/run/lirc
-
-#
 # release_base
 #
 # the following target creates the common file base
@@ -1358,7 +1345,7 @@ endif
 # IMPORTANT: it is assumed that only one variable is set. Otherwise the target name won't be resolved.
 #
 $(D)/release_enigma2: \
-$(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)$(FORTIS_DP7000)
+$(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)
 	touch $@
 
 #
