@@ -44,7 +44,7 @@ AC_ARG_WITH(boxtype,
 	[  --with-boxtype    valid values: ufs910, ufs912, ufs913, ufs922, ufc960
                              valid values: ipbox55, ipbox99, ipbox9900, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_mini_fta, cuberevo_250hd, cuberevo_2000hd, cuberevo_9500hd, cuberevo_3000hd
                              valid values: tf7700, fortis_hdbox, octagon1008, atevio7500, spark, spark7162, hl101, hs7110, hs7420, hs7810a, hs7119, hs7429, hs7819, adb_box, atemio520, atemio530
-                             valid values: vip, homecast5101, vitamin_hd5000, sagemcom88, arivalink200, fortis_dp7000],
+                             valid values: vip, homecast5101, vitamin_hd5000, sagemcom88, arivalink200],
 	[case "${withval}" in
 dnl		To-Do: extend CPU types and kernel versions when needed
 		ufs910)
@@ -156,9 +156,6 @@ dnl		To-Do: extend CPU types and kernel versions when needed
 			BOXTYPE="$withval"
 			;;
 		arivalink200)
-			BOXTYPE="$withval"
-			;;
-		fortis_dp7000)
 			BOXTYPE="$withval"
 			;;
 		*)
@@ -281,8 +278,6 @@ elif test "$BOXTYPE" = "sagemcom88"; then
 	AC_DEFINE(HAVE_SAGEMCOM88_HARDWARE, 1, [building for a sagemcom88])
 elif test "$BOXTYPE" = "arivalink200"; then
 	AC_DEFINE(HAVE_ARIVALINK200_HARDWARE, 1, [building for a arivalink200])
-elif test "$BOXTYPE" = "fortis_dp7000"; then
-	AC_DEFINE(HAVE_FORTIS_DP7000_HARDWARE, 1, [building for a fortis_dp7000])
 fi
 
 ])

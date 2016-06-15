@@ -754,7 +754,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi
 $(D)/mtd_utils: $(D)/bootstrap $(D)/zlib $(D)/lzo $(D)/e2fsprogs @DEPENDS_mtd_utils@
 	@PREPARE_mtd_utils@
 	cd @DIR_mtd_utils@ && \
-		$(BUILDENV)$(MAKE) -j$(MAKE_JOBS) PREFIX= CC=${target}-gcc LD=${target}-ld STRIP=${target}-strip `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(targetprefix) install && \
+		$(BUILDENV) $(MAKE) -j$(MAKE_JOBS) PREFIX= CC=${target}-gcc LD=${target}-ld STRIP=${target}-strip `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(targetprefix) install && \
 		cp -a $(targetprefix)/sbin/{mkfs.jffs2,sumtool,nandwrite} $(hostprefix)/bin && \
 		@INSTALL_mtd_utils@
 	@CLEANUP_mtd_utils@

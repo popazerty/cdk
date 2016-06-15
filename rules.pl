@@ -343,7 +343,7 @@ sub process_install_rule ($)
 
   if ( $_ eq "make" )
   {
-    $output .= "\$\(MAKE\) " . join " ", @_;
+    $output .= "\$\(MAKE\) -j\$\(MAKE_JOBS\) " . join " ", @_;
   }
   elsif ( $_ eq "install" )
   {

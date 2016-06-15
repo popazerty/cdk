@@ -233,14 +233,6 @@ AC_ARG_ENABLE(hs7819,
 AM_CONDITIONAL(ENABLE_HS7819,test "$enable_hs7819" = "yes")
 AC_SUBST(HS7819)
 
-#AC_ARG_ENABLE(dp7000,
-#	AS_HELP_STRING(--enable-dp7000, enable Fortis DP7000 stuff),
-#	[case "${enableval}" in
-#		yes) DP7000=dp7000 ;;
-#	esac],[enable_dp7000=no])
-#AM_CONDITIONAL(ENABLE_DP7000,test "$enable_dp7000" = "yes")
-#AC_SUBST(DP7000)
-
 AC_ARG_ENABLE(tf7700,
 	AS_HELP_STRING(--enable-tf7700, enable Topfield TF77X0HDPVR stuff),
 	[case "${enableval}" in
@@ -781,12 +773,16 @@ else
 	MEDIAFW_DEP="ffmpeg"
 fi
 
+AC_ARG_VAR([MAKE_JOBS], [Make -j argument, default=1])
+AS_IF([test "x$MAKE_JOBS" = x], [MAKE_JOBS="1"])
+
 AC_ARG_VAR([E2_DIFF], [Enigma2 diff-level, default=0])
 AS_IF([test "x$E2_DIFF" = x], [E2_DIFF="0"])
+
 AC_ARG_VAR(E2_REVISION, Enigma2 revision-level to check out)
 AS_IF([test "x$E2_REVISION" = x], [E2_REVISION="newest"])
 
-if test "$E2_DIFF" == "4"; then
+if test "$E2_DIFF" == "5"; then
 	AC_DEFINE(WITH_XMLCCWRAP, 1, [enables build of xmlccwrap with certain diff levels])
 fi
 AM_CONDITIONAL(WITH_XMLCCWRAP, test "$E2_DIFF" = "4")
@@ -1120,6 +1116,7 @@ MediaFw                     : $MEDIAFW
 MediaFw dependancy          : $MEDIAFW_DEP
 External LCD                : $enable_externallcd
 External LCD dependancy     : $EXTERNALLCD_DEP
+Number of make jobs         : $MAKE_JOBS
 ------------------------------------------------------------------
 ])
 

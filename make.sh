@@ -28,7 +28,7 @@ CONFIGPARAM=" \
  --with-flashscriptdir=$CURRENT_PATH/flash \
  --with-archivedir=$HOME/Archive \
  --with-maxcachesize=3 \
- --enable-ccache"
+ --enable-ccache" \
 
 ##############################################
 
