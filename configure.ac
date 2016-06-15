@@ -782,7 +782,7 @@ AS_IF([test "x$E2_DIFF" = x], [E2_DIFF="0"])
 AC_ARG_VAR(E2_REVISION, Enigma2 revision-level to check out)
 AS_IF([test "x$E2_REVISION" = x], [E2_REVISION="newest"])
 
-if test "$E2_DIFF" == "4"; then
+if test "$E2_DIFF" == "5"; then
 	AC_DEFINE(WITH_XMLCCWRAP, 1, [enables build of xmlccwrap with certain diff levels])
 fi
 AM_CONDITIONAL(WITH_XMLCCWRAP, test "$E2_DIFF" = "4")
