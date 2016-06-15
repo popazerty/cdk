@@ -10,8 +10,6 @@ endif
 
 TVHEADEND_PATCHES = tvheadend.patch
 
-T_CONFIG_OPTS = -DPLATFORM_$(BOXTYPE)
-
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
 	rm -rf $(sourcedir)/tvheadend.org
@@ -25,7 +23,7 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	(cd $(sourcedir)/tvheadend; cd $(sourcedir)/tvheadend; git checkout "$$REVISION"; cd "$(buildprefix)";); \
 	cp -ra $(sourcedir)/tvheadend $(sourcedir)/tvheadend.org
 	for i in $(TVHEADEND_PATCHES); do \
-		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		echo -e "==> \033[31mApplying Patch\033[0m: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/tvheadend && patch -p1 -i $(PATCHES)/$$i; \
 	done;
 	touch $@
@@ -36,9 +34,25 @@ $(D)/tvheadend.config.status:
 		./configure \
 			--build=$(build) \
 			--host=$(target) \
+			--disable-hdhomerun_static \
 			--disable-avahi \
 			--disable-tvhcsa \
 			--disable-libav \
+			--disable-ffmpeg_static \
+			--disable-libx264 \
+			--disable-libx264-static \
+			--disable-libx265 \
+			--disable-libx265-static \
+			--disable-libx264 \
+			--disable-libx264-static \
+			--disable-libvpx \
+			--disable-libvpx-static \
+			--disable-libtheora \
+			--disable-libtheora-static \
+			--disable-libvorbis \
+			--disable-libvorbis-static \
+			--disable-libfdkaac \
+			--disable-libfdkaac-static \
 			--disable-dvben50221 \
 			--disable-dbus_1 \
 			--with-boxtype=$(BOXTYPE) \
@@ -50,11 +64,11 @@ $(D)/tvheadend.config.status:
 
 $(D)/tvheadend.do_compile: tvheadend.config.status
 	cd $(sourcedir)/tvheadend && \
-		 $(MAKE) -j$(MAKE_JOBS) all
+		 $(MAKE) all
 	touch $@
 
 $(D)/tvheadend: tvheadend.do_prepare tvheadend.do_compile
-	 $(MAKE) -j$(MAKE_JOBS) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
+	 $(MAKE) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
 	if [ -e $(targetprefix)/usr/bin/tvheadend ]; then \
 		$(target)-strip $(targetprefix)/usr/bin/tvheadend; \
 	fi

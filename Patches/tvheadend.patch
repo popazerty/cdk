@@ -8,6 +8,41 @@
  CFLAGS  += -I${BUILDDIR} -I${ROOTDIR}/src -I${ROOTDIR}
  ifeq ($(CONFIG_ANDROID),yes)
  LDFLAGS += -ldl -lm
+@@ -91,8 +92,10 @@
+ 	$(MAKE) all
+ endif
+ 
+-FFMPEG_PREFIX := $(BUILDDIR)/ffmpeg/build/ffmpeg
+-FFMPEG_LIBDIR := $(FFMPEG_PREFIX)/lib
++#FFMPEG_PREFIX := $(BUILDDIR)/ffmpeg/build/ffmpeg
++#FFMPEG_LIBDIR := $(FFMPEG_PREFIX)/lib
++FFMPEG_PREFIX := ./ffmpeg
++FFMPEG_LIBDIR := ../../../../tufsbox/cdkroot/usr/lib/pkgconfig
+ FFMPEG_CONFIG := \
+     PKG_CONFIG_LIBDIR=$(FFMPEG_LIBDIR)/pkgconfig $(PKG_CONFIG) \
+     --define-variable=prefix=$(FFMPEG_PREFIX) --static
+--- tvheadend.org/configure
++++ tvheadend/configure
+@@ -109,6 +109,9 @@
+       opt=${opt#*-}
+       disable $opt 1
+       ;;
++    with-boxtype*)
++      boxtype=$val
++      ;;
+   esac
+ done
+ 
+@@ -657,6 +660,9 @@
+ 
+ # Output config
+ print_config
++echo "Building for receiver:"
++echo "  $boxtype"
++echo ""
+ echo "Final Binary:"
+ echo "  $BUILDDIR/tvheadend"
+ echo ""
 --- tvheadend.org/src/tvheadend.h
 +++ tvheadend/src/tvheadend.h
 @@ -70,12 +70,12 @@
