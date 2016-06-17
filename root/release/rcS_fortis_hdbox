@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 160526.1
+#Version 160617.1
 
 echo "Fortis FS9000/9200 Enigma2"
 
@@ -86,6 +86,7 @@ echo "[rcS] Init player $player (LOAD 4)"
 echo "LOAD 4" > /dev/vfd
 insmod $MODDIR/mmelog.ko
 insmod $MODDIR/mpeg2hw.ko mmeName=MPEG2_TRANSFORMER1;
+insmod $MODDIR/stmsysfs.ko
 insmod $MODDIR/ksound.ko
 insmod $MODDIR/p2div64.ko
 insmod $MODDIR/stm_v4l2.ko
@@ -104,7 +105,6 @@ if [ $player=='player179' ] || [ $player=='player191' ]; then
       insmod $MODDIR/pti.ko
 #   fi
    insmod $MODDIR/stm_monitor.ko
-   insmod $MODDIR/stmsysfs.ko
    insmod $MODDIR/stmdvb.ko
 else
    insmod $MODDIR/pti.ko

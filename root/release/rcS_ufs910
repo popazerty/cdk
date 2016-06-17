@@ -51,18 +51,19 @@ if [ ! -e /var/etc/.firstboot ]; then
 
    echo "init AVS"
    insmod $MODDIR/avs.ko
-   player=`cat /proc/stb/player/version`
-   if [ $player=='player179' ]; then
-      echo "init player 179"
-   else
-      echo "init player 131"
-   fi
-
    echo "init stmfb"
    insmod $MODDIR/stmcore-display-stx7100.ko
    insmod $MODDIR/stmfb.ko display0=1280x720-32@50:8m:pal:yuv:yuv;# display1=720x576-16@50:1m:pal:cvbs;
 
    echo "init player"
+   player=`cat /proc/stb/player/version`
+   if [ $player=='player191' ]; then
+      echo "init player 191"
+   elif [ $player=='player179' ]; then
+      echo "init player 179"
+   else
+      echo "init player 131"
+   fi
    insmod $MODDIR/mmelog.ko
    insmod $MODDIR/mpeg2hw.ko mmeName=MPEG2_TRANSFORMER0;
    insmod $MODDIR/stmsysfs.ko
@@ -70,23 +71,18 @@ if [ ! -e /var/etc/.firstboot ]; then
    insmod $MODDIR/p2div64.ko
    insmod $MODDIR/stm_v4l2.ko
    insmod $MODDIR/pseudocard.ko
-   if [ $player=='player179' ]; then
+   if [ $player=='player179' ] || [ $player=='player191' ]; then
       insmod $MODDIR/stmvout.ko
       insmod $MODDIR/stmvbi.ko
    fi
 
    insmod $MODDIR/cx24116.ko
    insmod $MODDIR/cimax.ko
-   if [ $player=='player179' ]; then
-      insmod $MODDIR/pti.ko
-      insmod $MODDIR/stm_monitor.ko
-      insmod $MODDIR/stmsysfs.ko
-      insmod $MODDIR/stmdvb.ko
-   else
-      insmod $MODDIR/pti.ko
-      insmod $MODDIR/stmdvb.ko
-      insmod $MODDIR/stm_monitor.ko
-   fi
+
+   insmod $MODDIR/pti.ko
+   insmod $MODDIR/stm_monitor.ko
+   insmod $MODDIR/stmdvb.ko
+
    insmod $MODDIR/player2.ko
    insmod $MODDIR/sth264pp.ko
    insmod $MODDIR/stmalloc.ko
@@ -131,7 +127,7 @@ if [ ! -e /var/etc/.firstboot ]; then
    until false
    do
       echo "starting Enigma2 ->"
-      /usr/bin/enigma2
+      /usr/local/bin/enigma2
       rtv=$?
       echo "enigma2 ended <- RTV: " $rtv
       case "$rtv" in
