@@ -175,7 +175,7 @@ $(D)/python_six: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_pyth
 	cd @DIR_python_six@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_six@
-	rm request*.tar.gz
+	rm -f request*.tar.gz
 	touch $@
 
 #

@@ -1930,6 +1930,11 @@ $(D)/libexif: $(D)/bootstrap @DEPENDS_libexif@
 $(D)/minidlna: $(D)/bootstrap $(D)/zlib $(D)/sqlite $(D)/libexif $(D)/libjpeg $(D)/libid3tag $(D)/libogg $(D)/libvorbis $(D)/libflac $(D)/ffmpeg @DEPENDS_minidlna@
 	@PREPARE_minidlna@
 	cd @DIR_minidlna@ && \
+		aclocal -I m4 && \
+		autoheader && \
+		autoconf && \
+		automake --foreign && \
+		libtoolize --force && \
 		$(CONFIGURE) \
 			--prefix=/usr \
 		&& \
