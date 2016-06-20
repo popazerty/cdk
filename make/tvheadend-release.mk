@@ -1084,6 +1084,11 @@ $(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL1
 #
 	find $(prefix)/release/ -name '*' -exec sh4-linux-strip --strip-unneeded {} &>/dev/null \;
 
+	@echo "***************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of Tvheadend for $(BOXTYPE) succesfully completed."
+	@echo -e "\033[00m"
+	@echo "***************************************************************"
 #
 # release-clean
 #
