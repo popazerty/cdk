@@ -175,6 +175,7 @@ $(D)/python_six: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_pyth
 	cd @DIR_python_six@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_six@
+	rm request*.tar.gz
 	touch $@
 
 #
@@ -318,7 +319,7 @@ $(D)/python_requests: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS
 	touch $@
 
 #
-# python_requests
+# python_futures
 #
 $(D)/python_futures: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_futures@
 	@PREPARE_python_futures@

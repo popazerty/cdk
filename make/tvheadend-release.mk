@@ -1086,7 +1086,7 @@ $(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL1
 
 	@echo "***************************************************************"
 	@echo -e "\033[01;32m"
-	@echo " Build of Tvheadend for $(BOXTYPE) succesfully completed."
+	@echo " Build of Tvheadend for $(BOXTYPE) successfully completed."
 	@echo -e "\033[00m"
 	@echo "***************************************************************"
 #
