@@ -1,2 +1,3 @@
 boot/*.elf
+boot/put_your_elf_files_here
 var/etc/.version
