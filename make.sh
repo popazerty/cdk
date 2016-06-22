@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20160615.1
+# Version 20160622.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 1: target system (1-38)"
@@ -29,6 +29,18 @@ CONFIGPARAM=" \
  --with-archivedir=$HOME/Archive \
  --with-maxcachesize=3 \
  --enable-ccache" \
+
+#Create text file with last settings
+if [ -e ./lastChoice ]; then
+	cp ./lastChoice ./lastsetting
+	sed -i 's/ --/\n&/g' ./lastsetting
+	sed -i 's/ --//g' ./lastsetting
+	sed -i 's/ E2/\n&E2/g' ./lastsetting
+	sed -i 's/ E2//g' ./lastsetting
+fi
+#determine receiver model of last build
+LASTBOX=`grep -e "with-boxtype" ./lastsetting | awk '{print substr($0,14,length($0)-12)}'`
+rm -f ./lastsetting
 
 ##############################################
 
@@ -145,6 +157,9 @@ case "$REPLY" in
 	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
+CURRBOX=`echo $BOXTYPE | awk '{print substr($0,16,length($0)-15)}'`
+#echo $LASTBOX
+#echo $CURRBOX
 
 case "$REPLY" in
 	8)	echo -e "\nModels:"
@@ -341,9 +356,10 @@ case "$IMAGEN" in
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
 			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
-			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ]; then
-				if [ -d ./.deps ]; then
-					make distclean
+			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
+				if [ -e ./.deps/* ]; then
+					echo "Settings changed, performing distclean..."
+					make distclean > /dev/null
 				fi
 			fi
 		fi;;
@@ -354,9 +370,10 @@ case "$IMAGEN" in
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
 			LASTIMAGE2=`grep -e "enable-neutrino" ./lastChoice`
-			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ]; then
-				if [ -d ./.deps ]; then
-					make distclean
+			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
+				if [ -e ./.deps/* ]; then
+					echo "Settings changed, performing distclean..."
+					make distclean > /dev/null
 				fi
 			fi
 		fi;;
@@ -422,9 +439,10 @@ case "$IMAGEN" in
 		if [ -e lastChoice ]; then
 			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
 			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
-			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ]; then
-				if [ -d ./.deps ]; then
-					make distclean
+			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
+				if [ -e ./.deps/* ]; then
+					echo "Settings changed, performing distclean..."
+					make distclean > /dev/null
 				fi
 			fi
 		fi;;

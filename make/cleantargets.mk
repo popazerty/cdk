@@ -42,6 +42,7 @@ distclean-local:
 	-$(MAKE) driver-clean
 	-rm -f Makefile-archive
 	-rm -f rules-downcheck.pl
+	-rm -f build
 	-rm -rf $(D)
 	-rm -rf $(prefix)/*cdkroot/
 	-rm -rf $(prefix)/*cdkroot-tftpboot
