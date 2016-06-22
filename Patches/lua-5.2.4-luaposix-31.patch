@@ -78,15 +78,15 @@
  	$(CC) -o $@ $(LDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -31,6 +31,7 @@ PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
- LUA_A=	liblua.a
+@@ -32,6 +32,7 @@
+ LUA_SO=	liblua.so
  CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
  	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
 +	posix.o \
  	ltm.o lundump.o lvm.o lzio.o
  LIB_O=	lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
  	lmathlib.o loslib.o lstrlib.o ltablib.o loadlib.o linit.o
-@@ -103,7 +104,7 @@ freebsd:
+@@ -120,7 +121,7 @@
  generic: $(ALL)
  
  linux:
@@ -95,7 +95,7 @@
  
  macosx:
  	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX" SYSLIBS="-lreadline" CC=cc
-@@ -164,6 +165,7 @@ loslib.o: loslib.c lua.h luaconf.h lauxlib.h lualib.h
+@@ -181,6 +182,7 @@
  lparser.o: lparser.c lua.h luaconf.h lcode.h llex.h lobject.h llimits.h \
   lzio.h lmem.h lopcodes.h lparser.h ldebug.h lstate.h ltm.h ldo.h lfunc.h \
   lstring.h lgc.h ltable.h

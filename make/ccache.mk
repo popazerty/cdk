@@ -59,7 +59,7 @@ $(D)/ccache.do_compile: $(D)/ccache.do_prepare
 			--build=$(build) \
 			--host=$(build) \
 			--prefix= && \
-			$(MAKE) -j$(MAKE_JOBS) all && \
+			$(MAKE) all && \
 			$(MAKE) install DESTDIR=$(hostprefix)
 	touch $@
 

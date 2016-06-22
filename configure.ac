@@ -773,8 +773,8 @@ else
 	MEDIAFW_DEP="ffmpeg"
 fi
 
-AC_ARG_VAR([MAKE_JOBS], [Make -j argument, default=1])
-AS_IF([test "x$MAKE_JOBS" = x], [MAKE_JOBS="1"])
+#AC_ARG_VAR([MAKE_JOBS], [Make -j argument, default=1])
+#AS_IF([test "x$MAKE_JOBS" = x], [MAKE_JOBS="1"])
 
 AC_ARG_VAR([E2_DIFF], [Enigma2 diff-level, default=0])
 AS_IF([test "x$E2_DIFF" = x], [E2_DIFF="0"])
@@ -1116,7 +1116,6 @@ MediaFw                     : $MEDIAFW
 MediaFw dependancy          : $MEDIAFW_DEP
 External LCD                : $enable_externallcd
 External LCD dependancy     : $EXTERNALLCD_DEP
-Number of make jobs         : $MAKE_JOBS
 ------------------------------------------------------------------
 ])
 

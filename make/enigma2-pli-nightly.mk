@@ -157,11 +157,11 @@ $(sourcedir)/enigma2-pli-nightly/config.status:
 
 $(D)/enigma2-pli-nightly.do_compile: $(sourcedir)/enigma2-pli-nightly/config.status
 	cd $(sourcedir)/enigma2-nightly && \
-		$(MAKE) -j$(MAKE_JOBS) all
+		$(MAKE) all
 	touch $@
 
 $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_compile
-	$(MAKE) -j$(MAKE_JOBS) -C $(sourcedir)/enigma2-nightly install DESTDIR=$(targetprefix)
+	$(MAKE) -C $(sourcedir)/enigma2-nightly install DESTDIR=$(targetprefix)
 	if [ -e $(targetprefix)/usr/bin/enigma2 ]; then \
 		$(target)-strip $(targetprefix)/usr/bin/enigma2; \
 	fi
@@ -184,7 +184,7 @@ enigma2-pli-nightly-clean:
 	rm -f $(D)/enigma2-pli-nightly
 	rm -f $(D)/enigma2-pli-nightly.do_compile
 	cd $(sourcedir)/enigma2-nightly && \
-		$(MAKE) -j$(MAKE_JOBS) distclean
+		$(MAKE) distclean
 
 enigma2-pli-nightly-distclean:
 	rm -f $(D)/enigma2-pli-nightly

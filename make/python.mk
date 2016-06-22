@@ -11,18 +11,18 @@ $(D)/host_python: @DEPENDS_host_python@
 			--without-cxx-main \
 			--with-threads \
 		&& \
-		$(MAKE) -j$(MAKE_JOBS) python Parser/pgen && \
+		$(MAKE) python Parser/pgen && \
 		mv python ./hostpython && \
 		mv Parser/pgen ./hostpgen && \
 		\
-		$(MAKE) -j$(MAKE_JOBS) distclean && \
+		$(MAKE) distclean && \
 		./configure \
 			--prefix=$(hostprefix) \
 			--sysconfdir=$(hostprefix)/etc \
 			--without-cxx-main \
 			--with-threads \
 		&& \
-		$(MAKE) -j$(MAKE_JOBS) all install && \
+		$(MAKE) all install && \
 		cp ./hostpgen $(hostprefix)/bin/pgen ) && \
 	@CLEANUP_host_python@
 	touch $@
@@ -63,7 +63,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/zlib $(D)/open
 			ac_cv_broken_sem_getvalue=no \
 			HOSTPYTHON=$(hostprefix)/bin/python \
 		&& \
-		$(MAKE) -j$(MAKE_JOBS) $(MAKE_OPTS) \
+		$(MAKE) $(MAKE_OPTS) \
 			PYTHON_MODULES_INCLUDE="$(targetprefix)/usr/include" \
 			PYTHON_MODULES_LIB="$(targetprefix)/usr/lib" \
 			PYTHON_XCOMPILE_DEPENDENCIES_PREFIX="$(targetprefix)" \
@@ -104,7 +104,7 @@ $(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2_e2 $(D)/libxslt @DEPENDS_libxmlcc
 			--target=$(target) \
 			--prefix=/usr \
 		&& \
-		$(MAKE) -j$(MAKE_JOBS) all && \
+		$(MAKE) all && \
 		@INSTALL_libxmlccwrap@
 	@CLEANUP_libxmlccwrap@
 	touch $@

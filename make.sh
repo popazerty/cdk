@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20160622.1
+# Version 20160623.1
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
  echo "Parameter 1: target system (1-38)"
@@ -16,11 +16,7 @@ fi
 CURDIR=`pwd`
 CURRENT_PATH=${CURDIR%/cdk}
 
-#CPU_CORES=1
-CPU_CORES=`getconf _NPROCESSORS_ONLN`
-
 CONFIGPARAM=" \
- MAKE_JOBS=$CPU_CORES \
  --enable-maintainer-mode \
  --prefix=$CURRENT_PATH/tufsbox \
  --with-cvsdir=$CURRENT_PATH \
@@ -28,7 +24,7 @@ CONFIGPARAM=" \
  --with-flashscriptdir=$CURRENT_PATH/flash \
  --with-archivedir=$HOME/Archive \
  --with-maxcachesize=3 \
- --enable-ccache" \
+ --enable-ccache"
 
 #Create text file with last settings
 if [ -e ./lastChoice ]; then
@@ -158,8 +154,6 @@ case "$REPLY" in
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
 CURRBOX=`echo $BOXTYPE | awk '{print substr($0,16,length($0)-15)}'`
-#echo $LASTBOX
-#echo $CURRBOX
 
 case "$REPLY" in
 	8)	echo -e "\nModels:"
@@ -357,9 +351,10 @@ case "$IMAGEN" in
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
 			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
 			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
-				if [ -e ./.deps/* ]; then
-					echo "Settings changed, performing distclean..."
-					make distclean > /dev/null
+				if [ -e ./.deps ]; then
+					echo -n "Settings changed, performing distclean..."
+					make distclean 2> /dev/null > /dev/null
+					echo "[Done]"
 				fi
 			fi
 		fi;;
@@ -371,9 +366,10 @@ case "$IMAGEN" in
 			LASTIMAGE=`grep -e "enable-enigma2" ./lastChoice`
 			LASTIMAGE2=`grep -e "enable-neutrino" ./lastChoice`
 			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
-				if [ -e ./.deps/* ]; then
-					echo "Settings changed, performing distclean..."
-					make distclean > /dev/null
+				if [ -e ./.deps/ ]; then
+					echo -n "Settings changed, performing distclean..."
+					make distclean 2> /dev/null > /dev/null
+					echo "[Done]"
 				fi
 			fi
 		fi;;
@@ -440,9 +436,10 @@ case "$IMAGEN" in
 			LASTIMAGE=`grep -e "enable-neutrino" ./lastChoice`
 			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
 			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
-				if [ -e ./.deps/* ]; then
-					echo "Settings changed, performing distclean..."
-					make distclean > /dev/null
+				if [ -e ./.deps/ ]; then
+					echo -n "Settings changed, performing distclean..."
+					make distclean 2> /dev/null > /dev/null
+					echo "[Done]"
 				fi
 			fi
 		fi;;
@@ -456,16 +453,19 @@ CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD"
 
 echo -ne "\nChecking the .elf files in $CURDIR/root/boot..."
 set='audio_7100 audio_7105 audio_7109 audio_7111 video_7100 video_7105 video_7109 video_7111'
+ELFMISSING=0
 for i in $set;
 do
   if [ ! -e $CURDIR/root/boot/$i.elf ]; then
-    echo -e "\n\nERROR: One or more .elf files are missing in ./root/boot!"
-    echo "($i.elf is one of them)"
-    echo
-    echo "Correct this and retry."
-    exit
+    echo -e -n "\n\033[31mERROR\033[0m: file $i.elf is missing in ./root/boot"
+    ELFMISSING=1
   fi
 done
+if [ "$ELFMISSING" == "1" ]; then
+  echo -e "\n"
+  echo "Correct this and retry."
+  exit
+fi
 echo " [OK]"
 if [ -e $CURDIR/root/boot/put_your_elf_files_here ]; then
   rm $CURDIR/root/boot/put_your_elf_files_here

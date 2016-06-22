@@ -57,6 +57,10 @@ ADAPTED_ETC_FILES =
 ETC_RW_FILES =
 SOCKSIFY=
 WGET=$(SOCKSIFY) wget --progress=bar
+#enable parallel makes
+CPU_CORES ?= $(shell getconf _NPROCESSORS_ONLN || echo 1)
+MAKEFLAGS=-j$(CPU_CORES)
+export MAKEFLAGS
 
 #
 #
