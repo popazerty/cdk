@@ -258,7 +258,7 @@ $(D)/lirc: $(D)/bootstrap @DEPENDS_lirc@
 			--with-syslog=LOG_DAEMON \
 			--enable-sandboxed \
 		&& \
-		$(MAKE) all && \
+		$(MAKE) -j1 all && \
 		@INSTALL_lirc@
 	@CLEANUP_lirc@
 	touch $@
