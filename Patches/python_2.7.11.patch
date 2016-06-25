@@ -1,6 +1,6 @@
 --- a/Lib/httplib.py
 +++ b/Lib/httplib.py
-@@ -1193,7 +1193,7 @@
+@@ -1259,7 +1259,7 @@
              self.key_file = key_file
              self.cert_file = cert_file
              if context is None:
@@ -11,12 +11,8 @@
              self._context = context
 --- a/Modules/_ctypes/_ctypes.c
 +++ b/Modules/_ctypes/_ctypes.c
-@@ -642,10 +642,16 @@
- #ifdef __CYGWIN__
- /* dlerror() isn't very helpful on cygwin */
-         PyErr_Format(PyExc_ValueError,
--                     "symbol '%s' not found (%s) ",
-+                     "symbol '%s' not found",
+@@ -645,7 +645,13 @@
+                      "symbol '%s' not found",
                       name);
  #else
 -        PyErr_SetString(PyExc_ValueError, ctypes_dlerror());
@@ -30,12 +26,8 @@
  #endif
          return NULL;
      }
-@@ -3393,10 +3399,16 @@
- #ifdef __CYGWIN__
- /* dlerror() isn't very helpful on cygwin */
-         PyErr_Format(PyExc_AttributeError,
--                     "function '%s' not found (%s) ",
-+                     "function '%s' not found",
+@@ -3396,7 +3402,13 @@
+                      "function '%s' not found",
                       name);
  #else
 -        PyErr_SetString(PyExc_AttributeError, ctypes_dlerror());
@@ -71,7 +63,7 @@
  # test code
 --- a/Lib/distutils/command/build_ext.py
 +++ b/Lib/distutils/command/build_ext.py
-@@ -435,7 +435,9 @@
+@@ -437,7 +437,9 @@
          # "build" tree.
          outputs = []
          for ext in self.extensions:
@@ -82,7 +74,7 @@
          return outputs
  
      def build_extensions(self):
-@@ -454,9 +456,24 @@
+@@ -456,9 +458,24 @@
                     "a list of source filenames") % ext.name
          sources = list(sources)
  
@@ -109,7 +101,7 @@
              log.debug("skipping '%s' extension (up-to-date)", ext.name)
              return
          else:
-@@ -517,7 +534,7 @@
+@@ -519,7 +536,7 @@
          language = ext.language or self.compiler.detect_language(sources)
  
          self.compiler.link_shared_object(
@@ -118,7 +110,7 @@
              libraries=self.get_libraries(ext),
              library_dirs=ext.library_dirs,
              runtime_library_dirs=ext.runtime_library_dirs,
-@@ -528,7 +545,7 @@
+@@ -530,7 +547,7 @@
              target_lang=language)
  
  
@@ -401,7 +393,7 @@
          exts.append( Extension('audioop', ['audioop.c']) )
  
          # Disabled on 64-bit platforms
--        if sys.maxint != 9223372036854775807L:
+-        if sys.maxsize != 9223372036854775807L:
 +        if not target_is_64bit_platform():
              # Operations on images
              exts.append( Extension('imageop', ['imageop.c']) )

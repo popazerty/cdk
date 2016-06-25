@@ -161,7 +161,7 @@ libplist-1.10.tar.gz;http://cgit.sukimashita.com/libplist.git/snapshot
 #
 # PYTHON
 #
-Python-2.7.9.tar.xz;https://www.python.org/ftp/python/2.7.9
+Python-2.7.11.tar.xz;https://www.python.org/ftp/python/2.7.11
 gdata-2.0.18.tar.gz;https://gdata-python-client.googlecode.com/files
 elementtree-1.2.6-20050316.tar.gz;http://effbot.org/media/downloads
 lxml-2.2.8.tgz;https://launchpadlibrarian.net/54848077

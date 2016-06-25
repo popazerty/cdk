@@ -9,7 +9,7 @@
  
  AC_REVISION($Revision$)
  AC_INIT(python, PYTHON_VERSION, http://bugs.python.org/)
-@@ -3335,7 +3335,7 @@
+@@ -3387,7 +3387,7 @@
  
  AC_MSG_RESULT($ac_cv_buggy_getaddrinfo)
  
@@ -20,7 +20,7 @@
  	then
 --- a/configure
 +++ b/configure
-@@ -14485,7 +14485,7 @@
+@@ -14651,7 +14651,7 @@
  $as_echo "$ac_cv_have_long_long_format" >&6; }
  fi
  
@@ -42,7 +42,7 @@
  #ifdef __cplusplus
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -194,6 +194,7 @@
+@@ -199,6 +199,7 @@
  
  PYTHON=		python$(EXE)
  BUILDPYTHON=	python$(BUILDEXE)
@@ -50,7 +50,7 @@
  
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
  _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
-@@ -234,6 +235,7 @@
+@@ -238,6 +239,7 @@
  ##########################################################################
  # Parser
  PGEN=		Parser/pgen$(EXE)
@@ -58,7 +58,7 @@
  
  PSRCS=		\
  		Parser/acceler.c \
-@@ -445,7 +447,7 @@
+@@ -470,7 +472,7 @@
  			$(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
  
  platform: $(BUILDPYTHON) pybuilddir.txt
@@ -67,7 +67,7 @@
  
  # Create build directory and generate the sysconfig build-time data there.
  # pybuilddir.txt contains the name of the build dir and is used for
-@@ -474,7 +476,8 @@
+@@ -499,7 +501,8 @@
  	esac; \
  	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
  		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
@@ -77,7 +77,7 @@
  
  # Build static library
  # avoid long command lines, same as LIBRARY_OBJS
-@@ -611,7 +614,7 @@
+@@ -636,7 +639,7 @@
  $(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGENSRCS)
  		@$(MKDIR_P) Include
  		$(MAKE) $(PGEN)
@@ -86,7 +86,7 @@
  $(GRAMMAR_C): $(GRAMMAR_H) $(GRAMMAR_INPUT) $(PGENSRCS)
  		$(MAKE) $(GRAMMAR_H)
  		touch $(GRAMMAR_C)
-@@ -1042,28 +1045,28 @@
+@@ -1072,28 +1075,28 @@
  		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
  			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
  	fi
@@ -123,7 +123,7 @@
  
  # Create the PLATDIR source directory, if one wasn't distributed..
  $(srcdir)/Lib/$(PLATDIR):
-@@ -1175,7 +1178,9 @@
+@@ -1205,7 +1208,9 @@
  # Install the dynamically loadable modules
  # This goes into $(exec_prefix)
  sharedinstall: sharedmods
