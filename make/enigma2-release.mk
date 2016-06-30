@@ -287,7 +287,7 @@ release_enigma2_spark: release_enigma2_common_utils
 	cp -f $(buildprefix)/root/sbin/nand* $(prefix)/release/sbin
 	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/share/fonts/
 	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD/plugin.pyo ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD; \
@@ -316,11 +316,8 @@ release_enigma2_spark7162: release_enigma2_common_utils
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/vdstandby
 	rm -f $(prefix)/release/bin/eeprom
-	if [ -e $(targetprefix)/usr/bin/ntpdate ]; then \
-		cp -f $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/; \
-	elif [ -e $(targetprefix)/usr/sbin/ntpdate ]; then \
-		cp -f $(targetprefix)/usr/sbin/ntpdate $(prefix)/release/sbin/; \
-	fi
+	[ -e $(targetprefix)/usr/bin/ntpdate ] && cp -f $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/ || true
+	[ -e $(targetprefix)/usr/sbin/ntpdate ] && cp -f $(targetprefix)/usr/sbin/ntpdate $(prefix)/release/sbin/ || true
 	cp -dp $(buildprefix)/root/release/lircd_spark7162.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	mkdir -p $(prefix)/release/var/run/lirc
@@ -328,8 +325,8 @@ release_enigma2_spark7162: release_enigma2_common_utils
 	cp -f $(buildprefix)/root/sbin/flash_* $(prefix)/release/sbin
 	cp -f $(buildprefix)/root/sbin/nand* $(prefix)/release/sbin
 	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/share/fonts/
-	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png; \
+	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD/plugin.pyo ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD; \
@@ -356,7 +353,7 @@ release_enigma2_fortis_hdbox: release_enigma2_common_utils
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	rm -f $(prefix)/release/bin/eeprom
 	cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/fs9000VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/fs9000VFD; \
@@ -387,7 +384,7 @@ release_enigma2_atevio7500: release_enigma2_common_utils
 	rm -f $(prefix)/release/lib/modules/mpeg2hw.ko
 	rm -f $(prefix)/release/bin/eeprom
 	cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs8200VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs8200VFD; \
@@ -416,7 +413,7 @@ release_enigma2_octagon1008: release_enigma2_common_utils
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
 	rm -f $(prefix)/release/bin/eeprom
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs9510VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs9510VFD; \
@@ -443,7 +440,7 @@ release_enigma2_hs7110: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD; \
@@ -470,7 +467,7 @@ release_enigma2_hs7420: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD; \
@@ -497,7 +494,7 @@ release_enigma2_hs7810a: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
@@ -524,7 +521,7 @@ release_enigma2_hs7119: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
@@ -551,7 +548,7 @@ release_enigma2_hs7429: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD; \
@@ -578,7 +575,7 @@ release_enigma2_hs7819: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
@@ -1213,23 +1210,6 @@ endif
 	fi
 
 #
-# Do not remove pyo files, remove pyc instead
-#
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.pyc' -exec rm -f {} \;
-#	find $(prefix)/release/usr/lib/enigma2/ -not -name 'mytest.py' -name '*.py' -exec rm -f {} \;
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.a' -exec rm -f {} \;
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.o' -exec rm -f {} \;
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.la' -exec rm -f {} \;
-
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
-#	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
-
-#
 # alsa
 #
 	if [ -e $(targetprefix)/usr/share/alsa ]; then \
@@ -1350,6 +1330,23 @@ endif
 #
 $(D)/release_enigma2: \
 $(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)
+#
+# Do not remove pyo files, remove pyc instead
+#
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.pyc' -exec rm -f {} \;
+#	find $(prefix)/release/usr/lib/enigma2/ -not -name 'mytest.py' -name '*.py' -exec rm -f {} \;
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.a' -exec rm -f {} \;
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.o' -exec rm -f {} \;
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.la' -exec rm -f {} \;
+
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
+#	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
+
 	touch $@
 
 #
