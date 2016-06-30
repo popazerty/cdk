@@ -88,8 +88,7 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 	echo "----------------------"; \
 	echo "Media Framework : $(MEDIAFW)"; \
 	echo "External LCD    : $(EXTERNALLCD)"; \
-	echo "Revision        : $$REVISION"; \
-	echo "Diff            : $$DIFF"; \
+	echo "Diff            : $$DIFF (revision $$REVISION)"; \
 	echo ""; \
 	if [ "$$DIFF" != "1" ]; then \
 		REPO="https://github.com/OpenPLi/enigma2.git"; \
@@ -114,9 +113,9 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 			[ -d "$(archivedir)/enigma2-tango.git" ] || \
 			(echo "Cloning remote enigma2-tango.git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-tango.git;); \
 			cp -ra $(archivedir)/enigma2-tango.git/lib/libeplayer3 $(sourcedir)/enigma2-nightly/lib; \
-			set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/libeplayer3.$$DIFF.patch";  echo;\
+			set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/libeplayer3.$$DIFF.patch"; echo;\
 		else \
-			touch $(sourcedir)/enigma2-nightly/lib/libeplayer3/empty;  echo;\
+			touch $(sourcedir)/enigma2-nightly/lib/libeplayer3/empty; \
 		fi; \
 		cd $(sourcedir)/enigma2-nightly; \
 		echo "Building VFD-drivers..."; \

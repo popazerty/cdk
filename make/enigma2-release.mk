@@ -316,7 +316,11 @@ release_enigma2_spark7162: release_enigma2_common_utils
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/vdstandby
 	rm -f $(prefix)/release/bin/eeprom
-	cp -p $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/
+	if [ -e $(targetprefix)/usr/bin/ntpdate ]; then \
+		cp -f $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/; \
+	elif [ -e $(targetprefix)/usr/sbin/ntpdate ]; then \
+		cp -f $(targetprefix)/usr/sbin/ntpdate $(prefix)/release/sbin/; \
+	fi
 	cp -dp $(buildprefix)/root/release/lircd_spark7162.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	mkdir -p $(prefix)/release/var/run/lirc

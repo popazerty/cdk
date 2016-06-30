@@ -10205,7 +10205,17 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/mytest.py enigma2-ni
  		dlg.isTmp = True
  		dlg.callback = None
  		self.execBegin()
-@@ -496,10 +500,10 @@
+@@ -355,7 +359,8 @@
+ 	def doAction(self, selected, longkey=False):
+ 		if self.longkeyPressed:
+ 			self.longkeyPressed = False
+-		elif selected and self.session.infobar:
++#		elif selected and self.session.infobar:
++		elif selected:
+ 			if longkey:
+ 				self.longkeyPressed = True
+ 			selected = selected.split("/")
+@@ -496,10 +501,10 @@
  	if wakeupList:
  		from time import strftime
  		startTime = wakeupList[0]
@@ -10772,7 +10782,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 -			("et10000", 9),
 -			("formuler1", 18),
 -			("formuler3", 18),
--			("formuler4", 18);
+-			("formuler4", 18),
 -			("xp1000", 14),
 -			("hd1200", 16),
 -			("hd1265", 16),
@@ -10794,7 +10804,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  	def __init__(self, session):
 --- enigma2-nightly.org/data/rc_models/rc_models.cfg	2014-04-03 08:38:53.154073324 +0200
 +++ enigma2-nightly/data/rc_models/rc_models.cfg	2014-05-28 20:18:22.000000000 +0200
-@@ -19,52 +19,15 @@
+@@ -19,52 +19,16 @@
  #
  # When no entry matches at all, 'default' will be used as remoteName
  #
@@ -10842,8 +10852,8 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 -osminiplus osmini
 -h3 zgemma
 -h5 zgemma
--7000S miraclebox
 -g300 miraclebox
+-7000S miraclebox2
 -spycat spycat
 -spycatmini spycat
 -xpeedlx xpeedlx
@@ -10859,19 +10869,20 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +spark       spark
 +spark7162   spark
 +tf7700hdpvr tf7700
++
 --- enigma2-nightly.org/data/rc_models/Makefile.am
 +++ enigma2-nightly/data/rc_models/Makefile.am
-@@ -2,11 +2,9 @@
+@@ -2,11 +2,10 @@
  
  dist_install_DATA = \
  	rc_models.cfg \
 -	dmmadv.png  et4x00.png  et8000.png  et9x00.png  vu.png        xp1000.png \
 -	dmm.png     et6x00.png  et9500.png  vuduo2.png  vuultimo.png  et7x00.png    formuler1.png \
--	hd2400.png  hd1100.png  wetekplay.png osmini.png miraclebox.png spycat.png \
+-	hd2400.png  hd1100.png  wetekplay.png osmini.png miraclebox.png miraclebox2.png spycat.png \
 -	xpeedlx.png \
 -	dmmadv.xml  et4x00.xml  et8000.xml  et9x00.xml  vuultimo.xml  xp1000.xml \
 -	dmm.xml     et6x00.xml  et9500.xml  et7x00.xml  vuduo2.xml    vu.xml	formuler1.xml \
--	hd2400.xml  hd1100.xml 	xsarius.xml  xsarius.png wetekplay.xml osmini.xml zgemma.png zgemma.xml miraclebox.xml spycat.xml \
+-	hd2400.xml  hd1100.xml 	xsarius.xml  xsarius.png wetekplay.xml osmini.xml zgemma.png zgemma.xml miraclebox.xml miraclebox2.xml spycat.xml \
 -	xpeedlx.xml
 +	dmmadv.png \
 +	fs9000.png  hs7110.png  hs9510.png  spark.png tf7700.png \
@@ -10879,4 +10890,5 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +	dmmadv.xml  \
 +	fs9000.xml  hs7110.xml  hs9510.xml  spark.xml tf7700.xml \
 +	dmm.xml
++
 
