@@ -33,10 +33,10 @@ if [ -e ./lastChoice ]; then
 	sed -i 's/ --//g' ./lastsetting
 	sed -i 's/ E2/\n&E2/g' ./lastsetting
 	sed -i 's/ E2//g' ./lastsetting
-fi
 #determine receiver model of last build
-LASTBOX=`grep -e "with-boxtype" ./lastsetting | awk '{print substr($0,14,length($0)-12)}'`
-rm -f ./lastsetting
+	LASTBOX=`grep -e "with-boxtype" ./lastsetting | awk '{print substr($0,14,length($0)-12)}'`
+	rm -f ./lastsetting
+fi
 
 ##############################################
 

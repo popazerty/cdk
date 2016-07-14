@@ -10,11 +10,11 @@
 # core
 #
 ccache-3.1.9.tar.gz;http://samba.org/ftp/ccache
-squashfs3.0.tar.gz;http://heanet.dl.sourceforge.net/sourceforge/squashfs
-lzma442.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/sevenzip
-squashfs4.0.tar.gz;http://heanet.dl.sourceforge.net/sourceforge/squashfs
-lzma465.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/sevenzip
-cramfs-1.1.tar.gz;http://heanet.dl.sourceforge.net/sourceforge/cramfs
+squashfs3.0.tar.gz;https://sourceforge.net/projects/squashfs/files/squashfs/squashfs3.0
+lzma442.tar.bz2;https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/4.42
+squashfs4.0.tar.gz;https://sourceforge.net/projects/squashfs/files/squashfs/squashfs4.0
+lzma465.tar.bz2;https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/4.65
+cramfs-1.1.tar.gz;https://sourceforge.net/projects/cramfs/files/cramfs/1.1
 mtd-utils-1.5.2.tar.bz2;ftp://ftp.infradead.org/pub/mtd-utils
 ipkg-utils-050831.tar.gz;ftp://ftp.gwdg.de/linux/handhelds/packages/ipkg-utils
 pkg-config-0.28.tar.gz;https://pkg-config.freedesktop.org/releases
@@ -32,12 +32,12 @@ sysvinit_2.88dsf.orig.tar.gz;ftp://ftp.debian.org/debian/pool/main/s/sysvinit
 #
 # Graphics and Font Libraries
 #
-freetype-2.6.1.tar.bz2;http://prdownloads.sourceforge.net/sourceforge/freetype
+freetype-2.6.1.tar.bz2;https://sourceforge.net/projects/freetype/files/freetype2/2.6.1
 fontconfig-2.8.0.tar.gz;http://www.freedesktop.org/software/fontconfig/release
 fribidi-0.19.7.tar.bz2;http://fribidi.org/download
-giflib-4.1.6.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
-giflib-5.1.2.tar.bz2;http://iweb.dl.sourceforge.net/project/giflib
-libungif-4.1.4.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
+giflib-4.1.6.tar.bz2;https://sourceforge.net/projects/giflib/files/giflib-4.x/giflib-4.1.6
+giflib-5.1.2.tar.bz2;https://sourceforge.net/projects/giflib/files/
+libungif-4.1.4.tar.bz2;https://sourceforge.net/projects/giflib/files/libungif-4.x/libungif-4.1.4
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
 libjpeg-turbo-1.4.2.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.4.2
 libpng-1.2.50.tar.bz2;http://sourceforge.net/projects/libpng/files/libpng12/1.2.50
@@ -61,7 +61,7 @@ libdvdnav-4.2.1.tar.xz;http://dvdnav.mplayerhq.hu/releases
 libdvdread-4.9.9.tar.xz;http://dvdnav.mplayerhq.hu/releases
 libid3tag-0.15.1b.tar.gz;https://sourceforge.net/projects/mad/files/libid3tag/0.15.1b
 libmad-0.15.1b.tar.gz;https://sourceforge.net/projects/mad/files/libmad/0.15.1b
-libmpeg2-0.5.1.tar.gz;http://libmpeg2.sourceforge.net/files
+libmpeg2-0.5.1.tar.gz;http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz
 libogg-1.3.2.tar.gz;http://downloads.xiph.org/releases/ogg
 libsamplerate-0.1.8.tar.gz;http://www.mega-nerd.com/SRC
 libvorbis-1.3.4.tar.gz;http://downloads.xiph.org/releases/vorbis
@@ -81,13 +81,13 @@ howl-1.0.0.tar.gz;http://downloads.sourceforge.net/project/howl/howl/1.0.0
 zlib-1.2.8.tar.gz;http://zlib.net
 readline-6.2.tar.gz;http://ftp.gnu.org/gnu/readline
 rtmpdump.git;git://github.com/oe-alliance/rtmpdump;2.4
-lirc-0.9.0.tar.gz;http://prdownloads.sourceforge.net/lirc
+lirc-0.9.0.tar.gz;https://sourceforge.net/projects/lirc/files/LIRC/0.9.0
 libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
 libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
 glib-2.45.4.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.45
 libffi-3.2.1.tar.gz;ftp://sourceware.org/pub/libffi
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
-libmng-1.0.10.tar.bz2;http://dfn.dl.sourceforge.net/sourceforge/libmng
+libmng-1.0.10.tar.bz2;https://sourceforge.net/projects/libmng/files/libmng-devel/1.0.10
 lcms-1.17.tar.gz;http://sourceforge.net/projects/lcms/files/lcms/1.17
 DirectFB-1.4.11.tar.gz;http://directfb.org/downloads/Core/DirectFB-1.4
 DFB++-1.0.0.tar.gz;http://www.directfb.org/downloads/Extras
@@ -104,7 +104,7 @@ fdk-aac.git;git://github.com/mstorsjo/fdk-aac.git
 libcap-2.22.tar.bz2;http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2
 BroFS1.2.tgz;http://www.avalpa.com/assets/freesoft/other
 libdvbsi++-0.3.7.tar.bz2;http://www.saftware.de/libdvbsi++
-libmodplug-0.8.8.4.tar.gz;http://downloads.sourceforge.net/project/modplug-xmms/libmodplug/0.8.8.4
+libmodplug-0.8.8.4.tar.gz;https://sourceforge.net/projects/modplug-xmms/files/libmodplug/0.8.8.4
 lzo-2.06.tar.gz;http://www.oberhumer.com/opensource/lzo/download
 yajl.git;git://github.com/lloyd/yajl;f4b2b1af87483caac60e50e5352fc783d9b2de2d
 pcre-8.30.tar.bz2;http://sourceforge.net/projects/pcre/files/pcre/8.30
@@ -118,7 +118,7 @@ djmount-0.71.tar.gz;https://sourceforge.net/projects/djmount/files/djmount/0.71
 libupnp-1.6.17.tar.bz2;https://sourceforge.net/projects/pupnp/files/latest/download
 rarfs-0.1.0.tar.gz;https://downloads.sourceforge.net/project/rarfs/rarfs/0.1.0
 sshfs-fuse-2.4.tar.bz2;http://fossies.org/linux/misc
-tinyxml_2_6_2.tar.gz;http://ignum.dl.sourceforge.net/project/tinyxml/tinyxml/2.6.2
+tinyxml_2_6_2.tar.gz;https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2
 taglib-1.8.tar.gz;https://github.com/downloads/taglib/taglib
 libnfs.git;git://github.com/sahlberg/libnfs.git
 libxml2-2.8.0.tar.gz;http://xmlsoft.org/sources
@@ -134,14 +134,14 @@ libkmod.git;git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 bzip2-1.0.6.tar.gz;http://www.bzip.org/1.0.6
 grep-2.5.1.tar.bz2;ftp://mirrors.kernel.org/gnu/grep
 grep_2.5.1.ds2-6.diff.gz;http://64studio.hivelocity.net/apt/pool/main/g/grep
-openrdate-1.1.2.tar.gz;http://prdownloads.sourceforge.net/sourceforge/openrdate
+openrdate-1.1.2.tar.gz;https://sourceforge.net/projects/openrdate/files/openrdate/openrdate-1.1.2
 termcap-2.0.8.tar.gz;http://fresh.t-systems-sfr.com/linux/src
 mc-4.8.1.7.tar.bz2;http://www.midnight-commander.org/downloads
 console-data_1.03.orig.tar.gz;ftp://ftp.debian.org/debian/pool/main/c/console-data
 nano-2.0.6.tar.gz;http://www.nano-editor.org/dist/v2.0
 rsync-2.6.9.tar.gz;http://samba.anu.edu.au/ftp/rsync
-curlftpfs-0.9.2.tar.gz;http://sourceforge.net/projects/curlftpfs/files/latest/download
-boost_1_53_0.tar.bz2;http://prdownloads.sourceforge.net/sourceforge/boost
+curlftpfs-0.9.2.tar.gz;https://sourceforge.net/projects/curlftpfs/files/curlftpfs/0.9.2
+boost_1_53_0.tar.bz2;https://sourceforge.net/projects/boost/files/boost/1.53.0
 pngquant-1.1-src.tgz;ftp://ftp.simplesystems.org/pub/libpng/png/applications/pngquant
 mplayer-export-snapshot.tar.bz2;ftp://ftp.mplayerhq.hu/MPlayer/releases
 opkg-0.2.0.tar.gz;http://opkg.googlecode.com/files
@@ -221,8 +221,8 @@ libdreamdvd.git;git://github.com/mirakels/libdreamdvd
 # EXTERNAL_LCD
 #
 graphlcd-base-touchcol.git;git://projects.vdr-developer.org/graphlcd-base.git;touchcol
-libusb-1.0.9.tar.bz2;http://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-1.0.9
-libusb-compat-0.1.5.tar.bz2;http://downloads.sourceforge.net/project/libusb/libusb-compat-0.1/libusb-compat-0.1.5
+libusb-1.0.9.tar.bz2;https://sourceforge.net/projects/libusb/files/libusb-1.0/libusb-1.0.9
+libusb-compat-0.1.5.tar.bz2;https://sourceforge.net/projects/libusb/files/libusb-compat-0.1/libusb-compat-0.1.5
 libgd-2.1.0.tar.gz;http://bitbucket.org/libgd/gd-libgd/downloads
 dpf-ax.svn;svn://svn.code.sf.net/p/dpf-ax/code/trunk
 
@@ -241,7 +241,7 @@ e2fsprogs-1.42.13.tar.gz;http://sourceforge.net/projects/e2fsprogs/files/e2fspro
 fdisk-1.3.0a.tar.gz;http://ftp.gnu.org/gnu/fdisk
 fuse-2.9.2.tar.gz;http://dfn.dl.sourceforge.net/sourceforge/fuse
 hddtemp-0.3-beta15.tar.bz2;http://savannah.c3sl.ufpr.br/hddtemp
-hdparm-9.48.tar.gz;http://prdownloads.sourceforge.net/sourceforge/hdparm
+hdparm-9.48.tar.gz;https://sourceforge.net/projects/hdparm/files/hdparm
 jfsutils-1.1.15.tar.gz;http://jfs.sourceforge.net/project/pub
 lm_sensors-2.9.2.tar.gz;http://dl.lm-sensors.org/lm-sensors/releases
 sdparm-1.07.tgz;http://sg.danny.cz/sg/p
@@ -257,7 +257,7 @@ autofs-4.1.4.tar.gz;https://kernel.org/pub/linux/daemons/autofs/v4
 curl-7.48.0.tar.bz2;https://curl.haxx.se/download
 portmap_6.0.0.orig.tar.gz;http://ftp.gnome.org/mirror/cdimage/snapshot/Debian/pool/main/p/portmap/
 portmap_6.0.0-2.diff.gz ;http://ftp.gnome.org/mirror/cdimage/snapshot/Debian/pool/main/p/portmap/
-nfs-utils-1.3.3.tar.bz2;http://downloads.sourceforge.net/project/nfs/nfs-utils/1.3.3
+nfs-utils-1.3.3.tar.bz2;https://sourceforge.net/projects/nfs/files/nfs-utils/1.3.3
 libevent-2.0.20-stable.tar.gz;http://downloads.sourceforge.net/project/levent/libevent/libevent-2.0
 libnfsidmap-0.25.tar.gz;http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap
 libsoup-2.50.0.tar.xz;http://download.gnome.org/sources/libsoup/2.50
