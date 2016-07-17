@@ -166,11 +166,12 @@ imagemagick;6.7.7-7;ImageMagick-6.7.7-7;ImageMagick-6.7.7-7.tar.bz2;extract:Imag
 shairport;1.0;shairport-1.0;shairport.git;extract:shairport.git
 mtd_utils;1.5.0;mtd-utils-1.5.0;mtd-utils-1.5.0.tar.bz2;extract:mtd-utils-1.5.0.tar.bz2
 wget;1.15;wget-1.15;wget-1.15.tar.gz;extract:wget-1.15.tar.gz
-usb_modeswitch;2.3.0;usb-modeswitch-2.3.0;usb-modeswitch-2.3.0.tar.bz2;extract:usb-modeswitch-2.3.0.tar.bz2;patch:usb-modeswitch.patch
+usb_modeswitch;2.4.0;usb-modeswitch-2.4.0;usb-modeswitch-2.4.0.tar.bz2;extract:usb-modeswitch-2.4.0.tar.bz2;patch:usb-modeswitch.patch
 usb_modeswitch_data;20160112;usb-modeswitch-data-20160112;usb-modeswitch-data-20160112.tar.bz2;extract:usb-modeswitch-data-20160112.tar.bz2;patch:usb-modeswitch-data.patch
 pppd;2.4.7;ppp-2.4.7;ppp-2.4.7.tar.gz;extract:ppp-2.4.7.tar.gz;patch:pppd.patch;
 #modem-scripts;
 usbutils;;usbutils;usbutils.git;extract:usbutils.git
+iso_codes;;iso-codes;iso-codes.git;extract:iso-codes.git
 
 #
 # AirPlay

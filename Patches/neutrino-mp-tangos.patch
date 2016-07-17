@@ -46,7 +46,7 @@
  elif test "$BOXMODEL" = "dp7000"; then
 --- neutrino-mp-tangos.org/src/neutrino.cpp
 +++ neutrino-mp-tangos/src/neutrino.cpp
-@@ -4254,6 +4254,9 @@
+@@ -4261,6 +4261,9 @@
  			CVFD::getInstance()->Clear();
  			CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
  		}
@@ -56,7 +56,7 @@
  		CVFD::getInstance()->setBacklight(g_settings.backlight_standby);
  
  		InfoClock->enableInfoClock(false);
-@@ -4285,6 +4288,9 @@
+@@ -4292,6 +4295,9 @@
  		// Active standby off
  		powerManager->SetStandby(false, false);
  		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);

@@ -785,7 +785,7 @@ AS_IF([test "x$E2_REVISION" = x], [E2_REVISION="newest"])
 if test "$E2_DIFF" == "5"; then
 	AC_DEFINE(WITH_XMLCCWRAP, 1, [enables build of xmlccwrap with certain diff levels])
 fi
-AM_CONDITIONAL(WITH_XMLCCWRAP, test "$E2_DIFF" = "4")
+AM_CONDITIONAL(WITH_XMLCCWRAP, test "$E2_DIFF" = "5")
 
 #
 # bootstrap sh4
@@ -937,6 +937,7 @@ TUXBOX_RULES_MAKE(dbus)
 TUXBOX_RULES_MAKE(avahi)
 TUXBOX_RULES_MAKE(mtd_utils)
 TUXBOX_RULES_MAKE(wget)
+TUXBOX_RULES_MAKE(iso_codes)
 
 #
 # python

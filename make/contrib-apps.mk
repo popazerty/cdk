@@ -794,3 +794,20 @@ $(D)/smartmontools: $(D)/bootstrap @DEPENDS_smartmontools@
 	@CLEANUP_smartmontools@
 	touch $@
 
+#
+# iso-codes
+#
+$(D)/iso_codes: $(D)/bootstrap @DEPENDS_iso_codes@
+	@PREPARE_iso_codes@
+	[ -d "$(archivedir)/iso-codes.git" ] && \
+	(cd $(archivedir)/iso-codes.git; git pull; cd "$(buildprefix)";); \
+	cd @DIR_iso_codes@ && \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		&& \
+		$(MAKE) && \
+		@INSTALL_iso_codes@
+	@CLEANUP_iso_codes@
+	touch $@
+
+

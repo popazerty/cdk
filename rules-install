@@ -158,8 +158,9 @@ wget;make:install:DESTDIR=TARGET
 usb_modeswitch;make:install:DESTDIR=TARGET
 usb_modeswitch_data;make:install:DESTDIR=TARGET
 pppd;make:install:DESTDIR=TARGET
-modem-scripts;make:install:DESTDIR=TARGET
+modem_scripts;make:install:DESTDIR=TARGET
 usbutils;make:install:DESTDIR=TARGET
+iso_codes;make:install:DESTDIR=TARGET
 
 #
 # AirPlay

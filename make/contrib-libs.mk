@@ -2106,7 +2106,7 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp @DEPENDS_nettle@
 			--prefix=/usr \
 			--with-gmp=yes \
 		&& \
-		$(MAKE) && \
+		$(MAKE) -j1 && \
 		@INSTALL_nettle@
 	@CLEANUP_nettle@
 	touch $@

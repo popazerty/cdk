@@ -917,7 +917,8 @@ endif
 #
 # iso-codes
 #
-	cp -aR $(targetprefix)/usr/local/share/iso-codes $(prefix)/release/usr/share/
+	[ -e $(targetprefix)/usr/share/iso-codes ] && cp -aR $(targetprefix)/usr/share/iso-codes $(prefix)/release/usr/share/ || true
+	[ -e $(targetprefix)/usr/local/share/iso-codes ] && cp -aR $(targetprefix)/usr/local/share/iso-codes $(prefix)/release/usr/share/ || true
 
 #
 # httpd/icons/locale/themes

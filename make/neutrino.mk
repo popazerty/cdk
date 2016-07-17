@@ -374,13 +374,14 @@ neutrino-mp-next-distclean:
 ################################################################################
 neutrino-cdkroot-clean:
 	[ -e $(targetprefix)/usr/local/bin ] && cd $(targetprefix)/usr/local/bin && find -name '*' -delete || true
-	[ -e $(targetprefix)/usr/local/share/iso-codes ] && cd $(targetprefix)/usr/local/share/iso-codes && find -name '*' -delete || true
+	[ -e $(targetprefix)/usr/share/iso-codes ] && cd $(targetprefix)/usr/share/iso-codes && find -name '*' -delete || true
 	[ -e $(targetprefix)/usr/share/tuxbox/neutrino ] && cd $(targetprefix)/usr/share/tuxbox/neutrino && find -name '*' -delete || true
 	[ -e $(targetprefix)/usr/share/fonts ] && cd $(targetprefix)/usr/share/fonts && find -name '*' -delete || true
 ################################################################################
 #
 # yaud-neutrino-hd2-exp
 #
+#NEUTRINO_DEPS += iso_codes
 yaud-neutrino-hd2-exp: yaud-none lirc \
 		boot-elf neutrino-hd2-exp release_neutrino
 	@TUXBOX_YAUD_CUSTOMIZE@
@@ -406,8 +407,8 @@ $(D)/neutrino-hd2-exp.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2) libflac
 	[ -d "$(archivedir)/neutrino-hd2-exp.git" ] && \
 	(cd $(archivedir)/neutrino-hd2-exp.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-hd2-exp.git" ] || \
-	git clone -b nhd2-exp https://github.com/mohousch/neutrinohd2.git $(archivedir)/neutrino-hd2-exp.git; \
-	cp -ra $(archivedir)/neutrino-hd2-exp.git $(sourcedir)/nhd2-exp; \
+	git clone https://github.com/mohousch/neutrinohd2.git $(archivedir)/neutrino-hd2-exp.git; \
+	cp -ra $(archivedir)/neutrino-hd2-exp.git/nhd2-exp $(sourcedir)/nhd2-exp; \
 	cp -ra $(sourcedir)/nhd2-exp $(sourcedir)/nhd2-exp.org
 	for i in $(NEUTRINO_HD2_PATCHES); do \
 		echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \

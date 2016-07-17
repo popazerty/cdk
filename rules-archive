@@ -149,6 +149,7 @@ sysstat-11.1.2.tar.bz2;http://pagesperso-orange.fr/sebastien.godard
 ImageMagick-6.7.7-7.tar.bz2;ftp://ftp.fifi.org/pub/ImageMagick
 shairport.git;git://github.com/abrasive/shairport;1.0-dev
 wget-1.15.tar.gz;http://ftp.gnu.org/gnu/wget
+iso-codes.git;git://anonscm.debian.org/pkg-isocodes/iso-codes.git
 
 #
 # AirPlay
