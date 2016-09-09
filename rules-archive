@@ -41,7 +41,7 @@ libungif-4.1.4.tar.bz2;https://sourceforge.net/projects/giflib/files/libungif-4.
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
 libjpeg-turbo-1.4.2.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.4.2
 libpng-1.2.50.tar.bz2;http://sourceforge.net/projects/libpng/files/libpng12/1.2.50
-libpng-1.6.21.tar.gz;https://sourceforge.net/projects/libpng/files/libpng16/older-releases/1.6.21
+libpng-1.6.24.tar.gz;https://sourceforge.net/projects/libpng/files/libpng16/1.6.24
 png++-0.2.9.tar.gz;http://download.savannah.gnu.org/releases/pngpp
 tiff-4.0.3.tar.gz;http://download.osgeo.org/libtiff
 pixman-0.18.0.tar.gz;http://cairographics.org/releases
