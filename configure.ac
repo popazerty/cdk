@@ -1097,7 +1097,6 @@ Ccache support              : $enable_ccache
 Target CPU                  : $CPU_MODEL
 Kernelversion               : $KERNELVERSION
 Patchlevel                  : P0$KERNELLABEL
-#DEBUG                       : $enable_debug
 Boot prefix                 : $bootprefix
 Serversupport               : $serversupport
 Host prefix                 : $hostprefix

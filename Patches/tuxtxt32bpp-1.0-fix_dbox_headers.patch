@@ -14,15 +14,16 @@
 +		}
 +	}
 +#else
- 	if ((renderinfo.fb=open("/dev/fb/0", O_RDWR)) == -1)
+ 	if ((renderinfo.fb=open(FB_DEV, O_RDWR)) == -1)
  	{
- 		perror("TuxTxt <open /dev/fb/0>");
+ 		printf("TuxTxt <open %s>: %m", FB_DEV);
  		return 0;
  	}
 +#endif
  	rc[0] = rc[1] =-1;
  	while(rc_num < 2)
  	{
+-----------------------
 @@ -225,13 +236,21 @@
  		}
  		if (ioctl(rc[rc_num], EVIOCGNAME(128), tmp) < 0)

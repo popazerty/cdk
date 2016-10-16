@@ -1,16 +1,28 @@
 #!/bin/bash
-# Version 20160623.1
+# Version 20161016.1
+
+##############################################
+
+if [ "$(id -u)" = "0" ]; then
+	echo ""
+	echo "You are running a build as root. Do not do this, it is dangerous."
+	echo "Aborting the build. Goodbye."
+	echo ""
+	exit 1
+fi
+
+##############################################
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
- echo "Parameter 1: target system (1-38)"
- echo "Parameter 2: kernel (1-5)"
- echo "Parameter 3: debug (y/N)"
- echo "Parameter 4: player (1-2)"
- echo "Parameter 5: Media Framework (1-3, ignored for Neutrino/Tvheadend)"
- echo "Parameter 6: External LCD support (1-2)"
- echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
- echo "Parameter 8: Neutrino variant (1-4) or Enigma2 diff (0-4)"
- exit
+	echo "Parameter 1: target system (1-38)"
+	echo "Parameter 2: kernel (1-5)"
+	echo "Parameter 3: debug (y/N)"
+	echo "Parameter 4: player (1-2)"
+	echo "Parameter 5: Media Framework (1-3, ignored for Neutrino/Tvheadend)"
+	echo "Parameter 6: External LCD support (1-2)"
+	echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
+	echo "Parameter 8: Neutrino variant (1-4) or Enigma2 diff (0-4)"
+	exit
 fi
 
 CURDIR=`pwd`
@@ -456,19 +468,19 @@ set='audio_7100 audio_7105 audio_7109 audio_7111 video_7100 video_7105 video_710
 ELFMISSING=0
 for i in $set;
 do
-  if [ ! -e $CURDIR/root/boot/$i.elf ]; then
-    echo -e -n "\n\033[31mERROR\033[0m: file $i.elf is missing in ./root/boot"
-    ELFMISSING=1
-  fi
+	if [ ! -e $CURDIR/root/boot/$i.elf ]; then
+		echo -e -n "\n\033[31mERROR\033[0m: file $i.elf is missing in ./root/boot"
+		ELFMISSING=1
+	fi
 done
 if [ "$ELFMISSING" == "1" ]; then
-  echo -e "\n"
-  echo "Correct this and retry."
-  exit
+	echo -e "\n"
+	echo "Correct this and retry."
+	exit
 fi
 echo " [OK]"
 if [ -e $CURDIR/root/boot/put_your_elf_files_here ]; then
-  rm $CURDIR/root/boot/put_your_elf_files_here
+	rm $CURDIR/root/boot/put_your_elf_files_here
 fi
 
 ##############################################
@@ -498,7 +510,7 @@ echo "Selected media framework : $MFWORK"
 echo "USB WLAN drivers         : $WLANDR"
 echo "Image                    : $IMAGEN"
 if [ "$IMAGEN" == "Enigma2" ]; then
-  echo "Enigma2 diff             : $DIFF (revision: $REVISION)"
+	echo "Enigma2 diff             : $DIFF (revision: $REVISION)"
 fi
 echo "------------------------------------------------------------------
 "
@@ -506,26 +518,26 @@ echo
 # Create build executable file
 cat $CURDIR/remake > $CURDIR/build
 if [ "$IMAGEN" == "Enigma2" ]; then
-  echo "make yaud-enigma2-pli-nightly" >> $CURDIR/build
+	echo "make yaud-enigma2-pli-nightly" >> $CURDIR/build
 elif [ "$IMAGEN" == "Tvheadend" ]; then
-  echo "make yaud-tvheadend" >> $CURDIR/build
+	echo "make yaud-tvheadend" >> $CURDIR/build
 else
-  case "$NEUTRINO" in
-    1) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
-    2) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
-    3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
-    4) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
-#    5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
-    *) exit;;
-  esac
+	case "$NEUTRINO" in
+		1) echo "make yaud-neutrino-mp-next" >> $CURDIR/build;;
+		2) echo "make yaud-neutrino-mp-cst-next" >> $CURDIR/build;;
+		3) echo "make yaud-neutrino-hd2-exp" >> $CURDIR/build;;
+		4) echo "make yaud-neutrino-mp-tangos" >> $CURDIR/build;;
+#		5) echo "make yaud-neutrino-mp-martii-github" >> $CURDIR/build;;
+		*) exit;;
+	esac
 fi
 chmod 755 $CURDIR/build
 
 read -p "Do you want to start the build now (Y*/n)? "
 
 case "$REPLY" in
-  N|n|No|NO|no) echo -e "\nOK. To start the build, execute ./build in this directory.\n"
-                exit;;
-  *)            $CURDIR/build;;
+	N|n|No|NO|no) echo -e "\nOK. To start the build, execute ./build in this directory.\n"
+		exit;;
+  	*)	$CURDIR/build;;
 esac
 
