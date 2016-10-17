@@ -1666,11 +1666,11 @@ $(D)/alsautils: $(D)/bootstrap @DEPENDS_alsautils@
 #
 $(D)/libopenthreads: $(D)/bootstrap @DEPENDS_libopenthreads@
 	@PREPARE_libopenthreads@
-	[ -d "$(archivedir)/cst-public-libraries-openthreads.git" ] && \
-	(cd $(archivedir)/cst-public-libraries-openthreads.git; git pull; cd "$(buildprefix)";); \
-	[ -d "$(archivedir)/cst-public-libraries-openthreads.git" ] || \
-	git clone --recursive git://c00lstreamtech.de/cst-public-libraries-openthreads.git $(archivedir)/cst-public-libraries-openthreads.git; \
-	cp -ra $(archivedir)/cst-public-libraries-openthreads.git $(buildprefix)/openthreads; \
+	[ -d "$(archivedir)/openthreads.git" ] && \
+	(cd $(archivedir)/openthreads.git; git pull; cd "$(buildprefix)";); \
+	[ -d "$(archivedir)/openthreads.git" ] || \
+	git clone --recursive git://github.com/tuxbox-neutrino/library-openthreads.git $(archivedir)/openthreads.git; \
+	cp -ra $(archivedir)/openthreads.git $(buildprefix)/openthreads; \
 	cd @DIR_libopenthreads@ && \
 		rm CMakeFiles/* -rf CMakeCache.txt cmake_install.cmake && \
 		echo "# dummy file to prevent warning message" > $(buildprefix)/openthreads/examples/CMakeLists.txt; \

@@ -38,7 +38,7 @@ uboot_tf7700;1.3.1;u-boot-1.3.1;u-boot-1.3.1.tar.bz2;extract:u-boot-1.3.1.tar.bz
 #
 # root
 #
-busybox;1.24.1;busybox-1.24.1;busybox-1.24.1.tar.bz2;extract:busybox-1.24.1.tar.bz2
+busybox;1.25.1;busybox-1.25.1;busybox-1.25.1.tar.bz2;extract:busybox-1.25.1.tar.bz2
 lsb;3.2-20;lsb-3.2;lsb_3.2-20.tar.gz;extract:lsb_3.2-20.tar.gz
 ipkg;0.99.163;ipkg-0.99.163;ipkg-0.99.163.tar.gz;extract:ipkg-0.99.163.tar.gz
 module_init_tools;3.16;module-init-tools-3.16;module-init-tools-3.16.tar.bz2;extract:module-init-tools-3.16.tar.bz2;patch:module-init-tools-no-man.patch
