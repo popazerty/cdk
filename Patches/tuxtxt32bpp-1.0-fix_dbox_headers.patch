@@ -23,15 +23,14 @@
  	rc[0] = rc[1] =-1;
  	while(rc_num < 2)
  	{
------------------------
 @@ -225,13 +236,21 @@
  		}
  		if (ioctl(rc[rc_num], EVIOCGNAME(128), tmp) < 0)
  			perror("EVIOCGNAME failed");
 +#if defined(__sh__)
-+		if (!strstr(tmp, "TDT RC event driver"))
++		if (!strstr(tmp, "TDT RC event driver") && !strstr(tmp, "key"))
 +#else
- 		if (!strstr(tmp, "remote control"))
+ 		if (!strstr(tmp, "remote control") && !strstr(tmp, "key"))
 +#endif
  		{
  			close(rc[rc_num]);
