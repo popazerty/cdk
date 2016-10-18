@@ -1520,8 +1520,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	}
  
  	if (m_fd >= 0)
- 
-@@ -128,7 +134,9 @@
+@@ -132,7 +138,9 @@
  			eDebugNoNewLine("failed: %m\n");
  		else
  			eDebugNoNewLine("ok\n");
@@ -1531,7 +1530,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBAudio%d] AUDIO_PLAY ", m_dev);
  		if (::ioctl(m_fd, AUDIO_PLAY) < 0)
  			eDebugNoNewLine("failed: %m\n");
-@@ -355,7 +363,11 @@
+@@ -363,7 +371,11 @@
  			pes.pes_type = DMX_PES_VIDEO3;
  			break;
  		}
@@ -1543,7 +1542,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBVideo%d] DMX_SET_PES_FILTER pid=0x%04x ", m_dev, pid);
  		if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
  		{
-@@ -363,6 +375,7 @@
+@@ -371,6 +383,7 @@
  			return -errno;
  		}
  		eDebugNoNewLine("ok\n");
@@ -1551,7 +1550,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBVideo%d] DEMUX_START ", m_dev);
  		if (::ioctl(m_fd_demux, DMX_START) < 0)
  		{
-@@ -370,11 +383,14 @@
+@@ -378,11 +391,14 @@
  			return -errno;
  		}
  		eDebugNoNewLine("ok\n");
@@ -1566,7 +1565,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBVideo%d] VIDEO_PLAY ", m_dev);
  		if (::ioctl(m_fd, VIDEO_PLAY) < 0)
  			eDebugNoNewLine("failed: %m\n");
-@@ -662,7 +678,11 @@
+@@ -670,7 +686,11 @@
  		pes.pes_type = DMX_PES_PCR3;
  		break;
  	}
@@ -1578,7 +1577,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	eDebugNoNewLineStart("[eDVBPCR%d] DMX_SET_PES_FILTER pid=0x%04x ", m_dev, pid);
  	if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
  	{
-@@ -670,6 +690,7 @@
+@@ -678,6 +698,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1586,7 +1585,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	eDebugNoNewLineStart("[eDVBPCR%d] DEMUX_START ", m_dev);
  	if (::ioctl(m_fd_demux, DMX_START) < 0)
  	{
-@@ -677,6 +698,7 @@
+@@ -685,6 +706,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1594,7 +1593,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	return 0;
  }
  
-@@ -732,7 +754,11 @@
+@@ -740,7 +762,11 @@
  		pes.pes_type = DMX_PES_TELETEXT3;
  		break;
  	}
@@ -1606,7 +1605,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  
  	eDebugNoNewLineStart("[eDVBText%d] DMX_SET_PES_FILTER pid=0x%04x ", m_dev, pid);
  	if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
-@@ -741,6 +767,7 @@
+@@ -749,6 +775,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1614,7 +1613,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	eDebugNoNewLineStart("[eDVBText%d] DEMUX_START ", m_dev);
  	if (::ioctl(m_fd_demux, DMX_START) < 0)
  	{
-@@ -748,6 +775,7 @@
+@@ -756,6 +783,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1622,7 +1621,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	return 0;
  }
  
-@@ -884,12 +912,28 @@
+@@ -892,12 +920,28 @@
  		int *s = state_table[m_state];
  		if (changed & (changeState|changeVideo) && m_video)
  		{
@@ -1651,7 +1650,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		}
  		if (changed & (changeState|changeAudio) && m_audio)
  		{
-@@ -1190,6 +1234,10 @@
+@@ -1198,6 +1242,10 @@
  		{
  			struct stat s;
  			fstat(f, &s);
@@ -1662,7 +1661,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  			if (m_video_clip_fd == -1)
  				m_video_clip_fd = open("/dev/dvb/adapter0/video0", O_WRONLY);
  			if (m_video_clip_fd >= 0)
-@@ -1210,8 +1258,10 @@
+@@ -1218,8 +1266,10 @@
  
  				if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_MEMORY) < 0)
  					eDebug("[eTSMPEGDecoder] VIDEO_SELECT_SOURCE MEMORY failed: %m");
@@ -1673,7 +1672,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  				if (ioctl(m_video_clip_fd, VIDEO_PLAY) < 0)
  					eDebug("[eTSMPEGDecoder] VIDEO_PLAY failed: %m");
  				if (ioctl(m_video_clip_fd, VIDEO_CONTINUE) < 0)
-@@ -1228,7 +1278,9 @@
+@@ -1236,7 +1286,9 @@
  				if (!seq_end_avail)
  					write(m_video_clip_fd, seq_end, sizeof(seq_end));
  				writeAll(m_video_clip_fd, stuffing, 8192);
