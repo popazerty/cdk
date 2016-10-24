@@ -29,7 +29,7 @@ ccache;3.1.9;ccache-3.1.9;ccache-3.1.9.tar.gz;extract:ccache-3.1.9.tar.gz
 host_cramfs;1.1;cramfs-1.1;cramfs-1.1.tar.gz;extract:cramfs-1.1.tar.gz
 host_squashfs;4.0;squashfs4.0;squashfs4.0.tar.gz:squashfs-tools-4.0-lzma.patch:lzma465.tar.bz2;dirextract:lzma465.tar.bz2;extract:squashfs4.0.tar.gz;patch:squashfs-tools-4.0-lzma.patch
 host_pkgconfig;0.28;pkg-config-0.28;pkg-config-0.28.tar.gz;extract:pkg-config-0.28.tar.gz;patch:pkg-config-0.28.patch
-host_module_init_tools;3.16;module-init-tools-3.16;module-init-tools-3.16.tar.bz2;extract:module-init-tools-3.16.tar.bz2;patch:module-init-tools-no-man.patch
+host_module_init_tools;3.16;module-init-tools-3.16;module-init-tools-3.16.tar.gz;extract:module-init-tools-3.16.tar.gz;patch:module-init-tools-no-man.patch
 host_mtd_utils;1.5.2;mtd-utils-1.5.2;mtd-utils-1.5.2.tar.bz2;extract:mtd-utils-1.5.2.tar.bz2;patch:host-mtd-utils-1.5.0.patch
 host_glib2_genmarshal;2.45.4;glib-2.45.4;glib-2.45.4.tar.xz;extract:glib-2.45.4.tar.xz
 host_libffi;3.2.1;libffi-3.2.1;libffi-3.2.1.tar.gz;extract:libffi-3.2.1.tar.gz
@@ -41,7 +41,7 @@ uboot_tf7700;1.3.1;u-boot-1.3.1;u-boot-1.3.1.tar.bz2;extract:u-boot-1.3.1.tar.bz
 busybox;1.25.1;busybox-1.25.1;busybox-1.25.1.tar.bz2;extract:busybox-1.25.1.tar.bz2
 lsb;3.2-20;lsb-3.2;lsb_3.2-20.tar.gz;extract:lsb_3.2-20.tar.gz
 ipkg;0.99.163;ipkg-0.99.163;ipkg-0.99.163.tar.gz;extract:ipkg-0.99.163.tar.gz
-module_init_tools;3.16;module-init-tools-3.16;module-init-tools-3.16.tar.bz2;extract:module-init-tools-3.16.tar.bz2;patch:module-init-tools-no-man.patch
+module_init_tools;3.16;module-init-tools-3.16;module-init-tools-3.16.tar.gz;extract:module-init-tools-3.16.tar.gz;patch:module-init-tools-no-man.patch
 sysvinit;2.88;sysvinit-2.88dsf;sysvinit_2.88dsf.orig.tar.gz;extract:sysvinit_2.88dsf.orig.tar.gz
 
 #
