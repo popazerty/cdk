@@ -1,6 +1,6 @@
 --- tvheadend.org/Makefile
 +++ tvheadend/Makefile
-@@ -44,6 +44,7 @@
+@@ -50,6 +50,7 @@
  CFLAGS  += -Wmissing-prototypes
  CFLAGS  += -fms-extensions -funsigned-char -fno-strict-aliasing
  CFLAGS  += -D_FILE_OFFSET_BITS=64
@@ -8,7 +8,7 @@
  CFLAGS  += -I${BUILDDIR} -I${ROOTDIR}/src -I${ROOTDIR}
  ifeq ($(CONFIG_ANDROID),yes)
  LDFLAGS += -ldl -lm
-@@ -91,8 +92,10 @@
+@@ -97,8 +98,10 @@
  	$(MAKE) all
  endif
  
@@ -23,7 +23,7 @@
      --define-variable=prefix=$(FFMPEG_PREFIX) --static
 --- tvheadend.org/configure
 +++ tvheadend/configure
-@@ -109,6 +109,9 @@
+@@ -110,6 +110,9 @@
        opt=${opt#*-}
        disable $opt 1
        ;;
@@ -33,7 +33,7 @@
    esac
  done
  
-@@ -657,6 +660,9 @@
+@@ -664,6 +667,9 @@
  
  # Output config
  print_config
@@ -60,7 +60,7 @@
  
  #define PTS_UNSET INT64_C(0x8000000000000000)
  #define PTS_MASK  INT64_C(0x00000001ffffffff)
-@@ -864,4 +864,18 @@
+@@ -871,4 +871,18 @@
  #define PRItime_t       "ld"
  #endif
  
@@ -146,7 +146,7 @@
  
  pthread_t main_tid;
  
-@@ -727,6 +728,10 @@
+@@ -742,6 +743,10 @@
    } randseed;
    extern int dvb_bouquets_parse;
  
@@ -157,18 +157,19 @@
    main_tid = pthread_self();
  
    /* Setup global mutexes */
-@@ -788,8 +793,8 @@
-              *opt_subscribe    = NULL,
+@@ -805,9 +810,9 @@
               *opt_user_agent   = NULL,
               *opt_satip_bindaddr = NULL;
--  str_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
--  str_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
-+  strg_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
-+  strg_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = calloc(10, sizeof(char*)) };
+   static char *__opt_satip_xml[10];
+-  str_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = __opt_satip_xml };
++  strg_list_t  opt_satip_xml    = { .max = 10, .num = 0, .str = __opt_satip_xml };
+   static char *__opt_satip_tsfile[10];
+-  str_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = __opt_satip_tsfile };
++  strg_list_t  opt_tsfile       = { .max = 10, .num = 0, .str = __opt_satip_tsfile };
    cmdline_opt_t cmdline_opts[] = {
      {   0, NULL,        N_("Generic options"),         OPT_BOOL, NULL         },
      { 'h', "help",      N_("Show this page"),          OPT_BOOL, &opt_help    },
-@@ -917,7 +922,7 @@
+@@ -936,7 +941,7 @@
      else if (opt->type == OPT_INT)
        *((int*)opt->param) = atoi(argv[i]);
      else if (opt->type == OPT_STR_LIST) {
@@ -177,7 +178,7 @@
        if (strl->num < strl->max)
          strl->str[strl->num++] = argv[i];
      }
-@@ -1255,6 +1260,29 @@
+@@ -1276,6 +1281,29 @@
           getpid(), getuid(), getgid(), getcwd(buf, sizeof(buf)),
           hts_settings_get_root());
  

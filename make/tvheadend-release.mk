@@ -282,7 +282,7 @@ release_tvheadend_spark7162: release_tvheadend_common_utils
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/vdstandby
 	rm -f $(prefix)/release/bin/eeprom
-	cp -p $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/
+	cp -p $(targetprefix)/usr/sbin/ntpdate $(prefix)/release/sbin/
 	cp -f $(buildprefix)/root/sbin/flashcp $(prefix)/release/sbin
 	cp -f $(buildprefix)/root/sbin/flash_* $(prefix)/release/sbin
 	cp -f $(buildprefix)/root/sbin/nand* $(prefix)/release/sbin

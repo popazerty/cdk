@@ -14,7 +14,7 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
 	rm -rf $(sourcedir)/tvheadend.org
 	rm -rf $(N_OBJDIR)
-	REVISION="f59669c92ce0a67924e72d150cbe881663e499bf"; \
+	REVISION="4931c0544885371b85146efad4eacd9683ba3dad"; \
 	[ -d "$(archivedir)/tvheadend.git" ] && \
 	(cd $(archivedir)/tvheadend.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/tvheadend.git" ] || \
@@ -26,7 +26,9 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 		echo -e "==> \033[31mApplying Patch\033[0m: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/tvheadend && patch -p1 -i $(PATCHES)/$$i; \
 	done;
-	touch $@
+	touch $@;
+	@echo -e "\033[01;32mDone: tvheadend.do_prepare\033[00m"
+
 
 $(D)/tvheadend.config.status:
 	cd $(sourcedir)/tvheadend && \
@@ -65,7 +67,8 @@ $(D)/tvheadend.config.status:
 $(D)/tvheadend.do_compile: tvheadend.config.status
 	cd $(sourcedir)/tvheadend && \
 		 $(MAKE) all
-	touch $@
+	touch $@;
+	@echo -e "\033[01;32mDone: tvheadend.do_compile\033[00m"
 
 $(D)/tvheadend: tvheadend.do_prepare tvheadend.do_compile
 	 $(MAKE) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
@@ -75,7 +78,8 @@ $(D)/tvheadend: tvheadend.do_prepare tvheadend.do_compile
 	if [ -e $(targetprefix)/usr/local/bin/tvheadend ]; then \
 		$(target)-strip $(targetprefix)/usr/local/bin/tvheadend; \
 	fi
-	touch $@
+	touch $@;
+	@echo -e "\033[01;32mDone: tvheadend\033[00m"
 
 tvheadendclean:
 	rm -f $(D)/tvheadend
