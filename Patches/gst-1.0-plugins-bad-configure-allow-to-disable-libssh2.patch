@@ -9,7 +9,7 @@
  
  dnl define PACKAGE_VERSION_* variables
  AS_VERSION
-@@ -2046,6 +2046,15 @@
+@@ -2049,6 +2049,15 @@
  ])
  
  dnl *** Curl ***
@@ -25,7 +25,7 @@
  translit(dnm, m, l) AM_CONDITIONAL(USE_CURL, true)
  AG_GST_CHECK_FEATURE(CURL, [Curl plugin], curl, [
    PKG_CHECK_MODULES(CURL, libcurl >= 7.35.0, [
-@@ -2068,12 +2077,14 @@
+@@ -2071,12 +2080,14 @@
    ])
    AC_SUBST(CURL_CFLAGS)
    AC_SUBST(CURL_LIBS)

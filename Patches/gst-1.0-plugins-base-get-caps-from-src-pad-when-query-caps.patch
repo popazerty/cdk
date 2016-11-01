@@ -1,6 +1,6 @@
 --- a/gst-libs/gst/tag/gsttagdemux.c
 +++ b/gst-libs/gst/tag/gsttagdemux.c
-@@ -1769,6 +1769,19 @@
+@@ -1778,6 +1778,19 @@
        }
        break;
      }

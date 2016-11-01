@@ -37,7 +37,7 @@
  
  static void
  gst_base_parse_reset (GstBaseParse * parse)
-@@ -2093,17 +2096,27 @@
+@@ -2114,17 +2100,27 @@
        GST_BUFFER_OFFSET (buffer), GST_BUFFER_OFFSET (buffer),
        gst_buffer_get_size (buffer));
  
