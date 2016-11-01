@@ -66,7 +66,7 @@
 +};
  #include <aotom_main.h>
  #define DISPLAY_DEV "/dev/vfd"
- #endif
+ #include <zapit/zapit.h>
 --- neutrino-mp-cst-next.org/src/driver/vfd.cpp
 +++ neutrino-mp-cst-next/src/driver/vfd.cpp
 @@ -52,7 +52,7 @@
@@ -220,7 +220,7 @@
  	for (int id = 0x10; id < FP_ICON_MAX; id++) {
 --- neutrino-mp-cst-next/src/gui/vfd_setup.cpp
 +++ neutrino-mp-cst-next/src/gui/vfd_setup.cpp
-@@ -191,6 +191,19 @@
+@@ -193,6 +193,19 @@
  
  int CVfdSetup::showBrightnessSetup()
  {
@@ -240,7 +240,7 @@
  	CMenuOptionNumberChooser * nc;
  	CMenuForwarder * mf;
  
-@@ -210,18 +223,18 @@
+@@ -212,18 +225,18 @@
  	brightnessstandby = CVFD::getInstance()->getBrightnessStandby();
  	brightnessdeepstandby = CVFD::getInstance()->getBrightnessDeepStandby();
  
