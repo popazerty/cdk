@@ -300,7 +300,7 @@ ethtool;6;ethtool-6;ethtool-6.tar.gz;extract:ethtool-6.tar.gz
 xupnpd;1.0;xupnpd-1.0;xupnpd.git;extract:xupnpd.git;patch:xupnpd.patch
 udpxy;1.0.23-0;udpxy-1.0.23-0;udpxy.1.0.23-0-prod.tar.gz;extract:udpxy.1.0.23-0-prod.tar.gz;patch:udpxy-1.0.23-0.patch
 glibnetworking;2.45.1;glib-networking-2.45.1;glib-networking-2.45.1.tar.xz;extract:glib-networking-2.45.1.tar.xz
-openvpn;2.3.10;openvpn-2.3.10;openvpn-2.3.10.tar.xz;extract:openvpn-2.3.10.tar.xz
+openvpn;2.3.12;openvpn-2.3.12;openvpn-2.3.12.tar.xz;extract:openvpn-2.3.12.tar.xz
 openssh;7.1p1;openssh-7.1p1;openssh-7.1p1.tar.gz;extract:openssh-7.1p1.tar.gz
 
 
