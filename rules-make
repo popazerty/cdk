@@ -281,7 +281,7 @@ smartmontools;6.4;smartmontools-6.4;smartmontools-6.4.tar.gz;extract:smartmontoo
 # Networking Libraries / Networking Utilities
 #
 autofs;4.1.4;autofs-4.1.4;autofs-4.1.4.tar.gz;extract:autofs-4.1.4.tar.gz;patch:autofs-4.1.4.patch
-libcurl;7.48.0;curl-7.48.0;curl-7.48.0.tar.bz2;extract:curl-7.48.0.tar.bz2;patch:libcurl-7.48.0.patch
+libcurl;7.51.0;curl-7.51.0;curl-7.51.0.tar.bz2;extract:curl-7.51.0.tar.bz2;patch:libcurl-7.51.0.patch
 portmap;6.0.0;portmap-6.0.0;portmap_6.0.0.orig.tar.gz:portmap_6.0.patch:portmap_6.0.0-2.diff.gz;extract:portmap_6.0.0.orig.tar.gz;patch:portmap_6.0.patch
 nfs_utils;1.3.3;nfs-utils-1.3.3;nfs-utils-1.3.3.tar.bz2;extract:nfs-utils-1.3.3.tar.bz2;patch:nfs-utils-1.3.3.patch
 libevent;2.0.20-stable;libevent-2.0.20-stable;libevent-2.0.20-stable.tar.gz;extract:libevent-2.0.20-stable.tar.gz
