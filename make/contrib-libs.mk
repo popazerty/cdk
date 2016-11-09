@@ -606,7 +606,7 @@ $(D)/orc: $(D)/bootstrap @DEPENDS_orc@
 # libglib2
 # You need libglib2.0-dev on host system
 #
-$(D)/glib2: $(D)/bootstrap $(D)/host_glib2_genmarshal $(D)/zlib $(D)/libffi @DEPENDS_glib2@
+$(D)/glib2: $(D)/bootstrap $(D)/host_glib2_genmarshal $(D)/zlib $(D)/libffi $(D)/libpcre @DEPENDS_glib2@
 	@PREPARE_glib2@
 	echo "glib_cv_va_copy=no" > @DIR_glib2@/config.cache
 	echo "glib_cv___va_copy=yes" >> @DIR_glib2@/config.cache
