@@ -137,7 +137,9 @@ AM_CONDITIONAL(DEBUG,test "$enable_debug" = "yes")
 
 AC_ARG_ENABLE(mediafwgstreamer,
 	AS_HELP_STRING(--enable-mediafwgstreamer,    set up the CDK to use mediafw gstreamer),
-	,[enable_mediafwgstreamer=no])
+	[case "${enableval}" in
+		yes) MEDIAFWGSTREAMER=gstreamer ;;
+	esac],[enable_mediafwgstreamer=no])
 AM_CONDITIONAL(ENABLE_MEDIAFWGSTREAMER,test "$enable_mediafwgstreamer" = "yes")
 AC_SUBST(MEDIAFWGSTREAMER)
 
@@ -156,7 +158,7 @@ AM_CONDITIONAL(ENABLE_EPLAYER3,test "$enable_eplayer3" = "yes")
 AC_SUBST(EPLAYER3)
 
 AC_ARG_ENABLE(buildinplayer,
-	AS_HELP_STRING(--enable-buildinplayer,    enable build-in player support),
+	AS_HELP_STRING(--enable-buildinplayer,    enable built-in player support),
 	,[enable_buildinplayer=no])
 AM_CONDITIONAL(ENABLE_BUILDINPLAYER,test "$enable_buildinplayer" = "yes")
 AC_SUBST(BUILDINPLAYER)

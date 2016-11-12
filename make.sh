@@ -1,13 +1,15 @@
 #!/bin/bash
-# Version 20161016.1
+# Version 20161112.1
 
 ##############################################
 
 if [ "$(id -u)" = "0" ]; then
 	echo ""
-	echo "You are running a build as root. Do not do this, it is dangerous."
-	echo "Aborting the build. Goodbye."
-	echo ""
+	echo "You are trying to run a build as root."
+	echo
+	echo "Do not do this, it is dangerous."
+	echo "Aborting the build. Log in as regular user and retry."
+	echo
 	exit 1
 fi
 
@@ -18,15 +20,48 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 2: kernel (1-5)"
 	echo "Parameter 3: debug (y/N)"
 	echo "Parameter 4: player (1-2)"
-	echo "Parameter 5: Media Framework (1-3, ignored for Neutrino/Tvheadend)"
-	echo "Parameter 6: External LCD support (1-2)"
-	echo "Parameter 7: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
-	echo "Parameter 8: Neutrino variant (1-4) or Enigma2 diff (0-4)"
+	echo "Parameter 5: Image (Enigma=1,2/Neutrino=3,4/Tvheadend=5) (1-5)"
+	echo "Parameter 6: External LCD support (1-2, ignored for Tvheadend))"
+	echo "Parameter 7: Neutrino variant (1-4) or Enigma2 diff (0-4), ignored for Tvheadend"
+	echo "Parameter 8: Media Framework (1-3, ignored for Neutrino/Tvheadend)"
 	exit
 fi
 
+##############################################
+
+echo "     _             _ _             _      _                _     _ _    "
+echo "    / \  _   _  __| (_) ___  _ __ (_) ___| | _____      __| | __| | |_  "
+echo "   / _ \| | | |/ _  | |/ _ \|  _ \| |/ _ \ |/ / __|___ / _  |/ _  | __| "
+echo "  / ___ \ |_| | (_| | | (_) | | | | |  __/   <\__ \___| (_| | (_| | |_  "
+echo " /_/   \_\__,_|\__,_|_|\___/|_| |_|_|\___|_|\_\___/    \__,_|\__,_|\__| "
+echo
+
+##############################################
+
 CURDIR=`pwd`
 CURRENT_PATH=${CURDIR%/cdk}
+
+echo -ne "\nChecking the .elf files in $CURDIR/root/boot..."
+set='audio_7100 audio_7105 audio_7109 audio_7111 video_7100 video_7105 video_7109 video_7111'
+ELFMISSING=0
+for i in $set;
+do
+	if [ ! -e $CURDIR/root/boot/$i.elf ]; then
+		echo -e -n "\n\033[31mERROR\033[0m: file $i.elf is missing in ./root/boot"
+		ELFMISSING=1
+	fi
+done
+if [ "$ELFMISSING" == "1" ]; then
+	echo -e "\n"
+	echo "Correct this and retry."
+	exit
+fi
+echo " [OK]"
+if [ -e $CURDIR/root/boot/put_your_elf_files_here ]; then
+	rm $CURDIR/root/boot/put_your_elf_files_here
+fi
+
+##############################################
 
 CONFIGPARAM=" \
  --enable-maintainer-mode \
@@ -49,15 +84,6 @@ if [ -e ./lastChoice ]; then
 	LASTBOX=`grep -e "with-boxtype" ./lastsetting | awk '{print substr($0,14,length($0)-12)}'`
 	rm -f ./lastsetting
 fi
-
-##############################################
-
-echo "     _             _ _             _      _                _     _ _    "
-echo "    / \  _   _  __| (_) ___  _ __ (_) ___| | _____      __| | __| | |_  "
-echo "   / _ \| | | |/ _  | |/ _ \|  _ \| |/ _ \ |/ / __|___ / _  |/ _  | __| "
-echo "  / ___ \ |_| | (_| | | (_) | | | | |  __/   <\__ \___| (_| | (_| | |_  "
-echo " /_/   \_\__,_|\__,_|_|\___/|_| |_|_|\___|_|\_\___/    \__,_|\__,_|\__| "
-echo
 
 ##############################################
 
@@ -296,23 +322,8 @@ cd $CURDIR
 
 ##############################################
 
-case $6 in
-	[1-2])	REPLY=$6;;
-	*)	echo -e "\nExternal LCD support:"
-		echo "   1) No external LCD"
-		echo "   2) graphlcd for external LCD"
-		read -p "Select external LCD support (1-2)? ";;
-esac
-
-case "$REPLY" in
-	2)	EXTERNAL_LCD="--enable-externallcd";LCDR="Yes";;
-	*)	EXTERNAL_LCD="";LCDR="No";;
-esac
-
-##############################################
-
-case $7 in
-	[1-5]) REPLY=$7;;
+case $5 in
+	[1-5]) REPLY=$5;;
 	*)	echo -e "\nWhich Image do you want to build:"
 		echo "   1) Enigma2"
 		echo "   2) Enigma2 (includes WLAN drivers)"
@@ -340,8 +351,22 @@ case "$IMAGEN" in
 		MEDIAFW="--enable-buildinplayer"
 		MFWORK="built-in"
 		CONFIGPARAM="$CONFIGPARAM --enable-neutrino"
-		case $8 in
-			[1-4])	REPLY=$8;;
+
+		case $6 in
+			[1-2])	REPLY=$6;;
+			*)	echo -e "\nExternal LCD support:"
+				echo "   1) No external LCD"
+				echo "   2) graphlcd for external LCD"
+				read -p "Select external LCD support (1-2)? ";;
+		esac
+
+		case "$REPLY" in
+			2)	EXTERNAL_LCD="--enable-externallcd";LCDR="Yes";;
+			*)	EXTERNAL_LCD="";LCDR="No";;
+		esac
+
+		case $7 in
+			[1-4])	REPLY=$7;;
 			*)	echo -e "\nWhich Neutrino variant do you want to build?"
 				echo "   1) Neutrino mp (next)"
 				echo "   2) Neutrino mp (cst-next)"
@@ -392,8 +417,21 @@ case "$IMAGEN" in
 			echo "Exiting..."
 			exit
 		fi
-		case $5 in
-			[1-3])	REPLY=$5;;
+		case $6 in
+			[1-2])	REPLY=$6;;
+			*)	echo -e "\nExternal LCD support:"
+				echo "   1) No external LCD"
+				echo "   2) graphlcd for external LCD"
+				read -p "Select external LCD support (1-2)? ";;
+		esac
+
+		case "$REPLY" in
+			2)	EXTERNAL_LCD="--enable-externallcd";LCDR="Yes";;
+			*)	EXTERNAL_LCD="";LCDR="No";;
+		esac
+
+		case $8 in
+			[1-3])	REPLY=$8;;
 			*)	echo -e "\nMedia Framework:"
 				echo "   1) eplayer3 (experimental)"
 				echo "   2) gstreamer"
@@ -411,8 +449,8 @@ case "$IMAGEN" in
 		esac
 
 		# Determine the OpenPLi diff-level
-		case $8 in
-			[0-4])	REPLY=$8;;
+		case $7 in
+			[0-5])	REPLY=$7;;
 			*)	echo "Please select one of the following Enigma2 revisions (default = 2):"
 				echo "================================================================================================="
 				echo " 0) Newest                 - E2 OpenPLi  any framework  (CAUTION: may fail due to outdated patch)"
@@ -435,7 +473,7 @@ case "$IMAGEN" in
 				REVISION="7d63bf16e99741f0a5798b84a3688759317eecb3";;
 			4)	DIFF="4"
 				REVISION="cd5505a4b8aba823334032bb6fd7901557575455";;
-			4)	DIFF="5"
+			5)	DIFF="5"
 				REVISION="4f2db7ace4d9b081cbbb3c13947e05312134ed8e";;
 			0)	DIFF="0"
 				REVISION="newest";;
@@ -462,28 +500,6 @@ esac
 CONFIGPARAM="$CONFIGPARAM $PLAYER $MULTICOM $MEDIAFW $EXTERNAL_LCD"
 
 ##############################################
-
-echo -ne "\nChecking the .elf files in $CURDIR/root/boot..."
-set='audio_7100 audio_7105 audio_7109 audio_7111 video_7100 video_7105 video_7109 video_7111'
-ELFMISSING=0
-for i in $set;
-do
-	if [ ! -e $CURDIR/root/boot/$i.elf ]; then
-		echo -e -n "\n\033[31mERROR\033[0m: file $i.elf is missing in ./root/boot"
-		ELFMISSING=1
-	fi
-done
-if [ "$ELFMISSING" == "1" ]; then
-	echo -e "\n"
-	echo "Correct this and retry."
-	exit
-fi
-echo " [OK]"
-if [ -e $CURDIR/root/boot/put_your_elf_files_here ]; then
-	rm $CURDIR/root/boot/put_your_elf_files_here
-fi
-
-##############################################
 echo && \
 
 echo "Performing autogen.sh..." && \
@@ -493,7 +509,7 @@ echo && \
 echo "Performing configure..." && \
 echo "-----------------------" && \
 echo && \
-./configure $CONFIGPARAM
+./configure -q $CONFIGPARAM
 ##############################################
 
 echo $CONFIGPARAM >lastChoice
@@ -502,15 +518,15 @@ echo "------------------------------------------------------------------
 "
 echo "Your build environment is ready :-)"
 echo
-echo "Selected receiver        : $RECEIVER"
-echo "Selected kernel          : $KERNELP"
-echo "Debug option             : $DEBUGR"
-echo "Selected player          : $PLAYERR"
-echo "Selected media framework : $MFWORK"
-echo "USB WLAN drivers         : $WLANDR"
-echo "Image                    : $IMAGEN"
+echo "Selected receiver           : $RECEIVER"
+echo "Selected kernel patch level : $KERNELP"
+echo "Debug option                : $DEBUGR"
+echo "Selected player             : $PLAYERR"
+echo "Selected media framework    : $MFWORK"
+echo "USB WLAN drivers            : $WLANDR"
+echo "Image                       : $IMAGEN"
 if [ "$IMAGEN" == "Enigma2" ]; then
-	echo "Enigma2 diff             : $DIFF (revision: $REVISION)"
+	echo "Enigma2 diff                : $DIFF (revision: $REVISION)"
 fi
 echo "------------------------------------------------------------------
 "

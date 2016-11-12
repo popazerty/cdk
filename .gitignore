@@ -34,4 +34,5 @@ busybox-*/
 custom/yaud-neutrino-*
 custom/yaud-enigma2-*
 custom/yaud-tvheadend-*
+root/boot/*
 

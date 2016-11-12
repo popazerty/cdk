@@ -11,7 +11,8 @@ $(appsdir)/tools/config.status: bootstrap driver bzip2 libpng libjpeg ffmpeg
 	--with-boxtype=$(BOXTYPE) \
 	$(if $(MULTICOM324), --enable-multicom324) \
 	$(if $(MULTICOM406), --enable-multicom406) \
-	$(if $(EPLAYER3), --enable-eplayer3)
+	$(if $(EPLAYER3), --enable-eplayer3) \
+	$(if $(MEDIAFWGSTREAMER), --enable-gstreamer)
 
 $(D)/tools: $(appsdir)/tools/config.status
 	$(MAKE) -C $(appsdir)/tools all prefix=$(targetprefix) DRIVER_TOPDIR=$(driverdir) \
