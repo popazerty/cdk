@@ -55,6 +55,7 @@ $(D)/tvheadend.config.status:
 			--disable-libvorbis-static \
 			--disable-libfdkaac \
 			--disable-libfdkaac-static \
+			--disable-uriparser \
 			--disable-dvben50221 \
 			--disable-dbus_1 \
 			--with-boxtype=$(BOXTYPE) \
