@@ -68,6 +68,7 @@ fi
 ##############################################
 
 CONFIGPARAM=" \
+ -q \
  --enable-maintainer-mode \
  --prefix=$CURRENT_PATH/tufsbox \
  --with-cvsdir=$CURRENT_PATH \
@@ -172,7 +173,7 @@ case "$REPLY" in
 	16) TARGET="--enable-homecast5101";BOXTYPE="--with-boxtype=homecast5101";RECEIVER="Homecast 5101";;
 	17) TARGET="--enable-octagon1008";BOXTYPE="--with-boxtype=octagon1008";RECEIVER="Fortis HS9510";;
 	18) TARGET="--enable-spark";BOXTYPE="--with-boxtype=spark";RECEIVER="Spark";;
-	19) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";RECEIVER="Fortis HS8200";;
+#	19) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";RECEIVER="Fortis HS8200";;
 	20) TARGET="--enable-spark7162";BOXTYPE="--with-boxtype=spark7162";RECEIVER="Spark7162";;
 	21) TARGET="--enable-ipbox9900";BOXTYPE="--with-boxtype=ipbox9900";RECEIVER="IPBOX 9900";;
 	22) TARGET="--enable-ipbox99";BOXTYPE="--with-boxtype=ipbox99";RECEIVER="IPBOX 99";;
@@ -192,7 +193,7 @@ case "$REPLY" in
 	36) TARGET="--enable-cuberevo_3000hd";BOXTYPE="--with-boxtype=cuberevo_3000hd";RECEIVER="Cuberevo 3000HD";;
 	37) TARGET="--enable-hs7420";BOXTYPE="--with-boxtype=hs7420";RECEIVER="Fortis HS7420";;
 	38) TARGET="--enable-hs7429";BOXTYPE="--with-boxtype=hs7429";RECEIVER="Fortis HS7429";;
-	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";;
+	 *) TARGET="--enable-atevio7500";BOXTYPE="--with-boxtype=atevio7500";RECEIVER="Fortis HS8200";;
 esac
 CONFIGPARAM="$CONFIGPARAM $TARGET $BOXTYPE"
 CURRBOX=`echo $BOXTYPE | awk '{print substr($0,16,length($0)-15)}'`
@@ -437,7 +438,7 @@ case "$IMAGEN" in
 		case $8 in
 			[1-3])	REPLY=$8;;
 			*)	echo -e "\nMedia Framework:"
-				echo "   1)  eplayer3 (experimental)"
+				echo "   1)  eplayer3"
 				echo "   2)  gstreamer"
 				echo "   3*) gstreamer+libplayer3 (recommended)"
 				read -p "Select media framework (1-3)? ";;
@@ -455,7 +456,8 @@ case "$IMAGEN" in
 		# Determine the OpenPLi diff-level
 		case $7 in
 			[0-5])	REPLY=$7;;
-			*)	echo "Please select one of the following Enigma2 revisions (default = 2):"
+			*)	echo
+				echo "Please select one of the following Enigma2 revisions (default = 2):"
 				echo "=================================================================================================="
 				echo " 0)  Newest                 - E2 OpenPLi  any framework  (CAUTION: may fail due to outdated patch)"
 				echo "=================================================================================================="
@@ -513,7 +515,7 @@ echo && \
 echo "Performing configure..." && \
 echo "-----------------------" && \
 echo && \
-./configure -q $CONFIGPARAM
+./configure $CONFIGPARAM
 ##############################################
 
 echo $CONFIGPARAM >lastChoice

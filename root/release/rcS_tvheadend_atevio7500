@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 160526.1
+#Version 161126.1
 
 echo "Fortis HS8200 Tvheadend"
 
@@ -101,7 +101,7 @@ insmod $MODDIR/avl2108.ko
 # DVB-C
 #insmod $MODDIR/tda10024.ko
 # DVB-T
-#insmod $MODDIR/cxd2820.ko
+insmod $MODDIR/cxd2820.ko
 
 insmod $MODDIR/starci.ko
 insmod $MODDIR/smartcard.ko

@@ -22,7 +22,7 @@ AM_MAINTAINER_MODE
 AC_PROG_CC
 
 AC_ARG_ENABLE(neutrino,
-	AS_HELP_STRING(--enable-neutrino, Setting up the CDK to build neutrino),
+	AS_HELP_STRING(--enable-neutrino, Set up the CDK to build neutrino),
 	[case "${enableval}" in
 		yes) NEUTRINO=neutrino ;;
 	esac],[enable_neutrino=no])
@@ -30,7 +30,7 @@ AM_CONDITIONAL(ENABLE_NEUTRINO,test "$enable_neutrino" = "yes")
 AC_SUBST(NEUTRINO)
 
 AC_ARG_ENABLE(enigma2,
-	AS_HELP_STRING(--enable-enigma2, Setting up the CDK to build enigma2),
+	AS_HELP_STRING(--enable-enigma2, Set up the CDK to build enigma2),
 	[case "${enableval}" in
 		yes) ENIGMA2=enigma2 ;;
 	esac],[enable_enigma2=no])
@@ -38,7 +38,7 @@ AM_CONDITIONAL(ENABLE_ENIGMA2,test "$enable_enigma2" = "yes")
 AC_SUBST(ENIGMA2)
 
 AC_ARG_ENABLE(tvheadend,
-	AS_HELP_STRING(--enable-tvheadend, Setting up the CDK to build tvheadend),
+	AS_HELP_STRING(--enable-tvheadend, Set up the CDK to build tvheadend),
 	[case "${enableval}" in
 		yes) TVHEADEND=tvheadend ;;
 	esac],[enable_tvheadend=no])
@@ -46,7 +46,7 @@ AM_CONDITIONAL(ENABLE_TVHEADEND,test "$enable_tvheadend" = "yes")
 AC_SUBST(TVHEADEND)
 
 AC_ARG_ENABLE(wlandriver,
-	AS_HELP_STRING(--enable-wlandriver, Setting up the CDK to build WLAN drivers),
+	AS_HELP_STRING(--enable-wlandriver, Set up the CDK to build USB WLAN drivers),
 	[case "${enableval}" in
 		yes) WLANDRIVER=wlandriver ;;
 	esac],[enable_wlandriver=no])
@@ -54,7 +54,7 @@ AM_CONDITIONAL(ENABLE_WLANDRIVER,test "$enable_wlandriver" = "yes")
 AC_SUBST(WLANDRIVER)
 
 AC_ARG_ENABLE(dvbtdriver,
-	AS_HELP_STRING(--enable-dvbtdriver, Setting up the CDK to build USB DVB-T drivers),
+	AS_HELP_STRING(--enable-dvbtdriver, Set up the CDK to build USB DVB-T drivers),
 	[case "${enableval}" in
 		yes) DVBTDRIVER=dvbtdriver ;;
 	esac],[enable_dvbtdriver=no])
@@ -62,7 +62,7 @@ AM_CONDITIONAL(ENABLE_DVBTDRIVER,test "$enable_dvbtdriver" = "yes")
 AC_SUBST(DVBTDRIVER)
 
 AC_ARG_ENABLE(player191,
-	AS_HELP_STRING(--enable-player191, set up the CDK to use player191),
+	AS_HELP_STRING(--enable-player191, Set up the CDK to use player191),
 	[case "${enableval}" in
 		yes) PLAYER191=player191 ;;
 	esac],[enable_player191=no])
@@ -70,7 +70,7 @@ AM_CONDITIONAL(ENABLE_PLAYER191,test "$enable_player191" = "yes")
 AC_SUBST(PLAYER191)
 
 AC_ARG_ENABLE(multicom324,
-	AS_HELP_STRING(--enable-multicom324, set up the CDK to use multicom324),
+	AS_HELP_STRING(--enable-multicom324, Set up the CDK to use multicom324),
 	[case "${enableval}" in
 		yes) MULTICOM324=multicom324 ;;
 	esac],[enable_multicom324=no])
@@ -78,7 +78,7 @@ AM_CONDITIONAL(ENABLE_MULTICOM324,test "$enable_multicom324" = "yes")
 AC_SUBST(MULTICOM324)
 
 AC_ARG_ENABLE(multicom406,
-	AS_HELP_STRING(--enable-multicom406, set up the CDK to use multicom406),
+	AS_HELP_STRING(--enable-multicom406, Set up the CDK to use multicom406),
 	[case "${enableval}" in
 		yes) MULTICOM406=multicom406 ;;
 	esac],[enable_multicom406=no])
@@ -86,7 +86,7 @@ AM_CONDITIONAL(ENABLE_MULTICOM406,test "$enable_multicom406" = "yes")
 AC_SUBST(MULTICOM406)
 
 AC_ARG_ENABLE(p0209,
-	AS_HELP_STRING(--enable-p0209, set up the CDK to use STLinux 2.4 with patchlevel 0209),
+	AS_HELP_STRING(--enable-p0209, Set up the CDK to use STLinux 2.4 with patchlevel 0209),
 	[case "${enableval}" in
 		yes) P0209=p0209 ;;
 	esac], [enable_p0209=no])
@@ -94,7 +94,7 @@ AM_CONDITIONAL(ENABLE_P0209,test "$enable_p0209" = "yes")
 AC_SUBST(P0209)
 
 AC_ARG_ENABLE(p0211,
-	AS_HELP_STRING(--enable-p0211, set up the CDK to use STLinux 2.4 with patchlevel 0211),
+	AS_HELP_STRING(--enable-p0211, Set up the CDK to use STLinux 2.4 with patchlevel 0211),
 	[case "${enableval}" in
 		yes) P0211=p0211 ;;
 	esac], [enable_p0211=no])
@@ -102,7 +102,7 @@ AM_CONDITIONAL(ENABLE_P0211,test "$enable_p0211" = "yes")
 AC_SUBST(P0211)
 
 AC_ARG_ENABLE(p0214,
-	AS_HELP_STRING(--enable-p0214, set up the CDK to use STLinux 2.4 with patchlevel 0214),
+	AS_HELP_STRING(--enable-p0214, Set up the CDK to use STLinux 2.4 with patchlevel 0214),
 	[case "${enableval}" in
 		yes) P0214=p0214 ;;
 	esac], [enable_p0214=no])
@@ -110,7 +110,7 @@ AM_CONDITIONAL(ENABLE_P0214,test "$enable_p0214" = "yes")
 AC_SUBST(P0214)
 
 AC_ARG_ENABLE(p0215,
-	AS_HELP_STRING(--enable-p0215, set up the CDK to use STLinux 2.4 with patchlevel 0215),
+	AS_HELP_STRING(--enable-p0215, Set up the CDK to use STLinux 2.4 with patchlevel 0215),
 	[case "${enableval}" in
 		yes) P0215=p0215 ;;
 	esac], [enable_p0215=no])
@@ -118,7 +118,7 @@ AM_CONDITIONAL(ENABLE_P0215,test "$enable_p0215" = "yes")
 AC_SUBST(P0215)
 
 AC_ARG_ENABLE(p0217,
-	AS_HELP_STRING(--enable-p0217, set up the CDK to use STLinux 2.4 with patchlevel 0217),
+	AS_HELP_STRING(--enable-p0217, Set up the CDK to use STLinux 2.4 with patchlevel 0217),
 	[case "${enableval}" in
 		yes) P0217=p0217 ;;
 	esac], [enable_p0217=no])
@@ -126,17 +126,17 @@ AM_CONDITIONAL(ENABLE_P0217,test "$enable_p0217" = "yes")
 AC_SUBST(P0217)
 
 AC_ARG_WITH(cpu,
-	[  --with-cpu=MODEL    cpu model [[sh4]]],
+	[  --with-cpu=MODEL	cpu model [[sh4]]],
 	[CPU_MODEL="$withval"],[CPU_MODEL="sh4"])
 AC_SUBST(CPU_MODEL)
 
 AC_ARG_ENABLE(debug,
-	AS_HELP_STRING(--enable-debug, set up the CDK to use debug kernel configs),
+	AS_HELP_STRING(--enable-debug, Set up the CDK to use debug kernel configs),
 	,[enable_debug=no])
 AM_CONDITIONAL(DEBUG,test "$enable_debug" = "yes")
 
 AC_ARG_ENABLE(mediafwgstreamer,
-	AS_HELP_STRING(--enable-mediafwgstreamer,    set up the CDK to use mediafw gstreamer),
+	AS_HELP_STRING(--enable-mediafwgstreamer, Set up the CDK to use mediafw gstreamer),
 	[case "${enableval}" in
 		yes) MEDIAFWGSTREAMER=gstreamer ;;
 	esac],[enable_mediafwgstreamer=no])
@@ -144,13 +144,13 @@ AM_CONDITIONAL(ENABLE_MEDIAFWGSTREAMER,test "$enable_mediafwgstreamer" = "yes")
 AC_SUBST(MEDIAFWGSTREAMER)
 
 AC_ARG_ENABLE(externallcd,
-	AS_HELP_STRING(--enable-externallcd,    set up the CDK to use graphlcd),
+	AS_HELP_STRING(--enable-externallcd, Set up the CDK to use graphlcd),
 	,[enable_externallcd=no])
 AM_CONDITIONAL(ENABLE_EXTERNALLCD,test "$enable_externallcd" = "yes")
 AC_SUBST(EXTERNALLCD)
 
 AC_ARG_ENABLE(eplayer3,
-	AS_HELP_STRING(--enable-eplayer3,    enable eplayer3 support),
+	AS_HELP_STRING(--enable-eplayer3, enable eplayer3 support),
 	[case "${enableval}" in
 		yes) EPLAYER3=eplayer3 ;;
 	esac],[enable_eplayer3=no])
@@ -158,7 +158,7 @@ AM_CONDITIONAL(ENABLE_EPLAYER3,test "$enable_eplayer3" = "yes")
 AC_SUBST(EPLAYER3)
 
 AC_ARG_ENABLE(buildinplayer,
-	AS_HELP_STRING(--enable-buildinplayer,    enable built-in player support),
+	AS_HELP_STRING(--enable-buildinplayer, enable built-in player support),
 	,[enable_buildinplayer=no])
 AM_CONDITIONAL(ENABLE_BUILDINPLAYER,test "$enable_buildinplayer" = "yes")
 AC_SUBST(BUILDINPLAYER)
@@ -292,7 +292,7 @@ AM_CONDITIONAL(ENABLE_ADB_BOX,test "$enable_adb_box" = "yes")
 AC_SUBST(ADB_BOX)
 
 AC_ARG_ENABLE(ufs922,
-	AS_HELP_STRING(--enable-ufs922, enable kathrein ufs922 stuff),
+	AS_HELP_STRING(--enable-ufs922, enable Kathrein ufs922 stuff),
 	[case "${enableval}" in
 		yes) UFS922=ufs922 ;;
 	esac],[enable_ufs922=no])
@@ -300,7 +300,7 @@ AM_CONDITIONAL(ENABLE_UFS922,test "$enable_ufs922" = "yes")
 AC_SUBST(UFS922)
 
 AC_ARG_ENABLE(ufc960,
-	AS_HELP_STRING(--enable-ufc960,    enable kathrein ufc960 stuff),
+	AS_HELP_STRING(--enable-ufc960, enable Kathrein ufc960 stuff),
 	[case "${enableval}" in
 		yes) UFC960=ufc960 ;;
 	esac],[enable_ufc960=no])
@@ -308,7 +308,7 @@ AM_CONDITIONAL(ENABLE_UFC960,test "$enable_ufc960" = "yes")
 AC_SUBST(UFC960)
 
 AC_ARG_ENABLE(ufs910,
-	AS_HELP_STRING(--enable-ufs910, enable kathrein ufs910 stuff),
+	AS_HELP_STRING(--enable-ufs910, enable Kathrein ufs910 stuff),
 	[case "${enableval}" in
 		yes) UFS910=ufs910 ;;
 	esac],[enable_ufs910=no])
@@ -316,7 +316,7 @@ AM_CONDITIONAL(ENABLE_UFS910,test "$enable_ufs910" = "yes")
 AC_SUBST(UFS910)
 
 AC_ARG_ENABLE(ufs912,
-	AS_HELP_STRING(--enable-ufs912, enable kathrein ufs912 stuff),
+	AS_HELP_STRING(--enable-ufs912, enable Kathrein ufs912 stuff),
 	[case "${enableval}" in
 		yes) UFS912=ufs912 ;;
 	esac],[enable_ufs912=no])
@@ -324,7 +324,7 @@ AM_CONDITIONAL(ENABLE_UFS912,test "$enable_ufs912" = "yes")
 AC_SUBST(UFS912)
 
 AC_ARG_ENABLE(ufs913,
-	AS_HELP_STRING(--enable-ufs913, enable kathrein ufs913 stuff),
+	AS_HELP_STRING(--enable-ufs913, enable Kathrein ufs913 stuff),
 	[case "${enableval}" in
 		yes) UFS913=ufs913 ;;
 	esac],[enable_ufs913=no])
@@ -332,7 +332,7 @@ AM_CONDITIONAL(ENABLE_UFS913,test "$enable_ufs913" = "yes")
 AC_SUBST(UFS913)
 
 AC_ARG_ENABLE(vitamin_hd5000,
-	AS_HELP_STRING(--enable-vitamin_hd5000,    enable vitamin_hd5000 stuff),
+	AS_HELP_STRING(--enable-vitamin_hd5000, enable vitamin_hd5000 stuff),
 	[case "${enableval}" in
 		yes) VITAMIN_HD5000=vitamin_hd5000 ;;
 	esac],[enable_vitamin_hd5000=no])
@@ -340,7 +340,7 @@ AM_CONDITIONAL(ENABLE_VITAMIN_HD5000,test "$enable_vitamin_hd5000" = "yes")
 AC_SUBST(VITAMIN_HD5000)
 
 AC_ARG_ENABLE(sagemcom88,
-	AS_HELP_STRING(--enable-sagemcom88,    enable sagemcom88 stuff),
+	AS_HELP_STRING(--enable-sagemcom88, enable sagemcom88 stuff),
 	[case "${enableval}" in
 		yes) SAGEMCOM88=sagemcom88 ;;
 	esac],[enable_sagemcom88=no])
@@ -473,31 +473,31 @@ if test "$prefix" = "NONE"; then
 fi
 
 AC_ARG_WITH(targetprefix,
-	[  --with-targetprefix=DIR prefix for target files [[PREFIX/cdkroot]]],
+	[  --with-targetprefix=DIR	prefix for target files [[PREFIX/cdkroot]]],
 	[targetprefix="$with_targetprefix"],[targetprefix="${prefix}/cdkroot"])
 
 AC_ARG_WITH(hostprefix,
-	[  --with-hostprefix=DIR   prefix for host files [[PREFIX/host]]],
+	[  --with-hostprefix=DIR		prefix for host files [[PREFIX/host]]],
 	[hostprefix="$with_hostprefix"],[hostprefix="${prefix}/host"])
 
 AC_ARG_WITH(bootprefix,
-	[  --with-bootprefix=DIR   prefix for boot files [[PREFIX/cdkroot-tftpboot]]],
+	[  --with-bootprefix=DIR		prefix for boot files [[PREFIX/cdkroot-tftpboot]]],
 	[bootprefix="$with_bootprefix"],[bootprefix="${prefix}/cdkroot-tftpboot"])
 
 AC_ARG_WITH(serversupport,
-	[  --with-serversupport=DIR    prefix for server file templates [[PREFIX/serversupport]]],
+	[  --with-serversupport=DIR	prefix for server file templates [[PREFIX/serversupport]]],
 	[serversupport="$with_serversupport"],[serversupport="${prefix}/serversupport"])
 
 AC_ARG_WITH(customizationsdir,
-	[  --with-customizationsdir=DIR    optional directory containing customization scripts [[[CVS]]]],
+	[  --with-customizationsdir=DIR	optional directory containing customization scripts [[[CVS]]]],
 	[customizationsdir="$with_customizationsdir"],[customizationsdir="`pwd`"])
 
 AC_ARG_WITH(flashscriptdir,
-	[  --with-flashscriptdir=DIR    optional directory containing flash scripts [[[CVS]]]],
-	[flashscriptdir="$with_flashscriptdir"],[flashscriptdir=])
+	[  --with-flashscriptdir=DIR	optional directory containing flash scripts [[[flash]]]],
+	[flashscriptdir="$with_flashscriptdir"],[flashscriptdir="${prefix}/flash"])
 
 AC_ARG_WITH(updatehttpprefix,
-	[  --with-updatehttpprefix=URL  optional URL containing the URL of a directory with update images [[NONE]]],
+	[  --with-updatehttpprefix=URL	optional URL containing the URL of a directory with update images [[NONE]]],
 	[updatehttpprefix="$with_updatehttpprefix"],[updatehttpprefix=])
 
 buildprefix=`pwd`
@@ -514,35 +514,35 @@ AC_SUBST(updatehttpprefix)
 AM_CONDITIONAL(DISABLE_UPDATE_HTTP,test "$updatehttpprefix" = "disable")
 
 AC_ARG_WITH(cvsdir,
-	[  --with-cvsdir=DIR       where to find the cvs],
+	[  --with-cvsdir=DIR		where to find the cvs],
 	[cvsdir="$with_cvsdir"],[cvsdir="NONE"])
 
 AC_ARG_WITH(appsdir,
-	[  --with-appsdir=DIR      apps dir from cvs [[[CVS/]apps/]]],
+	[  --with-appsdir=DIR		apps dir [[apps/]]],
 	[appsdir="$with_appsdir"],[appsdir="NONE"])
 
 AC_ARG_WITH(driverdir,
-	[  --with-driverdir=DIR    driver dir from cvs [[[CVS/]driver]]],
+	[  --with-driverdir=DIR		driver dir [[driver/]]],
 	[driverdir="$with_driverdir"],[driverdir="NONE"])
 
 AC_ARG_WITH(sourcedir,
-	[  --with-sourcedir=DIR      source dir from cvs [[source/]]],
+	[  --with-sourcedir=DIR		source dir [[source/]]],
 	[sourcedir="$with_sourcedir"],[sourcedir="NONE"])
 
 AC_ARG_WITH(buildtmp,
-	[  --with-buildtmp=DIR      buildtmp dir from cvs [[buildtmp/]]],
+	[  --with-buildtmp=DIR		buildtmp dir [[build_tmp/]]],
 	[buildtmp="$with_buildtmp"],[buildtmp="NONE"])
 
 AC_ARG_WITH(gnuserver,
-	[  --with-gnuserver=ADDRESS   the gnu server for gnu-stuff (without ftp://)],
+	[  --with-gnuserver=ADDRESS	the gnu server for gnu-stuff (without ftp://)],
 	[gnuserver="$with_gnuserver"],[gnuserver=ftp.gwdg.de/pub/misc/gnu/ftp/gnu])
 
 AC_ARG_WITH(defaultserver,
-	[  --with-defaultserver=ADDRESS   the server that is taken if no server is given/works (without http://)],
+	[  --with-defaultserver=ADDRESS	the server that is taken if no server is given/works (without http://)],
 	[defaultserver="$with_defaultserver"],[defaultserver="NONE"])
 
 AC_ARG_WITH(archivedir,
-	[  --with-archivedir=DIR   where to store downloaded files [[Archive/]]],
+	[  --with-archivedir=DIR		where to store downloaded files [[Archive/]]],
 	[archivedir="$with_archivedir"],[archivedir="$buildprefix/Archive"])
 
 if test "$defaultserver" = "NONE"; then
@@ -653,7 +653,7 @@ fi
 # ccache
 #
 AC_ARG_ENABLE(ccache,
-	AS_HELP_STRING(--enable-ccache,   enable ccache supported compiling ),
+	AS_HELP_STRING(--enable-ccache, enable ccache supported compiling ),
 	[case "${enableval}" in
 		yes) CCACHE=ccache ;;
 	esac],[enable_ccache=no])
@@ -672,14 +672,12 @@ AC_SUBST(ccachedir)
 
 # optional ccache settings
 AC_ARG_WITH(maxcachesize,
-	[  --with-maxcachesize=SIZE 
-						maximal ccachesize for ccache ],
+	[  --with-maxcachesize=SIZE	maximum ccachesize for ccache ],
 	[maxcachesize="$with_maxcachesize"],[maxcachesize="-1"])
 AC_SUBST(maxcachesize)
 
 AC_ARG_WITH(maxcachefiles,
-	[  --with-maxcachefiles=COUNT 
-						maximal count of cachefiles for ccache ],
+	[  --with-maxcachefiles=COUNT	maximum count of cachefiles for ccache ],
 	[maxcachefiles="$with_maxcachefiles"],[maxcachefiles="-1"])
 AC_SUBST(maxcachefiles)
 
@@ -1146,9 +1144,9 @@ AC_MSG_ERROR([
 ])
 fi
 
-TUXBOX_CUSTOMIZE='[[ -x $(customizationsdir)/$(notdir $@)-local.sh ] && KERNELVERSION=$(KERNELVERSION) && BOXTYPE=$(BOXTYPE) && $(customizationsdir)/$(notdir $@)-local.sh $(buildprefix) || true]'
+TUXBOX_CUSTOMIZE='@[[ -x $(customizationsdir)/$(notdir $@)-local.sh ] && KERNELVERSION=$(KERNELVERSION) && BOXTYPE=$(BOXTYPE) && $(customizationsdir)/$(notdir $@)-local.sh $(buildprefix) || true]'
 AC_SUBST(TUXBOX_CUSTOMIZE)
-TUXBOX_YAUD_CUSTOMIZE='[[ -x $(customizationsdir)/$(notdir $@)-local.sh ] && KERNELVERSION=$(KERNELVERSION) && BOXTYPE=$(BOXTYPE) && $(customizationsdir)/$(notdir $@)-local.sh $(prefix) $(prefix)/$*cdkroot $(buildprefix) $(sourcedir) $(flashscriptdir) $(BOXTYPE) || true]'
+TUXBOX_YAUD_CUSTOMIZE='@[[ -x $(customizationsdir)/$(notdir $@)-local.sh ] && KERNELVERSION=$(KERNELVERSION) && BOXTYPE=$(BOXTYPE) && $(customizationsdir)/$(notdir $@)-local.sh $(prefix) $(prefix)/$*cdkroot $(buildprefix) $(sourcedir) $(flashscriptdir) $(BOXTYPE) || true]'
 AC_SUBST(TUXBOX_YAUD_CUSTOMIZE)
 TUXBOX_TOUCH='[@[ "x$*" = "x" ] && touch $@ || true]'
 AC_SUBST(TUXBOX_TOUCH)
