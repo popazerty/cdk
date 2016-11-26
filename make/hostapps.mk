@@ -4,7 +4,7 @@
 $(D)/host_pkgconfig: @DEPENDS_host_pkgconfig@
 	@PREPARE_host_pkgconfig@
 	cd @DIR_host_pkgconfig@ && \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--prefix=$(hostprefix) \
 			--program-prefix=$(target)- \
 			--disable-host-tool \
@@ -23,7 +23,7 @@ $(D)/host_module_init_tools: @DEPENDS_host_module_init_tools@ directories
 	@PREPARE_host_module_init_tools@
 	cd @DIR_host_module_init_tools@ && \
 		autoreconf -fi && \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--prefix=$(hostprefix) \
 			--sbindir=$(hostprefix)/bin \
 		&& \
@@ -49,7 +49,7 @@ $(D)/host_mtd_utils: @DEPENDS_host_mtd_utils@
 $(D)/host_libffi: @DEPENDS_host_libffi@
 	@PREPARE_host_libffi@
 	cd @DIR_host_libffi@ && \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--prefix=$(hostprefix) \
 			--disable-static \
 		&& \
@@ -66,7 +66,7 @@ $(D)/host_glib2_genmarshal: $(D)/host_libffi @DEPENDS_host_glib2_genmarshal@
 	export PKG_CONFIG=/usr/bin/pkg-config && \
 	export PKG_CONFIG_PATH=$(hostprefix)/lib/pkgconfig && \
 	cd @DIR_host_glib2_genmarshal@ && \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--enable-static=yes \
 			--enable-shared=no \
 			--prefix=`pwd`/out \

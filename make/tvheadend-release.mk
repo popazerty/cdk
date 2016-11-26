@@ -842,7 +842,7 @@ endif
 	ln -sf /usr/share $(prefix)/release/usr/local/share
 	cp $(targetprefix)/usr/local/bin/tvheadend $(prefix)/release/usr/local/bin/
 	[ ! -d $(prefix)/release/.hts/tvheadend ] && mkdir -p $(prefix)/release/.hts/tvheadend 
-	cp -r $(buildprefix)/root/root_tvheadend/.hts/tvheadend/* $(prefix)/release/.hts/tvheadend
+#	cp -r $(buildprefix)/root/root_tvheadend/.hts/tvheadend/* $(prefix)/release/.hts/tvheadend
 
 #
 # WLAN
@@ -892,128 +892,6 @@ endif
 		ln -s /usr/sbin/automount $(prefix)/release/sbin/automount; \
 	fi
 
-#
-# GSTREAMER
-#
-if ENABLE_MEDIAFWGSTREAMER
-	if [ -d $(prefix)/release/usr/lib/gstreamer-0.10 ]; then \
-		#removed rm \
-		rm -rf $(prefix)/release/usr/lib/libgstfft*; \
-		rm -rf $(prefix)/release/usr/lib/gstreamer-0.10/*; \
-		cp -a $(targetprefix)/usr/bin/gst-* $(prefix)/release/usr/bin/; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/bin/gst-launch*; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstalsa.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstapetag.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstapp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstasf.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstassrender.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioconvert.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioparsers.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioresample.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstautodetect.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstavi.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcdxaparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcoreelements.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcoreindexers.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdecodebin.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdecodebin2.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvbaudiosink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvbvideosink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvdsub.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstflac.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstflv.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstfragmented.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgsticydemux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstid3demux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstisomp4.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmad.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmatroska.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegaudioparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegdemux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegstream.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstogg.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstplaybin.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtmp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtpmanager.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtsp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsouphttpsrc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgsttypefindfunctions.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstudp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstvcdsrc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstwavparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		if [ -e $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpeg.so ]; then \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpeg.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpegscale.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstpostproc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		fi; \
-		if [ -e $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubsink.so ]; then \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubsink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		fi; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/lib/gstreamer-0.10/*; \
-	fi
-endif
-
-#
-# GRAPHLCD
-#
-	if [ -e $(prefix)/release/usr/lib/libglcddrivers.so ]; then \
-		cp -f $(targetprefix)/etc/graphlcd.conf $(prefix)/release/etc/graphlcd.conf; \
-		rm -f $(prefix)/release/usr/lib/libglcdskin.so*; \
-	fi
-
-#
-# minidlna
-#
-	if [ -e $(targetprefix)/usr/sbin/minidlnad ]; then \
-		cp -f $(targetprefix)/usr/sbin/minidlnad $(prefix)/release/usr/sbin/; \
-	fi
-
-#
-# udpxy
-#
-	if [ -e $(targetprefix)/usr/bin/udpxy ]; then \
-		cp -f $(targetprefix)/usr/bin/udpxy $(prefix)/release/usr/bin; \
-		cp -a $(targetprefix)/usr/bin/udpxrec $(prefix)/release/usr/bin; \
-	fi
-
-#
-# xupnpd
-#
-	if [ -e $(targetprefix)/usr/bin/xupnpd ]; then \
-		cp -f $(targetprefix)/usr/bin/xupnpd $(prefix)/release/usr/bin; \
-		cp -aR $(targetprefix)/usr/share/xupnpd $(prefix)/release/usr/share; \
-		mkdir -p $(prefix)/release/usr/share/xupnpd/playlists; \
-	fi
-
-#
-# lua
-#
-	if [ -d $(targetprefix)/usr/share/lua ]; then \
-		cp -aR $(targetprefix)/usr/share/lua $(prefix)/release/usr/share; \
-	fi
-
-#
-# shairport
-#
-	if [ -e $(targetprefix)/usr/bin/shairport ]; then \
-		cp -f $(targetprefix)/usr/bin/shairport $(prefix)/release/usr/bin; \
-		cp -f $(targetprefix)/usr/bin/mDNSPublish $(prefix)/release/usr/bin; \
-		cp -f $(targetprefix)/usr/bin/mDNSResponder $(prefix)/release/usr/bin; \
-		cp -f $(buildprefix)/root/etc/init.d/shairport $(prefix)/release/etc/init.d/shairport; \
-		chmod 755 $(prefix)/release/etc/init.d/shairport; \
-		cp -f $(targetprefix)/usr/lib/libhowl.so* $(prefix)/release/usr/lib; \
-		cp -f $(targetprefix)/usr/lib/libmDNSResponder.so* $(prefix)/release/usr/lib; \
-	fi
-
-#
-# Neutrino HD2 Workaround Built-in Player
-#
-	if [ -e $(targetprefix)/usr/local/bin/eplayer3 ]; then \
-		cp -f $(targetprefix)/usr/local/bin/eplayer3 $(prefix)/release/bin/; \
-		cp -f $(targetprefix)/usr/local/bin/meta $(prefix)/release/bin/; \
-	fi
 
 #
 # delete unnecessary files

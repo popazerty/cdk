@@ -2,7 +2,7 @@ yaud-tvheadend: yaud-none \
 		boot-elf tvheadend release_tvheadend
 	@TUXBOX_YAUD_CUSTOMIZE@
 
-TVHEADEND_DEPS = bootstrap openssl python
+TVHEADEND_DEPS = bootstrap openssl zlib
 
 if ENABLE_SPARK7162
 TVHEADEND_DEPS += ntp
@@ -13,7 +13,6 @@ TVHEADEND_PATCHES = tvheadend.patch
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 	rm -rf $(sourcedir)/tvheadend
 	rm -rf $(sourcedir)/tvheadend.org
-	rm -rf $(N_OBJDIR)
 	REVISION="4931c0544885371b85146efad4eacd9683ba3dad"; \
 	[ -d "$(archivedir)/tvheadend.git" ] && \
 	(cd $(archivedir)/tvheadend.git; git pull; git checkout HEAD; cd "$(buildprefix)";); \
@@ -27,13 +26,13 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 		set -e; cd $(sourcedir)/tvheadend && patch -p1 -i $(PATCHES)/$$i; \
 	done;
 	touch $@;
-	@echo -e "\033[01;32mDone: tvheadend.do_prepare\033[00m"
+	@echo -e "\033[01;32mCompleted: tvheadend.do_prepare\033[00m"
 
 
 $(D)/tvheadend.config.status:
 	cd $(sourcedir)/tvheadend && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--disable-hdhomerun_static \
@@ -69,7 +68,7 @@ $(D)/tvheadend.do_compile: tvheadend.config.status
 	cd $(sourcedir)/tvheadend && \
 		 $(MAKE) all
 	touch $@;
-	@echo -e "\033[01;32mDone: tvheadend.do_compile\033[00m"
+	@echo -e "\033[01;32mCompleted: tvheadend.do_compile\033[00m"
 
 $(D)/tvheadend: tvheadend.do_prepare tvheadend.do_compile
 	 $(MAKE) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
@@ -80,7 +79,7 @@ $(D)/tvheadend: tvheadend.do_prepare tvheadend.do_compile
 		$(target)-strip $(targetprefix)/usr/local/bin/tvheadend; \
 	fi
 	touch $@;
-	@echo -e "\033[01;32mDone: tvheadend\033[00m"
+	@echo -e "\033[01;32mCompleted: tvheadend\033[00m"
 
 tvheadendclean:
 	rm -f $(D)/tvheadend

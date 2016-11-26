@@ -420,7 +420,7 @@ $(D)/neutrino-hd2-exp.config.status:
 	cd $(sourcedir)/nhd2-exp && \
 		./autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			$(N_CONFIG_OPTS) \

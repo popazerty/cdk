@@ -137,7 +137,7 @@ $(sourcedir)/enigma2-pli-nightly/config.status:
 		./autogen.sh && \
 		sed -e 's|#!/usr/bin/python|#!$(hostprefix)/bin/python|' -i po/xml2po.py && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT)\
 			--build=$(build) \
 			--host=$(target) \
 			--with-libsdl=no \

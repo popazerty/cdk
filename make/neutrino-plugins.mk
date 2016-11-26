@@ -18,7 +18,7 @@ $(sourcedir)/neutrino-mp-plugins/config.status: $(D)/bootstrap $(D)/xupnpd
 	cd $(sourcedir)/neutrino-mp-plugins && \
 		./autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--host=$(target) \
 			--build=$(build) \
 			--prefix= \
@@ -80,7 +80,7 @@ $(sourcedir)/nhd2-plugins/config.status: bootstrap
 	cd $(sourcedir)/nhd2-plugins && \
 		./autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--host=$(target) \
 			--build=$(build) \
 			--prefix= \

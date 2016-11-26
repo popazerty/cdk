@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 160526.1
+#Version 161126.1
 
 echo "Fortis HS8200 Enigma2"
 
@@ -109,7 +109,7 @@ insmod $MODDIR/avl2108.ko
 # DVB-C
 #insmod $MODDIR/tda10024.ko
 # DVB-T
-#insmod $MODDIR/cxd2820.ko
+insmod $MODDIR/cxd2820.ko
 
 echo "[rcS] Init CI & cardreader"
 insmod $MODDIR/starci.ko
@@ -163,7 +163,7 @@ if [ -e $MODDIR/pl2303.ko ]; then
 fi
 
 echo "[rcS] Init remote control (LOAD 2)"
-echo "Load 2" > /dev/vfd
+echo "LOAD 2" > /dev/vfd
 mknod /dev/rc c 147 1
 /bin/evremote2 10 140 &
 
@@ -171,7 +171,7 @@ stfbcontrol a 255
 
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
-   echo "[rcS] Booting from nfs, don't set network"
+   echo "[rcS] Booting from nfs, do not set network"
 else
    if [ -e /etc/network/interfaces ]; then
       ip addr flush eth0
@@ -233,7 +233,7 @@ if [ ! -e /tmp/reference.dat ] && [ -e /var/bin/reference.dat ]; then
 fi
 
 #timefix e2
-date -s "201605011200"
+date -s "201612011200"
 # Try and synchronise time
 #inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
 # if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then

@@ -657,7 +657,7 @@ $(D)/libmng: $(D)/bootstrap $(D)/libjpeg $(D)/lcms @DEPENDS_libmng@
 		cat unmaintained/autogen.sh | tr -d \\r > autogen.sh && chmod 755 autogen.sh && \
 		[ ! -x ./configure ] && ./autogen.sh --help || true && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
@@ -680,7 +680,7 @@ $(D)/lcms: $(D)/bootstrap $(D)/libjpeg @DEPENDS_lcms@
 	@PREPARE_lcms@
 	cd @DIR_lcms@ && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
@@ -701,7 +701,7 @@ $(D)/directfb: $(D)/bootstrap $(D)/libfreetype @DEPENDS_directfb@
 		libtoolize --copy --ltdl --force && \
 		autoreconf -fi && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
@@ -730,7 +730,7 @@ $(D)/dfbpp: $(D)/bootstrap $(D)/libjpeg $(D)/directfb @DEPENDS_dfbpp@
 	@PREPARE_dfbpp@
 	cd @DIR_dfbpp@ && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr && \
@@ -750,7 +750,7 @@ $(D)/libstgles: $(D)/bootstrap $(D)/directfb @DEPENDS_libstgles@
 		libtoolize --force --copy --ltdl && \
 		autoreconf -fi && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
@@ -1578,7 +1578,7 @@ $(D)/evebrowser: $(D)/webkitdfb @DEPENDS_evebrowser@
 		automake --foreign && \
 		libtoolize --force && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--host=$(target) \
 			--prefix=/usr \
 		&& \

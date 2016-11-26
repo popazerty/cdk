@@ -89,7 +89,7 @@ $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samb
 		$(BUILDENV) \
 		libreplace_cv_HAVE_GETADDRINFO=no \
 		libreplace_cv_READDIR_NEEDED=no \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix= \
@@ -190,7 +190,7 @@ $(D)/lighttpd.do_prepare: $(D)/bootstrap @DEPENDS_lighttpd@
 $(D)/lighttpd.do_compile: $(D)/lighttpd.do_prepare
 	cd @DIR_lighttpd@ && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix= \

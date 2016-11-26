@@ -7,7 +7,7 @@ $(D)/host_python: @DEPENDS_host_python@
 		autoconf && \
 		CONFIG_SITE= \
 		OPT="$(HOST_CFLAGS)" \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--without-cxx-main \
 			--with-threads \
 		&& \
@@ -16,7 +16,7 @@ $(D)/host_python: @DEPENDS_host_python@
 		mv Parser/pgen ./hostpgen && \
 		\
 		$(MAKE) distclean && \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--prefix=$(hostprefix) \
 			--sysconfdir=$(hostprefix)/etc \
 			--without-cxx-main \
@@ -37,7 +37,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/zlib $(D)/open
 		$(BUILDENV) \
 		autoreconf --verbose --install --force Modules/_ctypes/libffi && \
 		autoconf && \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--target=$(target) \

@@ -9,7 +9,7 @@ $(D)/tuxtxtlib: bootstrap @DEPENDS_tuxtxtlib@
 		autoconf && \
 		automake --foreign --add-missing && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
@@ -33,7 +33,7 @@ $(D)/tuxtxt32bpp: tuxtxtlib @DEPENDS_tuxtxt32bpp@
 		autoconf && \
 		automake --foreign --add-missing && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \

@@ -55,7 +55,7 @@ $(D)/ccache.do_prepare: @DEPENDS_ccache@
 
 $(D)/ccache.do_compile: $(D)/ccache.do_prepare
 	cd @DIR_ccache@ && \
-		./configure \
+		./configure $(CONFIGURE_SILENT)\
 			--build=$(build) \
 			--host=$(build) \
 			--prefix= && \

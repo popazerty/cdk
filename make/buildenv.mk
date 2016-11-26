@@ -84,8 +84,11 @@ BUILDENV := \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	PKG_CONFIG_PATH="$(targetprefix)/usr/lib/pkgconfig"
 
+#comment next line if you like lots of checking... messages
+CONFIGURE_SILENT= -q
+
 CONFIGURE_OPTS = \
-	--build=$(build) --host=$(target)
+	--build=$(build) --host=$(target) $(CONFIGURE_SILENT)
 
 CONFIGURE = \
 	test -f ./configure || ./autogen.sh && \

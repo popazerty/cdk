@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20161112.1
+# Version 20161126.1
 
 ##############################################
 
@@ -40,6 +40,10 @@ echo
 
 CURDIR=`pwd`
 CURRENT_PATH=${CURDIR%/cdk}
+
+if [ -e $CURDIR/../cdk_new/config ]; then
+	rm -f $CURDIR/../cdk_new/config
+fi
 
 echo -ne "\nChecking the .elf files in $CURDIR/root/boot..."
 set='audio_7100 audio_7105 audio_7109 audio_7111 video_7100 video_7105 video_7109 video_7111'
@@ -110,43 +114,43 @@ case $1 in
 	[1-9]|1[0-9]|2[0-9]|3[0-9]) REPLY=$1;;
 	*)
 		echo "Target receivers:"
-		echo "    1) Kathrein UFS-910"
-		echo "    3) Kathrein UFS-912"
-		echo "    4) Kathrein UFS-922"
-		echo "    5) Topfield TF77X0 HDPVR"
-		echo "    6) Fortis HDbox (Fortis FS9000/9200)"
-		echo "    7) SpiderBox HL-101"
-		echo "    8) Edision Argus vip"
-		echo "    9) Cuberevo (IPBOX 9000)"
-		echo "   10) Cuberevo mini (IPBOX 900)"
-		echo "   11) Cuberevo mini2 (IPBOX 910)"
-		echo "   12) Cuberevo 250 (IPBOX 91)"
-		echo "   13) Cuberevo 9500HD (7000HD)"
-		echo "   14) Cuberevo 2000HD"
-		echo "   15) Cuberevo mini_fta (200HD)"
-		echo "   16) Homecast 5101"
-		echo "   17) Octagon SF1008P (Fortis HS9510)"
-		echo "   18) SPARK"
-		echo "   19) Atevio AV7500 (Fortis HS8200)"
-		echo "   20) SPARK7162"
-		echo "   21) IPBOX9900"
-		echo "   22) IPBOX99"
-		echo "   23) IPBOX55"
-		echo "   24) Fortis HS7810A"
-		echo "   25) B4Team ADB 5800S"
-		echo "   26) Fortis HS7110"
-		echo "   27) Atemio AM520"
-		echo "   28) Kathrein UFS-913"
-		echo "   29) Kathrein UFC-960"
-		echo "   30) Vitamin HD5000"
-		echo "   31) Atemio AM530"
-		echo "   32) SagemCom 88 series"
-		echo "   33) Ferguson Ariva @Link 200"
-		echo "   34) Fortis HS7119"
-		echo "   35) Fortis HS7819"
-		echo "   36) Xsarius Alpha (Cuberevo 3000HD)"
-		echo "   37) Fortis HS7420"
-		echo "   38) Fortis HS7429"
+		echo "    1)  Kathrein UFS-910"
+		echo "    3)  Kathrein UFS-912"
+		echo "    4)  Kathrein UFS-922"
+		echo "    5)  Topfield TF77X0 HDPVR"
+		echo "    6)  Fortis HDbox (Fortis FS9000/9200)"
+		echo "    7)  SpiderBox HL-101"
+		echo "    8)  Edision Argus vip"
+		echo "    9)  Cuberevo (IPBOX 9000)"
+		echo "   10)  Cuberevo mini (IPBOX 900)"
+		echo "   11)  Cuberevo mini2 (IPBOX 910)"
+		echo "   12)  Cuberevo 250 (IPBOX 91)"
+		echo "   13)  Cuberevo 9500HD (7000HD)"
+		echo "   14)  Cuberevo 2000HD"
+		echo "   15)  Cuberevo mini_fta (200HD)"
+		echo "   16)  Homecast 5101"
+		echo "   17)  Octagon SF1008P (Fortis HS9510)"
+		echo "   18)  SPARK"
+		echo "   19*) Atevio AV7500 (Fortis HS8200)"
+		echo "   20)  SPARK7162"
+		echo "   21)  IPBOX9900"
+		echo "   22)  IPBOX99"
+		echo "   23)  IPBOX55"
+		echo "   24)  Fortis HS7810A"
+		echo "   25)  B4Team ADB 5800S"
+		echo "   26)  Fortis HS7110"
+		echo "   27)  Atemio AM520"
+		echo "   28)  Kathrein UFS-913"
+		echo "   29)  Kathrein UFC-960"
+		echo "   30)  Vitamin HD5000"
+		echo "   31)  Atemio AM530"
+		echo "   32)  SagemCom 88 series"
+		echo "   33)  Ferguson Ariva @Link 200"
+		echo "   34)  Fortis HS7119"
+		echo "   35)  Fortis HS7819"
+		echo "   36)  Xsarius Alpha (Cuberevo 3000HD)"
+		echo "   37)  Fortis HS7420"
+		echo "   38)  Fortis HS7429"
 		read -p "Select target (1-38)? ";;
 esac
 
@@ -195,9 +199,9 @@ CURRBOX=`echo $BOXTYPE | awk '{print substr($0,16,length($0)-15)}'`
 
 case "$REPLY" in
 	8)	echo -e "\nModels:"
-		echo " 1) VIP1 v1 [ single tuner + 2 CI + 2 USB ]"
-		echo " 2) VIP1 v2 [ single tuner + 2 CI + 1 USB + plug & play tuner (dvb-s2/t/c) ]"
-		echo " 3) VIP2 v1 [ twin tuner ]"
+		echo " 1)  VIP1 v1 [ single tuner + 2 CI + 2 USB ]"
+		echo " 2)  VIP1 v2 [ single tuner + 2 CI + 1 USB + plug & play tuner (dvb-s2/t/c) ]"
+		echo " 3*) VIP2 v1 [ twin tuner ]"
 
 		read -p "Select Model (1-3)? "
 
@@ -216,11 +220,11 @@ esac
 case $2 in
 	[1-5])	REPLY=$2;;
 	*)	echo -e "\nKernel:"
-		echo "   1) STM 24 P0209 (outdated)"
-		echo "   2) STM 24 P0211 (outdated)"
-		echo "   3) STM 24 P0214 (outdated)"
-		echo "   4) STM 24 P0215"
-		echo "   5) STM 24 P0217 (recommended)"
+		echo "   1)  STM 24 P0209 (outdated)"
+		echo "   2)  STM 24 P0211 (outdated)"
+		echo "   3)  STM 24 P0214 (outdated)"
+		echo "   4)  STM 24 P0215"
+		echo "   5*) STM 24 P0217 (recommended)"
 		read -p "Select kernel (1-5)? ";;
 esac
 
@@ -268,8 +272,8 @@ cd - &>/dev/null
 case $4 in
 	[1-2])	REPLY=$4;;
 	*)	echo -e "\nPlayer:"
-		echo "   1) Player 191 (stmfb-3.1_stm24_0102)"
-		echo "   2) Player 191 (stmfb-3.1_stm24_0104, recommended)"
+		echo "   1)  Player 191 (stmfb-3.1_stm24_0102)"
+		echo "   2*) Player 191 (stmfb-3.1_stm24_0104, recommended)"
 		read -p "Select player (1-2)? ";;
 esac
 
@@ -325,11 +329,11 @@ cd $CURDIR
 case $5 in
 	[1-5]) REPLY=$5;;
 	*)	echo -e "\nWhich Image do you want to build:"
-		echo "   1) Enigma2"
-		echo "   2) Enigma2 (includes WLAN drivers)"
-		echo "   3) Neutrino"
-		echo "   4) Neutrino (includes WLAN drivers)"
-		echo "   5) Tvheadend"
+		echo "   1)  Enigma2"
+		echo "   2*) Enigma2 (includes WLAN drivers)"
+		echo "   3)  Neutrino"
+		echo "   4)  Neutrino (includes WLAN drivers)"
+		echo "   5)  Tvheadend"
 		read -p "Select Image to build (1-5)? ";;
 esac
 
@@ -355,8 +359,8 @@ case "$IMAGEN" in
 		case $6 in
 			[1-2])	REPLY=$6;;
 			*)	echo -e "\nExternal LCD support:"
-				echo "   1) No external LCD"
-				echo "   2) graphlcd for external LCD"
+				echo "   1*) No external LCD"
+				echo "   2)  graphlcd for external LCD"
 				read -p "Select external LCD support (1-2)? ";;
 		esac
 
@@ -368,11 +372,11 @@ case "$IMAGEN" in
 		case $7 in
 			[1-4])	REPLY=$7;;
 			*)	echo -e "\nWhich Neutrino variant do you want to build?"
-				echo "   1) Neutrino mp (next)"
-				echo "   2) Neutrino mp (cst-next)"
-				echo "   3) Neutrino HD2 exp"
-				echo "   4) Neutrino mp (Tangos)"
-#				echo "   5) Neutrino mp (martii-github)"
+				echo "   1*) Neutrino mp (next)"
+				echo "   2)  Neutrino mp (cst-next)"
+				echo "   3)  Neutrino HD2 exp"
+				echo "   4)  Neutrino mp (Tangos)"
+#				echo "   5)  Neutrino mp (martii-github)"
 				read -p " Select Neutrino variant (1-4)? ";;
 		esac
 		case "$REPLY" in
@@ -420,8 +424,8 @@ case "$IMAGEN" in
 		case $6 in
 			[1-2])	REPLY=$6;;
 			*)	echo -e "\nExternal LCD support:"
-				echo "   1) No external LCD"
-				echo "   2) graphlcd for external LCD"
+				echo "   1*) No external LCD"
+				echo "   2)  graphlcd for external LCD"
 				read -p "Select external LCD support (1-2)? ";;
 		esac
 
@@ -433,9 +437,9 @@ case "$IMAGEN" in
 		case $8 in
 			[1-3])	REPLY=$8;;
 			*)	echo -e "\nMedia Framework:"
-				echo "   1) eplayer3 (experimental)"
-				echo "   2) gstreamer"
-				echo "   3) gstreamer+libplayer3 (recommended)"
+				echo "   1)  eplayer3 (experimental)"
+				echo "   2)  gstreamer"
+				echo "   3*) gstreamer+libplayer3 (recommended)"
 				read -p "Select media framework (1-3)? ";;
 		esac
 
@@ -452,16 +456,16 @@ case "$IMAGEN" in
 		case $7 in
 			[0-5])	REPLY=$7;;
 			*)	echo "Please select one of the following Enigma2 revisions (default = 2):"
-				echo "================================================================================================="
-				echo " 0) Newest                 - E2 OpenPLi  any framework  (CAUTION: may fail due to outdated patch)"
-				echo "================================================================================================="
-				echo " 1) Use your own Enigma2 git dir without patchfile"
-				echo "================================================================================================="
-				echo " 2) Mon, 16 May 2016 22:46 - E2 OpenPLi  any framework  577fa5ab7d5f0f83f18d625b547d148e93cf27d3"
-				echo " 3) Thu, 31 Mar 2016 21:52 - E2 OpenPLi  any framework  7d63bf16e99741f0a5798b84a3688759317eecb3"
-				echo " 4) Mon, 17 Aug 2015 07:08 - E2 OpenPLi  any framework  cd5505a4b8aba823334032bb6fd7901557575455"
-				echo " 5) Sun, 19 Apr 2015 17:05 - E2 OpenPLi  any framework  4f2db7ace4d9b081cbbb3c13947e05312134ed8e"
-				echo "================================================================================================="
+				echo "=================================================================================================="
+				echo " 0)  Newest                 - E2 OpenPLi  any framework  (CAUTION: may fail due to outdated patch)"
+				echo "=================================================================================================="
+				echo " 1)  Use your own Enigma2 git dir without patchfile"
+				echo "=================================================================================================="
+				echo " 2*) Mon, 16 May 2016 22:46 - E2 OpenPLi  any framework  577fa5ab7d5f0f83f18d625b547d148e93cf27d3"
+				echo " 3)  Thu, 31 Mar 2016 21:52 - E2 OpenPLi  any framework  7d63bf16e99741f0a5798b84a3688759317eecb3"
+				echo " 4)  Mon, 17 Aug 2015 07:08 - E2 OpenPLi  any framework  cd5505a4b8aba823334032bb6fd7901557575455"
+				echo " 5)  Sun, 19 Apr 2015 17:05 - E2 OpenPLi  any framework  4f2db7ace4d9b081cbbb3c13947e05312134ed8e"
+				echo "=================================================================================================="
 				echo "Media Framework         : $MFWORK"
 				read -p "Select Enigma2 revision : ";;
 		esac

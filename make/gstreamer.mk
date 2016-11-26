@@ -72,7 +72,7 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmod
 	cd @DIR_gst_plugins_bad@ && \
 		$(BUILDENV) \
 		autoreconf --force --install && \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
