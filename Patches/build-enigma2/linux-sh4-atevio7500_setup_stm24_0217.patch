@@ -11,17 +11,17 @@
 +		int command_line_len = strlen(command_line);
 +		int org_command_line_len = strlen(org_command_line);
 +
-+		if(command_line_len >= org_command_line_len && !strncmp(command_line, org_command_line, org_command_line_len))
++		if (command_line_len >= org_command_line_len && !strncmp(command_line, org_command_line, org_command_line_len))
 +		{
 +			int i;
-+			for(i = 0; i < (command_line_len - 7); i++)
++			for (i = 0; i < (command_line_len - 7); i++)
 +			{
-+				if(!strncmp(command_line + i, "ethaddr", 7))
++				if (!strncmp(command_line + i, "ethaddr", 7))
 +				{
 +					strlcpy(mac, command_line + i + 8, sizeof(mac));
 +					break;
 +				}
-+				if(!strncmp(command_line + i, "hwaddr", 6))
++				if (!strncmp(command_line + i, "hwaddr", 6))
 +				{
 +					strlcpy(mac, command_line + i + 7, sizeof(mac));
 +					break;
@@ -227,20 +227,20 @@
 +		.offset = 0x003C0000,  //3.75M
 +	},
 +	{
-+	 .name   = "Real_ROOT", //mtd5
-+	 .size   = 0x01D00000,  //29M, 128k hole at 0x20FE0000 is used for force flash
-+	 .offset = 0x003E0000,  //3.875M
-+	 },
++		.name   = "Real_ROOT", //mtd5
++		.size   = 0x01D00000,  //29M, 128k hole at 0x20FE0000 is used for force flash
++		.offset = 0x003E0000,  //3.875M
++	},
 +	{
-+	 .name   = "Config",    //mtd6
-+	 .size   = 0x00100000,  //1M
-+	 .offset = 0x02100000,
-+	 },
++		.name   = "Config",    //mtd6
++		.size   = 0x00100000,  //1M
++		.offset = 0x02100000,
++	},
 +	{
-+	 .name   = "User",      //mtd7
-+	 .size   = 0x01E00000,  //30M
-+	 .offset = 0x02200000,
-+	 }
++		.name   = "User",      //mtd7
++		.size   = 0x01E00000,  //30M
++		.offset = 0x02200000,
++	}
  };
  
 -/* PCI configuration */
