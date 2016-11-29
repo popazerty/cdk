@@ -1,5 +1,6 @@
 #Trick: ich haue mal das kopieren von /boot mal hier rein. ist fuer m82 und m84
 $(D)/boot-elf:
+	$(START_BUILD)
 	$(INSTALL_DIR) $(targetprefix)/boot
 	for elf in video_7109.elf video_7100.elf video_7111.elf video_7105.elf audio_7109.elf audio_7100.elf audio_7111.elf audio_7105.elf \
 	;do \
@@ -11,28 +12,31 @@ $(D)/boot-elf:
 	done
 	$(INSTALL_DIR) $(targetprefix)/lib/firmware
 	cp $(buildprefix)/root/firmware/*.fw $(targetprefix)/lib/firmware/
-	touch $@
+	$(TOUCH)
 
 $(D)/misc-cp:
+	$(START_BUILD)
 	cp $(buildprefix)/root/sbin/hotplug $(targetprefix)/sbin
 	cp $(buildprefix)/root/etc/$(LIRCD_CONF) $(targetprefix)/etc/lircd.conf
 	cp -rd $(buildprefix)/root/etc/hotplug $(targetprefix)/etc
 	cp -rd $(buildprefix)/root/etc/hotplug.d $(targetprefix)/etc
-	touch $@
+	$(TOUCH)
 
 $(D)/misc-e2:
+	$(START_BUILD)
 	$(INSTALL_DIR) $(targetprefix)/media/hdd
 	$(INSTALL_DIR) $(targetprefix)/media/dvd
 	$(INSTALL_DIR) $(targetprefix)/hdd
 	$(INSTALL_DIR) $(targetprefix)/hdd/music
 	$(INSTALL_DIR) $(targetprefix)/hdd/picture
 	$(INSTALL_DIR) $(targetprefix)/hdd/movie
-	touch $@
+	$(TOUCH)
 
 #
 # DIVERSE STUFF / TOOLS
 #
 $(D)/diverse-tools: $(DIVERSE_TOOLS_ADAPTED_ETC_FILES:%=root/etc/%)
+	$(START_BUILD)
 	( cd root/etc && for i in $(DIVERSE_TOOLS_ADAPTED_ETC_FILES); do \
 		[ -f $$i ] && $(INSTALL) -m644 $$i $(prefix)/$*cdkroot/etc/$$i || true; \
 		[ "$${i%%/*}" = "init.d" ] && chmod 755 $(prefix)/$*cdkroot/etc/$$i || true; done ) && \
@@ -49,7 +53,7 @@ $(D)/diverse-tools: $(DIVERSE_TOOLS_ADAPTED_ETC_FILES:%=root/etc/%)
 		[ -f $$i ] && $(INSTALL) -m644 $$i $(prefix)/$*cdkroot/etc/$$i || true; \
 		[ "$${i%%/*}" = "init.d" ] && chmod 755 $(prefix)/$*cdkroot/etc/$$i || true; done ) && \
 	ln -sf /usr/share/zoneinfo/CET $(prefix)/$*cdkroot/etc/localtime
-	touch $@
+	$(TOUCH)
 
 #
 # Adapted etc files and etc read-write files

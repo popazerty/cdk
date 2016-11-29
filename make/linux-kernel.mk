@@ -344,32 +344,38 @@ HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,_,$(KERNELVERSION))_$(MODNAME).co
 
 $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS) \
 	$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=$(PATCHES)/$(BUILDCONFIG)/%))
+	$(START_BUILD)
 	rm -rf linux-sh4*
 	if [ -e $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz ]; then \
 		mkdir $(buildprefix)/$(KERNEL_DIR); \
-		echo "Getting archived P0$(KERNELLABEL) kernel source"; \
+		echo -n "Getting archived P0$(KERNELLABEL) kernel source..."; \
 		tar -xf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz -C $(buildprefix)/$(KERNEL_DIR); \
+		echo " done."; \
 	else \
 		if [ -d $(archivedir)/linux-sh4-2.6.32.y.git ]; then \
-			echo "Updating STlinux kernel source"; \
+			echo -n "Updating STlinux kernel source..."; \
 			cd $(archivedir)/linux-sh4-2.6.32.y.git; git pull; \
+			echo " done."; \
 		else \
-			echo "Getting STlinux kernel source"; \
+			echo "Getting STlinux kernel source..."; \
 			REPO=git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro; \
 			git clone $$REPO $(archivedir)/linux-sh4-2.6.32.y.git; \
 		fi; \
-		echo "Copying kernel source code to build environment"; \
+		echo -n "Copying kernel source code to build environment..."; \
 		cp -ra $(archivedir)/linux-sh4-2.6.32.y.git $(buildprefix)/$(KERNEL_DIR); \
-		echo "Applying patch level P0$(KERNELLABEL)"; \
+		echo " done."; \
+		echo "Applying patch level P0$(KERNELLABEL)..."; \
 		cd $(buildprefix)/$(KERNEL_DIR); \
 		git checkout -q $(HOST_KERNEL_REVISION); \
-		echo "Archiving patched kernel source"; \
+		echo " done."; \
+		echo -n "Archiving patched kernel source"; \
 		tar --exclude=.git -czf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz .; \
+		echo " done."; \
 	fi
 	set -e; cd $(KERNEL_DIR); \
 		for i in $(HOST_KERNEL_PATCHES); do \
 			echo -e "==> \033[31mApplying Patch:\033[0m $$i"; \
-			patch -p1 -i $(buildprefix)/Patches/$(BUILDCONFIG)/$$i; \
+			patch -p1 $(SILENT_PATCH) -i $(buildprefix)/Patches/$(BUILDCONFIG)/$$i; \
 		done
 	$(INSTALL) -m644 Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
 	ln -s $(KERNEL_DIR) $(buildprefix)/linux-sh4
@@ -393,12 +399,13 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 	cp $(KERNEL_DIR)/arch/sh/boot/uImage $(targetprefix)/boot/ && \
 	rm $(targetprefix)/lib/modules/$(KERNELVERSION)/build || true && \
 	rm $(targetprefix)/lib/modules/$(KERNELVERSION)/source || true
-	touch $@
+	$(TOUCH)
 
 $(D)/tfkernel.do_compile:
+	$(START_BUILD)
 	cd $(KERNEL_DIR) && \
 		$(MAKE) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(target)- uImage
-	touch $@
+	$(TOUCH)
 
 linux-kernel-clean:
 	rm -f $(DEPDIR)/linux-kernel
@@ -414,3 +421,4 @@ linux-kernel.%:
 	@echo ""
 	diff $(KERNEL_DIR)/.config.old $(KERNEL_DIR)/.config
 	@echo ""
+

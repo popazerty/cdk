@@ -35,7 +35,7 @@ sub load ($$$)
     }
   }
 
-  die "can't find package $package";
+  die "cannot find package $package";
 }
 
 sub process_make_depends (@)
@@ -120,7 +120,7 @@ sub process_make_prepare (@)
   my $dir = shift;
   shift;
 
-  my $output = "( rm -rf " . $dir . " || /bin/true )";
+  my $output = "@( rm -rf " . $dir . " || /bin/true )";
 
   foreach ( @_ )
   {
@@ -191,7 +191,7 @@ sub process_make_prepare (@)
       }
       else
       {
-        die "can't recognize type of archive " . $_[1];
+        die "cannot recognize type of archive " . $_[1];
       }
     }
     elsif ( $_[0] eq "dirextract" )
@@ -221,7 +221,7 @@ sub process_make_prepare (@)
       }
       else
       {
-        die "can't recognize type of archive " . $_[1];
+        die "cannot recognize type of archive " . $_[1];
       }
 
       $output .= " )";
@@ -263,7 +263,7 @@ sub process_make_prepare (@)
       }
       else
       {
-        $output .= "( cd " . $dir . " && chmod +w -R .; patch $_ < " . $patchesdir . $_[1] . " )";
+        $output .= "( cd " . $dir . " && chmod +w -R .; echo -e \\\"==> \033[31mApplying Patch:\033[0m " . $_[1] . "\\\"; patch \\\$(SILENT_PATCH) $_ < " . $patchesdir . $_[1] . " )";
       }
     }
     elsif ( $_[0] eq "rpmbuild" )
@@ -288,7 +288,7 @@ sub process_make_prepare (@)
     }
     else
     {
-      die "can't recognize @_";
+      die "cannot recognize @_";
     }
   }
 
@@ -325,7 +325,7 @@ sub process_make ($$$)
   }
   else
   {
-    die "can't recognize $arg" if not $args{$arg};
+    die "cannot recognize $arg" if not $args{$arg};
 
     $output = &{$args{$arg}} (@rules);
   }
@@ -381,7 +381,7 @@ sub process_install_rule ($)
   }
   else
   {
-    die "can't recognize rule \"$rule\"";
+    die "cannot recognize rule \"$rule\"";
   }
 
   return $output;
@@ -413,7 +413,7 @@ my $ruletype = shift;
 my $filename = shift;
 my $package = shift;
 
-die "can't determine rule type" if not $ruletypes{$ruletype};
+die "cannot determine rule type" if not $ruletypes{$ruletype};
 die "rule type needs further args" if $ruletypes{$ruletype}->{further_args} and $#ARGV + 1 < $ruletypes{$ruletype}->{further_args};
 
 my @rules = load ( $filename, $package, 0 );

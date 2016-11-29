@@ -11,6 +11,7 @@ endif
 TVHEADEND_PATCHES = tvheadend.patch
 
 $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
+	$(START_BUILD)
 	rm -rf $(sourcedir)/tvheadend
 	rm -rf $(sourcedir)/tvheadend.org
 	REVISION="4931c0544885371b85146efad4eacd9683ba3dad"; \
@@ -25,9 +26,7 @@ $(D)/tvheadend.do_prepare: | $(TVHEADEND_DEPS)
 		echo -e "==> \033[31mApplying Patch\033[0m: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/tvheadend && patch -p1 -i $(PATCHES)/$$i; \
 	done;
-	touch $@;
-	@echo -e "\033[01;32mCompleted: tvheadend.do_prepare\033[00m"
-
+	$(TOUCH);
 
 $(D)/tvheadend.config.status:
 	cd $(sourcedir)/tvheadend && \
@@ -65,21 +64,21 @@ $(D)/tvheadend.config.status:
 			$(T_CONFIG_OPTS)
 
 $(D)/tvheadend.do_compile: tvheadend.config.status
+	$(START_BUILD)
 	cd $(sourcedir)/tvheadend && \
 		 $(MAKE) all
-	touch $@;
-	@echo -e "\033[01;32mCompleted: tvheadend.do_compile\033[00m"
+	$(TOUCH);
 
 $(D)/tvheadend: tvheadend.do_prepare tvheadend.do_compile
-	 $(MAKE) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
+	$(START_BUILD)
+	$(MAKE) -C $(sourcedir)/tvheadend install DESTDIR=$(targetprefix)
 	if [ -e $(targetprefix)/usr/bin/tvheadend ]; then \
 		$(target)-strip $(targetprefix)/usr/bin/tvheadend; \
 	fi
 	if [ -e $(targetprefix)/usr/local/bin/tvheadend ]; then \
 		$(target)-strip $(targetprefix)/usr/local/bin/tvheadend; \
 	fi
-	touch $@;
-	@echo -e "\033[01;32mCompleted: tvheadend\033[00m"
+	$(TOUCH);
 
 tvheadendclean:
 	rm -f $(D)/tvheadend

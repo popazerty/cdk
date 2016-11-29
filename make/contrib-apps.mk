@@ -2,10 +2,16 @@
 # grep
 #
 $(D)/grep: $(D)/bootstrap @DEPENDS_grep@
+	$(START_BUILD)
 	@PREPARE_grep@
 	cd @DIR_grep@ && \
 		gunzip -cd $(lastword $^) | cat > debian.patch && \
-		patch -p1 <debian.patch && \
+		for i in \
+			debian.patch \
+		; do \
+			echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
+			patch -p1 $(SILENT_PATCH) <debian.patch; \
+		done; \
 		$(CONFIGURE) \
 			--disable-nls \
 			--disable-perl-regexp \
@@ -15,12 +21,13 @@ $(D)/grep: $(D)/bootstrap @DEPENDS_grep@
 		$(MAKE) && \
 		@INSTALL_grep@
 	@CLEANUP_grep@
-	touch $@
+	$(TOUCH)
 
 #
 # CONSOLE_DATA
 #
 $(D)/console_data: $(D)/bootstrap @DEPENDS_console_data@
+	$(START_BUILD)
 	@PREPARE_console_data@
 	cd @DIR_console_data@ && \
 		$(CONFIGURE) \
@@ -30,12 +37,13 @@ $(D)/console_data: $(D)/bootstrap @DEPENDS_console_data@
 		$(MAKE) && \
 		@INSTALL_console_data@
 	@CLEANUP_console_data@
-	touch $@
+	$(TOUCH)
 
 #
 # sysvinit
 #
 $(D)/sysvinit: $(D)/bootstrap @DEPENDS_sysvinit@
+	$(START_BUILD)
 	@PREPARE_sysvinit@
 	cd @DIR_sysvinit@ && \
 		$(BUILDENV) \
@@ -43,12 +51,13 @@ $(D)/sysvinit: $(D)/bootstrap @DEPENDS_sysvinit@
 		&& \
 		@INSTALL_sysvinit@
 	@CLEANUP_sysvinit@
-	touch $@
+	$(TOUCH)
 
 #
 # module_init_tools
 #
 $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb @DEPENDS_module_init_tools@
+	$(START_BUILD)
 	@PREPARE_module_init_tools@
 	cd @DIR_module_init_tools@ && \
 		autoreconf -fi && \
@@ -60,38 +69,46 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb @DEPENDS_module_init_tools@
 		@INSTALL_module_init_tools@
 	$(call adapted-etc-files,$(MODULE_INIT_TOOLS_ADAPTED_ETC_FILES))
 	@CLEANUP_module_init_tools@
-	touch $@
+	$(TOUCH)
 
 #
 # lsb
 #
 $(D)/lsb: $(D)/bootstrap @DEPENDS_lsb@
+	$(START_BUILD)
 	@PREPARE_lsb@
 	cd @DIR_lsb@ && \
 		@INSTALL_lsb@
 	@CLEANUP_lsb@
-	touch $@
+	$(TOUCH)
 
 #
 # portmap
 #
 $(D)/portmap: $(D)/bootstrap @DEPENDS_portmap@
+	$(START_BUILD)
 	@PREPARE_portmap@
 	cd @DIR_portmap@ && \
 		gunzip -cd $(lastword $^) | cat > debian.patch && \
-		patch -p1 <debian.patch && \
+		for i in \
+			debian.patch \
+		; do \
+			echo -e "==> \033[31mApplying Patch:\033[0m $(subst $(PATCHES)/,'',$$i)"; \
+			patch -p1 $(SILENT_PATCH) <debian.patch; \
+		done; \
 		sed -e 's/### BEGIN INIT INFO/# chkconfig: S 41 10\n### BEGIN INIT INFO/g' -i debian/init.d && \
 		$(BUILDENV) \
 		$(MAKE) && \
 		@INSTALL_portmap@
 	$(call adapted-etc-files,$(PORTMAP_ADAPTED_ETC_FILES))
 	@CLEANUP_portmap@
-	touch $@
+	$(TOUCH)
 
 #
 # openrdate
 #
 $(D)/openrdate: $(D)/bootstrap @DEPENDS_openrdate@ $(OPENRDATE_ADAPTED_ETC_FILES:%=root/etc/%)
+	$(START_BUILD)
 	@PREPARE_openrdate@
 	cd @DIR_openrdate@ && \
 		$(CONFIGURE) \
@@ -103,12 +120,13 @@ $(D)/openrdate: $(D)/bootstrap @DEPENDS_openrdate@ $(OPENRDATE_ADAPTED_ETC_FILES
 		$(MAKE) && \
 		@INSTALL_openrdate@
 	@CLEANUP_openrdate@
-	touch $@
+	$(TOUCH)
 
 #
 # e2fsprogs
 #
 $(D)/e2fsprogs: $(D)/bootstrap $(D)/utillinux @DEPENDS_e2fsprogs@
+	$(START_BUILD)
 	@PREPARE_e2fsprogs@
 	cd @DIR_e2fsprogs@ && \
 		PATH=$(buildprefix)/@DIR_e2fsprogs@:$(PATH) \
@@ -136,12 +154,13 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/utillinux @DEPENDS_e2fsprogs@
 		$(MAKE) -C lib/blkid install DESTDIR=$(targetprefix); \
 		@INSTALL_e2fsprogs@
 	@CLEANUP_e2fsprogs@
-	touch $@
+	$(TOUCH)
 
 #
 # utillinux
 #
 $(D)/utillinux: $(D)/bootstrap $(D)/zlib @DEPENDS_utillinux@
+	$(START_BUILD)
 	@PREPARE_utillinux@
 	cd @DIR_utillinux@ && \
 		autoreconf -fi && \
@@ -217,12 +236,13 @@ $(D)/utillinux: $(D)/bootstrap $(D)/zlib @DEPENDS_utillinux@
 		$(MAKE) ARCH=sh4 && \
 		@INSTALL_utillinux@
 	@CLEANUP_utillinux@
-	touch $@
+	$(TOUCH)
 
 #
 # xfsprogs
 #
 $(D)/xfsprogs: $(D)/bootstrap $(D)/e2fsprogs $(D)/libreadline @DEPENDS_xfsprogs@
+	$(START_BUILD)
 	@PREPARE_xfsprogs@
 	cd @DIR_xfsprogs@ && \
 		export DEBUG=-DNDEBUG && export OPTIMIZER=-O2 && \
@@ -239,12 +259,13 @@ $(D)/xfsprogs: $(D)/bootstrap $(D)/e2fsprogs $(D)/libreadline @DEPENDS_xfsprogs@
 		export top_builddir=`pwd` && \
 		@INSTALL_xfsprogs@
 	@CLEANUP_xfsprogs@
-	touch $@
+	$(TOUCH)
 
 #
 # mc
 #
 $(D)/mc: $(D)/bootstrap $(D)/glib2 @DEPENDS_mc@
+	$(START_BUILD)
 	@PREPARE_mc@
 	cd @DIR_mc@ && \
 		$(CONFIGURE) \
@@ -256,12 +277,13 @@ $(D)/mc: $(D)/bootstrap $(D)/glib2 @DEPENDS_mc@
 		$(MAKE) all && \
 		@INSTALL_mc@
 	@CLEANUP_mc@
-	touch $@
+	$(TOUCH)
 
 #
 # sdparm
 #
 $(D)/sdparm: $(D)/bootstrap @DEPENDS_sdparm@
+	$(START_BUILD)
 	@PREPARE_sdparm@
 	cd @DIR_sdparm@ && \
 		$(CONFIGURE) \
@@ -273,12 +295,13 @@ $(D)/sdparm: $(D)/bootstrap @DEPENDS_sdparm@
 		@INSTALL_sdparm@
 	@( cd $(prefix)/$*cdkroot/usr/share/man/man8 && gzip -v9 sdparm.8 )
 	@CLEANUP_sdparm@
-	touch $@
+	$(TOUCH)
 
 #
 # ipkg
 #
 $(D)/ipkg: $(D)/bootstrap @DEPENDS_ipkg@
+	$(START_BUILD)
 	@PREPARE_ipkg@
 	cd @DIR_ipkg@ && \
 		$(CONFIGURE) \
@@ -292,13 +315,14 @@ $(D)/ipkg: $(D)/bootstrap @DEPENDS_ipkg@
 	$(INSTALL) -d $(prefix)/$*cdkroot/usr/lib/ipkg
 	$(INSTALL) -m 644 root/usr/lib/ipkg/status.initial $(prefix)/$*cdkroot/usr/lib/ipkg/status
 	@CLEANUP_ipkg@
-	touch $@
+	$(TOUCH)
 
 #
 # zd1211
 #
 CONFIG_ZD1211B :=
 $(D)/zd1211: $(D)/bootstrap @DEPENDS_zd1211@
+	$(START_BUILD)
 	@PREPARE_zd1211@
 	cd @DIR_zd1211@ && \
 		$(MAKE) KERNEL_LOCATION=$(buildprefix)/$(KERNEL_DIR) \
@@ -310,12 +334,13 @@ $(D)/zd1211: $(D)/bootstrap @DEPENDS_zd1211@
 		&& \
 	$(DEPMOD) -ae -b $(targetprefix) -r $(KERNELVERSION)
 	@CLEANUP_zd1211@
-	touch $@
+	$(TOUCH)
 
 #
 # nano
 #
 $(D)/nano: $(D)/bootstrap @DEPENDS_nano@
+	$(START_BUILD)
 	@PREPARE_nano@
 	cd @DIR_nano@ && \
 		$(CONFIGURE) \
@@ -327,12 +352,13 @@ $(D)/nano: $(D)/bootstrap @DEPENDS_nano@
 		$(MAKE) && \
 		@INSTALL_nano@
 	@CLEANUP_nano@
-	touch $@
+	$(TOUCH)
 
 #
 # rsync
 #
 $(D)/rsync: $(D)/bootstrap @DEPENDS_rsync@
+	$(START_BUILD)
 	@PREPARE_rsync@
 	cd @DIR_rsync@ && \
 		$(CONFIGURE) \
@@ -343,24 +369,26 @@ $(D)/rsync: $(D)/bootstrap @DEPENDS_rsync@
 		$(MAKE) && \
 		@INSTALL_rsync@
 	@CLEANUP_rsync@
-	touch $@
+	$(TOUCH)
 
 #
 # rfkill
 #
 $(D)/rfkill: $(D)/bootstrap @DEPENDS_rfkill@
+	$(START_BUILD)
 	@PREPARE_rfkill@
 	cd @DIR_rfkill@ && \
 		$(MAKE) $(MAKE_OPTS) \
 		&& \
 		@INSTALL_rfkill@
 	@CLEANUP_rfkill@
-	touch $@
+	$(TOUCH)
 
 #
 # lm_sensors
 #
 $(D)/lm_sensors: $(D)/bootstrap @DEPENDS_lm_sensors@
+	$(START_BUILD)
 	@PREPARE_lm_sensors@
 	cd @DIR_lm_sensors@ && \
 		$(MAKE) $(MAKE_OPTS) MACHINE=sh PREFIX=/usr user && \
@@ -372,12 +400,13 @@ $(D)/lm_sensors: $(D)/bootstrap @DEPENDS_lm_sensors@
 		rm $(prefix)/$*cdkroot/usr/include/linux/i2c-dev.h && \
 		rm $(prefix)/$*cdkroot/usr/bin/ddcmon
 	@CLEANUP_lm_sensors@
-	touch $@
+	$(TOUCH)
 
 #
 # fuse
 #
 $(D)/fuse: $(D)/bootstrap @DEPENDS_fuse@
+	$(START_BUILD)
 	@PREPARE_fuse@
 	cd @DIR_fuse@ && \
 		$(CONFIGURE) \
@@ -393,12 +422,13 @@ $(D)/fuse: $(D)/bootstrap @DEPENDS_fuse@
 		$(LN_SF) sh4-linux-fusermount $(prefix)/$*cdkroot/usr/bin/fusermount
 		$(LN_SF) sh4-linux-ulockmgr_server $(prefix)/$*cdkroot/usr/bin/ulockmgr_server
 	@CLEANUP_fuse@
-	touch $@
+	$(TOUCH)
 
 #
 # curlftpfs
 #
 $(D)/curlftpfs: $(D)/bootstrap $(D)/fuse @DEPENDS_curlftpfs@
+	$(START_BUILD)
 	@PREPARE_curlftpfs@
 	cd @DIR_curlftpfs@ && \
 		export ac_cv_func_malloc_0_nonnull=yes && \
@@ -409,24 +439,26 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/fuse @DEPENDS_curlftpfs@
 		$(MAKE) && \
 		@INSTALL_curlftpfs@
 	@CLEANUP_curlftpfs@
-	touch $@
+	$(TOUCH)
 
 #
 # pngquant
 #
 $(D)/pngquant: $(D)/bootstrap $(D)/zlib $(D)/libpng @DEPENDS_pngquant@
+	$(START_BUILD)
 	@PREPARE_pngquant@
 	cd @DIR_pngquant@ && \
 		$(target)-gcc -O3 -Wall -I. -funroll-loops -fomit-frame-pointer -o pngquant pngquant.c rwpng.c -lpng -lz -lm \
 		&& \
 		@INSTALL_pngquant@
 	@CLEANUP_pngquant@
-	touch $@
+	$(TOUCH)
 
 #
 # mplayer
 #
 $(D)/mplayer: $(D)/bootstrap @DEPENDS_mplayer@
+	$(START_BUILD)
 	@PREPARE_mplayer@
 	cd @DIR_mplayer@ && \
 		$(CONFIGURE) \
@@ -439,12 +471,13 @@ $(D)/mplayer: $(D)/bootstrap @DEPENDS_mplayer@
 		$(MAKE) CC="$(target)-gcc" && \
 		@INSTALL_mplayer@
 	@CLEANUP_mplayer@
-	touch $@
+	$(TOUCH)
 
 #
 # mencoder
 #
 $(D)/mencoder: $(D)/bootstrap @DEPENDS_mencoder@
+	$(START_BUILD)
 	@PREPARE_mencoder@
 	cd @DIR_mencoder@ && \
 		$(CONFIGURE) \
@@ -482,12 +515,13 @@ $(D)/mencoder: $(D)/bootstrap @DEPENDS_mencoder@
 		$(MAKE) CC="$(target)-gcc" && \
 		@INSTALL_mencoder@
 	@CLEANUP_mencoder@
-	touch $@
+	$(TOUCH)
 
 #
 # jfsutils
 #
 $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_jfsutils@
+	$(START_BUILD)
 	@PREPARE_jfsutils@
 	cd @DIR_jfsutils@ && \
 		sed "s@<unistd.h>@&\n#include <sys/types.h>@g" -i fscklog/extract.c && \
@@ -498,12 +532,13 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_jfsutils@
 		$(MAKE) && \
 		@INSTALL_jfsutils@
 	@CLEANUP_jfsutils@
-	touch $@
+	$(TOUCH)
 
 #
 # dosfstools
 #
 $(D)/dosfstools: $(D)/bootstrap @DEPENDS_dosfstools@
+	$(START_BUILD)
 	@PREPARE_dosfstools@
 	cd @DIR_dosfstools@ && \
 		$(MAKE) all \
@@ -512,12 +547,13 @@ $(D)/dosfstools: $(D)/bootstrap @DEPENDS_dosfstools@
 		&& \
 		@INSTALL_dosfstools@
 	@CLEANUP_dosfstools@
-	touch $@
+	$(TOUCH)
 
 #
 # hddtemp
 #
 $(D)/hddtemp: $(D)/bootstrap @DEPENDS_hddtemp@
+	$(START_BUILD)
 	@PREPARE_hddtemp@
 	cd @DIR_hddtemp@ && \
 		$(CONFIGURE) \
@@ -529,12 +565,13 @@ $(D)/hddtemp: $(D)/bootstrap @DEPENDS_hddtemp@
 		$(INSTALL) -d $(targetprefix)/var/tuxbox/config
 		$(INSTALL) -m 644 root/release/hddtemp.db $(targetprefix)/var
 	@CLEANUP_hddtemp@
-	touch $@
+	$(TOUCH)
 
 #
 # hdparm
 #
 $(D)/hdparm: $(D)/bootstrap @DEPENDS_hdparm@
+	$(START_BUILD)
 	@PREPARE_hdparm@
 	cd @DIR_hdparm@ && \
 		$(BUILDENV) \
@@ -542,12 +579,13 @@ $(D)/hdparm: $(D)/bootstrap @DEPENDS_hdparm@
 		&& \
 		@INSTALL_hdparm@
 	@CLEANUP_hdparm@
-	touch $@
+	$(TOUCH)
 
 #
 # fdisk
 #
 $(D)/fdisk: $(D)/bootstrap $(D)/parted @DEPENDS_fdisk@
+	$(START_BUILD)
 	@PREPARE_fdisk@
 	cd @DIR_fdisk@ && \
 		$(CONFIGURE) \
@@ -557,12 +595,13 @@ $(D)/fdisk: $(D)/bootstrap $(D)/parted @DEPENDS_fdisk@
 		$(MAKE) all && \
 		@INSTALL_fdisk@
 	@CLEANUP_fdisk@
-	touch $@
+	$(TOUCH)
 
 #
 # parted
 #
 $(D)/parted: $(D)/bootstrap $(D)/libreadline $(D)/e2fsprogs @DEPENDS_parted@
+	$(START_BUILD)
 	@PREPARE_parted@
 	cd @DIR_parted@ && \
 		$(CONFIGURE) \
@@ -574,12 +613,13 @@ $(D)/parted: $(D)/bootstrap $(D)/libreadline $(D)/e2fsprogs @DEPENDS_parted@
 		$(MAKE) all && \
 		@INSTALL_parted@
 	@CLEANUP_parted@
-	touch $@
+	$(TOUCH)
 
 #
 # opkg
 #
 $(D)/opkg: $(D)/bootstrap @DEPENDS_opkg@
+	$(START_BUILD)
 	@PREPARE_opkg@
 	cd @DIR_opkg@ && \
 		$(CONFIGURE) \
@@ -593,12 +633,13 @@ $(D)/opkg: $(D)/bootstrap @DEPENDS_opkg@
 		$(MAKE) all && \
 		@INSTALL_opkg@
 	@CLEANUP_opkg@
-	touch $@
+	$(TOUCH)
 
 #
 # sysstat
 #
 $(D)/sysstat: $(D)/bootstrap @DEPENDS_sysstat@
+	$(START_BUILD)
 	@PREPARE_sysstat@
 	cd @DIR_sysstat@ && \
 		$(CONFIGURE) \
@@ -608,12 +649,13 @@ $(D)/sysstat: $(D)/bootstrap @DEPENDS_sysstat@
 		$(MAKE) && \
 		@INSTALL_sysstat@
 	@CLEANUP_sysstat@
-	touch $@
+	$(TOUCH)
 
 #
 # autofs
 #
 $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_autofs@
+	$(START_BUILD)
 	@PREPARE_autofs@
 	cd @DIR_autofs@ && \
 		cp aclocal.m4 acinclude.m4 && \
@@ -624,12 +666,13 @@ $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs @DEPENDS_autofs@
 		$(MAKE) all CC=$(target)-gcc STRIP=$(target)-strip SUBDIRS="lib daemon modules" && \
 		@INSTALL_autofs@
 	@CLEANUP_autofs@
-	touch $@
+	$(TOUCH)
 
 #
 # imagemagick
 #
 $(D)/imagemagick: $(D)/bootstrap @DEPENDS_imagemagick@
+	$(START_BUILD)
 	@PREPARE_imagemagick@
 	cd @DIR_imagemagick@ && \
 		$(BUILDENV) \
@@ -658,12 +701,13 @@ $(D)/imagemagick: $(D)/bootstrap @DEPENDS_imagemagick@
 		$(MAKE) all && \
 		@INSTALL_imagemagick@
 	@CLEANUP_imagemagick@
-	touch $@
+	$(TOUCH)
 
 #
 # hotplug_e2
 #
 $(D)/hotplug_e2: $(D)/bootstrap @DEPENDS_hotplug_e2@
+	$(START_BUILD)
 	@PREPARE_hotplug_e2@
 	[ -d "$(archivedir)/hotplug-e2-helper.git" ] && \
 	(cd $(archivedir)/hotplug-e2-helper.git; git pull; cd "$(buildprefix)";); \
@@ -674,12 +718,13 @@ $(D)/hotplug_e2: $(D)/bootstrap @DEPENDS_hotplug_e2@
 		$(MAKE) all && \
 		@INSTALL_hotplug_e2@
 	@CLEANUP_hotplug_e2@
-	touch $@
+	$(TOUCH)
 
 #
 # shairport
 #
 $(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/libalsa @DEPENDS_shairport@
+	$(START_BUILD)
 	@PREPARE_shairport@
 	[ -d "$(archivedir)/shairport.git" ] && \
 	(cd $(archivedir)/shairport.git; git pull; cd "$(buildprefix)";); \
@@ -690,12 +735,13 @@ $(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/libalsa @DEPENDS_shai
 		$(MAKE) && \
 		@INSTALL_shairport@
 	@CLEANUP_shairport@
-	touch $@
+	$(TOUCH)
 
 #
 # dbus
 #
 $(D)/dbus: $(D)/bootstrap $(D)/libexpat @DEPENDS_dbus@
+	$(START_BUILD)
 	@PREPARE_dbus@
 	cd @DIR_dbus@ && \
 		libtoolize --copy --ltdl && \
@@ -716,12 +762,13 @@ $(D)/dbus: $(D)/bootstrap $(D)/libexpat @DEPENDS_dbus@
 		$(MAKE) all && \
 		@INSTALL_dbus@
 	@CLEANUP_dbus@
-	touch $@
+	$(TOUCH)
 
 #
 # avahi
 #
 $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi@
+	$(START_BUILD)
 	@PREPARE_avahi@
 	cd @DIR_avahi@ && \
 		sed -i 's/\(CFLAGS=.*\)-Werror \(.*\)/\1\2/' configure && \
@@ -746,24 +793,26 @@ $(D)/avahi: $(D)/bootstrap $(D)/libexpat $(D)/libdaemon $(D)/dbus @DEPENDS_avahi
 		$(MAKE) all && \
 		@INSTALL_avahi@
 	@CLEANUP_avahi@
-	touch $@
+	$(TOUCH)
 
 #
 # mtd_utils
 #
 $(D)/mtd_utils: $(D)/bootstrap $(D)/zlib $(D)/lzo $(D)/e2fsprogs @DEPENDS_mtd_utils@
+	$(START_BUILD)
 	@PREPARE_mtd_utils@
 	cd @DIR_mtd_utils@ && \
 		$(BUILDENV) $(MAKE) PREFIX= CC=${target}-gcc LD=${target}-ld STRIP=${target}-strip `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(targetprefix) install && \
 		cp -a $(targetprefix)/sbin/{mkfs.jffs2,sumtool,nandwrite} $(hostprefix)/bin && \
 		@INSTALL_mtd_utils@
 	@CLEANUP_mtd_utils@
-	touch $@
+	$(TOUCH)
 
 #
 # wget
 #
 $(D)/wget: $(D)/bootstrap $(D)/openssl @DEPENDS_wget@
+	$(START_BUILD)
 	@PREPARE_wget@
 	cd @DIR_wget@ && \
 		$(CONFIGURE) \
@@ -778,12 +827,13 @@ $(D)/wget: $(D)/bootstrap $(D)/openssl @DEPENDS_wget@
 		$(MAKE) && \
 		@INSTALL_wget@
 	@CLEANUP_wget@
-	touch $@
+	$(TOUCH)
 
 #
 # smartmontools
 #
 $(D)/smartmontools: $(D)/bootstrap @DEPENDS_smartmontools@
+	$(START_BUILD)
 	@PREPARE_smartmontools@
 	cd @DIR_smartmontools@ && \
 		$(CONFIGURE) \
@@ -792,12 +842,13 @@ $(D)/smartmontools: $(D)/bootstrap @DEPENDS_smartmontools@
 		$(MAKE) && \
 		@INSTALL_smartmontools@
 	@CLEANUP_smartmontools@
-	touch $@
+	$(TOUCH)
 
 #
 # iso-codes
 #
 $(D)/iso_codes: $(D)/bootstrap @DEPENDS_iso_codes@
+	$(START_BUILD)
 	@PREPARE_iso_codes@
 	[ -d "$(archivedir)/iso-codes.git" ] && \
 	(cd $(archivedir)/iso-codes.git; git pull; cd "$(buildprefix)";); \
@@ -808,6 +859,5 @@ $(D)/iso_codes: $(D)/bootstrap @DEPENDS_iso_codes@
 		$(MAKE) && \
 		@INSTALL_iso_codes@
 	@CLEANUP_iso_codes@
-	touch $@
-
+	$(TOUCH)
 

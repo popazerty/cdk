@@ -6,13 +6,14 @@
 # PLUGINS
 #
 $(D)/neutrino-mp-plugins.do_prepare:
+	$(START_BUILD)
 	rm -rf $(sourcedir)/neutrino-mp-plugins
 	[ -d "$(archivedir)/neutrino-mp-plugins.git" ] && \
 	(cd $(archivedir)/neutrino-mp-plugins.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-plugins.git" ] || \
 	git clone https://github.com/Duckbox-Developers/neutrino-mp-plugins.git $(archivedir)/neutrino-mp-plugins.git; \
 	cp -ra $(archivedir)/neutrino-mp-plugins.git $(sourcedir)/neutrino-mp-plugins;\
-	touch $@
+	$(TOUCH)
 
 $(sourcedir)/neutrino-mp-plugins/config.status: $(D)/bootstrap $(D)/xupnpd
 	cd $(sourcedir)/neutrino-mp-plugins && \
@@ -37,14 +38,15 @@ $(sourcedir)/neutrino-mp-plugins/config.status: $(D)/bootstrap $(D)/xupnpd
 			LDFLAGS="$(TARGET_LDFLAGS) -L$(sourcedir)/neutrino-mp-plugins/fx2/lib/.libs"
 
 $(D)/neutrino-mp-plugins.do_compile: $(sourcedir)/neutrino-mp-plugins/config.status
+	$(START_BUILD)
 	cd $(sourcedir)/neutrino-mp-plugins && \
 		$(MAKE)
-	touch $@
+	$(TOUCH)
 
 $(D)/neutrino-mp-plugins: neutrino-mp-plugins.do_prepare neutrino-mp-plugins.do_compile
 	rm -rf $(targetprefix)/var/tuxbox/plugins/*
 	$(MAKE) -C $(sourcedir)/neutrino-mp-plugins install DESTDIR=$(targetprefix)
-#	touch $@
+#	$(TOUCH)
 
 neutrino-mp-plugins-clean:
 	rm -f $(D)/neutrino-mp-plugins
@@ -64,6 +66,7 @@ yaud-neutrino-hd2-exp-plugins: yaud-none lirc \
 NEUTRINO_HD2_PLUGINS_PATCHES =
 
 $(D)/nhd2-plugins.do_prepare:
+	$(START_BUILD)
 	rm -rf $(sourcedir)/nhd2-plugins
 	[ -d "$(archivedir)/nhd2-plugins.git" ] && \
 	(cd $(archivedir)/nhd2-plugins.git; git pull; cd "$(buildprefix)";); \
@@ -74,7 +77,7 @@ $(D)/nhd2-plugins.do_prepare:
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(sourcedir)/nhd2-plugins && patch -p1 -i $$i; \
 	done;
-	touch $@
+	$(TOUCH)
 
 $(sourcedir)/nhd2-plugins/config.status: bootstrap
 	cd $(sourcedir)/nhd2-plugins && \
@@ -96,14 +99,15 @@ $(sourcedir)/nhd2-plugins/config.status: bootstrap
 			LDFLAGS="$(TARGET_LDFLAGS)"
 
 $(D)/nhd2-plugins.do_compile: $(sourcedir)/nhd2-plugins/config.status
+	$(START_BUILD)
 	cd $(sourcedir)/nhd2-plugins && \
 	$(MAKE)
-	touch $@
+	$(TOUCH)
 
 $(D)/nhd2-plugins: nhd2-plugins.do_prepare nhd2-plugins.do_compile
 	rm -rf $(targetprefix)/var/tuxbox/plugins/*
 	$(MAKE) -C $(sourcedir)/nhd2-plugins install DESTDIR=$(targetprefix)
-#	touch $@
+#	$(TOUCH)
 
 nhd2-plugins-clean:
 	rm -f $(D)/nhd2-plugins

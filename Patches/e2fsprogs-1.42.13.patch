@@ -19,7 +19,7 @@
  	$(RM) -rf elfshared
 --- a/misc/Makefile.in
 +++ b/misc/Makefile.in
-@@ -150,10 +150,10 @@
+@@ -151,10 +151,10 @@
  	$(E) "	LD $@"
  	$(Q) $(CC) $(ALL_LDFLAGS) -o partinfo partinfo.o
  
@@ -32,7 +32,7 @@
  
  tune2fs: $(TUNE2FS_OBJS) $(DEPLIBS) $(DEPLIBS_E2P) $(DEPLIBBLKID) \
  		$(DEPLIBUUID) $(DEPLIBQUOTA) $(LIBEXT2FS)
-@@ -303,10 +303,10 @@
+@@ -304,10 +304,10 @@
  		$(PROFILED_DUMPE2FS_OBJS) $(PROFILED_LIBS) \
  		$(PROFILED_LIBE2P) $(PROFILED_LIBUUID) $(LIBINTL) $(SYSLIBS)
  

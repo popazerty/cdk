@@ -809,6 +809,7 @@ release_enigma2_arivalink200: release_enigma2_common_utils
 #
 # the following target creates the common file base
 release_enigma2_base:
+	$(START_BUILD)
 	rm -rf $(prefix)/release || true
 	$(INSTALL_DIR) $(prefix)/release && \
 	$(INSTALL_DIR) $(prefix)/release/{autofs,bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,share,sys,tmp,usr,var} && \
@@ -1335,7 +1336,6 @@ $(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(V
 	find $(prefix)/release/usr/lib/enigma2/ -name '*.a' -exec rm -f {} \;
 	find $(prefix)/release/usr/lib/enigma2/ -name '*.o' -exec rm -f {} \;
 	find $(prefix)/release/usr/lib/enigma2/ -name '*.la' -exec rm -f {} \;
-
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
 #	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
@@ -1343,8 +1343,7 @@ $(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(V
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
 	find $(prefix)/release$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
-
-	touch $@
+	$(TOUCH)
 
 #
 # FOR YOUR OWN CHANGES use these folder in cdk/own_build/enigma2

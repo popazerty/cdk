@@ -2,6 +2,7 @@
 # host_python
 #
 $(D)/host_python: @DEPENDS_host_python@
+	$(START_BUILD)
 	@PREPARE_host_python@ && \
 	( cd @DIR_host_python@ && \
 		autoconf && \
@@ -25,12 +26,13 @@ $(D)/host_python: @DEPENDS_host_python@
 		$(MAKE) all install && \
 		cp ./hostpgen $(hostprefix)/bin/pgen ) && \
 	@CLEANUP_host_python@
-	touch $@
+	$(TOUCH)
 
 #
 # python
 #
 $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/zlib $(D)/openssl $(D)/libffi $(D)/bzip2 $(D)/libreadline $(D)/sqlite @DEPENDS_python@
+	$(START_BUILD)
 	@PREPARE_python@
 	( cd @DIR_python@ && \
 		CONFIG_SITE= \
@@ -82,22 +84,24 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/zlib $(D)/open
 	$(LN_SF) ../../libpython$(PYTHON_VERSION).so.1.0 $(targetprefix)/$(PYTHON_DIR)/config/libpython$(PYTHON_VERSION).so && \
 	$(LN_SF) $(targetprefix)/$(PYTHON_INCLUDE_DIR) $(targetprefix)/usr/include/python
 	@CLEANUP_python@
-	touch $@
+	$(TOUCH)
 
 #
 # python_setuptools
 #
 $(D)/python_setuptools: $(D)/bootstrap $(D)/python @DEPENDS_python_setuptools@
+	$(START_BUILD)
 	@PREPARE_python_setuptools@
 	cd @DIR_python_setuptools@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_setuptools@
-	touch $@
+	$(TOUCH)
 
 #
 # libxmlccwrap
 #
 $(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2_e2 $(D)/libxslt @DEPENDS_libxmlccwrap@
+	$(START_BUILD)
 	@PREPARE_libxmlccwrap@
 	cd @DIR_libxmlccwrap@ && \
 		$(CONFIGURE) \
@@ -107,12 +111,13 @@ $(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2_e2 $(D)/libxslt @DEPENDS_libxmlcc
 		$(MAKE) all && \
 		@INSTALL_libxmlccwrap@
 	@CLEANUP_libxmlccwrap@
-	touch $@
+	$(TOUCH)
 
 #
 # python_lxml
 #
 $(D)/python_lxml: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_lxml@
+	$(START_BUILD)
 	@PREPARE_python_lxml@
 	cd @DIR_python_lxml@ && \
 		$(PYTHON_BUILD) \
@@ -120,34 +125,37 @@ $(D)/python_lxml: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_pyt
 			--with-xslt-config=$(hostprefix)/bin/xslt-config && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_lxml@
-	touch $@
+	$(TOUCH)
 
 #
 # python_twisted
 #
 $(D)/python_twisted: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_twisted@
+	$(START_BUILD)
 	@PREPARE_python_twisted@
 	cd @DIR_python_twisted@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_twisted@
-	touch $@
+	$(TOUCH)
 
 #
 # python_imaging
 #
 $(D)/python_imaging: $(D)/bootstrap $(D)/libjpeg $(D)/libfreetype $(D)/python $(D)/python_setuptools @DEPENDS_python_imaging@
+	$(START_BUILD)
 	@PREPARE_python_imaging@
 	cd @DIR_python_imaging@ && \
 		sed -ie "s|"darwin"|"darwinNot"|g" "setup.py"; \
 		sed -ie "s|ZLIB_ROOT = None|ZLIB_ROOT = libinclude(\"${targetprefix}/usr\")|" "setup.py"; \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_imaging@
-	touch $@
+	$(TOUCH)
 
 #
 # python_pycrypto
 #
 $(D)/python_pycrypto: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_pycrypto@
+	$(START_BUILD)
 	@PREPARE_python_pycrypto@
 	cd @DIR_python_pycrypto@ && \
 		export ac_cv_func_malloc_0_nonnull=yes && \
@@ -155,205 +163,225 @@ $(D)/python_pycrypto: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS
 			--prefix=/usr && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_pycrypto@
-	touch $@
+	$(TOUCH)
 
 #
 # python_pyusb
 #
 $(D)/python_pyusb: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_pyusb@
+	$(START_BUILD)
 	@PREPARE_python_pyusb@
 	cd @DIR_python_pyusb@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_pyusb@
-	touch $@
+	$(TOUCH)
 
 #
 # python_six
 #
 $(D)/python_six: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_six@
+	$(START_BUILD)
 	@PREPARE_python_six@
 	cd @DIR_python_six@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_six@
 	rm -f request*.tar.gz
-	touch $@
+	$(TOUCH)
 
 #
 # python_cffi
 #
 $(D)/python_cffi: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_cffi@
+	$(START_BUILD)
 	@PREPARE_python_cffi@
 	cd @DIR_python_cffi@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_cffi@
-	touch $@
+	$(TOUCH)
 
 #
 # python_enum34
 #
 $(D)/python_enum34: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_enum34@
+	$(START_BUILD)
 	@PREPARE_python_enum34@
 	cd @DIR_python_enum34@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_enum34@
-	touch $@
+	$(TOUCH)
 
 #
 # python_pyasn1_modules
 #
 $(D)/python_pyasn1_modules: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_pyasn1_modules@
+	$(START_BUILD)
 	@PREPARE_python_pyasn1_modules@
 	cd @DIR_python_pyasn1_modules@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_pyasn1_modules@
-	touch $@
+	$(TOUCH)
 
 #
 # python_pyasn1
 #
 $(D)/python_pyasn1: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_pyasn1_modules @DEPENDS_python_pyasn1@
+	$(START_BUILD)
 	@PREPARE_python_pyasn1@
 	cd @DIR_python_pyasn1@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_pyasn1@
-	touch $@
+	$(TOUCH)
 
 #
 # python_pycparser
 #
 $(D)/python_pycparser: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_pyasn1 @DEPENDS_python_pycparser@
+	$(START_BUILD)
 	@PREPARE_python_pycparser@
 	cd @DIR_python_pycparser@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_pycparser@
-	touch $@
+	$(TOUCH)
 
 #
 # python_cryptography
 #
 $(D)/python_cryptography: $(D)/bootstrap $(D)/libffi $(D)/python $(D)/python_setuptools $(D)/python_pyopenssl $(D)/python_six $(D)/python_pycparser @DEPENDS_python_cryptography@
+	$(START_BUILD)
 	@PREPARE_python_cryptography@
 	cd @DIR_python_cryptography@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_cryptography@
-	touch $@
+	$(TOUCH)
 
 #
 # python_pyopenssl
 #
 $(D)/python_pyopenssl: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_pyopenssl@
+	$(START_BUILD)
 	@PREPARE_python_pyopenssl@
 	cd @DIR_python_pyopenssl@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_pyopenssl@
-	touch $@
+	$(TOUCH)
 
 #
 # python_elementtree
 #
 $(D)/python_elementtree: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_elementtree@
+	$(START_BUILD)
 	@PREPARE_python_elementtree@
 	cd @DIR_python_elementtree@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_elementtree@
-	touch $@
+	$(TOUCH)
 
 #
 # python_wifi
 #
 $(D)/python_wifi: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_wifi@
+	$(START_BUILD)
 	@PREPARE_python_wifi@
 	cd @DIR_python_wifi@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_wifi@
-	touch $@
+	$(TOUCH)
 
 #
 # python_cheetah
 #
 $(D)/python_cheetah: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_cheetah@
+	$(START_BUILD)
 	@PREPARE_python_cheetah@
 	cd @DIR_python_cheetah@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_cheetah@
-	touch $@
+	$(TOUCH)
 
 #
 # python_mechanize
 #
 $(D)/python_mechanize: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_mechanize@
+	$(START_BUILD)
 	@PREPARE_python_mechanize@
 	cd @DIR_python_mechanize@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_mechanize@
-	touch $@
+	$(TOUCH)
 
 #
 # python_gdata
 #
 $(D)/python_gdata: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_gdata@
+	$(START_BUILD)
 	@PREPARE_python_gdata@
 	cd @DIR_python_gdata@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_gdata@
-	touch $@
+	$(TOUCH)
 
 #
 # python_zope_interface
 #
 $(D)/python_zope_interface: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_zope_interface@
+	$(START_BUILD)
 	@PREPARE_python_zope_interface@
 	cd @DIR_python_zope_interface@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_zope_interface@
-	touch $@
+	$(TOUCH)
 
 #
 # python_requests
 #
 $(D)/python_requests: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_requests@
+	$(START_BUILD)
 	@PREPARE_python_requests@
 	cd @DIR_python_requests@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_requests@
-	touch $@
+	$(TOUCH)
 
 #
 # python_futures
 #
 $(D)/python_futures: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_futures@
+	$(START_BUILD)
 	@PREPARE_python_futures@
 	cd @DIR_python_futures@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_futures@
-	touch $@
+	$(TOUCH)
 
 #
 # python_singledispatch
 #
 $(D)/python_singledispatch: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_singledispatch@
+	$(START_BUILD)
 	@PREPARE_python_singledispatch@
 	cd @DIR_python_singledispatch@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_singledispatch@
-	touch $@
+	$(TOUCH)
 
 #
 # python_livestreamer
 #
 $(D)/python_livestreamer: $(D)/bootstrap $(D)/python $(D)/python_setuptools @DEPENDS_python_livestreamer@
+	$(START_BUILD)
 	@PREPARE_python_livestreamer@
 	[ -d "$(archivedir)/livestreamer.git" ] && \
 	(cd $(archivedir)/livestreamer.git; git pull; cd "$(buildprefix)";); \
 	cd @DIR_python_livestreamer@ && \
 		$(PYTHON_INSTALL)
 	@CLEANUP_python_livestreamer@
-	touch $@
+	$(TOUCH)
 
 #
 # python_livestreamersrv
 #
 $(D)/python_livestreamersrv: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_livestreamer @DEPENDS_python_livestreamersrv@
+	$(START_BUILD)
 	@PREPARE_python_livestreamersrv@
 	[ -d "$(archivedir)/livestreamersrv.git" ] && \
 	(cd $(archivedir)/livestreamersrv.git; git pull; cd "$(buildprefix)";); \
@@ -361,5 +389,5 @@ $(D)/python_livestreamersrv: $(D)/bootstrap $(D)/python $(D)/python_setuptools $
 		cp -rd livestreamersrv $(targetprefix)/usr/sbin && \
 		cp -rd offline.mp4 $(targetprefix)/usr/share
 	@CLEANUP_python_livestreamersrv@
-	touch $@
+	$(TOUCH)
 

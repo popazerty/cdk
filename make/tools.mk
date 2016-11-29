@@ -15,6 +15,7 @@ $(appsdir)/tools/config.status: bootstrap driver bzip2 libpng libjpeg ffmpeg
 	$(if $(MEDIAFWGSTREAMER), --enable-gstreamer)
 
 $(D)/tools: $(appsdir)/tools/config.status
+	$(START_BUILD)
 	$(MAKE) -C $(appsdir)/tools all prefix=$(targetprefix) DRIVER_TOPDIR=$(driverdir) \
 	CPPFLAGS="\
 	-I$(targetprefix)/usr/include \
@@ -25,5 +26,5 @@ $(D)/tools: $(appsdir)/tools/config.status
 	$(if $(PLAYER191), -DPLAYER191) \
 	" && \
 	$(MAKE) -C $(appsdir)/tools install prefix=$(targetprefix) DRIVER_TOPDIR=$(driverdir)
-	touch $@
+	$(TOUCH)
 

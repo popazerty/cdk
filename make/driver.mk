@@ -2,6 +2,7 @@
 # driver
 #
 $(D)/driver: $(driverdir)/Makefile $(D)/bootstrap $(D)/linux-kernel
+	$(START_BUILD)
 	cp $(driverdir)/stgfb/stmfb/linux/drivers/video/stmfb.h $(targetprefix)/usr/include/linux
 	cp $(driverdir)/player2/linux/include/linux/dvb/stm_ioctls.h $(targetprefix)/usr/include/linux/dvb
 	$(MAKE) -C $(driverdir) ARCH=sh \
@@ -20,7 +21,7 @@ $(D)/driver: $(driverdir)/Makefile $(D)/bootstrap $(D)/linux-kernel
 		INSTALL_MOD_PATH=$(targetprefix) \
 		install
 	$(DEPMOD) -ae -b $(targetprefix) -F $(buildprefix)/$(KERNEL_DIR)/System.map -r $(KERNELVERSION)
-	touch $@
+	$(TOUCH)
 
 driver-clean:
 	rm -f $(D)/driver

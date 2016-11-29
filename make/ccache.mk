@@ -41,19 +41,23 @@ CCACHE_ENV = $(INSTALL) -d $(CCACHE_BINDIR); \
 # use ccache from your host if is installed
 if USE_CCACHEHOST
 $(D)/ccache:
+	$(START_BUILD)
 	$(CCACHE_ENV); \
 	$(CCACHE_TEST)
-	touch $@
+	$(TOUCH)
 else
 
 #
 # build own tuxbox-cdk ccache
 #
 $(D)/ccache.do_prepare: @DEPENDS_ccache@
+	$(START_BUILD)
 	@PREPARE_ccache@
-	touch $@
+	$(TOUCH)
+
 
 $(D)/ccache.do_compile: $(D)/ccache.do_prepare
+	$(START_BUILD)
 	cd @DIR_ccache@ && \
 		./configure $(CONFIGURE_SILENT)\
 			--build=$(build) \
@@ -61,7 +65,7 @@ $(D)/ccache.do_compile: $(D)/ccache.do_prepare
 			--prefix= && \
 			$(MAKE) all && \
 			$(MAKE) install DESTDIR=$(hostprefix)
-	touch $@
+	$(TOUCH)
 
 $(D)/ccache: \
 $(D)/%ccache: $(D)/ccache.do_compile

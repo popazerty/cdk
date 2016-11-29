@@ -3,6 +3,7 @@
 # gstreamer
 #
 $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 $(D)/glibnetworking @DEPENDS_gstreamer@
+	$(START_BUILD)
 	@PREPARE_gstreamer@
 	cd @DIR_gstreamer@ && \
 		$(CONFIGURE) \
@@ -22,12 +23,13 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 $(D)/glibnetworking @D
 		$(MAKE) && \
 		@INSTALL_gstreamer@
 	@CLEANUP_gstreamer@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_plugins_base
 #
 $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/libogg $(D)/libalsa @DEPENDS_gst_plugins_base@
+	$(START_BUILD)
 	@PREPARE_gst_plugins_base@
 	cd @DIR_gst_plugins_base@ && \
 		$(CONFIGURE) \
@@ -43,12 +45,13 @@ $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/li
 		$(MAKE) && \
 		@INSTALL_gst_plugins_base@
 	@CLEANUP_gst_plugins_base@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_plugins_good
 #
 $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libflac @DEPENDS_gst_plugins_good@
+	$(START_BUILD)
 	@PREPARE_gst_plugins_good@
 	cd @DIR_gst_plugins_good@ && \
 		$(CONFIGURE) \
@@ -62,12 +65,13 @@ $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/
 		$(MAKE) && \
 		@INSTALL_gst_plugins_good@
 	@CLEANUP_gst_plugins_good@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_plugins_bad
 #
 $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmodplug @DEPENDS_gst_plugins_bad@
+	$(START_BUILD)
 	@PREPARE_gst_plugins_bad@
 	cd @DIR_gst_plugins_bad@ && \
 		$(BUILDENV) \
@@ -93,10 +97,8 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmod
 			--disable-daala \
 			--disable-dc1394 \
 			--disable-direct3d \
-			--disable-directdraw \
 			--disable-directsound \
 			--disable-gme \
-			--disable-gsettings \
 			--disable-gsm \
 			--disable-kate \
 			--disable-ladspa \
@@ -105,13 +107,11 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmod
 			--disable-mimic \
 			--disable-mplex \
 			--disable-musepack \
-			--disable-mythtv \
 			--disable-nas \
 			--disable-ofa \
 			--disable-openjpeg \
 			--disable-opensles \
 			--disable-pvr \
-			--disable-quicktime \
 			--disable-resindvd \
 			--disable-sdl \
 			--disable-sdltest \
@@ -138,12 +138,13 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base libmod
 		$(MAKE) && \
 		@INSTALL_gst_plugins_bad@
 	@CLEANUP_gst_plugins_bad@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_plugins_ugly
 #
 $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_ugly@
+	$(START_BUILD)
 	@PREPARE_gst_plugins_ugly@
 	cd @DIR_gst_plugins_ugly@ && \
 		$(CONFIGURE) \
@@ -159,12 +160,13 @@ $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPE
 		$(MAKE) && \
 		@INSTALL_gst_plugins_ugly@
 	@CLEANUP_gst_plugins_ugly@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_libav
 #
 $(D)/gst_libav: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_libav@
+	$(START_BUILD)
 	@PREPARE_gst_libav@
 	cd @DIR_gst_libav@ && \
 		$(CONFIGURE) \
@@ -208,12 +210,13 @@ $(D)/gst_libav: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst
 		$(MAKE) && \
 		@INSTALL_gst_libav@
 	@CLEANUP_gst_libav@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_plugins_fluendo_mpegdemux
 #
 $(D)/gst_plugins_fluendo_mpegdemux: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base @DEPENDS_gst_plugins_fluendo_mpegdemux@
+	$(START_BUILD)
 	@PREPARE_gst_plugins_fluendo_mpegdemux@
 	cd @DIR_gst_plugins_fluendo_mpegdemux@ && \
 		$(CONFIGURE) \
@@ -223,12 +226,13 @@ $(D)/gst_plugins_fluendo_mpegdemux: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugi
 		$(MAKE) && \
 		@INSTALL_gst_plugins_fluendo_mpegdemux@
 	@CLEANUP_gst_plugins_fluendo_mpegdemux@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_plugin_subsink
 #
 $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly @DEPENDS_gst_plugin_subsink@
+	$(START_BUILD)
 	@PREPARE_gst_plugin_subsink@
 	[ -d "$(archivedir)/gst-plugin-subsink.git" ] && \
 	(cd $(archivedir)/gst-plugin-subsink.git; git pull; cd "$(buildprefix)";); \
@@ -244,12 +248,13 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 		$(MAKE) && \
 		@INSTALL_gst_plugin_subsink@
 	@CLEANUP_gst_plugin_subsink@
-	touch $@
+	$(TOUCH)
 
 #
 # gmediarender
 #
 $(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp @DEPENDS_gst_gmediarender@
+	$(START_BUILD)
 	@PREPARE_gst_gmediarender@
 	cd @DIR_gst_gmediarender@ && \
 		$(CONFIGURE) \
@@ -259,12 +264,13 @@ $(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp
 		$(MAKE) all && \
 		@INSTALL_gst_gmediarender@
 	@CLEANUP_gst_gmediarender@
-	touch $@
+	$(TOUCH)
 
 #
 # gst_plugins_dvbmediasink
 #
 $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink $(D)/libdca @DEPENDS_gst_plugins_dvbmediasink@
+	$(START_BUILD)
 	@PREPARE_gst_plugins_dvbmediasink@
 	[ -d "$(archivedir)/gst-plugins-dvbmediasink.git" ] && \
 	(cd $(archivedir)/gst-plugins-dvbmediasink.git; git pull; cd "$(buildprefix)";); \
@@ -287,4 +293,5 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 		$(MAKE) && \
 		@INSTALL_gst_plugins_dvbmediasink@
 	@CLEANUP_gst_plugins_dvbmediasink@
-	touch $@
+	$(TOUCH)
+

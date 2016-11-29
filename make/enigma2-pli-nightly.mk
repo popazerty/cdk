@@ -97,29 +97,29 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] && \
 		(cd $(archivedir)/enigma2-pli-nightly.git; echo "Pulling archived OpenPLi git..."; git pull -q; echo "Checking out HEAD..."; git checkout -q HEAD; cd "$(buildprefix)";); \
 		[ -d "$(archivedir)/enigma2-pli-nightly.git" ] || \
-		(echo "Cloning remote OpenPLi git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git;); \
-		echo "Copying local git content to build environment..."; cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; \
+		(echo -n "Cloning remote OpenPLi git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-pli-nightly.git; echo " done.";); \
+		echo -n "Copying local git content to build environment..."; cp -ra $(archivedir)/enigma2-pli-nightly.git $(sourcedir)/enigma2-nightly; echo " done."; \
 		[ "$$DIFF" == "0" ] || (cd $(sourcedir)/enigma2-nightly; echo "Checking out revision $$REVISION..."; git checkout -q "$$REVISION"; cd "$(buildprefix)";); \
 		cp -ra $(sourcedir)/enigma2-nightly $(sourcedir)/enigma2-nightly.org; \
 		mkdir $(sourcedir)/enigma2-nightly/lib/libeplayer3; \
 		echo "Applying diff-$$DIFF patch..."; \
-		set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
+		set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 $(SILENT_PATCH) < "$(buildprefix)/Patches/enigma2-pli-nightly.$$DIFF.diff"; \
 		echo "Patching to diff-$$DIFF completed."; echo; \
 		if [ "$(MEDIAFW)" == "eplayer3" ]; then \
 			echo "Adding eplayer3..."; \
 			REPO="https://github.com/TangoCash/tangos-enigma2.git"; \
 			[ -d "$(archivedir)/enigma2-tango.git" ] && \
-			(cd $(archivedir)/enigma2-tango.git; echo "Pulling archived enigma2-tango git..."; git pull -q; echo "Checking out HEAD..."; git checkout -q HEAD; cd "$(buildprefix)";); \
+			(cd $(archivedir)/enigma2-tango.git; echo -n "Pulling archived enigma2-tango git..."; git pull -q; echo " done."; echo -n "Checking out HEAD..."; git checkout -q HEAD; echo " done."; cd "$(buildprefix)";); \
 			[ -d "$(archivedir)/enigma2-tango.git" ] || \
-			(echo "Cloning remote enigma2-tango.git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-tango.git;); \
+			(echo -n "Cloning remote enigma2-tango.git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/enigma2-tango.git; echo " done.";); \
 			cp -ra $(archivedir)/enigma2-tango.git/lib/libeplayer3 $(sourcedir)/enigma2-nightly/lib; \
-			set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 < "../../cdk/Patches/libeplayer3.$$DIFF.patch"; echo;\
+			set -e; cd $(sourcedir)/enigma2-nightly && patch -p1 $(SILENT_PATCH) < "$(buildprefix)/Patches/libeplayer3.$$DIFF.patch"; echo;\
 		else \
 			touch $(sourcedir)/enigma2-nightly/lib/libeplayer3/empty; \
 		fi; \
 		cd $(sourcedir)/enigma2-nightly; \
 		echo "Building VFD-drivers..."; \
-		patch -p1 -s < "../../cdk/Patches/vfd-drivers.patch"; \
+		patch -p1 $(SILENT_PATCH) < "$(buildprefix)/Patches/vfd-drivers.patch"; \
 		rm -rf $(targetprefix)/usr/local/share/enigma2/rc_models; \
 		echo; \
 		echo "Patching remote control files..."; \
@@ -130,7 +130,7 @@ $(D)/enigma2-pli-nightly.do_prepare: | $(ENIGMA2_DEPS)
 		(cd $(archivedir)/enigma2-own.git; echo "Pulling archived own git..."; git pull -q; echo "Checking out HEAD..."; git checkout -q HEAD; cd "$(buildprefix)";); \
 		echo "Copying local git content to build environment..."; cp -ra $(archivedir)/enigma2-own.git $(sourcedir)/enigma2-nightly; \
 	fi
-	touch $@
+	$(TOUCH)
 
 $(sourcedir)/enigma2-pli-nightly/config.status:
 	cd $(sourcedir)/enigma2-nightly && \
@@ -155,9 +155,10 @@ $(sourcedir)/enigma2-pli-nightly/config.status:
 			$(E_CONFIG_OPTS)
 
 $(D)/enigma2-pli-nightly.do_compile: $(sourcedir)/enigma2-pli-nightly/config.status
+	$(START_BUILD)
 	cd $(sourcedir)/enigma2-nightly && \
 		$(MAKE) all
-	touch $@
+	$(TOUCH)
 
 $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_compile
 	$(MAKE) -C $(sourcedir)/enigma2-nightly install DESTDIR=$(targetprefix)
@@ -167,7 +168,7 @@ $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_
 	if [ -e $(targetprefix)/usr/local/bin/enigma2 ]; then \
 		$(target)-strip $(targetprefix)/usr/local/bin/enigma2; \
 	fi
-	@echo; \
+	@echo "------------------"; \
 	echo "Adding PLi-HD skin"; \
 	HEAD="master"; \
 	REPO="https://github.com/littlesat/skin-PLiHD.git"; \
@@ -176,8 +177,8 @@ $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_
 	[ -d $(archivedir)/PLi-HD_skin.git ] || \
 		(echo "Cloning PLi-HD skin git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/PLi-HD_skin.git;);
 	@cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2; \
-	cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 < "../../../../../../cdk/Patches/PLi-HD_skin.patch"
-	@touch $@
+	cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 $(SILENT_PATCH) < "$(buildprefix)/Patches/PLi-HD_skin.patch"
+	@$(TOUCH)
 
 enigma2-pli-nightly-clean:
 	rm -f $(D)/enigma2-pli-nightly

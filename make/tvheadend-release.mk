@@ -628,6 +628,7 @@ release_tvheadend_sagemcom88: release_tvheadend_common_utils
 #
 # the following target creates the common file base
 release_tvheadend_base:
+	$(START_BUILD)
 	rm -rf $(prefix)/release || true
 	$(INSTALL_DIR) $(prefix)/release && \
 	$(INSTALL_DIR) $(prefix)/release/{bin,boot,dev,dev.static,etc,hdd,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var} && \
@@ -934,7 +935,7 @@ endif
 #
 $(D)/release_tvheadend: \
 $(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)
-	touch $@
+	$(TOUCH)
 
 #
 # FOR YOUR OWN CHANGES use these folder in cdk/own_build/tvheadend

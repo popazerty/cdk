@@ -36,6 +36,10 @@ PATH := $(hostprefix)/bin:$(crossprefix)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/
 #PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
 PATCHES         = $(buildprefix)/Patches
+#Comment next line if you want to see the names of the files being patched
+SILENT_PATCH    = -s
+PATCH           = patch -p1 $(SILENT_PATCH) -i $(PATCHES)
+
 #TARGETLIB       = $(targetprefix)/usr/lib
 #REWRITE_LIBDIR  = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(TARGETLIB)
 #REWRITE_LIBDEP  = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/usr/lib,\$(TARGETLIB)," $(TARGETLIB)
@@ -61,7 +65,10 @@ WGET=$(SOCKSIFY) wget --progress=bar
 CPU_CORES ?= $(shell getconf _NPROCESSORS_ONLN || echo 1)
 MAKEFLAGS=-j$(CPU_CORES)
 export MAKEFLAGS
+START_BUILD=@echo "--------------------------------------------"; echo -e "Start build of \033[01;32m$(subst .deps/,,$@)\033[0m."; echo
+TOUCH=@touch $@; echo -e "Build of \033[01;32m$(subst .deps/,,$@)\033[0m completed."; echo
 
+#
 #
 #
 #

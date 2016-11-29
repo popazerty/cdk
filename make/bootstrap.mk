@@ -41,7 +41,7 @@ LIBGCC_VER    = 4.8.4-148
 GLIBC_VER     = 2.14.1-56
 
 $(hostprefix)/bin/unpack-rpm.sh:
-	ln -sf $(buildprefix)/scripts/$(shell basename $@) $(hostprefix)/bin
+	@ln -sf $(buildprefix)/scripts/$(shell basename $@) $(hostprefix)/bin
 
 crosstool-rpminstall: \
 $(archivedir)/stlinux24-cross-sh4-binutils-$(BINUTILS_VER).i386.rpm \
@@ -55,14 +55,17 @@ $(archivedir)/stlinux24-sh4-glibc-dev-$(GLIBC_VER).sh4.rpm \
 $(archivedir)/stlinux24-sh4-libgcc-$(LIBGCC_VER).sh4.rpm \
 $(archivedir)/stlinux24-sh4-libstdc++-$(LIBGCC_VER).sh4.rpm \
 $(archivedir)/stlinux24-sh4-libstdc++-dev-$(LIBGCC_VER).sh4.rpm
+	$(START_BUILD)
 	unpack-rpm.sh $(buildtmp) $(STM_RELOCATE)/devkit/sh4 $(crossprefix) \
 		$^
-	touch .deps/$@
+	@touch .deps/$@ 
+	@echo -e "Build of \033[01;32m$(subst $(buildprefix)/.deps/,,$@)\033[0m completed."; echo
 
 # install the RPMs
 crosstool: directories \
 $(hostprefix)/bin/unpack-rpm.sh \
 crosstool-rpminstall
+	$(START_BUILD)
 	if [ -e $(crossprefix)/target/usr/lib/libstdc++.la ]; then \
 		sed -i "s,^libdir=.*,libdir='$(crossprefix)/target/usr/lib'," $(crossprefix)/target/usr/lib/lib{std,sup}c++.la; \
 	fi
@@ -85,12 +88,14 @@ crosstool-rpminstall
 		cp -a $(crossprefix)/target/etc/ld.so.conf $(targetprefix)/etc; \
 		cp -a $(crossprefix)/target/etc/host.conf $(targetprefix)/etc; \
 	fi
-	touch .deps/$@
+	@touch .deps/$@
+	@echo -e "Build of \033[01;32m$(subst $(buildprefix)/.deps/,,$@)\033[0m completed."; echo
 
 #
 # FILESYSTEM
 #
 $(D)/directories:
+	$(START_BUILD)
 	$(INSTALL) -d $(targetprefix)
 	$(INSTALL) -d $(crossprefix)
 	$(INSTALL) -d $(bootprefix)
@@ -111,5 +116,5 @@ $(D)/directories:
 	$(INSTALL) -d $(targetprefix)/var/{etc,lib,run}
 	$(INSTALL) -d $(targetprefix)/var/lib/{misc,nfs}
 	$(INSTALL) -d $(targetprefix)/var/bin
-	touch $@
+	$(TOUCH)
 

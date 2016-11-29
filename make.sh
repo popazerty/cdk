@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20161126.1
+# Version 20161128.2
 
 ##############################################
 
@@ -394,9 +394,9 @@ case "$IMAGEN" in
 			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
 			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
 				if [ -e ./.deps ]; then
-					echo -n "Settings changed, performing distclean..."
+					echo; echo -n "Settings changed, performing distclean..."
 					make distclean 2> /dev/null > /dev/null
-					echo "[Done]"
+					echo " [Done]"
 				fi
 			fi
 		fi;;
@@ -409,9 +409,9 @@ case "$IMAGEN" in
 			LASTIMAGE2=`grep -e "enable-neutrino" ./lastChoice`
 			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
 				if [ -e ./.deps/ ]; then
-					echo -n "Settings changed, performing distclean..."
+					echo; echo -n "Settings changed, performing distclean..."
 					make distclean 2> /dev/null > /dev/null
-					echo "[Done]"
+					echo " [Done]"
 				fi
 			fi
 		fi;;
@@ -493,9 +493,9 @@ case "$IMAGEN" in
 			LASTIMAGE2=`grep -e "enable-tvheadend" ./lastChoice`
 			if [ "$LASTIMAGE" ] || [ "$LASTIMAGE2" ] || [ ! "$LASTBOX" == "$CURRBOX" ]; then
 				if [ -e ./.deps/ ]; then
-					echo -n "Settings changed, performing distclean..."
+					echo; echo -n "Settings changed, performing distclean..."
 					make distclean 2> /dev/null > /dev/null
-					echo "[Done]"
+					echo " [Done]"
 				fi
 			fi
 		fi;;
@@ -560,6 +560,7 @@ read -p "Do you want to start the build now (Y*/n)? "
 case "$REPLY" in
 	N|n|No|NO|no) echo -e "\nOK. To start the build, execute ./build in this directory.\n"
 		exit;;
-  	*)	$CURDIR/build;;
+  	*)	echo
+		$CURDIR/build;;
 esac
 
