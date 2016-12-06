@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20161128.2
+# Version 20161206.2
 
 ##############################################
 
@@ -41,9 +41,7 @@ echo
 CURDIR=`pwd`
 CURRENT_PATH=${CURDIR%/cdk}
 
-if [ -e $CURDIR/../cdk_new/config ]; then
-	rm -f $CURDIR/../cdk_new/config
-fi
+##############################################
 
 echo -ne "\nChecking the .elf files in $CURDIR/root/boot..."
 set='audio_7100 audio_7105 audio_7109 audio_7111 video_7100 video_7105 video_7109 video_7111'
@@ -108,6 +106,15 @@ host_alias=`echo ${host_alias} | sed -e "s/suse/${VENDOR}/"`
 
 # And add it to the config parameters.
 CONFIGPARAM="$CONFIGPARAM --host=$host_alias --build=$host_alias"
+
+##############################################
+
+# Check if a build from ../cdk_new is present
+if [ -e ../cdk_new/config ]; then
+	echo -e -n "\nBuild from cdk_new found, performing make distclean..."
+	make distclean 2> /dev/null > /dev/null
+	echo " [Done]"
+fi
 
 ##############################################
 
