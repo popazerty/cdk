@@ -1189,11 +1189,6 @@ endif
 #
 	find $(prefix)/release/ -name '*' -exec sh4-linux-strip --strip-unneeded {} &>/dev/null \;
 
-	@echo "***************************************************************"
-	@echo -e "\033[01;32m"
-	@echo " Build of Neutrino for $(BOXTYPE) successfully completed."
-	@echo -e "\033[00m"
-	@echo "***************************************************************"
 #
 # release-clean
 #

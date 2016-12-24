@@ -4,6 +4,12 @@
 yaud-enigma2-pli-nightly: yaud-none host_python lirc \
 		boot-elf enigma2-pli-nightly enigma2-plugins release_enigma2
 	@TUXBOX_YAUD_CUSTOMIZE@
+	@echo "***************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of Enigma2 for $(BOXTYPE) successfully completed."
+	@echo -e "\033[00m"
+	@echo "***************************************************************"
+	@touch $(D)/build_complete
 
 #
 # enigma2-pli-nightly

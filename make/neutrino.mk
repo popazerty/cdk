@@ -118,6 +118,12 @@ libstb-hal-cst-next-distclean:
 yaud-neutrino-mp-cst-next: yaud-none lirc \
 		boot-elf neutrino-mp-cst-next release_neutrino
 	@TUXBOX_YAUD_CUSTOMIZE@
+	@echo "********************************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of neutrino-mp-cst-next for $(BOXTYPE) successfully completed."
+	@echo -e "\033[00m"
+	@echo "********************************************************************************"
+	@touch $(D)/build_complete
 
 yaud-neutrino-mp-cst-next-plugins: yaud-none lirc \
 		boot-elf neutrino-mp-cst-next neutrino-mp-plugins release_neutrino
@@ -224,6 +230,12 @@ neutrino-mp-cst-next-distclean:
 yaud-neutrino-mp-next: yaud-none lirc \
 		boot-elf neutrino-mp-next release_neutrino
 	@TUXBOX_YAUD_CUSTOMIZE@
+	@echo "********************************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of neutrino-mp-next for $(BOXTYPE) successfully completed."
+	@echo -e "\033[00m"
+	@echo "********************************************************************************"
+	@touch $(D)/build_complete
 
 yaud-neutrino-mp-next-plugins: yaud-none lirc \
 		boot-elf neutrino-mp-next neutrino-mp-plugins release_neutrino
@@ -397,6 +409,12 @@ neutrino-cdkroot-clean:
 yaud-neutrino-hd2-exp: yaud-none lirc \
 		boot-elf neutrino-hd2-exp release_neutrino
 	@TUXBOX_YAUD_CUSTOMIZE@
+	@echo "********************************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of neutrino-hd2-exp for $(BOXTYPE) successfully completed."
+	@echo -e "\033[00m"
+	@echo "********************************************************************************"
+	@touch $(D)/build_complete
 
 if BOXTYPE_SPARK
 NHD2_OPTS = --enable-4digits
@@ -489,6 +507,12 @@ nhd2-distclean: neutrino-cdkroot-clean
 yaud-neutrino-mp-tangos: yaud-none lirc \
 		boot-elf neutrino-mp-tangos release_neutrino
 	@TUXBOX_YAUD_CUSTOMIZE@
+	@echo "********************************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of neutrino-mp-next for $(BOXTYPE) successfully completed."
+	@echo -e "\033[00m"
+	@echo "********************************************************************************"
+	@touch $(D)/build_complete
 
 yaud-neutrino-mp-tangos-plugins: yaud-none lirc \
 		boot-elf neutrino-mp-tangos neutrino-mp-plugins release_neutrino

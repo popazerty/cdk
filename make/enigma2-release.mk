@@ -1359,11 +1359,6 @@ $(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(V
 #
 	find $(prefix)/release/ -name '*' -exec sh4-linux-strip --strip-unneeded {} &>/dev/null \;
 
-	@echo "***************************************************************"
-	@echo -e "\033[01;32m"
-	@echo " Build of Enigma2 for $(BOXTYPE) successfully completed."
-	@echo -e "\033[00m"
-	@echo "***************************************************************"
 #
 # release-clean
 #

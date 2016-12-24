@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20161206.2
+# Version 20161219.2
 
 ##############################################
 
@@ -114,6 +114,7 @@ if [ -e ../cdk_new/config ]; then
 	echo -e -n "\nBuild from cdk_new found, performing make distclean..."
 	make distclean 2> /dev/null > /dev/null
 	echo " [Done]"
+	rm ../cdk_new/config
 fi
 
 ##############################################
