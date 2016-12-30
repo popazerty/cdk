@@ -345,8 +345,8 @@ HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,_,$(KERNELVERSION))_$(MODNAME).co
 $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS) \
 	$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=$(PATCHES)/$(BUILDCONFIG)/%))
 	$(START_BUILD)
-	rm -rf linux-sh4*
-	if [ -e $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz ]; then \
+	@rm -rf linux-sh4*
+	@if [ -e $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz ]; then \
 		mkdir $(buildprefix)/$(KERNEL_DIR); \
 		echo -n "Getting archived P0$(KERNELLABEL) kernel source..."; \
 		tar -xf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz -C $(buildprefix)/$(KERNEL_DIR); \
@@ -358,13 +358,13 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 			echo " done."; \
 		else \
 			echo "Getting STlinux kernel source..."; \
-			REPO=git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro; \
+			REPO=https://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=https;branch=stmicro; \
 			git clone $$REPO $(archivedir)/linux-sh4-2.6.32.y.git; \
 		fi; \
 		echo -n "Copying kernel source code to build environment..."; \
 		cp -ra $(archivedir)/linux-sh4-2.6.32.y.git $(buildprefix)/$(KERNEL_DIR); \
 		echo " done."; \
-		echo "Applying patch level P0$(KERNELLABEL)..."; \
+		echo -n "Applying patch level P0$(KERNELLABEL)..."; \
 		cd $(buildprefix)/$(KERNEL_DIR); \
 		git checkout -q $(HOST_KERNEL_REVISION); \
 		echo " done."; \
@@ -372,7 +372,7 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 		tar --exclude=.git -czf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz .; \
 		echo " done."; \
 	fi
-	set -e; cd $(KERNEL_DIR); \
+	@set -e; cd $(KERNEL_DIR); \
 		for i in $(HOST_KERNEL_PATCHES); do \
 			echo -e "==> \033[31mApplying Patch:\033[0m $$i"; \
 			patch -p1 $(SILENT_PATCH) -i $(buildprefix)/Patches/$(BUILDCONFIG)/$$i; \
