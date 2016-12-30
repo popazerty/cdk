@@ -1396,7 +1396,6 @@ $(D)/libflac: $(D)/bootstrap @DEPENDS_libflac@
 			--disable-doxygen-docs \
 			--disable-exhaustive-tests \
 			--disable-thorough-tests \
-			--disable-3dnow \
 			--disable-debug \
 			--disable-valgrind-testing \
 			--disable-dependency-tracking \

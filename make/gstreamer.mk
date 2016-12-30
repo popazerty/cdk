@@ -34,11 +34,9 @@ $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/li
 	cd @DIR_gst_plugins_base@ && \
 		$(CONFIGURE) \
 			--prefix=/usr \
-			--disable-freetypetest \
 			--disable-libvisual \
 			--disable-valgrind \
 			--disable-debug \
-			--disable-tests \
 			--disable-examples \
 			--disable-debug \
 		&& \
