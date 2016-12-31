@@ -469,7 +469,6 @@ $(D)/libfribidi: $(D)/bootstrap @DEPENDS_libfribidi@
 			--enable-static \
 			--disable-debug \
 			--disable-deprecated \
-			--enable-malloc \
 			--enable-charsets \
 			--without-glib \
 			--prefix=/usr \
@@ -2210,7 +2209,6 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp @DEPENDS_nettle@
 	cd @DIR_nettle@ && \
 		$(CONFIGURE) \
 			--prefix=/usr \
-			--with-gmp=yes \
 		&& \
 		$(MAKE) -j1 && \
 		@INSTALL_nettle@
