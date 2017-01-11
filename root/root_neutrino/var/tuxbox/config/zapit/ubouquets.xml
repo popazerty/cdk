@@ -1,247 +1,241 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<zapit>
-	<Bouquet name="favorites" hidden="0" locked="0" epg="0">
+<zapit api="4">
+	<Bouquet name="favorites">
 	</Bouquet>
-	<Bouquet name="Nederlands HD" hidden="0" locked="0" epg="0">
-		<S i="5225" n="NPO1 HD" t="c99" on="3" s="235" frq="12188"/>
-		<S i="17c0" n="NPO2 HD" t="c82" on="3" s="235" frq="11739"/>
-		<S i="5230" n="NPO3 HD" t="c99" on="3" s="235" frq="12188"/>
-		<S i="5221" n="een HD" t="c99" on="3" s="235" frq="12188"/>
-		<S i="5226" n="Canvas HD" t="c99" on="3" s="235" frq="12188"/>
-		<S i="522b" n="Veronica/DisneyXD HD" t="c99" on="3" s="235" frq="12188"/>
-		<S i="1b6c" n="RTL4 HD" t="c88" on="3" s="235" frq="11855"/>
-		<S i="1b6f" n="RTL5 HD" t="c88" on="3" s="235" frq="11855"/>
-		<S i="521c" n="NET5 HD" t="c99" on="3" s="235" frq="12188"/>
-		<S i="17ca" n="SBS6 HD" t="c82" on="3" s="235" frq="11739"/>
-		<S i="1b73" n="RTL7 HD" t="c88" on="3" s="235" frq="11855"/>
-		<S i="1b7c" n="RTL8 HD" t="c88" on="3" s="235" frq="11855"/>
-		<S i="51e5" n="NGC HD" t="c96" on="3" s="235" frq="12129"/>
-		<S i="13c7" n="History HD DUT" t="c95" on="3" s="235" frq="12109"/>
-		<S i="13ca" n="Eurosport HD DUT" t="c95" on="3" s="235" frq="12109"/>
-		<S i="13c9" n="Eurosport 2 HD DUT" t="c95" on="3" s="235" frq="12109"/>
+	<Bouquet name="Nederlands HD">
+		<S i="5225" t="c99" on="3" s="235" frq="12188" n="NPO1 HD"/>
+		<S i="17c0" t="c82" on="3" s="235" frq="11739" n="NPO2 HD"/>
+		<S i="5230" t="c99" on="3" s="235" frq="12188" n="NPO3 HD"/>
+		<S i="5221" t="c99" on="3" s="235" frq="12188" n="een HD"/>
+		<S i="5226" t="c99" on="3" s="235" frq="12188" n="Canvas HD"/>
+		<S i="522b" t="c99" on="3" s="235" frq="12188" n="Veronica/DisneyXD HD"/>
+		<S i="1b6c" t="c88" on="3" s="235" frq="11855" n="RTL4 HD"/>
+		<S i="1b6f" t="c88" on="3" s="235" frq="11855" n="RTL5 HD"/>
+		<S i="521c" t="c99" on="3" s="235" frq="12188" n="NET5 HD"/>
+		<S i="17ca" t="c82" on="3" s="235" frq="11739" n="SBS6 HD"/>
+		<S i="1b73" t="c88" on="3" s="235" frq="11855" n="RTL7 HD"/>
+		<S i="1b7c" t="c88" on="3" s="235" frq="11855" n="RTL8 HD"/>
+		<S i="51e5" t="c96" on="3" s="235" frq="12129" n="NGC HD"/>
+		<S i="13c7" t="c95" on="3" s="235" frq="12109" n="History HD DUT"/>
+		<S i="13ca" t="c95" on="3" s="235" frq="12109" n="Eurosport HD DUT"/>
+		<S i="13c9" t="c95" on="3" s="235" frq="12109" n="Eurosport 2 HD DUT"/>
 	</Bouquet>
-	<Bouquet name="Nederlands SD" hidden="0" locked="0" epg="0">
-		<S i="fab" n="NPO1" t="451" on="35" s="192" frq="12515"/>
-		<S i="fac" n="NPO2" t="451" on="35" s="192" frq="12515"/>
-		<S i="fad" n="NPO3" t="451" on="35" s="192" frq="12515"/>
-		<S i="10e0" n="BVN TV" t="418" on="1" s="192" frq="11186"/>
-		<S i="3201" n="een" t="45f" on="35" s="192" frq="12722"/>
-		<S i="3202" n="Canvas" t="45f" on="35" s="192" frq="12722"/>
-		<S i="5278" n="KetOp12" t="c96" on="3" s="235" frq="12129"/>
-		<S i="fcc" n="RTL4" t="451" on="35" s="192" frq="12515"/>
-		<S i="fcd" n="RTL5" t="451" on="35" s="192" frq="12515"/>
-		<S i="fa3" n="NET5" t="451" on="35" s="192" frq="12515"/>
-		<S i="fa2" n="SBS6" t="451" on="35" s="192" frq="12515"/>
-		<S i="fcf" n="RTL7" t="451" on="35" s="192" frq="12515"/>
-		<S i="13dd" n="NGC" t="c8a" on="3" s="235" frq="11896"/>
-		<S i="177f" n="NPO DOC" t="c82" on="3" s="235" frq="11739"/>
-		<S i="177a" n="NPO Politiek/NPO Best" t="c82" on="3" s="235" frq="11739"/>
-		<S i="1789" n="NPO Zapp Xtra/NPO Humor TV" t="c82" on="3" s="235" frq="11739"/>
-		<S i="439f" n="BVN" t="2cec" on="13e" s="130" frq="10815"/>
-		<S i="7007" n="Nickelodeon Nederland" t="436" on="1" s="192" frq="11973"/>
-		<S i="7003" n="Comedy Central Nederland" t="436" on="1" s="192" frq="11973"/>
+	<Bouquet name="Nederlands SD">
+		<S i="fab" t="451" on="35" s="192" frq="12515" n="NPO1"/>
+		<S i="fac" t="451" on="35" s="192" frq="12515" n="NPO2"/>
+		<S i="fad" t="451" on="35" s="192" frq="12515" n="NPO3"/>
+		<S i="10e0" t="418" on="1" s="192" frq="11186" n="BVN TV"/>
+		<S i="3201" t="45f" on="35" s="192" frq="12722" n="een"/>
+		<S i="3202" t="45f" on="35" s="192" frq="12722" n="Canvas"/>
+		<S i="5278" t="c96" on="3" s="235" frq="12129" n="KetOp12"/>
+		<S i="fcc" t="451" on="35" s="192" frq="12515" n="RTL4"/>
+		<S i="fcd" t="451" on="35" s="192" frq="12515" n="RTL5"/>
+		<S i="fa3" t="451" on="35" s="192" frq="12515" n="NET5"/>
+		<S i="fa2" t="451" on="35" s="192" frq="12515" n="SBS6"/>
+		<S i="fcf" t="451" on="35" s="192" frq="12515" n="RTL7"/>
+		<S i="13dd" t="c8a" on="3" s="235" frq="11896" n="NGC"/>
+		<S i="177f" t="c82" on="3" s="235" frq="11739" n="NPO DOC"/>
+		<S i="177a" t="c82" on="3" s="235" frq="11739" n="NPO Politiek/NPO Best"/>
+		<S i="1789" t="c82" on="3" s="235" frq="11739" n="NPO Zapp Xtra/NPO Humor TV"/>
+		<S i="439f" t="2cec" on="13e" s="130" frq="10815" n="BVN"/>
+		<S i="7007" t="436" on="1" s="192" frq="11973" n="Nickelodeon Nederland"/>
+		<S i="7003" t="436" on="1" s="192" frq="11973" n="Comedy Central Nederland"/>
 	</Bouquet>
-	<Bouquet name="Nederlands Regionaal" hidden="0" locked="0" epg="0">
-		<S i="514a" n="TV Noord" t="c8b" on="3" s="235" frq="11915"/>
-		<S i="514c" n="TV Drenthe" t="c8b" on="3" s="235" frq="11915"/>
-		<S i="514e" n="TV Oost" t="c8b" on="3" s="235" frq="11915"/>
-		<S i="5150" n="TV Gelderland" t="c8b" on="3" s="235" frq="11915"/>
-		<S i="51d4" n="TV Oranje" t="c96" on="3" s="235" frq="12129"/>
-		<S i="5144" n="TV West" t="c8b" on="3" s="235" frq="11915"/>
-		<S i="1b8a" n="L1MBURG" t="c88" on="3" s="235" frq="11855"/>
+	<Bouquet name="Nederlands Regionaal">
+		<S i="514a" t="c8b" on="3" s="235" frq="11915" n="TV Noord"/>
+		<S i="514c" t="c8b" on="3" s="235" frq="11915" n="TV Drenthe"/>
+		<S i="514e" t="c8b" on="3" s="235" frq="11915" n="TV Oost"/>
+		<S i="5150" t="c8b" on="3" s="235" frq="11915" n="TV Gelderland"/>
+		<S i="51d4" t="c96" on="3" s="235" frq="12129" n="TV Oranje"/>
+		<S i="5144" t="c8b" on="3" s="235" frq="11915" n="TV West"/>
+		<S i="1b8a" t="c88" on="3" s="235" frq="11855" n="L1MBURG"/>
 	</Bouquet>
-	<Bouquet name="English" hidden="0" locked="0" epg="0">
-		<S i="1b1d" n="BBC One HD" t="802" on="2" s="282" frq="10847"/>
-		<S i="1b1c" n="BBC Two HD" t="802" on="2" s="282" frq="10847"/>
-		<S i="1b27" n="BBC Three HD" t="802" on="2" s="282" frq="10847"/>
-		<S i="22e3" n="BBC Four HD" t="80d" on="2" s="282" frq="11023"/>
-		<S i="189d" n="BBC One Lon" t="7fd" on="2" s="282" frq="10773"/>
-		<S i="189e" n="BBC Two Eng" t="7fd" on="2" s="282" frq="10773"/>
-		<S i="286f" n="BBC Three" t="800" on="2" s="282" frq="10818"/>
-		<S i="18ac" n="BBC Four" t="7fd" on="2" s="282" frq="10773"/>
-		<S i="5208" n="ITV HD" t="812" on="2" s="282" frq="11097"/>
-		<S i="2f4e" n="ITV" t="7f4" on="2" s="282" frq="10994"/>
-		<S i="2756" n="ITV2" t="7fc" on="2" s="282" frq="10758"/>
-		<S i="2814" n="ITV3" t="806" on="2" s="282" frq="10906"/>
-		<S i="2758" n="ITV4" t="7fc" on="2" s="282" frq="10758"/>
-		<S i="275b" n="ITVBe" t="7fc" on="2" s="282" frq="10758"/>
-		<S i="27ab" n="ITV +1" t="805" on="2" s="282" frq="10891"/>
-		<S i="27b5" n="ITV2+1" t="805" on="2" s="282" frq="10891"/>
-		<S i="2815" n="ITV3+1" t="806" on="2" s="282" frq="10906"/>
-		<S i="271f" n="ITV4+1" t="801" on="2" s="282" frq="10832"/>
-		<S i="279b" n="ITVBe+1" t="805" on="2" s="282" frq="10891"/>
-		<S i="52d0" n="Channel 4 HD" t="814" on="2" s="282" frq="11126"/>
-		<S i="23fd" n="Channel 4" t="7f9" on="2" s="282" frq="10714"/>
-		<S i="2071" n="E4" t="7fa" on="2" s="282" frq="10729"/>
-		<S i="2404" n="Film4" t="7f9" on="2" s="282" frq="10714"/>
-		<S i="2094" n="More4" t="7fa" on="2" s="282" frq="10729"/>
-		<S i="5302" n="4seven" t="814" on="2" s="282" frq="11126"/>
-		<S i="2077" n="Channel 4 +1" t="7fa" on="2" s="282" frq="10729"/>
-		<S i="206c" n="E4+1" t="7fa" on="2" s="282" frq="10729"/>
-		<S i="2409" n="Film4 +1" t="7f9" on="2" s="282" frq="10714"/>
-		<S i="240e" n="More4 +1" t="7f9" on="2" s="282" frq="10714"/>
-		<S i="1e14" n="Channel 5" t="809" on="2" s="282" frq="10964"/>
-		<S i="1e1e" n="5 USA" t="809" on="2" s="282" frq="10964"/>
-		<S i="1e23" n="5*" t="809" on="2" s="282" frq="10964"/>
-		<S i="1e28" n="Channel 5+1" t="809" on="2" s="282" frq="10964"/>
-		<S i="1e1f" n="5 USA +1" t="809" on="2" s="282" frq="10964"/>
-		<S i="1e25" n="5* +1" t="809" on="2" s="282" frq="10964"/>
-		<S i="1e24" n="Channel 5+24" t="809" on="2" s="282" frq="10964"/>
-		<S i="d1ce" n="CBS Action" t="841" on="2" s="282" frq="11389"/>
-		<S i="c6d7" n="CBS Drama" t="900" on="2" s="282" frq="11343"/>
-		<S i="cd19" n="CBS Reality" t="902" on="2" s="282" frq="11426"/>
-		<S i="cb86" n="CBS Reality+1" t="8fd" on="2" s="282" frq="11261"/>
-		<S i="d084" n="True Drama" t="90a" on="2" s="282" frq="11307"/>
-		<S i="d07f" n="True Ent" t="90a" on="2" s="282" frq="11307"/>
-		<S i="d07b" n="True Ent+1" t="90a" on="2" s="282" frq="11307"/>
-		<S i="d048" n="True Movies 1" t="90a" on="2" s="282" frq="11307"/>
-		<S i="d04d" n="True Movies 2" t="90a" on="2" s="282" frq="11307"/>
-		<S i="c7ac" n="movies4men" t="821" on="2" s="282" frq="12633"/>
-		<S i="d35e" n="more&gt;movies" t="81c" on="2" s="282" frq="12552"/>
-		<S i="c7ae" n="mov4men+1" t="821" on="2" s="282" frq="12633"/>
-		<S i="c7b0" n="m&gt;movies+1" t="821" on="2" s="282" frq="12633"/>
-		<S i="5140" n="STV HD" t="810" on="2" s="282" frq="11068"/>
-		<S i="27ec" n="STV" t="806" on="2" s="282" frq="10906"/>
-		<S i="514a" n="UTV HD" t="810" on="2" s="282" frq="11068"/>
-		<S i="27f6" n="UTV" t="806" on="2" s="282" frq="10906"/>
-		<S i="c6c2" n="CNBC" t="820" on="2" s="282" frq="12611"/>
-		<S i="1917" n="BBC ALBA" t="7ff" on="2" s="282" frq="10803"/>
-		<S i="2843" n="BBC Parliament" t="7fe" on="2" s="282" frq="10788"/>
-		<S i="22d9" n="BBC NEWS HD" t="80d" on="2" s="282" frq="11023"/>
-		<S i="2876" n="BBC NEWS" t="800" on="2" s="282" frq="10818"/>
-		<S i="c42c" n="CNN" t="81a" on="2" s="282" frq="12520"/>
-		<S i="1262" n="Sky News" t="7ea" on="2" s="282" frq="12207"/>
-		<S i="178f" n="Challenge" t="7ef" on="2" s="282" frq="12305"/>
-		<S i="178a" n="Challenge+1" t="7ef" on="2" s="282" frq="12305"/>
-		<S i="cb89" n="horror channel" t="8fd" on="2" s="282" frq="11261"/>
-		<S i="d1c4" n="horror ch+1" t="841" on="2" s="282" frq="11389"/>
-		<S i="d05c" n="POP" t="90a" on="2" s="282" frq="11307"/>
-		<S i="d07a" n="POP+1" t="90a" on="2" s="282" frq="11307"/>
-		<S i="cb61" n="Showcase" t="907" on="2" s="282" frq="11222"/>
-		<S i="cb25" n="Showcase +1" t="907" on="2" s="282" frq="11222"/>
-		<S i="d052" n="Tiny Pop" t="90a" on="2" s="282" frq="11307"/>
-		<S i="d061" n="Tiny Pop +1" t="90a" on="2" s="282" frq="11307"/>
-		<S i="5212" n="ITV HD" t="812" on="2" s="282" frq="11097"/>
-		<S i="521c" n="ITV HD" t="812" on="2" s="282" frq="11097"/>
-		<S i="5226" n="ITV HD" t="812" on="2" s="282" frq="11097"/>
+	<Bouquet name="English">
+		<S i="1b1d" t="802" on="2" s="282" frq="10847" n="BBC One HD"/>
+		<S i="1b1c" t="802" on="2" s="282" frq="10847" n="BBC Two HD"/>
+		<S i="22e3" t="80d" on="2" s="282" frq="11023" n="BBC Four HD"/>
+		<S i="189d" t="7fd" on="2" s="282" frq="10773" n="BBC One Lon"/>
+		<S i="189e" t="7fd" on="2" s="282" frq="10773" n="BBC Two Eng"/>
+		<S i="18ac" t="7fd" on="2" s="282" frq="10773" n="BBC Four"/>
+		<S i="5208" t="812" on="2" s="282" frq="11097" n="ITV HD"/>
+		<S i="274c" t="7fc" on="2" s="282" frq="10758" n="ITV London"/>
+		<S i="2756" t="7fc" on="2" s="282" frq="10758" n="ITV2"/>
+		<S i="2814" t="806" on="2" s="282" frq="10906" n="ITV3"/>
+		<S i="2758" t="7fc" on="2" s="282" frq="10758" n="ITV4"/>
+		<S i="275b" t="7fc" on="2" s="282" frq="10758" n="ITVBe"/>
+		<S i="27ab" t="805" on="2" s="282" frq="10891" n="ITV London +1"/>
+		<S i="27b5" t="805" on="2" s="282" frq="10891" n="ITV2+1"/>
+		<S i="2815" t="806" on="2" s="282" frq="10906" n="ITV3+1"/>
+		<S i="2759" t="7fc" on="2" s="282" frq="10758" n="ITV4+1"/>
+		<S i="279b" t="805" on="2" s="282" frq="10891" n="ITVBe+1"/>
+		<S i="52d0" t="814" on="2" s="282" frq="11126" n="Channel 4 HD"/>
+		<S i="2071" t="7fa" on="2" s="282" frq="10729" n="E4 UK"/>
+		<S i="2404" t="7f9" on="2" s="282" frq="10714" n="Film4"/>
+		<S i="2094" t="7fa" on="2" s="282" frq="10729" n="More4"/>
+		<S i="5302" t="814" on="2" s="282" frq="11126" n="4seven"/>
+		<S i="2077" t="7fa" on="2" s="282" frq="10729" n="Channel 4 London +1"/>
+		<S i="206c" t="7fa" on="2" s="282" frq="10729" n="E4+1"/>
+		<S i="2409" t="7f9" on="2" s="282" frq="10714" n="Film4 +1"/>
+		<S i="240e" t="7f9" on="2" s="282" frq="10714" n="More4 +1"/>
+		<S i="1e1e" t="809" on="2" s="282" frq="10964" n="5 USA"/>
+		<S i="1e23" t="809" on="2" s="282" frq="10964" n="5STAR"/>
+		<S i="1e28" t="809" on="2" s="282" frq="10964" n="Channel 5+1"/>
+		<S i="1e1f" t="809" on="2" s="282" frq="10964" n="5 USA +1"/>
+		<S i="1e25" t="809" on="2" s="282" frq="10964" n="5STAR +1"/>
+		<S i="1e24" t="809" on="2" s="282" frq="10964" n="My5"/>
+		<S i="d1ce" t="841" on="2" s="282" frq="11387" n="CBS Action"/>
+		<S i="c6d7" t="900" on="2" s="282" frq="11343" n="CBS Drama"/>
+		<S i="cd19" t="902" on="2" s="282" frq="11426" n="CBS Reality"/>
+		<S i="cb86" t="8fd" on="2" s="282" frq="11261" n="CBS Reality+1"/>
+		<S i="d084" t="90a" on="2" s="282" frq="11307" n="True Drama"/>
+		<S i="d07f" t="90a" on="2" s="282" frq="11307" n="True Ent"/>
+		<S i="d07b" t="90a" on="2" s="282" frq="11307" n="True Ent+1"/>
+		<S i="d048" t="90a" on="2" s="282" frq="11307" n="True Movies 1"/>
+		<S i="d04d" t="90a" on="2" s="282" frq="11307" n="True Movies 2"/>
+		<S i="c7ac" t="821" on="2" s="282" frq="12633" n="movies4men"/>
+		<S i="d35e" t="81c" on="2" s="282" frq="12552" n="more&gt;movies"/>
+		<S i="c7ae" t="821" on="2" s="282" frq="12633" n="mov4men+1"/>
+		<S i="c7b0" t="821" on="2" s="282" frq="12633" n="m&gt;movies+1"/>
+		<S i="5140" t="810" on="2" s="282" frq="11068" n="STV HD"/>
+		<S i="27ec" t="806" on="2" s="282" frq="10906" n="STV Central West"/>
+		<S i="514a" t="810" on="2" s="282" frq="11068" n="UTV HD"/>
+		<S i="27f6" t="806" on="2" s="282" frq="10906" n="UTV (Ulster)"/>
+		<S i="c6c2" t="820" on="2" s="282" frq="12611" n="CNBC"/>
+		<S i="1917" t="7ff" on="2" s="282" frq="10803" n="BBC ALBA"/>
+		<S i="2843" t="7fe" on="2" s="282" frq="10788" n="BBC Parliament"/>
+		<S i="22d9" t="80d" on="2" s="282" frq="11023" n="BBC NEWS HD"/>
+		<S i="2876" t="800" on="2" s="282" frq="10818" n="BBC NEWS"/>
+		<S i="c42c" t="81a" on="2" s="282" frq="12520" n="CNN"/>
+		<S i="1262" t="7ea" on="2" s="282" frq="12207" n="Sky News"/>
+		<S i="cb89" t="8fd" on="2" s="282" frq="11261" n="horror channel"/>
+		<S i="d1c4" t="841" on="2" s="282" frq="11387" n="horror ch+1"/>
+		<S i="d05c" t="90a" on="2" s="282" frq="11307" n="POP"/>
+		<S i="d07a" t="90a" on="2" s="282" frq="11307" n="POP+1"/>
+		<S i="cb61" t="907" on="2" s="282" frq="11222" n="Showcase"/>
+		<S i="cb25" t="907" on="2" s="282" frq="11222" n="Showcase +1"/>
+		<S i="d052" t="90a" on="2" s="282" frq="11307" n="Tiny Pop"/>
+		<S i="d061" t="90a" on="2" s="282" frq="11307" n="Tiny Pop +1"/>
+		<S i="5212" t="812" on="2" s="282" frq="11097" n="ITV HD"/>
+		<S i="521c" t="812" on="2" s="282" frq="11097" n="ITV HD"/>
+		<S i="5226" t="812" on="2" s="282" frq="11097" n="ITV HD"/>
 	</Bouquet>
-	<Bouquet name="Deutsch HD" hidden="0" locked="0" epg="0">
-		<S i="283d" n="Das Erste HD" t="3fb" on="1" s="192" frq="11494"/>
-		<S i="2888" n="Einsfestival HD" t="40f" on="1" s="192" frq="11053"/>
-		<S i="2889" n="EinsPlus HD" t="40f" on="1" s="192" frq="11053"/>
-		<S i="2b66" n="ZDF HD" t="3f3" on="1" s="192" frq="11362"/>
-		<S i="2b84" n="zdf.kultur HD" t="3f3" on="1" s="192" frq="11362"/>
-		<S i="2b7a" n="zdf_neo HD" t="3f3" on="1" s="192" frq="11362"/>
-		<S i="2ba2" n="ZDFinfo HD" t="3f2" on="1" s="192" frq="11347"/>
-		<S i="2859" n="NDR FS HH HD" t="401" on="1" s="192" frq="11582"/>
-		<S i="2858" n="NDR FS MV HD" t="401" on="1" s="192" frq="11582"/>
-		<S i="285a" n="NDR FS SH HD" t="401" on="1" s="192" frq="11582"/>
-		<S i="2857" n="NDR FS NDS HD" t="401" on="1" s="192" frq="11582"/>
-		<S i="6f80" n="WDR HD Aachen" t="457" on="1" s="192" frq="12604"/>
-		<S i="6ea6" n="WDR HD Bielefeld" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6f82" n="WDR HD Bonn" t="457" on="1" s="192" frq="12604"/>
-		<S i="6ea7" n="WDR HD Dortmund" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6f83" n="WDR HD Duisburg" t="457" on="1" s="192" frq="12604"/>
-		<S i="6ea8" n="WDR HD Düsseldorf" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6ea9" n="WDR HD Essen" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6ea5" n="WDR HD Köln" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6eaa" n="WDR HD Münster" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6eab" n="WDR HD Siegen" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6f81" n="WDR HD Wuppertal" t="457" on="1" s="192" frq="12604"/>
-		<S i="2b8e" n="3sat HD" t="3f2" on="1" s="192" frq="11347"/>
-		<S i="2856" n="BR Nord HD" t="401" on="1" s="192" frq="11582"/>
-		<S i="2855" n="BR Süd HD" t="401" on="1" s="192" frq="11582"/>
-		<S i="2873" n="hr-fernsehen HD" t="425" on="1" s="192" frq="10891"/>
-		<S i="ef76" n="kabel eins HD" t="3f9" on="1" s="192" frq="11464"/>
-		<S i="ef14" n="n-tv HD" t="421" on="1" s="192" frq="10832"/>
-		<S i="5274" n="N24 HD" t="41d" on="1" s="192" frq="10773"/>
-		<S i="ef75" n="ProSieben HD" t="3f9" on="1" s="192" frq="11464"/>
-		<S i="ef78" n="ProSieben MAXX HD" t="3f9" on="1" s="192" frq="11464"/>
-		<S i="ef10" n="RTL HD" t="421" on="1" s="192" frq="10832"/>
-		<S i="ef74" n="SAT.1 HD" t="3f9" on="1" s="192" frq="11464"/>
-		<S i="30d4" n="SAT.1 Gold HD" t="413" on="1" s="192" frq="11112"/>
-		<S i="1332" n="ServusTV HD Deutschland" t="3ef" on="1" s="192" frq="11303"/>
-		<S i="ef77" n="SIXX HD" t="3f9" on="1" s="192" frq="11464"/>
-		<S i="1518" n="sonnenklar.TV HD" t="455" on="1" s="192" frq="12574"/>
-		<S i="89" n="Spiegel Geschichte HD" t="8" on="85" s="192" frq="11553"/>
-		<S i="283f" n="SWR BW HD" t="3fb" on="1" s="192" frq="11494"/>
-		<S i="2840" n="SWR RP HD" t="3fb" on="1" s="192" frq="11494"/>
-		<S i="2887" n="tagesschau24 HD" t="40f" on="1" s="192" frq="11053"/>
+	<Bouquet name="Deutsch HD">
+		<S i="283d" t="3fb" on="1" s="192" frq="11494" n="Das Erste HD"/>
+		<S i="2888" t="40f" on="1" s="192" frq="11053" n="Einsfestival HD"/>
+		<S i="2889" t="40f" on="1" s="192" frq="11053" n="EinsPlus HD"/>
+		<S i="2b66" t="3f3" on="1" s="192" frq="11362" n="ZDF HD"/>
+		<S i="2b84" t="3f3" on="1" s="192" frq="11362" n="zdf.kultur HD"/>
+		<S i="2b7a" t="3f3" on="1" s="192" frq="11362" n="zdf_neo HD"/>
+		<S i="2ba2" t="3f2" on="1" s="192" frq="11347" n="ZDFinfo HD"/>
+		<S i="2859" t="401" on="1" s="192" frq="11582" n="NDR FS HH HD"/>
+		<S i="2858" t="401" on="1" s="192" frq="11582" n="NDR FS MV HD"/>
+		<S i="285a" t="401" on="1" s="192" frq="11582" n="NDR FS SH HD"/>
+		<S i="2857" t="401" on="1" s="192" frq="11582" n="NDR FS NDS HD"/>
+		<S i="6f80" t="457" on="1" s="192" frq="12604" n="WDR HD Aachen"/>
+		<S i="6ea6" t="4b1" on="1" s="192" frq="12422" n="WDR HD Bielefeld"/>
+		<S i="6f82" t="457" on="1" s="192" frq="12604" n="WDR HD Bonn"/>
+		<S i="6ea7" t="4b1" on="1" s="192" frq="12422" n="WDR HD Dortmund"/>
+		<S i="6f83" t="457" on="1" s="192" frq="12604" n="WDR HD Duisburg"/>
+		<S i="6ea8" t="4b1" on="1" s="192" frq="12422" n="WDR HD Düsseldorf"/>
+		<S i="6ea9" t="4b1" on="1" s="192" frq="12422" n="WDR HD Essen"/>
+		<S i="6ea5" t="4b1" on="1" s="192" frq="12422" n="WDR HD Köln"/>
+		<S i="6eaa" t="4b1" on="1" s="192" frq="12422" n="WDR HD Münster"/>
+		<S i="6eab" t="4b1" on="1" s="192" frq="12422" n="WDR HD Siegen"/>
+		<S i="6f81" t="457" on="1" s="192" frq="12604" n="WDR HD Wuppertal"/>
+		<S i="2b8e" t="3f2" on="1" s="192" frq="11347" n="3sat HD"/>
+		<S i="2856" t="401" on="1" s="192" frq="11582" n="BR Nord HD"/>
+		<S i="2855" t="401" on="1" s="192" frq="11582" n="BR Süd HD"/>
+		<S i="2873" t="425" on="1" s="192" frq="10891" n="hr-fernsehen HD"/>
+		<S i="ef76" t="3f9" on="1" s="192" frq="11464" n="kabel eins HD"/>
+		<S i="ef14" t="421" on="1" s="192" frq="10832" n="n-tv HD"/>
+		<S i="5274" t="41d" on="1" s="192" frq="10773" n="N24 HD"/>
+		<S i="ef75" t="3f9" on="1" s="192" frq="11464" n="ProSieben HD"/>
+		<S i="ef78" t="3f9" on="1" s="192" frq="11464" n="ProSieben MAXX HD"/>
+		<S i="ef10" t="421" on="1" s="192" frq="10832" n="RTL HD"/>
+		<S i="ef74" t="3f9" on="1" s="192" frq="11464" n="SAT.1 HD"/>
+		<S i="30d4" t="413" on="1" s="192" frq="11112" n="SAT.1 Gold HD"/>
+		<S i="1332" t="3ef" on="1" s="192" frq="11303" n="ServusTV HD Deutschland"/>
+		<S i="ef77" t="3f9" on="1" s="192" frq="11464" n="SIXX HD"/>
+		<S i="1518" t="455" on="1" s="192" frq="12574" n="sonnenklar.TV HD"/>
+		<S i="89" t="8" on="85" s="192" frq="11553" n="Spiegel Geschichte HD"/>
+		<S i="283f" t="3fb" on="1" s="192" frq="11494" n="SWR BW HD"/>
+		<S i="2840" t="3fb" on="1" s="192" frq="11494" n="SWR RP HD"/>
+		<S i="2887" t="40f" on="1" s="192" frq="11053" n="tagesschau24 HD"/>
 	</Bouquet>
-	<Bouquet name="Deutsch SD" hidden="0" locked="0" epg="0">
-		<S i="6dca" n="Das Erste" t="44d" on="1" s="192" frq="11836"/>
-		<S i="7032" n="Einsfestival" t="41b" on="1" s="192" frq="10744"/>
-		<S i="7033" n="EinsPlus" t="41b" on="1" s="192" frq="10744"/>
-		<S i="6d66" n="ZDF" t="437" on="1" s="192" frq="11954"/>
-		<S i="6d70" n="zdf.kultur" t="437" on="1" s="192" frq="11954"/>
-		<S i="6d6e" n="zdf_neo" t="437" on="1" s="192" frq="11954"/>
-		<S i="6d6b" n="ZDFinfo" t="437" on="1" s="192" frq="11954"/>
-		<S i="6e41" n="NDR FS HH" t="431" on="1" s="192" frq="12110"/>
-		<S i="6e40" n="NDR FS MV" t="431" on="1" s="192" frq="12110"/>
-		<S i="6e42" n="NDR FS NDS" t="431" on="1" s="192" frq="12110"/>
-		<S i="6e43" n="NDR FS SH" t="431" on="1" s="192" frq="12110"/>
-		<S i="6f76" n="WDR Aachen" t="457" on="1" s="192" frq="12604"/>
-		<S i="6e92" n="WDR Bielefeld" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6f78" n="WDR Bonn" t="457" on="1" s="192" frq="12604"/>
-		<S i="6e93" n="WDR Dortmund" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6f79" n="WDR Duisburg" t="457" on="1" s="192" frq="12604"/>
-		<S i="6e94" n="WDR Düsseldorf" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6e95" n="WDR Essen" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6dcf" n="WDR Köln" t="44d" on="1" s="192" frq="11836"/>
-		<S i="6e96" n="WDR Münster" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6e97" n="WDR Siegen" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6eeb" n="WDR Test A" t="4b1" on="1" s="192" frq="12422"/>
-		<S i="6f77" n="WDR Wuppertal" t="457" on="1" s="192" frq="12604"/>
-		<S i="6d67" n="3sat" t="437" on="1" s="192" frq="11954"/>
-		<S i="6dce" n="Bayerisches FS Nord" t="44d" on="1" s="192" frq="11836"/>
-		<S i="6dcb" n="Bayerisches FS Süd" t="44d" on="1" s="192" frq="11836"/>
-		<S i="36ce" n="BR new 2" t="c8c" on="3" s="235" frq="11934"/>
-		<S i="6dcc" n="hr-fernsehen" t="44d" on="1" s="192" frq="11836"/>
-		<S i="445e" n="kabel eins" t="453" on="1" s="192" frq="12545"/>
-		<S i="4462" n="kabel eins classics" t="453" on="1" s="192" frq="12545"/>
-		<S i="2f3a" n="n-tv" t="441" on="1" s="192" frq="12188"/>
-		<S i="445f" n="N24" t="453" on="1" s="192" frq="12545"/>
-		<S i="445d" n="ProSieben" t="453" on="1" s="192" frq="12545"/>
-		<S i="4461" n="ProSieben MAXX" t="453" on="1" s="192" frq="12545"/>
-		<S i="2ee6" n="RTL FS" t="441" on="1" s="192" frq="12188"/>
-		<S i="2ee3" n="RTL Television" t="441" on="1" s="192" frq="12188"/>
-		<S i="2ef4" n="RTL2" t="441" on="1" s="192" frq="12188"/>
-		<S i="4463" n="SAT.1 Bayern" t="453" on="1" s="192" frq="12545"/>
-		<S i="4460" n="SAT.1 Gold" t="453" on="1" s="192" frq="12545"/>
-		<S i="4e28" n="SAT.1 HH/SH" t="43a" on="1" s="192" frq="12051"/>
-		<S i="4e29" n="SAT.1 NS/Bremen" t="43a" on="1" s="192" frq="12051"/>
-		<S i="4e2a" n="SAT.1 RhlPf/Hessen" t="43a" on="1" s="192" frq="12051"/>
-		<S i="3336" n="ServusTV Deutschland" t="45b" on="1" s="192" frq="12663"/>
-		<S i="308" n="SIXX" t="5" on="85" s="192" frq="12460"/>
-		<S i="20" n="Sonnenklar TV" t="21" on="85" s="192" frq="12480"/>
-		<S i="34" n="Spiegel Geschichte" t="4" on="85" s="192" frq="12032"/>
-		<S i="6f46" n="SR Fernsehen" t="445" on="1" s="192" frq="12266"/>
-		<S i="6dd1" n="SWR Fernsehen BW" t="44d" on="1" s="192" frq="11836"/>
-		<S i="6e47" n="SWR Fernsehen RP" t="431" on="1" s="192" frq="12110"/>
-		<S i="7031" n="tagesschau24" t="41b" on="1" s="192" frq="10744"/>
+	<Bouquet name="Deutsch SD">
+		<S i="6dca" t="44d" on="1" s="192" frq="11836" n="Das Erste"/>
+		<S i="7032" t="41b" on="1" s="192" frq="10744" n="Einsfestival"/>
+		<S i="7033" t="41b" on="1" s="192" frq="10744" n="EinsPlus"/>
+		<S i="6d66" t="437" on="1" s="192" frq="11954" n="ZDF"/>
+		<S i="6d70" t="437" on="1" s="192" frq="11954" n="zdf.kultur"/>
+		<S i="6d6e" t="437" on="1" s="192" frq="11954" n="zdf_neo"/>
+		<S i="6d6b" t="437" on="1" s="192" frq="11954" n="ZDFinfo"/>
+		<S i="6e41" t="431" on="1" s="192" frq="12110" n="NDR FS HH"/>
+		<S i="6e40" t="431" on="1" s="192" frq="12110" n="NDR FS MV"/>
+		<S i="6e42" t="431" on="1" s="192" frq="12110" n="NDR FS NDS"/>
+		<S i="6e43" t="431" on="1" s="192" frq="12110" n="NDR FS SH"/>
+		<S i="6f76" t="457" on="1" s="192" frq="12604" n="WDR Aachen"/>
+		<S i="6e92" t="4b1" on="1" s="192" frq="12422" n="WDR Bielefeld"/>
+		<S i="6f78" t="457" on="1" s="192" frq="12604" n="WDR Bonn"/>
+		<S i="6e93" t="4b1" on="1" s="192" frq="12422" n="WDR Dortmund"/>
+		<S i="6f79" t="457" on="1" s="192" frq="12604" n="WDR Duisburg"/>
+		<S i="6e94" t="4b1" on="1" s="192" frq="12422" n="WDR Düsseldorf"/>
+		<S i="6e95" t="4b1" on="1" s="192" frq="12422" n="WDR Essen"/>
+		<S i="6dcf" t="44d" on="1" s="192" frq="11836" n="WDR Köln"/>
+		<S i="6e96" t="4b1" on="1" s="192" frq="12422" n="WDR Münster"/>
+		<S i="6e97" t="4b1" on="1" s="192" frq="12422" n="WDR Siegen"/>
+		<S i="6eeb" t="4b1" on="1" s="192" frq="12422" n="WDR Test A"/>
+		<S i="6f77" t="457" on="1" s="192" frq="12604" n="WDR Wuppertal"/>
+		<S i="6d67" t="437" on="1" s="192" frq="11954" n="3sat"/>
+		<S i="6dce" t="44d" on="1" s="192" frq="11836" n="Bayerisches FS Nord"/>
+		<S i="6dcb" t="44d" on="1" s="192" frq="11836" n="Bayerisches FS Süd"/>
+		<S i="36ce" t="c8c" on="3" s="235" frq="11934" n="BR new 2"/>
+		<S i="6dcc" t="44d" on="1" s="192" frq="11836" n="hr-fernsehen"/>
+		<S i="445e" t="453" on="1" s="192" frq="12545" n="kabel eins"/>
+		<S i="4462" t="453" on="1" s="192" frq="12545" n="kabel eins classics"/>
+		<S i="2f3a" t="441" on="1" s="192" frq="12188" n="n-tv"/>
+		<S i="445f" t="453" on="1" s="192" frq="12545" n="N24"/>
+		<S i="445d" t="453" on="1" s="192" frq="12545" n="ProSieben"/>
+		<S i="4461" t="453" on="1" s="192" frq="12545" n="ProSieben MAXX"/>
+		<S i="2ee6" t="441" on="1" s="192" frq="12188" n="RTL FS"/>
+		<S i="2ee3" t="441" on="1" s="192" frq="12188" n="RTL Television"/>
+		<S i="2ef4" t="441" on="1" s="192" frq="12188" n="RTL2"/>
+		<S i="4463" t="453" on="1" s="192" frq="12545" n="SAT.1 Bayern"/>
+		<S i="4460" t="453" on="1" s="192" frq="12545" n="SAT.1 Gold"/>
+		<S i="4e28" t="43a" on="1" s="192" frq="12051" n="SAT.1 HH/SH"/>
+		<S i="4e29" t="43a" on="1" s="192" frq="12051" n="SAT.1 NS/Bremen"/>
+		<S i="4e2a" t="43a" on="1" s="192" frq="12051" n="SAT.1 RhlPf/Hessen"/>
+		<S i="3336" t="45b" on="1" s="192" frq="12663" n="ServusTV Deutschland"/>
+		<S i="308" t="5" on="85" s="192" frq="12460" n="SIXX"/>
+		<S i="20" t="21" on="85" s="192" frq="12480" n="Sonnenklar TV"/>
+		<S i="34" t="4" on="85" s="192" frq="12032" n="Spiegel Geschichte"/>
+		<S i="6f46" t="445" on="1" s="192" frq="12266" n="SR Fernsehen"/>
+		<S i="6dd1" t="44d" on="1" s="192" frq="11836" n="SWR Fernsehen BW"/>
+		<S i="6e47" t="431" on="1" s="192" frq="12110" n="SWR Fernsehen RP"/>
+		<S i="7031" t="41b" on="1" s="192" frq="10744" n="tagesschau24"/>
 	</Bouquet>
-	<Bouquet name="Hotbird" hidden="0" locked="0" epg="0">
-		<S i="439f" n="BVN" t="2cec" on="13e" s="130" frq="10815"/>
-		<S i="e26" n="DAS ERSTE" t="708" on="c8" s="130" frq="11541"/>
-		<S i="1f4b" n="ZDF" t="319c" on="13e" s="130" frq="11054"/>
-		<S i="25f" n="DW Europe" t="3c8c" on="13e" s="130" frq="11604"/>
-		<S i="1072" n="Rai HD" t="3ee" on="1" s="192" frq="11288"/>
-		<S i="d49" n="Rai 1 HD" t="1450" on="13e" s="130" frq="11766"/>
-		<S i="1073" n="Rai 2 HD" t="3ee" on="1" s="192" frq="11288"/>
-		<S i="1074" n="Rai 3 HD" t="3ee" on="1" s="192" frq="11288"/>
-		<S i="213f" n="Rai 1" t="3070" on="13e" s="130" frq="10992"/>
-		<S i="2140" n="Rai 2" t="3070" on="13e" s="130" frq="10992"/>
-		<S i="2141" n="Rai 3" t="3070" on="13e" s="130" frq="10992"/>
-		<S i="d4b" n="Rai 3 TGR FVG" t="1450" on="13e" s="130" frq="11766"/>
-		<S i="d52" n="Rai 5" t="1450" on="13e" s="130" frq="11766"/>
-		<S i="cee" n="Rai Gulp" t="1518" on="13e" s="130" frq="11804"/>
-		<S i="2144" n="Rai News 24" t="3070" on="13e" s="130" frq="10992"/>
-		<S i="cea" n="Rai Premium" t="1518" on="13e" s="130" frq="11804"/>
-		<S i="d4e" n="Rai Scuola" t="1450" on="13e" s="130" frq="11766"/>
-		<S i="ce9" n="Rai Sport 1" t="1518" on="13e" s="130" frq="11804"/>
-		<S i="ce5" n="Rai Sport 2" t="1518" on="13e" s="130" frq="11804"/>
-		<S i="ceb" n="Rai Storia" t="1518" on="13e" s="130" frq="11804"/>
-		<S i="d66" n="Rai yoyo" t="1450" on="13e" s="130" frq="11766"/>
-		<S i="d4c" n="RaiMed" t="1450" on="13e" s="130" frq="11766"/>
+	<Bouquet name="Hotbird">
+		<S i="439f" t="2cec" on="13e" s="130" frq="10815" n="BVN"/>
+		<S i="e26" t="708" on="c8" s="130" frq="11541" n="DAS ERSTE"/>
+		<S i="1f4b" t="319c" on="13e" s="130" frq="11054" n="ZDF"/>
+		<S i="25f" t="3c8c" on="13e" s="130" frq="11604" n="DW Europe"/>
+		<S i="1072" t="3ee" on="1" s="192" frq="11288" n="Rai HD"/>
+		<S i="d49" t="1450" on="13e" s="130" frq="11766" n="Rai 1 HD"/>
+		<S i="1073" t="3ee" on="1" s="192" frq="11288" n="Rai 2 HD"/>
+		<S i="1074" t="3ee" on="1" s="192" frq="11288" n="Rai 3 HD"/>
+		<S i="213f" t="3070" on="13e" s="130" frq="10992" n="Rai 1"/>
+		<S i="2140" t="3070" on="13e" s="130" frq="10992" n="Rai 2"/>
+		<S i="2141" t="3070" on="13e" s="130" frq="10992" n="Rai 3"/>
+		<S i="d4b" t="1450" on="13e" s="130" frq="11766" n="Rai 3 TGR FVG"/>
+		<S i="d52" t="1450" on="13e" s="130" frq="11766" n="Rai 5"/>
+		<S i="cee" t="1518" on="13e" s="130" frq="11804" n="Rai Gulp"/>
+		<S i="2144" t="3070" on="13e" s="130" frq="10992" n="Rai News 24"/>
+		<S i="cea" t="1518" on="13e" s="130" frq="11804" n="Rai Premium"/>
+		<S i="d4e" t="1450" on="13e" s="130" frq="11766" n="Rai Scuola"/>
+		<S i="ce9" t="1518" on="13e" s="130" frq="11804" n="Rai Sport 1"/>
+		<S i="ce5" t="1518" on="13e" s="130" frq="11804" n="Rai Sport 2"/>
+		<S i="ceb" t="1518" on="13e" s="130" frq="11804" n="Rai Storia"/>
+		<S i="d66" t="1450" on="13e" s="130" frq="11766" n="Rai yoyo"/>
+		<S i="d4c" t="1450" on="13e" s="130" frq="11766" n="RaiMed"/>
 	</Bouquet>
 </zapit>

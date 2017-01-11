@@ -509,7 +509,7 @@ yaud-neutrino-mp-tangos: yaud-none lirc \
 	@TUXBOX_YAUD_CUSTOMIZE@
 	@echo "********************************************************************************"
 	@echo -e "\033[01;32m"
-	@echo " Build of neutrino-mp-next for $(BOXTYPE) successfully completed."
+	@echo " Build of neutrino-mp-tangos for $(BOXTYPE) successfully completed."
 	@echo -e "\033[00m"
 	@echo "********************************************************************************"
 	@touch $(D)/build_complete

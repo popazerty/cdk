@@ -178,7 +178,8 @@
 +	data.data[1] = 0;
 +	data.data[4] = 0;
  	data.length = 5;
- 	write_to_vfd(VFDPWRLED, &data);
+-	write_to_vfd(VFDPWRLED, &data);
++	write_to_vfd(VFDSETLED, &data);
 -	usleep(100000);
 +#elif defined (BOXMODEL_HS7420) \
 + || defined (BOXMODEL_HS7810A) \
