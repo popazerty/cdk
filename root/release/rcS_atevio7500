@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 161126.1
+#Version 170101.1
 
 echo "Fortis HS8200 Enigma2"
 
@@ -23,8 +23,6 @@ else
 fi
 
 /etc/init.d/mountvirtfs start
-
-#insmod $MODDIR/sata.ko
 
 # Start automounter with umount timeout of 5 seconds
 /etc/init.d/autofs start
@@ -162,6 +160,10 @@ if [ -e $MODDIR/pl2303.ko ]; then
    insmod $MODDIR/pl2303.ko
 fi
 
+if [ -e $MODDIR/sata.ko ]; then
+   insmod $MODDIR/sata.ko
+fi
+
 echo "[rcS] Init remote control (LOAD 2)"
 echo "LOAD 2" > /dev/vfd
 mknod /dev/rc c 147 1
@@ -233,7 +235,7 @@ if [ ! -e /tmp/reference.dat ] && [ -e /var/bin/reference.dat ]; then
 fi
 
 #timefix e2
-date -s "201612011200"
+date -s "201701011200"
 # Try and synchronise time
 #inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
 # if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then

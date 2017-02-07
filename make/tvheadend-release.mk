@@ -968,6 +968,7 @@ $(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL1
 	@echo " Build of Tvheadend for $(BOXTYPE) successfully completed."
 	@echo -e "\033[00m"
 	@echo "***************************************************************"
+	@touch $(D)/build_completed
 #
 # release-clean
 #

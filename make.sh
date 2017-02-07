@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version 20161219.2
+# Version 20170207.1
 
 ##############################################
 
@@ -258,7 +258,7 @@ if [ "$3" ]; then
 	REPLY="$3"
 else
 	REPLY=N
-	read -p "Activate debug (y/N)? "
+	read -p "Activate debug (y/N*)? "
 fi
 if [ "$REPLY" == "y" -o "$REPLY" == "Y" ]; then
 	CONFIGPARAM="$CONFIGPARAM --enable-debug"
