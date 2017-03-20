@@ -1,21 +1,20 @@
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2-nightly/configure.ac
 --- enigma2-nightly.org/configure.ac	2015-08-07 17:31:49.665972690 +0200
 +++ enigma2-nightly/configure.ac	2015-08-19 23:14:08.327487372 +0200
-@@ -34,10 +34,158 @@
+@@ -18,6 +18,7 @@
+ AC_PATH_PROG(MSGFMT, msgfmt, AC_MSG_ERROR(Could not find msgfmt))
+ 
+ AM_PATH_PYTHON
++PYTHON_NOVERSIONCHECK=no
+ AX_PYTHON_DEVEL
+ AX_PKG_SWIG
+ AX_SWIG_ENABLE_CXX
+@@ -34,10 +35,149 @@
  	AS_HELP_STRING([--with-gstversion],[use gstreamer version (major.minor)]),
  	[GST_MAJORMINOR=$withval],[GST_MAJORMINOR=0.10])
  
 -PKG_CHECK_MODULES(GSTREAMER, gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR)
 -PKG_CHECK_MODULES(BASE, [freetype2 fribidi gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
-+AC_ARG_ENABLE(duckbox,
-+	[  --enable-duckbox          enable duckbox options],
-+	[AC_DEFINE(ENABLE_DUCKBOX,1,[enable duckbox options])])
-+
-+AM_CONDITIONAL(ENABLE_DUCKBOX,test "$enable_duckbox" = "yes")
-+if test "$enable_duckbox" = "yes"; then
-+	AC_DEFINE(ENABLE_DUCKBOX,1,[include TDT duckbox options])
-+fi
-+
 +AC_ARG_ENABLE(libeplayer3,
 +	[  --enable-libeplayer3          enable TDT libeplayer3 as player engine support],
 +	[AC_DEFINE(ENABLE_LIBEPLAYER3,1,[enable TDT libeplayer3 as player engine support])])
@@ -162,7 +161,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  
  AC_CHECK_LIB([dl], [dlopen], [LIBDL_LIBS="-ldl"], [AC_MSG_ERROR([Could not find libdl])])
  AC_SUBST(LIBDL_LIBS)
-@@ -182,6 +330,22 @@
+@@ -182,6 +322,22 @@
  	PKG_CHECK_MODULES(DVBCSA, libdvbcsa)
  fi
  
@@ -185,7 +184,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  
  ENIGMA2_CFLAGS="-fno-rtti -fno-exceptions"
  AC_SUBST(ENIGMA2_CFLAGS)
-@@ -243,8 +407,6 @@
+@@ -243,8 +399,6 @@
  lib/python/Plugins/Extensions/TuxboxPlugins/Makefile
  lib/python/Plugins/Extensions/TuxboxPlugins/meta/Makefile
  lib/python/Plugins/PLi/Makefile
@@ -194,7 +193,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/Makefile
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/meta/Makefile
  lib/python/Plugins/SystemPlugins/DiseqcTester/Makefile
-@@ -274,6 +436,50 @@
+@@ -274,6 +428,50 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
@@ -638,7 +637,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/rc.cpp en
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp enigma2-nightly/lib/driver/vfd.cpp
 --- enigma2-nightly.org/lib/driver/vfd.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ enigma2-nightly/lib/driver/vfd.cpp	2013-05-11 19:07:01.916432460 +0200
-@@ -0,0 +1,791 @@
+@@ -0,0 +1,804 @@
 +/*
 + * vfd.cpp
 + *
@@ -680,6 +679,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 + * 20140527 Audioniek       Spark7162 spins circle on init.
 + * 20150316 Audioniek       Spark7162 circle spin on init removed.
 + * 20160101 Audioniek       Fortis HS7420 and HS7429 added.
++ * 20170313 Audioniek       Kathrein UFS910/912 added.
 + *
 + ****************************************************************************/
 +#include <stdarg.h>
@@ -781,6 +781,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +	vfd_type = 10;
 +#elif defined(PLATFORM_HS7420) || defined(PLATFORM_HS7429)
 +	vfd_type = 11;
++#elif defined(PLATFORM_UFS912) || defined(PLATFORM_UFS913)
++	vfd_type = 12;
 +#else
 +	vfd_type = -1;
 +#endif
@@ -935,6 +937,12 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +		char str[] = "HS7429 Enigma2";
 +	#elif defined PLATFORM_HS7819
 +		char str[] = "7819 Enigma2";
++	#elif defined PLATFORM_UFS910
++		char str[] = "UFS910 Enigma2";
++	#elif defined PLATFORM_UFS912
++		char str[] = "UFS912 Enigma2";
++	#elif defined PLATFORM_UFS913
++		char str[] = "UFS913 Enigma2";
 +	#else
 +		char str[] = "SH4 Git Enigma2";
 +	#endif
@@ -954,6 +962,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +	 && !defined(PLATFORM_CUBEREVO_2000HD) \
 +	 && !defined(PLATFORM_CUBEREVO_9500HD) \
 +	 && !defined(PLATFORM_SPARK7162) \
++	 && !defined PLATFORM_UFS912 \
++	 && !defined PLATFORM_UFS913 \
 +	 && !defined(PLATFORM_HS7119) \
 +	 && !defined(PLATFORM_HS7420) \
 +	 && !defined(PLATFORM_HS7429) \
@@ -970,7 +980,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +		}
 +	}
 +	#else //modulate brightness 3 times
-+	for (int vloop = 0; vloop < 3*14; vloop++)
++	for (int vloop = 0; vloop < 3 * 14; vloop++)
 +	{
 +		if (vloop%14 == 0)
 +		{
@@ -1342,6 +1352,8 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.cpp e
 +		for (int id = 1; id < 40; id++)
 +	#elif defined OCTAGON1008
 +		for (int id = 1; id < 29; id++)
++	#elif defined PLATFORM_UFS912 || defined PLATFORM_UFS913
++		for (int id = 1; id < 16; id++)
 +	#else
 +		for (int id = 0x10; id < 0x20; id++)
 +	#endif
@@ -3755,28 +3767,20 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/Makefile.am enig
  	-include Python.h \
  	-include $(top_builddir)/enigma2_config.h
 +
-+if ENABLE_MEDIAFWGSTREAMER
 +if ENABLE_LIBEPLAYER3
++if ENABLE_MEDIAFWGSTREAMER
 +AM_CPPFLAGS += \
 +	-I$(top_srcdir)/../../apps/tools/libeplayer3/include
-+endif
 +else
 +AM_CPPFLAGS += \
 +	-D__STDC_CONSTANT_MACROS \
 +	-D__STDC_FORMAT_MACROS \
-+	-I$(top_srcdir)/lib/libeplayer3/include
++	-I$(top_srcdir)/../../apps/tools/eplayer3/include
++endif
 +endif
  
  # initialize these, to be filled with targets in the included files
  noinst_LIBRARIES=
-@@ -32,3 +44,7 @@
- 
- # Build the subdirs without parallellism
- SUBDIRS = python
-+
-+if !ENABLE_MEDIAFWGSTREAMER
-+SUBDIRS += libeplayer3
-+endif
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/Converter/RemainingToText.py enigma2-nightly/lib/python/Components/Converter/RemainingToText.py
 --- enigma2-nightly.org/lib/python/Components/Converter/RemainingToText.py	2015-08-07 17:31:49.769972686 +0200
 +++ enigma2-nightly/lib/python/Components/Converter/RemainingToText.py	2015-08-19 23:14:08.347487371 +0200
@@ -9672,15 +9676,15 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicem
  		m_decoder_time_valid_state = 0;
 +#ifdef ENABLE_MEDIAFWGSTREAMER
  		m_currentSubtitleStream = track.pid;
-+#endif
  		m_cachedSubtitleStream = m_currentSubtitleStream;
  		g_object_set (G_OBJECT (m_gst_playbin), "current-text", m_currentSubtitleStream, NULL);
++#endif
  
  		m_subtitle_widget = user;
  
 -		eDebug ("[eServiceMP3] switched to subtitle stream %i", m_currentSubtitleStream);
 +#ifdef ENABLE_MEDIAFWGSTREAMER
-+// 		eDebug ("[eServiceMP3] switched to subtitle stream %i", m_currentSubtitleStream);
++//		eDebug ("[eServiceMP3] switched to subtitle stream %i", m_currentSubtitleStream);
  
  #ifdef GSTREAMER_SUBTITLE_SYNC_MODE_BUG
  		/*
@@ -10126,19 +10130,17 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/Makefile.am eni
  
  enigma2_SOURCES = \
  	bsod.cpp \
-@@ -47,6 +49,28 @@
+@@ -47,6 +49,26 @@
  	@DVBCSA_LIBS@ \
  	-ltuxtxt -ltuxtxt32bpp -lcrypt -lrt
  
-+if ENABLE_MEDIAFWGSTREAMER
 +if ENABLE_LIBEPLAYER3
++if ENABLE_MEDIAFWGSTREAMER
 +enigma2_LDADD += \
 +	-leplayer3
-+endif
 +else
-+if ENABLE_LIBEPLAYER3
 +enigma2_LDADD_WHOLE += \
-+	$(top_builddir)/lib/libeplayer3/libeplayer3.a
++	$(top_builddir)/../../apps/tools/eplayer3/libeplayer3.a
 +enigma2_LDADD += \
 +	@AVFORMAT_LIBS@ \
 +	@AVUTIL_LIBS@ \
@@ -10706,8 +10708,8 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			idx = 4
 +		elif rctype == 11:	# Topfield TF77X0HDPVR
 +			idx = 5
-+#		elif rctype == 12:	# Kathrein UFS912
-+#			idx = 6
++		elif rctype == 12:	# Kathrein UFS912
++			idx = 6
 +#		elif rctype == 13:	# Cuberevo
 +#			idx = 7
 +#		elif rctype == 14:	# ...
@@ -10717,7 +10719,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
  	if key in keyDescriptions[idx]:
 --- enigma2-nightly.org/lib/python/Screens/InputDeviceSetup.py
 +++ enigma2-nightly/lib/python/Screens/InputDeviceSetup.py
-@@ -296,45 +296,21 @@
+@@ -296,45 +296,23 @@
  class RemoteControlType(Screen, ConfigListScreen):
  	rcList = [
  			("0", _("Default")),
@@ -10740,6 +10742,7 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			("9", _("hs7110")),
 +			("10", _("spark")),
 +			("11", _("tf7700")),
++			("12", _("ufs912")),
  		]
  
  	defaultRcList = [
@@ -10770,12 +10773,13 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +			("hs7110", 9),
 +			("spark", 10),
 +			("tf7700", 11),
++			("ufs912", 12),
  		]
  
  	def __init__(self, session):
 --- enigma2-nightly.org/data/rc_models/rc_models.cfg	2014-04-03 08:38:53.154073324 +0200
 +++ enigma2-nightly/data/rc_models/rc_models.cfg	2014-05-28 20:18:22.000000000 +0200
-@@ -19,51 +19,15 @@
+@@ -19,51 +19,17 @@
  #
  # When no entry matches at all, 'default' will be used as remoteName
  #
@@ -10839,6 +10843,8 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 +spark       spark
 +spark7162   spark
 +tf7700hdpvr tf7700
++ufs910      ufs912
++ufs912      ufs912
 --- enigma2-nightly.org/data/rc_models/Makefile.am
 +++ enigma2-nightly/data/rc_models/Makefile.am
 @@ -2,11 +2,9 @@
@@ -10854,9 +10860,9 @@ diff -Nur --exclude=.git --exclude=tuxtxt enigma2-nightly.org/lib/python/Plugins
 -	hd2400.xml  hd1100.xml 	xsarius.xml  xsarius.png wetekplay.xml osmini.xml zgemma.png zgemma.xml miraclebox.xml spycat.xml \
 -	xpeedlx.xml
 +	dmmadv.png \
-+	fs9000.png  hs7110.png  hs9510.png  spark.png tf7700.png \
++	fs9000.png  hs7110.png  hs9510.png  spark.png tf7700.png ufs912.png\
 +	dmm.png \
 +	dmmadv.xml  \
-+	fs9000.xml  hs7110.xml  hs9510.xml  spark.xml tf7700.xml \
++	fs9000.xml  hs7110.xml  hs9510.xml  spark.xml tf7700.xml ufs912.xml\
 +	dmm.xml
 

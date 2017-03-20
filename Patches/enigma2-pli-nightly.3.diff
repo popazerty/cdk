@@ -1,21 +1,20 @@
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2-nightly/configure.ac
 --- enigma2-nightly.org/configure.ac	2015-08-07 17:31:49.665972690 +0200
 +++ enigma2-nightly/configure.ac	2015-08-19 23:14:08.327487372 +0200
-@@ -34,10 +34,158 @@
+@@ -18,6 +18,7 @@
+ AC_PATH_PROG(MSGFMT, msgfmt, AC_MSG_ERROR(Could not find msgfmt))
+ 
+ AM_PATH_PYTHON
++PYTHON_NOVERSIONCHECK=no
+ AX_PYTHON_DEVEL
+ AX_PKG_SWIG
+ AX_SWIG_ENABLE_CXX
+@@ -34,10 +35,149 @@
  	AS_HELP_STRING([--with-gstversion],[use gstreamer version (major.minor)]),
  	[GST_MAJORMINOR=$withval],[GST_MAJORMINOR=0.10])
  
 -PKG_CHECK_MODULES(GSTREAMER, gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR)
 -PKG_CHECK_MODULES(BASE, [freetype2 fribidi gstreamer-$GST_MAJORMINOR gstreamer-pbutils-$GST_MAJORMINOR libdvbsi++ libpng libxml-2.0 sigc++-1.2 libssl libcrypto])
-+AC_ARG_ENABLE(duckbox,
-+	[  --enable-duckbox          enable duckbox options],
-+	[AC_DEFINE(ENABLE_DUCKBOX,1,[enable duckbox options])])
-+
-+AM_CONDITIONAL(ENABLE_DUCKBOX,test "$enable_duckbox" = "yes")
-+if test "$enable_duckbox" = "yes"; then
-+	AC_DEFINE(ENABLE_DUCKBOX,1,[include TDT duckbox options])
-+fi
-+
 +AC_ARG_ENABLE(libeplayer3,
 +	[  --enable-libeplayer3          enable TDT libeplayer3 as player engine support],
 +	[AC_DEFINE(ENABLE_LIBEPLAYER3,1,[enable TDT libeplayer3 as player engine support])])
@@ -162,7 +161,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  
  AC_CHECK_LIB([dl], [dlopen], [LIBDL_LIBS="-ldl"], [AC_MSG_ERROR([Could not find libdl])])
  AC_SUBST(LIBDL_LIBS)
-@@ -182,6 +330,22 @@
+@@ -182,6 +322,22 @@
  	PKG_CHECK_MODULES(DVBCSA, libdvbcsa)
  fi
  
@@ -185,7 +184,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  
  ENIGMA2_CFLAGS="-fno-rtti -fno-exceptions"
  AC_SUBST(ENIGMA2_CFLAGS)
-@@ -243,8 +407,6 @@
+@@ -243,8 +399,6 @@
  lib/python/Plugins/Extensions/TuxboxPlugins/Makefile
  lib/python/Plugins/Extensions/TuxboxPlugins/meta/Makefile
  lib/python/Plugins/PLi/Makefile
@@ -194,7 +193,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/Makefile
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/meta/Makefile
  lib/python/Plugins/SystemPlugins/DiseqcTester/Makefile
-@@ -274,6 +436,50 @@
+@@ -274,6 +428,50 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
@@ -3755,28 +3754,20 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/Makefile.am enig
  	-include Python.h \
  	-include $(top_builddir)/enigma2_config.h
 +
-+if ENABLE_MEDIAFWGSTREAMER
 +if ENABLE_LIBEPLAYER3
++if ENABLE_MEDIAFWGSTREAMER
 +AM_CPPFLAGS += \
 +	-I$(top_srcdir)/../../apps/tools/libeplayer3/include
-+endif
 +else
 +AM_CPPFLAGS += \
 +	-D__STDC_CONSTANT_MACROS \
 +	-D__STDC_FORMAT_MACROS \
-+	-I$(top_srcdir)/lib/libeplayer3/include
++	-I$(top_srcdir)/../../apps/tools/eplayer3/include
++endif
 +endif
  
  # initialize these, to be filled with targets in the included files
  noinst_LIBRARIES=
-@@ -32,3 +44,7 @@
- 
- # Build the subdirs without parallellism
- SUBDIRS = python
-+
-+if !ENABLE_MEDIAFWGSTREAMER
-+SUBDIRS += libeplayer3
-+endif
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Components/Converter/RemainingToText.py enigma2-nightly/lib/python/Components/Converter/RemainingToText.py
 --- enigma2-nightly.org/lib/python/Components/Converter/RemainingToText.py	2015-08-07 17:31:49.769972686 +0200
 +++ enigma2-nightly/lib/python/Components/Converter/RemainingToText.py	2015-08-19 23:14:08.347487371 +0200
@@ -5834,7 +5825,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/S
  config.av.edid_override = ConfigYesNo(default = False)
  video_hw = VideoHardware()
  video_hw.setConfiguredMode()
-diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/ChannelSelection.py enigma2-nightly/lib/python/Screens/ChannelSelection.py
 --- enigma2-nightly.org/lib/python/Components/AVSwitch.py	2014-06-20 15:54:03.944692604 +0200
 +++ enigma2-nightly/lib/python/Components/AVSwitch.py	2014-06-20 15:54:04.080692598 +0200
 @@ -76,11 +76,11 @@
@@ -10139,19 +10129,17 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/main/Makefile.am eni
  
  enigma2_SOURCES = \
  	bsod.cpp \
-@@ -47,6 +49,28 @@
+@@ -47,6 +49,26 @@
  	@DVBCSA_LIBS@ \
  	-ltuxtxt -ltuxtxt32bpp -lcrypt -lrt
  
-+if ENABLE_MEDIAFWGSTREAMER
 +if ENABLE_LIBEPLAYER3
++if ENABLE_MEDIAFWGSTREAMER
 +enigma2_LDADD += \
 +	-leplayer3
-+endif
 +else
-+if ENABLE_LIBEPLAYER3
 +enigma2_LDADD_WHOLE += \
-+	$(top_builddir)/lib/libeplayer3/libeplayer3.a
++	$(top_builddir)/../../apps/tools/eplayer3/libeplayer3.a
 +enigma2_LDADD += \
 +	@AVFORMAT_LIBS@ \
 +	@AVUTIL_LIBS@ \

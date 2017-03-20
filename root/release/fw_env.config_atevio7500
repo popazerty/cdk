@@ -3,4 +3,3 @@
 # environment sector is assumed present.
 # MTD device name   Device offset    Env. size    Flash sector size
 /dev/mtd0           0x00040000       0x00020000   0x20000
-

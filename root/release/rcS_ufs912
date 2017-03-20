@@ -1,6 +1,7 @@
 #!/bin/sh
 
 MODDIR=/lib/modules
+insmod $MODDIR/e2_proc.ko
 insmod $MODDIR/micom.ko paramDebug=0
 
 if [ -e /var/etc/.firstboot ]; then
@@ -15,7 +16,6 @@ fi
 
 /etc/init.d/portmap start
 
-insmod $MODDIR/e2_proc.ko
 
 /etc/init.d/autofs start
 
@@ -109,7 +109,7 @@ if [ ! -e /var/etc/.firstboot ]; then
 
    insmod $MODDIR/bpamem.ko
 
-   showiframe -p /var/boot/bootlogo.mvi &
+   showiframe -p /boot/bootlogo.mvi &
    stfbcontrol a 0
 
    echo "init frontpanel"
@@ -158,7 +158,7 @@ if [ ! -e /var/etc/.firstboot ]; then
 		3) echo "3"
 		   echo "E2 RESTART"
 		   echo "0" > /proc/progress
-		   showiframe -p /var/boot/bootlogo.mvi &;;
+		   showiframe -p /boot/bootlogo.mvi &;;
 		*) echo "*"
 		   echo "ERROR"
            init 6;;

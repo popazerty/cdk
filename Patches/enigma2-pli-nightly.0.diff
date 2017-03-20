@@ -160,9 +160,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
 +	esac])
 +AM_CONDITIONAL([ENABLE_HS7819], [test x$enable_hs7819 = xtrue])
  
+ AC_CHECK_LIB([udfread], [udfread_init])
  AC_CHECK_LIB([dl], [dlopen], [LIBDL_LIBS="-ldl"], [AC_MSG_ERROR([Could not find libdl])])
- AC_SUBST(LIBDL_LIBS)
-@@ -190,6 +338,22 @@
+@@ -191,6 +339,22 @@
  	PKG_CHECK_MODULES(DVBCSA, libdvbcsa)
  fi
  
@@ -185,7 +185,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  
  ENIGMA2_CFLAGS="-fno-rtti -fno-exceptions"
  AC_SUBST(ENIGMA2_CFLAGS)
-@@ -251,8 +415,6 @@
+@@ -252,8 +416,6 @@
  lib/python/Plugins/Extensions/TuxboxPlugins/Makefile
  lib/python/Plugins/Extensions/TuxboxPlugins/meta/Makefile
  lib/python/Plugins/PLi/Makefile
@@ -194,7 +194,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/configure.ac enigma2
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/Makefile
  lib/python/Plugins/SystemPlugins/DefaultServicesScanner/meta/Makefile
  lib/python/Plugins/SystemPlugins/DiseqcTester/Makefile
-@@ -282,6 +444,50 @@
+@@ -283,6 +445,50 @@
  lib/python/Plugins/SystemPlugins/Videomode/meta/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
  lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
@@ -1491,7 +1491,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/driver/vfd.h eni
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp enigma2-nightly/lib/dvb/decoder.cpp
 --- enigma2-nightly.org/lib/dvb/decoder.cpp	2015-08-07 17:31:49.749972687 +0200
 +++ enigma2-nightly/lib/dvb/decoder.cpp	2015-08-19 23:14:08.331487372 +0200
-@@ -77,14 +77,19 @@
+@@ -76,14 +76,19 @@
  			pes.pes_type = DMX_PES_AUDIO3;
  			break;
  		}
@@ -1512,7 +1512,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBAudio%d] DEMUX_START ", m_dev);
  		if (::ioctl(m_fd_demux, DMX_START) < 0)
  		{
-@@ -92,6 +97,7 @@
+@@ -91,6 +96,7 @@
  			return -errno;
  		}
  		eDebugNoNewLine("ok\n");
@@ -1520,7 +1520,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	}
  
  	if (m_fd >= 0)
-@@ -135,7 +141,9 @@
+@@ -134,7 +140,9 @@
  			eDebugNoNewLine("failed: %m\n");
  		else
  			eDebugNoNewLine("ok\n");
@@ -1530,7 +1530,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBAudio%d] AUDIO_PLAY ", m_dev);
  		if (::ioctl(m_fd, AUDIO_PLAY) < 0)
  			eDebugNoNewLine("failed: %m\n");
-@@ -371,7 +379,11 @@
+@@ -370,7 +378,11 @@
  			pes.pes_type = DMX_PES_VIDEO3;
  			break;
  		}
@@ -1542,7 +1542,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBVideo%d] DMX_SET_PES_FILTER pid=0x%04x ", m_dev, pid);
  		if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
  		{
-@@ -379,6 +391,7 @@
+@@ -378,6 +390,7 @@
  			return -errno;
  		}
  		eDebugNoNewLine("ok\n");
@@ -1550,22 +1550,26 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		eDebugNoNewLineStart("[eDVBVideo%d] DEMUX_START ", m_dev);
  		if (::ioctl(m_fd_demux, DMX_START) < 0)
  		{
-@@ -386,11 +399,14 @@
+@@ -385,11 +398,14 @@
  			return -errno;
  		}
  		eDebugNoNewLine("ok\n");
+-	}
+-
+-	if (m_fd >= 0)
+-	{
 +#endif
- 	}
- 
- 	if (m_fd >= 0)
- 	{
++	}
++
++	if (m_fd >= 0)
++	{
 +#if not defined(__sh__) // this is a hack which only matters for dm drivers
  		freeze();  // why freeze here?!? this is a problem when only a pid change is requested... because of the unfreeze logic in Decoder::setState
 +#endif
  		eDebugNoNewLineStart("[eDVBVideo%d] VIDEO_PLAY ", m_dev);
  		if (::ioctl(m_fd, VIDEO_PLAY) < 0)
  			eDebugNoNewLine("failed: %m\n");
-@@ -678,7 +694,11 @@
+@@ -677,7 +693,11 @@
  		pes.pes_type = DMX_PES_PCR3;
  		break;
  	}
@@ -1577,7 +1581,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	eDebugNoNewLineStart("[eDVBPCR%d] DMX_SET_PES_FILTER pid=0x%04x ", m_dev, pid);
  	if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
  	{
-@@ -686,6 +706,7 @@
+@@ -685,6 +705,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1585,7 +1589,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	eDebugNoNewLineStart("[eDVBPCR%d] DEMUX_START ", m_dev);
  	if (::ioctl(m_fd_demux, DMX_START) < 0)
  	{
-@@ -693,6 +714,7 @@
+@@ -692,6 +713,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1593,7 +1597,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	return 0;
  }
  
-@@ -748,7 +770,11 @@
+@@ -747,7 +769,11 @@
  		pes.pes_type = DMX_PES_TELETEXT3;
  		break;
  	}
@@ -1605,7 +1609,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  
  	eDebugNoNewLineStart("[eDVBText%d] DMX_SET_PES_FILTER pid=0x%04x ", m_dev, pid);
  	if (::ioctl(m_fd_demux, DMX_SET_PES_FILTER, &pes) < 0)
-@@ -757,6 +783,7 @@
+@@ -756,6 +782,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1613,7 +1617,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	eDebugNoNewLineStart("[eDVBText%d] DEMUX_START ", m_dev);
  	if (::ioctl(m_fd_demux, DMX_START) < 0)
  	{
-@@ -764,6 +791,7 @@
+@@ -763,6 +790,7 @@
  		return -errno;
  	}
  	eDebugNoNewLine("ok\n");
@@ -1621,7 +1625,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	return 0;
  }
  
-@@ -900,12 +928,28 @@
+@@ -899,12 +927,28 @@
  		int *s = state_table[m_state];
  		if (changed & (changeState|changeVideo) && m_video)
  		{
@@ -1650,7 +1654,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  		}
  		if (changed & (changeState|changeAudio) && m_audio)
  		{
-@@ -1206,6 +1250,10 @@
+@@ -1205,6 +1249,10 @@
  		{
  			struct stat s;
  			fstat(f, &s);
@@ -1661,7 +1665,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  			if (m_video_clip_fd == -1)
  				m_video_clip_fd = open("/dev/dvb/adapter0/video0", O_WRONLY);
  			if (m_video_clip_fd >= 0)
-@@ -1226,8 +1274,10 @@
+@@ -1225,8 +1273,10 @@
  
  				if (ioctl(m_video_clip_fd, VIDEO_SELECT_SOURCE, VIDEO_SOURCE_MEMORY) < 0)
  					eDebug("[eTSMPEGDecoder] VIDEO_SELECT_SOURCE MEMORY failed: %m");
@@ -1672,7 +1676,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  				if (ioctl(m_video_clip_fd, VIDEO_PLAY) < 0)
  					eDebug("[eTSMPEGDecoder] VIDEO_PLAY failed: %m");
  				if (ioctl(m_video_clip_fd, VIDEO_CONTINUE) < 0)
-@@ -1244,7 +1294,9 @@
+@@ -1243,7 +1293,9 @@
  				if (!seq_end_avail)
  					write(m_video_clip_fd, seq_end, sizeof(seq_end));
  				writeAll(m_video_clip_fd, stuffing, 8192);
@@ -1852,7 +1856,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  		m_cached_channel_state_changed_conn.disconnect();
  		m_cached_channel=0;
  		m_releaseCachedChannelTimer->stop();
-@@ -2124,6 +2106,12 @@
+@@ -2126,6 +2108,12 @@
  
  	if (m_pvr_fd_dst < 0)
  	{
@@ -1865,7 +1869,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.cpp enig
  		ePtr<eDVBAllocatedDemux> &demux = m_demux ? m_demux : m_decoder_demux;
  		if (demux)
  		{
-@@ -2139,6 +2127,7 @@
+@@ -2141,6 +2129,7 @@
  			eDebug("[eDVBChannel] no demux allocated yet.. so its not possible to open the dvr device!!");
  			return -ENODEV;
  		}
@@ -1899,16 +1903,16 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.h enigma
  #endif
  
  #define eDebugNoSimulate(x...) \
-@@ -1187,7 +1191,7 @@
- 				}
- #endif
- 				// fallback to old DVB API
--				if(!signalquality && !signalqualitydb || strstr(m_description, "Sundtek"))
-+				if((!signalquality && !signalqualitydb) || (strstr(m_description, "Sundtek")))
- 				{
- 					int snr = readFrontendData(iFrontendInformation_ENUMS::snrValue);
- 					calculateSignalQuality(snr, signalquality, signalqualitydb);
-@@ -2830,10 +2834,10 @@
+#@@ -1195,7 +1199,7 @@
+# 				}
+# #endif
+# 				// fallback to old DVB API
+#-				if(!signalquality && !signalqualitydb || strstr(m_description, "Sundtek"))
+#+				if((!signalquality && !signalqualitydb) || (strstr(m_description, "Sundtek")))
+# 				{
+# 					int snr = readFrontendData(iFrontendInformation_ENUMS::snrValue);
+# 					calculateSignalQuality(snr, signalquality, signalqualitydb);
+@@ -2835,10 +2839,10 @@
  		case SYS_ISDBT:		ss << " ISDBT"; break;
  		case SYS_UNDEFINED:	ss << " UNDEFINED"; break;
  		case SYS_DVBC_ANNEX_A:	ss << " DVBC_ANNEX_A"; break;
@@ -1925,7 +1929,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/dvb.h enigma
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cpp enigma2-nightly/lib/dvb/epgcache.cpp
 --- enigma2-nightly.org/lib/dvb/epgcache.cpp	2015-08-07 17:31:49.753972687 +0200
 +++ enigma2-nightly/lib/dvb/epgcache.cpp	2015-08-19 23:14:08.335487371 +0200
-@@ -1929,6 +1929,45 @@
  {
  	int map;
  	iDVBSectionReader *reader = NULL;
@@ -1971,7 +1974,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/epgcache.cpp
  	switch (source)
  	{
  		case NOWNEXT:
-@@ -2053,6 +2092,10 @@
+@@ -2279,6 +2318,10 @@
  			cache->sectionRead(data, source, this);
  		}
  	}
@@ -2088,7 +2091,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/base/filepush.h 
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/pmt.cpp enigma2-nightly/lib/dvb/pmt.cpp
 --- enigma2-nightly.org/lib/dvb/pmt.cpp	2015-08-07 17:31:49.753972687 +0200
 +++ enigma2-nightly/lib/dvb/pmt.cpp	2015-08-19 23:14:08.339487371 +0200
-@@ -812,6 +812,11 @@
+@@ -829,6 +829,11 @@
  			eDVBCIInterfaces::getInstance()->addPMTHandler(this);
  	} else if (!simulate) // no simulation of playback services
  	{
@@ -3040,7 +3043,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  	if ((screeninfo.xres != (unsigned int)nxRes) || (screeninfo.yres != (unsigned int)nyRes) ||
  		(screeninfo.bits_per_pixel != (unsigned int)nbpp))
  	{
-@@ -167,15 +196,22 @@
+@@ -168,15 +197,22 @@
  	}
  	stride=fix.line_length;
  	memset(lfb, 0, stride*yRes);
@@ -3063,7 +3066,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  }
  
  int fbClass::setOffset(int off)
-@@ -195,11 +231,94 @@
+@@ -196,11 +232,94 @@
  
  void fbClass::blit()
  {
@@ -3158,7 +3161,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  }
  
  fbClass::~fbClass()
-@@ -235,6 +354,25 @@
+@@ -236,6 +355,25 @@
  	}
  	else
  		locked = 1;
@@ -3184,7 +3187,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
  	return fbFd;
  }
  
-@@ -245,27 +383,89 @@
+@@ -246,27 +384,89 @@
  	if (locked == 2)  // re-enable manualBlit
  		enableManualBlit();
  	locked=0;
@@ -5931,7 +5934,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap
  from Components.MenuList import MenuList
  from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
-@@ -151,7 +156,7 @@
+@@ -152,7 +157,7 @@
  		self.parentalControl = parentalControl
  		self.parentalControlEnabled = config.ParentalControl.servicepin[0].value and config.ParentalControl.servicepinactive.value
  		if not (current_sel_path or current_sel_flags & (eServiceReference.isDirectory|eServiceReference.isMarker)) or current_sel_flags & eServiceReference.isGroup:
@@ -5940,7 +5943,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  		if csel.bouquet_mark_edit == OFF and not csel.entry_marked:
  			if not inBouquetRootList:
  				isPlayable = not (current_sel_flags & (eServiceReference.isMarker|eServiceReference.isDirectory))
-@@ -159,17 +164,17 @@
+@@ -160,17 +165,17 @@
  					for p in plugins.getPlugins(PluginDescriptor.WHERE_CHANNEL_CONTEXT_MENU):
  						append_when_current_valid(current, menu, (p.name, boundFunction(self.runPlugin, p)), key="bullet")
  					if config.servicelist.startupservice.value == current.toString():
@@ -5963,7 +5966,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  						if config.ParentalControl.hideBlacklist.value and not parentalControl.sessionPinCached and config.ParentalControl.storeservicepin.value != "never":
  							append_when_current_valid(current, menu, (_("Unhide parental control services"), self.unhideParentalServices), level=0, key="1")
  					if SystemInfo["3DMode"] and  fileExists("/usr/lib/enigma2/python/Plugins/SystemPlugins/OSD3DSetup/plugin.py"):
-@@ -189,93 +194,93 @@
+@@ -190,93 +195,93 @@
  						else:
  							bouquetCnt = len(bouquets)
  						if not self.inBouquet or bouquetCnt > 1:
@@ -6096,7 +6099,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  		self["menu"] = ChoiceList(menu)
  
  	def set3DMode(self, value):
-@@ -833,6 +838,9 @@
+@@ -834,6 +839,9 @@
  		self.saved_title = None
  		self.saved_root = None
  		self.current_ref = None
@@ -6106,7 +6109,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  		self.editMode = False
  		self.confirmRemove = True
  
-@@ -940,7 +948,7 @@
+@@ -941,7 +949,7 @@
  				if mutableAlternatives:
  					mutableAlternatives.setListName(name)
  					if mutableAlternatives.addService(cur_service.ref):
@@ -6115,7 +6118,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  					mutableAlternatives.flushChanges()
  					self.servicelist.addService(new_ref.ref, True)
  					self.servicelist.removeCurrent()
-@@ -951,7 +959,7 @@
+@@ -952,7 +960,7 @@
  					if self.startServiceRef and cur_service.ref == self.startServiceRef:
  						self.startServiceRef = new_ref.ref
  				else:
@@ -6124,7 +6127,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  			else:
  				print "add", str, "to", cur_root.getServiceName(), "failed"
  		else:
-@@ -972,10 +980,10 @@
+@@ -973,10 +981,10 @@
  					if services is not None:
  						for service in services:
  							if mutableBouquet.addService(service):
@@ -6137,7 +6140,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  				# do some voodoo to check if current_root is equal to bouquet_root
  				cur_root = self.getRoot();
  				str1 = cur_root and cur_root.toString()
-@@ -985,9 +993,9 @@
+@@ -986,9 +994,9 @@
  					self.servicelist.addService(new_bouquet_ref)
  					self.servicelist.resetRoot()
  			else:
@@ -6150,7 +6153,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  
  	def copyCurrentToBouquetList(self):
  		provider = ServiceReference(self.getCurrentSelection())
-@@ -1013,11 +1021,11 @@
+@@ -1014,11 +1022,11 @@
  					if self.startServiceRef and cur_service.ref == self.startServiceRef:
  						self.startServiceRef = first_in_alternative
  				else:
@@ -6167,7 +6170,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  		self.removeBouquet()
  		if not end:
  			self.servicelist.moveUp()
-@@ -1099,6 +1107,9 @@
+@@ -1100,6 +1108,9 @@
  			else:
  				new_title += ' ' + _("[favourite edit]")
  		self.setTitle(new_title)
@@ -6177,7 +6180,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  		self.__marked = self.servicelist.getRootServices()
  		for x in self.__marked:
  			self.servicelist.addMarked(eServiceReference(x))
-@@ -1126,6 +1137,9 @@
+@@ -1127,6 +1138,9 @@
  		self.bouquet_mark_edit = OFF
  		self.mutableList = None
  		self.setTitle(self.saved_title)
@@ -6187,7 +6190,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  		self.saved_title = None
  		# self.servicePath is just a reference to servicePathTv or Radio...
  		# so we never ever do use the asignment operator in self.servicePath
-@@ -1202,6 +1216,9 @@
+@@ -1203,6 +1217,9 @@
  			self.mutableList.flushChanges() # FIXME add check if changes was made
  			self.mutableList = None
  			self.setTitle(self.saved_title)
@@ -6197,7 +6200,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  			self.saved_title = None
  			self.servicelist.resetRoot()
  			self.servicelist.l.setHideNumberMarker(config.usage.hide_number_markers.value)
-@@ -1213,6 +1230,9 @@
+@@ -1214,6 +1231,9 @@
  			self.saved_title = self.getTitle()
  			pos = self.saved_title.find(')')
  			self.setTitle(self.saved_title[:pos+1] + ' ' + _("[move mode]") + self.saved_title[pos+1:]);
@@ -6207,7 +6210,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  			self.servicelist.l.setHideNumberMarker(False)
  			self.setCurrentSelection(self.servicelist.getCurrent())
  		self["Service"].editmode = True
-@@ -1268,6 +1288,11 @@
+@@ -1269,6 +1289,11 @@
  
  		self["list"] = ServiceList(self)
  		self.servicelist = self["list"]
@@ -6219,7 +6222,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  
  		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
  		self.numericalTextInput.setUseableChars(u'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-@@ -1361,6 +1386,9 @@
+@@ -1362,6 +1387,9 @@
  			title = title[:pos]
  		title += _(" (TV)")
  		self.setTitle(title)
@@ -6229,7 +6232,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  
  	def setRadioMode(self):
  		self.mode = MODE_RADIO
-@@ -1372,6 +1400,9 @@
+@@ -1373,6 +1401,9 @@
  			title = title[:pos]
  		title += _(" (Radio)")
  		self.setTitle(title)
@@ -6239,7 +6242,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  
  	def setRoot(self, root, justSet=False):
  		if self.startRoot is None:
-@@ -1426,6 +1457,9 @@
+@@ -1427,6 +1458,9 @@
  					end_ref = None
  				nameStr = self.getServiceName(base_ref)
  				titleStr += ' - ' + nameStr
@@ -6249,7 +6252,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/C
  				if end_ref is not None:
  					if Len > 2:
  						titleStr += '/../'
-@@ -1433,7 +1467,13 @@
+@@ -1434,7 +1468,13 @@
  						titleStr += '/'
  					nameStr = self.getServiceName(end_ref)
  					titleStr += nameStr
@@ -6743,7 +6746,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/I
 diff -Naur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Screens/ScanSetup.py enigma2-nightly/lib/python/Screens/ScanSetup.py
 --- enigma2-nightly.org/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:24.143088681 +0200
 +++ enigma2-nightly/lib/python/Screens/ScanSetup.py	2014-06-21 13:05:30.091088431 +0200
-@@ -1147,7 +1147,7 @@
+@@ -1173,7 +1173,7 @@
  		self.cable_toggle = {"single_transponder":"complete", "complete":"single_transponder"}
  		self.scan_typeterrestrial = ConfigSelection(default = defaultTerrSearchType, choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("complete", _("Complete"))])
  		self.scan_type_atsc = ConfigSelection(default = defaultATSCSearchType, choices = [("single_transponder", _("User defined transponder")), ("predefined_transponder", _("Predefined transponder")), ("complete", _("Complete"))])
@@ -7034,7 +7037,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviced
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/servicedvbrecord.cpp enigma2-nightly/lib/service/servicedvbrecord.cpp
 --- enigma2-nightly.org/lib/service/servicedvbrecord.cpp	2015-08-07 17:31:49.845972683 +0200
 +++ enigma2-nightly/lib/service/servicedvbrecord.cpp	2015-08-19 23:14:08.359487370 +0200
-@@ -10,6 +10,10 @@
+@@ -11,6 +11,10 @@
  #include <byteswap.h>
  #include <netinet/in.h>
  
@@ -7045,7 +7048,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/service/serviced
  DEFINE_REF(eDVBServiceRecord);
  
  eDVBServiceRecord::eDVBServiceRecord(const eServiceReferenceDVB &ref, bool isstreamclient): m_ref(ref)
-@@ -294,9 +298,43 @@
+@@ -283,9 +287,43 @@
  
  	if (!m_record && m_tuned && !m_streaming && !m_simulate)
  	{

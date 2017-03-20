@@ -206,6 +206,7 @@ release_enigma2_ufs912: release_enigma2_common_utils
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
+	cp -f $(buildprefix)/root/release/rc_ufs912.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_ufs912.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
 
 #
