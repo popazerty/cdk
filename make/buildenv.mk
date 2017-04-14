@@ -64,6 +64,7 @@ WGET=$(SOCKSIFY) wget --progress=bar
 #enable parallel makes
 CPU_CORES ?= $(shell getconf _NPROCESSORS_ONLN || echo 1)
 MAKEFLAGS=-j$(CPU_CORES)
+MAKEFLAGS+= --no-print-directory
 export MAKEFLAGS
 START_BUILD=@echo "--------------------------------------------"; echo -e "Start build of \033[01;32m$(subst .deps/,,$@)\033[0m."; echo
 TOUCH=@touch $@; echo -e "Build of \033[01;32m$(subst .deps/,,$@)\033[0m completed."; echo

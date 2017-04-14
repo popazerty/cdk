@@ -354,7 +354,7 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 	else \
 		if [ -d $(archivedir)/linux-sh4-2.6.32.y.git ]; then \
 			echo -n "Updating STlinux kernel source..."; \
-			cd $(archivedir)/linux-sh4-2.6.32.y.git; git pull; \
+			cd $(archivedir)/linux-sh4-2.6.32.y.git; git pull -q; \
 			echo " done."; \
 		else \
 			echo "Getting STlinux kernel source..."; \
@@ -368,7 +368,7 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 		cd $(buildprefix)/$(KERNEL_DIR); \
 		git checkout -q $(HOST_KERNEL_REVISION); \
 		echo " done."; \
-		echo -n "Archiving patched kernel source"; \
+		echo -n "Archiving patched kernel source..."; \
 		tar --exclude=.git -czf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz .; \
 		echo " done."; \
 	fi

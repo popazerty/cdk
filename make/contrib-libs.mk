@@ -623,6 +623,7 @@ $(D)/libffi: $(D)/bootstrap @DEPENDS_libffi@
 # orc
 #
 $(D)/orc: $(D)/bootstrap @DEPENDS_orc@
+	$(START_BUILD)
 	@PREPARE_orc@
 	cd @DIR_orc@ && \
 		$(CONFIGURE) \
@@ -652,6 +653,7 @@ $(D)/glib2: $(D)/bootstrap $(D)/host_glib2_genmarshal $(D)/zlib $(D)/libffi $(D)
 			--prefix=/usr \
 			--cache-file=config.cache \
 			--disable-gtk-doc \
+			--disable-libmount \
 			--with-threads="posix" \
 			--enable-static \
 		&& \
