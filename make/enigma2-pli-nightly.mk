@@ -25,8 +25,11 @@ if WITH_XMLCCWRAP
   ENIGMA2_DEPS += libxmlccwrap
 endif
 
-#E_CONFIG_OPTS = --enable-duckbox
 E_CONFIG_OPTS = 
+
+#ifeq ($(E2_DIFF), 0)
+#ENIGMA2_DEPS += avahi
+#endif
 
 if ENABLE_SPARK
 E_CONFIG_OPTS += --enable-spark
@@ -184,7 +187,9 @@ $(D)/enigma2-pli-nightly: enigma2-pli-nightly.do_prepare enigma2-pli-nightly.do_
 		(echo "Cloning PLi-HD skin git..."; git clone -q -b $$HEAD $$REPO $(archivedir)/PLi-HD_skin.git;);
 	@cp -ra $(archivedir)/PLi-HD_skin.git/usr/share/enigma2/* $(targetprefix)/usr/local/share/enigma2; \
 	cd $(targetprefix)/usr/local/share/enigma2 && patch -p1 $(SILENT_PATCH) < "$(buildprefix)/Patches/PLi-HD_skin.patch"
-	@$(TOUCH)
+	@rm -rf $(TARGETPREFIX)/usr/local/share/enigma2/PLi-FullHD
+	@rm -rf $(TARGETPREFIX)/usr/local/share/enigma2/PLi-FullNightHD
+	$(TOUCH)
 
 enigma2-pli-nightly-clean:
 	rm -f $(D)/enigma2-pli-nightly
