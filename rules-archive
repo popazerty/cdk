@@ -84,7 +84,8 @@ rtmpdump.git;git://github.com/oe-alliance/rtmpdump;2.4
 lirc-0.9.0.tar.gz;https://sourceforge.net/projects/lirc/files/LIRC/0.9.0
 libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
 libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
-glib-2.45.4.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.45
+#glib-2.45.4.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.45
+glib-2.51.0.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.51
 libffi-3.2.1.tar.gz;ftp://sourceware.org/pub/libffi
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
 libmng-1.0.10.tar.bz2;https://sourceforge.net/projects/libmng/files/libmng-devel/1.0.10
@@ -107,7 +108,7 @@ libdvbsi++-0.3.7.tar.bz2;http://www.saftware.de/libdvbsi++
 libmodplug-0.8.8.4.tar.gz;https://sourceforge.net/projects/modplug-xmms/files/libmodplug/0.8.8.4
 lzo-2.06.tar.gz;http://www.oberhumer.com/opensource/lzo/download
 yajl.git;git://github.com/lloyd/yajl;f4b2b1af87483caac60e50e5352fc783d9b2de2d
-pcre-8.30.tar.bz2;http://sourceforge.net/projects/pcre/files/pcre/8.30
+pcre-8.39.tar.bz2;http://sourceforge.net/projects/pcre/files/pcre/8.39
 libcdio-0.83.tar.gz;http://ftp.gnu.org/gnu/libcdio
 jasper-1.900.1.zip;http://www.ece.uvic.ca/~frodo/jasper/software
 mysql-5.1.40.tar.gz;http://downloads.mysql.com/archives/mysql-5.1
@@ -230,7 +231,7 @@ dpf-ax.svn;svn://svn.code.sf.net/p/dpf-ax/code/trunk
 #
 # Security
 #
-openssl-1.0.2j.tar.gz;ftp://ftp.openssl.org/source
+openssl-1.0.2k.tar.gz;ftp://ftp.openssl.org/source
 gnutls-3.4.3.tar.xz;ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4
 nettle-3.1.tar.gz;https://ftp.gnu.org/gnu/nettle
 
@@ -247,7 +248,7 @@ jfsutils-1.1.15.tar.gz;http://jfs.sourceforge.net/project/pub
 lm_sensors-2.9.2.tar.gz;http://dl.lm-sensors.org/lm-sensors/releases
 sdparm-1.07.tgz;http://sg.danny.cz/sg/p
 parted-3.0.tar.gz;http://ftp.gnu.org/pub/gnu/parted
-util-linux-2.25.2.tar.gz;https://www.kernel.org/pub/linux/utils/util-linux/v2.25
+util-linux-2.25.2.tar.gz;http://ftp.kernel.org/pub/linux/utils/util-linux/v2.25
 xfsprogs-3.1.8.tar.gz;http://ftp.gwdg.de/pub/linux/misc/xfs/xfs/cmd_tars
 smartmontools-6.4.tar.gz;http://sourceforge.net/projects/smartmontools/files/smartmontools/6.4
 
@@ -274,6 +275,6 @@ wpa_supplicant-0.7.3.tar.gz;http://w1.fi/releases
 ethtool-6.tar.gz;http://downloads.openwrt.org/sources
 xupnpd.git;git://github.com/clark15b/xupnpd
 udpxy.1.0.23-0-prod.tar.gz;http://www.udpxy.com/download/1_23
-glib-networking-2.45.1.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/2.45
+glib-networking-2.50.0.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/2.50
 openvpn-2.3.12.tar.xz;http://swupdate.openvpn.org/community/releases
 openssh-7.1p1.tar.gz;http://artfiles.org/openbsd/OpenSSH/portable
