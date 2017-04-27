@@ -113,6 +113,15 @@ CONFIGPARAM="$CONFIGPARAM --host=$host_alias --build=$host_alias"
 if [ -e ../cdk_new/config ]; then
 	echo -e -n "\nBuild from cdk_new found, performing make distclean..."
 	make distclean 2> /dev/null > /dev/null
+	pushd
+	cd ../apps/tools
+	rm config.status
+	rm config.log
+	rm configure
+	rm libtool
+	rm Makefile
+	rm Makefile.in
+	popd
 	echo " [Done]"
 	rm ../cdk_new/config
 fi

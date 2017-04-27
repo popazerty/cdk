@@ -179,7 +179,8 @@ iso_codes;;iso-codes;iso-codes.git;extract:iso-codes.git
 # AirPlay
 #
 avahi;0.6.31;avahi-0.6.31;avahi-0.6.31.tar.gz;extract:avahi-0.6.31.tar.gz
-dbus;1.8;dbus-dbus-1.8;dbus-dbus-1.8.tar.gz;extract:dbus-dbus-1.8.tar.gz
+#dbus;1.8;dbus-dbus-1.8;dbus-dbus-1.8.tar.gz;extract:dbus-dbus-1.8.tar.gz
+dbus;1.8.0;dbus-dbus-1.8.0;dbus-1.8.0.tar.gz;extract:dbus-1.8.0.tar.gz
 libdaemon;0.14;libdaemon-0.14;libdaemon-0.14.tar.gz;extract:libdaemon-0.14.tar.gz
 libplist;1.10;libplist-1.10;libplist-1.10.tar.gz;extract:libplist-1.10.tar.gz
 

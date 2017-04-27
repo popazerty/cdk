@@ -156,7 +156,8 @@ iso-codes.git;git://anonscm.debian.org/pkg-isocodes/iso-codes.git
 # AirPlay
 #
 avahi-0.6.31.tar.gz;http://www.avahi.org/download
-dbus-dbus-1.8.tar.gz;http://cgit.freedesktop.org/dbus/dbus/snapshot
+#dbus-dbus-1.8.tar.gz;http://cgit.freedesktop.org/dbus/dbus/snapshot
+dbus-1.8.0.tar.gz;http://dbus.freedesktop.org/releases/dbus
 libdaemon-0.14.tar.gz;http://0pointer.de/lennart/projects/libdaemon
 libplist-1.10.tar.gz;http://cgit.sukimashita.com/libplist.git/snapshot
 

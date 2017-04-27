@@ -3267,7 +3267,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.cpp enigm
 +	if(-bottom > yRes) bottom = -yRes;
 +	bottomDiff = bottom;
 +}
-
 diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/gdi/fb.h enigma2-nightly/lib/gdi/fb.h
 --- enigma2-nightly.org/lib/gdi/fb.h	2015-08-07 17:31:49.761972686 +0200
 +++ enigma2-nightly/lib/gdi/fb.h	2015-08-19 23:14:08.343487371 +0200
@@ -3942,7 +3941,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  
  	def killPartition(self, n):
  		zero = 512 * '\0'
-@@ -297,15 +307,21 @@
+@@ -297,15 +307,23 @@
  		h.close()
  
  	def createInitializeJob(self):
@@ -3950,24 +3949,31 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
 +		job = Task.Job(_("Initialize hard disk"))
  		size = self.diskSize()
 -		print "[HD] size: %s MB" % size
+-
+-		task = UnmountTask(job, self)
+-
+-		task = Task.PythonTask(job, _("Removing partition table"))
+-		task.work = self.killPartitionTable
+-		task.weighting = 1
 +		sectors = ((size*1000/512)*1000)
 +		print "[Harddisk] Create initialize job, consisting of:"
 +		print "[Harddisk init] Initializing device /dev/%s, size is: %s MB" % (self.device, size)
 +		print "                (Equals %s sectors)" % sectors
- 
- 		task = UnmountTask(job, self)
- 
--		task = Task.PythonTask(job, _("Removing partition table"))
-+		print "[Harddisk init] Unmount", self.disk_path
 +
-+		task = Task.PythonTask(job, _("Removing current partition table"))
- 		task.work = self.killPartitionTable
- 		task.weighting = 1
-+		print "[Harddisk init] Killing partition table on ", self.disk_path
++		if self.disk_path:
++			task = UnmountTask(job, self)
++			print "[Harddisk init] Unmount", self.disk_path
++			task = Task.PythonTask(job, _("Removing current partition table"))
++			task.work = self.killPartitionTable
++			task.weighting = 1
++			print "[Harddisk init] Killing partition table on ", self.disk_path
++		else:
++			self.disk_path = "/dev/"+self.device
++			print "[Harddisk init] No partitions found on ", self.disk_path
  
  		task = Task.LoggingTask(job, _("Rereading partition table"))
  		task.weighting = 1
-@@ -313,86 +329,159 @@
+@@ -313,86 +331,153 @@
  		task.args.append('-z')
  		task.args.append(self.disk_path)
  
@@ -4081,12 +4087,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
 -						big_o_options.append("bigalloc")
 -				except Exception, ex:
 -					print "Failed to detect Linux version:", ex
-+# audioniek: we have Linux 2.6 and not 3.2
-+#			if size > 20000:
-+#				version = open("/proc/version","r").read().split(' ', 4)[2].split('.',2)[:2]
-+#				if (version[0] > 3) or ((version[0] > 2) and (version[1] >= 2)):
-+#					# Linux version 3.2 supports bigalloc and -C option, use 256k blocks
-+#					task.args += ["-O", "bigalloc", "-C", "262144"]
  		else:
  			task.setTool("mkfs.ext3")
 -		if size > 250000:
@@ -4167,7 +4167,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		return job
  
  	def initialize(self):
-@@ -424,7 +513,7 @@
+@@ -424,7 +509,7 @@
  
  	def createExt4ConversionJob(self):
  		if not isFileSystemSupported('ext4'):
@@ -4176,7 +4176,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		job = Task.Job(_("Converting ext3 to ext4..."))
  		if not os.path.exists('/sbin/tune2fs'):
  			addInstallTask(job, 'e2fsprogs-tune2fs')
-@@ -435,10 +524,12 @@
+@@ -435,10 +520,12 @@
  		else:
  			# otherwise, assume there is one partition
  			dev = self.partitionPath("1")
@@ -4189,7 +4189,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		task = Task.LoggingTask(job, "tune2fs")
  		task.setTool('tune2fs')
  		task.args.append('-O')
-@@ -446,6 +537,7 @@
+@@ -446,6 +533,7 @@
  		task.args.append('-o')
  		task.args.append('journal_data_writeback')
  		task.args.append(dev)
@@ -4197,7 +4197,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		task = Task.LoggingTask(job, "fsck")
  		task.setTool('fsck.ext4')
  		task.postconditions = [] # ignore result, it will always "fail"
-@@ -453,7 +545,9 @@
+@@ -453,7 +541,9 @@
  		task.args.append('-p')
  		task.args.append('-D')
  		task.args.append(dev)
@@ -4207,7 +4207,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		task = Task.ConditionTask(job, _("Waiting for mount"))
  		task.check = self.mountDevice
  		return job
-@@ -587,7 +681,8 @@
+@@ -587,7 +677,8 @@
  		return ''
  
  DEVICEDB =  \
@@ -4217,7 +4217,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		{
  			# dm8000:
  			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.1/1-1.1:1.0": "Front USB Slot",
-@@ -595,18 +690,18 @@
+@@ -595,18 +686,18 @@
  			"/devices/platform/brcm-ehci.0/usb1/1-1/1-1.3/1-1.3:1.0": "Back, lower USB Slot",
  			"/devices/platform/brcm-ehci-1.1/usb2/2-1/2-1:1.0/host1/target1:0:0/1:0:0:0": "DVD Drive",
  		},
@@ -4248,7 +4248,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  	}
  
  def addInstallTask(job, package):
-@@ -695,17 +790,26 @@
+@@ -695,17 +786,26 @@
  					self.addHotplugPartition(part)
  				self.devices_scanned_on_init.append((blockdev, removable, is_cdrom, medium_found))
  
@@ -4279,7 +4279,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		return None
  
  	def addHotplugPartition(self, device, physdev = None):
-@@ -721,6 +825,10 @@
+@@ -721,6 +821,10 @@
  		error, blacklisted, removable, is_cdrom, partitions, medium_found = self.getBlockDevInfo(device)
  		if not blacklisted and medium_found:
  			description = self.getUserfriendlyDeviceName(device, physdev)
@@ -4290,7 +4290,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  			p = Partition(mountpoint = self.getMountpoint(device), description = description, force_mounted = True, device = device)
  			self.partitions.append(p)
  			if p.mountpoint: # Plugins won't expect unmounted devices
-@@ -813,7 +921,7 @@
+@@ -813,7 +917,7 @@
  		try:
  			description = readFile("/sys" + phys + "/model")
  		except IOError, s:
@@ -4299,7 +4299,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		from Tools.HardwareInfo import HardwareInfo
  		for physdevprefix, pdescription in DEVICEDB.get(HardwareInfo().device_name,{}).items():
  			if phys.startswith(physdevprefix):
-@@ -858,7 +966,7 @@
+@@ -858,7 +962,7 @@
  			dev = self.hdd.disk_path.split('/')[-1]
  			open('/dev/nomount.%s' % dev, "wb").close()
  		except Exception, e:
@@ -4308,7 +4308,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		self.setTool('umount')
  		self.args.append('-f')
  		for dev in self.hdd.enumMountDevices():
-@@ -866,7 +974,7 @@
+@@ -866,7 +970,7 @@
  			self.postconditions.append(Task.ReturncodePostcondition())
  			self.mountpoints.append(dev)
  		if not self.mountpoints:
@@ -4317,7 +4317,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  			self.cmd = 'true'
  			self.args = [self.cmd]
  	def afterRun(self):
-@@ -874,7 +982,7 @@
+@@ -874,7 +978,7 @@
  			try:
  				os.rmdir(path)
  			except Exception, ex:
@@ -4326,7 +4326,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  
  class MountTask(Task.LoggingTask):
  	def __init__(self, job, hdd):
-@@ -885,7 +993,7 @@
+@@ -885,7 +989,7 @@
  			dev = self.hdd.disk_path.split('/')[-1]
  			os.unlink('/dev/nomount.%s' % dev)
  		except Exception, e:
@@ -4335,7 +4335,7 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Component
  		# try mounting through fstab first
  		if self.hdd.mount_device is None:
  			dev = self.hdd.partitionPath("1")
-@@ -914,7 +1022,7 @@
+@@ -914,7 +1018,7 @@
  	def prepare(self):
  		self.fsck_state = None
  	def processOutput(self, data):
@@ -5555,9 +5555,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/S
 +			info=service.info()
 +			crypted = info and info.getInfo(iServiceInformation.sIsCrypted) or -1
 +			if crypted == 1 : #set crypt symbol
-+				evfd.getInstance().vfd_set_icon(0x13,1)
++				evfd.getInstance().vfd_set_icon(0x13,True)
 +			else:
-+				evfd.getInstance().vfd_set_icon(0x13,0)
++				evfd.getInstance().vfd_set_icon(0x13,False)
 +
 +	def checkAudioTracks(self):
 +		self.dolbyAvailable = False
@@ -5578,16 +5578,16 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/S
 +	def showDolby(self):
 +		print "[showDolby]"
 +		if self.dolbyAvailable:
-+			evfd.getInstance().vfd_set_icon(0x17,1)
++			evfd.getInstance().vfd_set_icon(0x17,True)
 +		else:
-+			evfd.getInstance().vfd_set_icon(0x17,0)
++			evfd.getInstance().vfd_set_icon(0x17,False)
 +
 +	def showMp3(self):
 +		print "[showMp3]"
 +		if self.mp3Available:
-+			evfd.getInstance().vfd_set_icon(0x15,1)
++			evfd.getInstance().vfd_set_icon(0x15,True)
 +		else:
-+			evfd.getInstance().vfd_set_icon(0x15,0)
++			evfd.getInstance().vfd_set_icon(0x15,False)
 +
 +	def __evUpdatedEventInfo(self):
 +		print "[__evUpdatedEventInfo]"
@@ -5604,9 +5604,9 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/S
 +	def __evSeekableStatusChanged(self):
 +		print "[__evSeekableStatusChanged]"
 +		if self.getSeekState():
-+			evfd.getInstance().vfd_set_icon(0x1A,1)
++			evfd.getInstance().vfd_set_icon(0x1A,True)
 +		else:
-+			evfd.getInstance().vfd_set_icon(0x1A,0)
++			evfd.getInstance().vfd_set_icon(0x1A,False)
 +
 +	def __evVideoSizeChanged(self):
 +		print "[__evVideoSizeChanged]"
@@ -5615,17 +5615,17 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/python/Plugins/S
 +			info=service.info()
 +			height = info and info.getInfo(iServiceInformation.sVideoHeight) or -1
 +			if height > 576 : #set HD symbol
-+				evfd.getInstance().vfd_set_icon(0x11,1)
++				evfd.getInstance().vfd_set_icon(0x11,True)
 +			else:
-+				evfd.getInstance().vfd_set_icon(0x11,0)
++				evfd.getInstance().vfd_set_icon(0x11,False)
 +
 +	def gotRecordEvent(self, service, event):
 +		recs = self.session.nav.getRecordings()
 +		nrecs = len(recs)
 +		if nrecs > 0: #set rec symbol
-+			evfd.getInstance().vfd_set_icon(0x1e,1)
++			evfd.getInstance().vfd_set_icon(0x1e,True)
 +		else:
-+			evfd.getInstance().vfd_set_icon(0x1e,0)
++			evfd.getInstance().vfd_set_icon(0x1e,False)
 +
 +VFDIconsInstance = None
 +
@@ -10185,17 +10185,16 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/mytest.py enigma2-ni
  		dlg.isTmp = True
  		dlg.callback = None
  		self.execBegin()
-@@ -355,7 +359,8 @@
+@@ -355,7 +359,7 @@
  	def doAction(self, selected, longkey=False):
  		if self.longkeyPressed:
  			self.longkeyPressed = False
 -		elif selected and self.session.infobar:
-+#		elif selected and self.session.infobar:
 +		elif selected:
  			if longkey:
  				self.longkeyPressed = True
  			selected = selected.split("/")
-@@ -496,10 +501,10 @@
+@@ -496,10 +500,10 @@
  	if wakeupList:
  		from time import strftime
  		startTime = wakeupList[0]

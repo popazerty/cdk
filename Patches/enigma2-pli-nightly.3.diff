@@ -1519,7 +1519,6 @@ diff -Nur '--exclude-from=diff-exclude' enigma2-nightly.org/lib/dvb/decoder.cpp 
  	}
  
  	if (m_fd >= 0)
- 
 @@ -128,7 +134,9 @@
  			eDebugNoNewLine("failed: %m\n");
  		else

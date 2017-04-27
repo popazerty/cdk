@@ -18,18 +18,18 @@ ENIGMA2_DEPS  = bootstrap libncurses libcurl libid3tag libmad libpng libjpeg lib
 ENIGMA2_DEPS += libexpat libdvbsipp python libxml2_e2 libxslt python_elementtree python_lxml python_zope_interface
 ENIGMA2_DEPS += python_twisted python_pyopenssl python_wifi python_imaging python_pyusb python_pycrypto python_pyasn1 python_mechanize python_six
 ENIGMA2_DEPS += python_requests python_futures python_singledispatch python_livestreamer python_livestreamersrv
-ENIGMA2_DEPS += libdreamdvd tuxtxt32bpp sdparm hotplug_e2 wpa_supplicant wireless_tools minidlna opkg ethtool ntp
+ENIGMA2_DEPS += libdreamdvd tuxtxt32bpp sdparm hotplug_e2 wpa_supplicant wireless_tools minidlna opkg ethtool
 ENIGMA2_DEPS += $(MEDIAFW_DEP) $(EXTERNALLCD_DEP) $(THREEG_MODEM_DEP)
 
 if WITH_XMLCCWRAP
   ENIGMA2_DEPS += libxmlccwrap
 endif
 
-E_CONFIG_OPTS = 
+if WITH_AVAHI
+  ENIGMA2_DEPS += avahi
+endif
 
-#ifeq ($(E2_DIFF), 0)
-#ENIGMA2_DEPS += avahi
-#endif
+E_CONFIG_OPTS = 
 
 if ENABLE_SPARK
 E_CONFIG_OPTS += --enable-spark
@@ -37,7 +37,7 @@ endif
 
 if ENABLE_SPARK7162
 E_CONFIG_OPTS += --enable-spark7162
-#ENIGMA2_DEPS += ntp
+ENIGMA2_DEPS += ntp
 endif
 
 if ENABLE_FORTIS_HDBOX
