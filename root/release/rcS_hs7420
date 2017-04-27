@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 160526.1
+#Version 170425.1
 
 echo "Fortis HS7420 Enigma2"
 
@@ -221,8 +221,6 @@ if [ ! -e /tmp/reference.dat ] && [ -e /var/bin/reference.dat ]; then
    cp /var/bin/reference.dat /tmp
 fi
 
-#timefix e2
-date -s "201605011200"
 # Try and synchronise time
 #inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
 # if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then

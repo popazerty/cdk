@@ -1,5 +1,5 @@
 #!/bin/sh
-#Version 170101.1
+#Version 170410.1
 
 echo "Fortis HS8200 Enigma2"
 
@@ -9,7 +9,6 @@ insmod $MODDIR/e2_proc.ko
 
 echo "[rcS] Init frontpanel"
 insmod $MODDIR/nuvoton.ko
-insmod $MODDIR/simu_button.ko
 
 if [ -e /var/etc/.firstboot ]; then
    echo "Wait 1 min." > /dev/vfd
@@ -88,8 +87,7 @@ echo "[rcS] Init AVS (LOAD 5)"
 echo "LOAD 5" > /dev/vfd
 insmod $MODDIR/avs.ko type=stv6412
 
-player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
-echo "[rcS] Init player $player (LOAD 4)"
+echo "[rcS] (LOAD 4)"
 echo "LOAD 4" > /dev/vfd
 insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
@@ -107,15 +105,35 @@ insmod $MODDIR/avl2108.ko
 # DVB-C
 #insmod $MODDIR/tda10024.ko
 # DVB-T
-insmod $MODDIR/cxd2820.ko
+#insmod $MODDIR/cxd2820.ko
 
 echo "[rcS] Init CI & cardreader"
 insmod $MODDIR/starci.ko
 
-insmod $MODDIR/pti.ko
-insmod $MODDIR/stm_monitor.ko
-insmod $MODDIR/stmsysfs.ko
-insmod $MODDIR/stmdvb.ko
+echo "[rcS] Init pti"
+player=`cat /proc/stb/player/version`
+if [ $player=='player191' ]; then
+   echo "[rcS] Init player2"
+elif [ $player=='player179' ]; then
+   echo "init player 179"
+else
+   echo "init player 131"
+fi
+if [ $player=='player191' ] || [ $player=='player179' ]; then
+   # Full feature pti
+   insmod $MODDIR/pti.ko waitMS=20 videoMem=4096
+   if [ $?=='2' ]; then
+      # Simple pti
+      insmod $MODDIR/pti.ko
+   fi
+   insmod $MODDIR/stm_monitor.ko
+   insmod $MODDIR/stmsysfs.ko
+   insmod $MODDIR/stmdvb.ko
+else
+   insmod $MODDIR/pti.ko
+   insmod $MODDIR/stmdvb.ko
+   insmod $MODDIR/stm_monitor.ko
+fi
 
 echo "[rcS] Init player2 (LOAD 3)"
 echo "LOAD 3" > /dev/vfd
@@ -159,10 +177,12 @@ fi
 if [ -e $MODDIR/pl2303.ko ]; then
    insmod $MODDIR/pl2303.ko
 fi
-
 if [ -e $MODDIR/sata.ko ]; then
    insmod $MODDIR/sata.ko
 fi
+
+echo "[rcS] Init frontpanel buttons"
+insmod $MODDIR/simu_button.ko
 
 echo "[rcS] Init remote control (LOAD 2)"
 echo "LOAD 2" > /dev/vfd
@@ -234,8 +254,6 @@ if [ ! -e /tmp/reference.dat ] && [ -e /var/bin/reference.dat ]; then
    cp /var/bin/reference.dat /tmp
 fi
 
-#timefix e2
-date -s "201701011200"
 # Try and synchronise time
 #inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
 # if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
