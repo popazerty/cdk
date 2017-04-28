@@ -543,7 +543,7 @@ AC_ARG_WITH(defaultserver,
 
 AC_ARG_WITH(archivedir,
 	[  --with-archivedir=DIR		where to store downloaded files [[Archive/]]],
-	[archivedir="$with_archivedir"],[archivedir="$buildprefix/Archive"])
+	[archivedir="$with_archivedir"],[archivedir="~/Archive"])
 
 if test "$defaultserver" = "NONE"; then
 	defaultserver=""
@@ -551,16 +551,16 @@ fi
 
 if test "$cvsdir" = "NONE"; then
 	if test "$appsdir" = "NONE"; then
-		appsdir="$buildprefix/apps"
+		appsdir="$buildprefix/../apps"
 	fi
 	if test "$driverdir" = "NONE"; then
-		driverdir="$buildprefix/driver"
+		driverdir="$buildprefix/../driver"
 	fi
 	if test "$sourcedir" = "NONE"; then
-		sourcedir="$buildprefix/source"
+		sourcedir="$buildprefix/../source"
 	fi
 	if test "$buildtmp" = "NONE"; then
-		buildtmp="$buildprefix/build_tmp"
+		buildtmp="$buildprefix/../build_tmp"
 	fi
 else
 	if test "$appsdir" = "NONE"; then
