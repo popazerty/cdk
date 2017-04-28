@@ -40,7 +40,6 @@ giflib-5.1.2.tar.bz2;https://sourceforge.net/projects/giflib/files/
 libungif-4.1.4.tar.bz2;https://sourceforge.net/projects/giflib/files/libungif-4.x/libungif-4.1.4
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
 libjpeg-turbo-1.4.2.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.4.2
-#libpng-1.2.50.tar.bz2;http://sourceforge.net/projects/libpng/files/libpng12/1.2.50
 libpng-1.6.24.tar.gz;https://sourceforge.net/projects/libpng/files/libpng16/older-releases/1.6.24
 png++-0.2.9.tar.gz;http://download.savannah.gnu.org/releases/pngpp
 tiff-4.0.3.tar.gz;http://download.osgeo.org/libtiff
@@ -84,7 +83,6 @@ rtmpdump.git;git://github.com/oe-alliance/rtmpdump;2.4
 lirc-0.9.0.tar.gz;https://sourceforge.net/projects/lirc/files/LIRC/0.9.0
 libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
 libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
-#glib-2.45.4.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.45
 glib-2.51.0.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.51
 libffi-3.2.1.tar.gz;ftp://sourceware.org/pub/libffi
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
@@ -104,7 +102,7 @@ ffmpeg-3.0.1.tar.bz2;http://ffmpeg.org/releases
 fdk-aac.git;git://github.com/mstorsjo/fdk-aac.git
 libcap-2.22.tar.bz2;http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2
 BroFS1.2.tgz;http://www.avalpa.com/assets/freesoft/other
-libdvbsi++-0.3.7.tar.bz2;http://www.saftware.de/libdvbsi++
+libdvbsi++.git;git://git.opendreambox.org/git/obi/libdvbsi++.git
 libmodplug-0.8.8.4.tar.gz;https://sourceforge.net/projects/modplug-xmms/files/libmodplug/0.8.8.4
 lzo-2.06.tar.gz;http://www.oberhumer.com/opensource/lzo/download
 yajl.git;git://github.com/lloyd/yajl;f4b2b1af87483caac60e50e5352fc783d9b2de2d
