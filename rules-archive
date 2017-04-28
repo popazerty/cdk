@@ -164,12 +164,14 @@ libplist-1.10.tar.gz;http://cgit.sukimashita.com/libplist.git/snapshot
 #
 Python-2.7.11.tar.xz;https://www.python.org/ftp/python/2.7.11
 gdata-2.0.18.tar.gz;https://gdata-python-client.googlecode.com/files
-elementtree-1.2.6-20050316.tar.gz;http://effbot.org/media/downloads
+#elementtree-1.2.6-20050316.tar.gz;https://effbot.org/media/downloads
+#elementtree-1.2.6-20050316.tar.gz;http://pkgs.fedoraproject.org/repo/pkgs/python-elementtree/elementtree-1.2.6-20050316.tar.gz/e1b21716be8bfff8bf192fc3880ad008
 lxml-2.2.8.tgz;https://launchpadlibrarian.net/54848077
 libxmlccwrap-0.0.12.tar.gz;http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwrap/download
 setuptools-5.2.tar.gz;https://pypi.python.org/packages/source/s/setuptools
 Twisted-16.0.0.tar.bz2;https://pypi.python.org/packages/source/T/Twisted
-Imaging-1.1.7.tar.gz;http://effbot.org/media/downloads
+Imaging-1.1.7.tar.gz;https://effbot.org/media/downloads
+#Imaging-1.1.7.tar.gz;https://ftp.heanet.ie/mirrors/xbmc/build-deps/sources
 pycrypto-2.6.1.tar.gz;https://pypi.python.org/packages/source/p/pycrypto
 pyOpenSSL-0.13.1.tar.gz;http://pypi.python.org/packages/source/p/pyOpenSSL
 pyusb-1.0.0a3.tar.gz;http://pypi.python.org/packages/source/p/pyusb
@@ -247,7 +249,8 @@ jfsutils-1.1.15.tar.gz;http://jfs.sourceforge.net/project/pub
 lm_sensors-2.9.2.tar.gz;http://dl.lm-sensors.org/lm-sensors/releases
 sdparm-1.07.tgz;http://sg.danny.cz/sg/p
 parted-3.0.tar.gz;http://ftp.gnu.org/pub/gnu/parted
-util-linux-2.25.2.tar.gz;http://ftp.kernel.org/pub/linux/utils/util-linux/v2.25
+#util-linux-2.25.2.tar.gz;http://ftp.kernel.org/pub/linux/utils/util-linux/v2.25
+util-linux-2.25.2.tar.xz;https://www.kernel.org/pub/linux/utils/util-linux/v2.25
 xfsprogs-3.1.8.tar.gz;http://ftp.gwdg.de/pub/linux/misc/xfs/xfs/cmd_tars
 smartmontools-6.4.tar.gz;http://sourceforge.net/projects/smartmontools/files/smartmontools/6.4
 
