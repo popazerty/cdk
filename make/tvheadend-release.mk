@@ -47,6 +47,7 @@ release_tvheadend_cube_common:
 	chmod 777 $(prefix)/release/etc/init.d/reboot
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(targetprefix)/bin/eeprom $(prefix)/release/bin
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/ipbox/micom.ko $(prefix)/release/lib/modules/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx21143}.fw
@@ -112,6 +113,7 @@ release_tvheadend_common_ipbox:
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/siinfo/siinfo.ko $(prefix)/release/lib/modules/
 	cp -f $(buildprefix)/root/release/fstab_ipbox $(prefix)/release/etc/fstab
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp -dp $(buildprefix)/root/release/lircd_ipbox.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(buildprefix)/root/release/lircd_ipbox $(prefix)/release/usr/bin/lircd
 	rm -f $(prefix)/release/lib/firmware/*
@@ -160,6 +162,7 @@ release_tvheadend_ufs910: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7100.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,stv6306}.fw
 	mv $(prefix)/release/lib/firmware/dvb-fe-cx21143.fw $(prefix)/release/lib/firmware/dvb-fe-cx24116.fw
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
@@ -217,6 +220,7 @@ release_tvheadend_ufs922: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/ufs922_fan/fan_ctrl.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
@@ -232,6 +236,7 @@ release_tvheadend_ufc960: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
@@ -293,6 +298,7 @@ release_tvheadend_fortis_hdbox: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/component_7111_mb618.fw
 	rm -f $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
@@ -330,6 +336,7 @@ release_tvheadend_octagon1008: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(targetprefix)/lib/firmware/dvb-fe-avl2108.fw $(prefix)/release/lib/firmware/
 	cp $(targetprefix)/lib/firmware/dvb-fe-stv6306.fw $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/component_7111_mb618.fw
@@ -343,6 +350,23 @@ release_tvheadend_octagon1008: release_tvheadend_common_utils
 release_tvheadend_hs7110: release_tvheadend_common_utils
 	echo "hs7110" > $(prefix)/release/etc/hostname
 	cp $(buildprefix)/root/release/halt_hs7110 $(prefix)/release/etc/init.d/halt
+	chmod 755 $(prefix)/release/etc/init.d/halt
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-sti7111.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/video_7111.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7111.elf $(prefix)/release/lib/firmware/audio.elf
+	mv $(prefix)/release/lib/firmware/component_7111_mb618.fw $(prefix)/release/lib/firmware/component.fw
+	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
+	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
+
+#
+# release_hs7420
+#
+release_tvheadend_hs7420: release_tvheadend_common_utils
+	echo "hs7420" > $(prefix)/release/etc/hostname
+	cp $(buildprefix)/root/release/halt_hs7420 $(prefix)/release/etc/init.d/halt
 	chmod 755 $(prefix)/release/etc/init.d/halt
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
@@ -377,6 +401,23 @@ release_tvheadend_hs7810a: release_tvheadend_common_utils
 release_tvheadend_hs7119: release_tvheadend_common_utils
 	echo "hs7119" > $(prefix)/release/etc/hostname
 	cp $(buildprefix)/root/release/halt_hs7119 $(prefix)/release/etc/init.d/halt
+	chmod 755 $(prefix)/release/etc/init.d/halt
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-sti7111.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/video_7111.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7111.elf $(prefix)/release/lib/firmware/audio.elf
+	mv $(prefix)/release/lib/firmware/component_7111_mb618.fw $(prefix)/release/lib/firmware/component.fw
+	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
+	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
+
+#
+# release_hs7429
+#
+release_tvheadend_hs7429: release_tvheadend_common_utils
+	echo "hs7429" > $(prefix)/release/etc/hostname
+	cp $(buildprefix)/root/release/halt_hs7429 $(prefix)/release/etc/init.d/halt
 	chmod 755 $(prefix)/release/etc/init.d/halt
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
@@ -450,6 +491,7 @@ release_tvheadend_hl101: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(targetprefix)/lib/firmware/dvb-fe-avl2108.fw $(prefix)/release/lib/firmware/
 	cp $(targetprefix)/lib/firmware/dvb-fe-stv6306.fw $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
@@ -470,6 +512,7 @@ release_tvheadend_adb_box: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/cec_adb_box/cec_ctrl.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/as102/dvb-as102.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(buildprefix)/root/firmware/as102_data1_st.hex $(prefix)/release/lib/firmware/
 	cp $(buildprefix)/root/firmware/as102_data2_st.hex $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
@@ -488,6 +531,7 @@ release_tvheadend_vip1_v2: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/fstab_vip2 $(prefix)/release/etc/fstab
 	cp -dp $(buildprefix)/root/release/lircd_vip1_v2.conf $(prefix)/release/etc/lircd.conf
@@ -504,6 +548,7 @@ release_tvheadend_vip2_v1: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/fstab_vip2 $(prefix)/release/etc/fstab
 	cp -dp $(buildprefix)/root/release/lircd_vip2_v1.conf $(prefix)/release/etc/lircd.conf
@@ -519,6 +564,7 @@ release_tvheadend_hs5101: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7100.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/lib/firmware/audio.elf
 	cp -dp $(buildprefix)/root/release/lircd_hs5101.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx21143,stv6306}.fw
@@ -535,6 +581,7 @@ release_tvheadend_tf7700: release_tvheadend_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp -f $(buildprefix)/root/release/fstab_tf7700 $(prefix)/release/etc/fstab
 
 #
@@ -581,6 +628,7 @@ release_tvheadend_sagemcom88: release_tvheadend_common_utils
 #
 # the following target creates the common file base
 release_tvheadend_base:
+	$(START_BUILD)
 	rm -rf $(prefix)/release || true
 	$(INSTALL_DIR) $(prefix)/release && \
 	$(INSTALL_DIR) $(prefix)/release/{bin,boot,dev,dev.static,etc,hdd,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var} && \
@@ -623,7 +671,6 @@ release_tvheadend_base:
 	ln -sf ../sbin/MAKEDEV $(prefix)/release/dev/MAKEDEV && \
 	ln -sf ../../sbin/MAKEDEV $(prefix)/release/lib/udev/MAKEDEV && \
 	cp $(targetprefix)/boot/uImage $(prefix)/release/boot/ && \
-	cp $(targetprefix)/boot/audio.elf $(prefix)/release/lib/firmware/audio.elf && \
 	cp -dp $(targetprefix)/etc/fstab $(prefix)/release/etc/ && \
 	cp -dp $(buildprefix)/root/etc/group $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/host.conf $(prefix)/release/etc/ && \
@@ -649,11 +696,11 @@ release_tvheadend_base:
 	cp -aR $(buildprefix)/root/usr/share/udhcpc/* $(prefix)/release/usr/share/udhcpc/ && \
 	cp -aR $(buildprefix)/root/usr/share/zoneinfo/* $(prefix)/release/usr/share/zoneinfo/ && \
 	echo "576i50" > $(prefix)/release/etc/videomode && \
-	cp $(buildprefix)/root/release/rcS_tvheadend$(if $(TF7700),_$(TF7700))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(HS7110),_$(HS7110))$(if $(HS7810A),_$(HS7810A))$(if $(HS7119),_$(HS7119))$(if $(HS7819),_$(HS7819))$(if $(ATEMIO520),_$(ATEMIO520))$(if $(ATEMIO530),_$(ATEMIO530))$(if $(HL101),_$(HL101))$(if $(VIP1_V2),_$(VIP1_V2))$(if $(VIP2_V1),_$(VIP2_V1))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_MINI_FTA),_$(CUBEREVO_MINI_FTA))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(CUBEREVO_9500HD),_$(CUBEREVO_9500HD))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162)) $(prefix)/release/etc/init.d/rcS && \
+	cp $(buildprefix)/root/release/rcS_tvheadend$(if $(TF7700),_$(TF7700))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(HS7110),_$(HS7110))$(if $(HS7420),_$(HS7420))$(if $(HS7810A),_$(HS7810A))$(if $(HS7119),_$(HS7119))$(if $(HS7429),_$(HS7429))$(if $(HS7819),_$(HS7819))$(if $(ATEMIO520),_$(ATEMIO520))$(if $(ATEMIO530),_$(ATEMIO530))$(if $(HL101),_$(HL101))$(if $(VIP1_V2),_$(VIP1_V2))$(if $(VIP2_V1),_$(VIP2_V1))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_MINI_FTA),_$(CUBEREVO_MINI_FTA))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(CUBEREVO_9500HD),_$(CUBEREVO_9500HD))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162)) $(prefix)/release/etc/init.d/rcS && \
 	chmod 755 $(prefix)/release/etc/init.d/rcS && \
 	export CROSS_COMPILE=$(target)- && \
 		$(MAKE) install -C @DIR_busybox@ CONFIG_PREFIX=$(prefix)/release && \
-	cp -dp $(targetprefix)/usr/sbin/vsftpd $(prefix)/release/usr/bin/ && \
+	cp -dp $(targetprefix)/usr/bin/vsftpd $(prefix)/release/usr/bin/ && \
 	cp $(buildprefix)/root/bootscreen/tvhlogo_720.mvi $(prefix)/release/boot/ && \
 	cp $(buildprefix)/root/bin/autologin $(prefix)/release/bin/ && \
 	cp $(buildprefix)/root/usr/sbin/fw_printenv $(prefix)/release/usr/sbin/ && \
@@ -713,15 +760,15 @@ endif
 #
 # modules
 #
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko $(prefix)/release/lib/modules/
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko $(prefix)/release/lib/modules/ || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/net/ipv6/ipv6.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/net/ipv6/ipv6.ko $(prefix)/release/lib/modules || true
 
 #
-# multicom 323
+# multicom 324
 #
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxshell/embxshell.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxshell/embxshell.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxmailbox/embxmailbox.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxmailbox/embxmailbox.ko $(prefix)/release/lib/modules || true
@@ -796,7 +843,7 @@ endif
 	ln -sf /usr/share $(prefix)/release/usr/local/share
 	cp $(targetprefix)/usr/local/bin/tvheadend $(prefix)/release/usr/local/bin/
 	[ ! -d $(prefix)/release/.hts/tvheadend ] && mkdir -p $(prefix)/release/.hts/tvheadend 
-	cp -r $(buildprefix)/root/root_tvheadend/.hts/tvheadend/* $(prefix)/release/.hts/tvheadend
+#	cp -r $(buildprefix)/root/root_tvheadend/.hts/tvheadend/* $(prefix)/release/.hts/tvheadend
 
 #
 # WLAN
@@ -846,128 +893,6 @@ endif
 		ln -s /usr/sbin/automount $(prefix)/release/sbin/automount; \
 	fi
 
-#
-# GSTREAMER
-#
-if ENABLE_MEDIAFWGSTREAMER
-	if [ -d $(prefix)/release/usr/lib/gstreamer-0.10 ]; then \
-		#removed rm \
-		rm -rf $(prefix)/release/usr/lib/libgstfft*; \
-		rm -rf $(prefix)/release/usr/lib/gstreamer-0.10/*; \
-		cp -a $(targetprefix)/usr/bin/gst-* $(prefix)/release/usr/bin/; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/bin/gst-launch*; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstalsa.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstapetag.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstapp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstasf.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstassrender.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioconvert.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioparsers.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstaudioresample.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstautodetect.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstavi.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcdxaparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcoreelements.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstcoreindexers.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdecodebin.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdecodebin2.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvbaudiosink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvbvideosink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstdvdsub.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstflac.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstflv.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstfragmented.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgsticydemux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstid3demux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstisomp4.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmad.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmatroska.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegaudioparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegdemux.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstmpegstream.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstogg.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstplaybin.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtmp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtpmanager.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstrtsp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsouphttpsrc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgsttypefindfunctions.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstudp.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstvcdsrc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstwavparse.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		if [ -e $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpeg.so ]; then \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpeg.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstffmpegscale.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstpostproc.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		fi; \
-		if [ -e $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubsink.so ]; then \
-			cp -a $(targetprefix)/usr/lib/gstreamer-0.10/libgstsubsink.so $(prefix)/release/usr/lib/gstreamer-0.10/; \
-		fi; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/lib/gstreamer-0.10/*; \
-	fi
-endif
-
-#
-# GRAPHLCD
-#
-	if [ -e $(prefix)/release/usr/lib/libglcddrivers.so ]; then \
-		cp -f $(targetprefix)/etc/graphlcd.conf $(prefix)/release/etc/graphlcd.conf; \
-		rm -f $(prefix)/release/usr/lib/libglcdskin.so*; \
-	fi
-
-#
-# minidlna
-#
-	if [ -e $(targetprefix)/usr/sbin/minidlnad ]; then \
-		cp -f $(targetprefix)/usr/sbin/minidlnad $(prefix)/release/usr/sbin/; \
-	fi
-
-#
-# udpxy
-#
-	if [ -e $(targetprefix)/usr/bin/udpxy ]; then \
-		cp -f $(targetprefix)/usr/bin/udpxy $(prefix)/release/usr/bin; \
-		cp -a $(targetprefix)/usr/bin/udpxrec $(prefix)/release/usr/bin; \
-	fi
-
-#
-# xupnpd
-#
-	if [ -e $(targetprefix)/usr/bin/xupnpd ]; then \
-		cp -f $(targetprefix)/usr/bin/xupnpd $(prefix)/release/usr/bin; \
-		cp -aR $(targetprefix)/usr/share/xupnpd $(prefix)/release/usr/share; \
-		mkdir -p $(prefix)/release/usr/share/xupnpd/playlists; \
-	fi
-
-#
-# lua
-#
-	if [ -d $(targetprefix)/usr/share/lua ]; then \
-		cp -aR $(targetprefix)/usr/share/lua $(prefix)/release/usr/share; \
-	fi
-
-#
-# shairport
-#
-	if [ -e $(targetprefix)/usr/bin/shairport ]; then \
-		cp -f $(targetprefix)/usr/bin/shairport $(prefix)/release/usr/bin; \
-		cp -f $(targetprefix)/usr/bin/mDNSPublish $(prefix)/release/usr/bin; \
-		cp -f $(targetprefix)/usr/bin/mDNSResponder $(prefix)/release/usr/bin; \
-		cp -f $(buildprefix)/root/etc/init.d/shairport $(prefix)/release/etc/init.d/shairport; \
-		chmod 755 $(prefix)/release/etc/init.d/shairport; \
-		cp -f $(targetprefix)/usr/lib/libhowl.so* $(prefix)/release/usr/lib; \
-		cp -f $(targetprefix)/usr/lib/libmDNSResponder.so* $(prefix)/release/usr/lib; \
-	fi
-
-#
-# Neutrino HD2 Workaround Built-in Player
-#
-	if [ -e $(targetprefix)/usr/local/bin/eplayer3 ]; then \
-		cp -f $(targetprefix)/usr/local/bin/eplayer3 $(prefix)/release/bin/; \
-		cp -f $(targetprefix)/usr/local/bin/meta $(prefix)/release/bin/; \
-	fi
 
 #
 # delete unnecessary files
@@ -1009,8 +934,8 @@ endif
 # IMPORTANT: it is assumed that only one variable is set. Otherwise the target name won't be resolved.
 #
 $(D)/release_tvheadend: \
-$(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)
-	touch $@
+$(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)
+	$(TOUCH)
 
 #
 # FOR YOUR OWN CHANGES use these folder in cdk/own_build/tvheadend
@@ -1038,6 +963,12 @@ $(D)/%release_tvheadend: release_tvheadend_base release_tvheadend_$(TF7700)$(HL1
 #
 	find $(prefix)/release/ -name '*' -exec sh4-linux-strip --strip-unneeded {} &>/dev/null \;
 
+	@echo "***************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of Tvheadend for $(BOXTYPE) successfully completed."
+	@echo -e "\033[00m"
+	@echo "***************************************************************"
+	@touch $(D)/build_completed
 #
 # release-clean
 #

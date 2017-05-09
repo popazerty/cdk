@@ -13,7 +13,7 @@
  } AVIOContext;
  
  /* unbuffered I/O */
---- a/libavformat/aviobuf.c.orig
+--- a/libavformat/aviobuf.c
 +++ b/libavformat/aviobuf.c
 @@ -33,7 +33,7 @@
  #include "url.h"

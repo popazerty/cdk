@@ -67,9 +67,11 @@ ${DIALOG} --menu "\n Select Target:\n " $height $width $listheight \
 31	"Atemio530" \
 32	"SagemCom 88 series" \
 33	"Ferguson Ariva @Link 200" \
-34	"Fortis HS7119 (not finished yet)" \
-35	"Fortis HS7819 (not finished yet)" \
-36	"Fortis DP7000 (not finished yet)" \
+34	"Fortis HS7119" \
+35	"Fortis HS7819" \
+36	"Xsarius Alpha (Cuberevo 3000HD)" \
+37	"Fortis HS7420" \
+38	"Fortis HS7429" \
 2> ${tempfile}
 
 opt=${?}

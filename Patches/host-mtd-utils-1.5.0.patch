@@ -1,6 +1,6 @@
 --- mtd-utils-1.5.0/Makefile.orig	2012-05-07 09:19:39.000000000 +0200
 +++ mtd-utils-1.5.0/Makefile	2014-04-30 18:07:11.365308291 +0200
-@@ -61,8 +61,8 @@
+@@ -62,8 +62,8 @@
  	$(MAKE) -C $(TESTS) clean
  
  install:: $(addprefix $(BUILDDIR)/,${BINS}) ${SCRIPTS}

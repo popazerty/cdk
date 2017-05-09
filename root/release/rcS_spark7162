@@ -1,9 +1,11 @@
 #!/bin/sh
-#Version 150810.1
+#Version 160420.1
 
-echo "Spark 7162"
+echo "Spark 7162 Enigma2"
 
 MODDIR=/lib/modules
+
+insmod $MODDIR/e2_proc.ko
 
 echo "Init frontpanel"
 insmod $MODDIR/aotom.ko paramDebug=0
@@ -25,9 +27,6 @@ fi
 
 /etc/init.d/mountvirtfs start
 /etc/init.d/portmap start
-
-insmod $MODDIR/e2_proc.ko
-
 /etc/init.d/autofs start
 
 if [ -e "$MODDIR/cpu_frequ.ko" ]; then
@@ -71,10 +70,10 @@ fi
 echo "Init stmfb (LOAD 9)"
 echo "Load 9" > /dev/vfd
 insmod $MODDIR/stmcore-display-sti7105.ko
-if  grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
+if grep -q "config.av.videoport=Scart" /etc/enigma2/settings; then
   insmod $MODDIR/stmfb.ko display0=720x576i-32@50:15m:pal:rgb:rgb; #SCART
 else
-  insmod $MODDIR/stmfb.ko display0=1280x720-32@50:15m:pal:rgb:rgb; #HDMI
+  insmod $MODDIR/stmfb.ko display0=1280x720-32@50:16m:pal:rgb:rgb; #HDMI
 fi
 
 echo "Loading modules"
@@ -151,6 +150,38 @@ insmod $MODDIR/silencegen.ko
 
 insmod $MODDIR/smartcard.ko
 
+if [ -e $MODDIR/dvb-it913x.ko ]; then
+  echo
+  echo "IT913X driver loading"
+  echo "---------------------"
+  insmod $MODDIR/dvb-pll.ko
+  insmod $MODDIR/dvb-it913x.ko
+  echo
+  echo "End of IT913X driver loading"
+  echo "----------------------------"
+fi
+
+if [ -e $MODDIR/dvb-usb-rtl2832u.ko ]; then
+  echo
+  echo "RTL2832U driver loading"
+  echo "-----------------------"
+  insmod $MODDIR/dvb-usb-rtl2832u.ko
+  echo
+  echo "End of RTL2832U driver loading"
+  echo "------------------------------"
+fi
+
+if [ -e $MODDIR/usb_serial.ko ]; then
+  insmod $MODDIR/usb_serial.ko
+  if [ -e $MODDIR/option.ko ]; then
+    insmod $MODDIR/option.ko
+  fi
+  if [ -e $MODDIR/usb_wwan.ko ]; then # 3G modem
+    insmod $MODDIR/usb_wwan.ko
+  fi
+  insmod $MODDIR/option.ko
+fi
+
 echo "Init HDMI-CEC"
 insmod $MODDIR/cec.ko activemode=1
 
@@ -201,10 +232,6 @@ echo "Init FTP (LOAD 1)"
 echo "Load 1" > /dev/vfd
 /etc/init.d/vsftpd start
 /usr/sbin/inetd
-
-mknod /dev/dvb/adapter0/frontend1 c 212 19  #SAT1
-mknod /dev/dvb/adapter0/frontend2 c 212 35  #SAT2
-mknod /dev/dvb/adapter0/frontend3 c 212 51  #T/C
 
 NFS=`grep -c nfs /proc/cmdline`
 if [ "$NFS" -eq "1" ]; then
@@ -322,3 +349,4 @@ done
 echo "REBOOT SPARK7162"
 echo "Reboot SPARK7162" > /dev/vfd
 reboot -f
+

@@ -9,12 +9,15 @@ $(appsdir)/tools/config.status: bootstrap driver bzip2 libpng libjpeg ffmpeg
 	$(CONFIGURE) \
 	--prefix=$(targetprefix)/usr \
 	--with-boxtype=$(BOXTYPE) \
+	--enable-$(BOXTYPE) \
 	$(if $(MULTICOM324), --enable-multicom324) \
 	$(if $(MULTICOM406), --enable-multicom406) \
-	$(if $(EPLAYER3), --enable-eplayer3)
+	$(if $(EPLAYER3), --enable-eplayer3) \
+	$(if $(MEDIAFWGSTREAMER), --enable-gstreamer)
 
 $(D)/tools: $(appsdir)/tools/config.status
-	$(MAKE) -C $(appsdir)/tools all prefix=$(targetprefix) \
+	$(START_BUILD)
+	$(MAKE) -C $(appsdir)/tools all prefix=$(targetprefix) DRIVER_TOPDIR=$(driverdir) \
 	CPPFLAGS="\
 	-I$(targetprefix)/usr/include \
 	-I$(driverdir)/bpamem \
@@ -23,6 +26,6 @@ $(D)/tools: $(appsdir)/tools/config.status
 	-I$(driverdir)/include/player2 \
 	$(if $(PLAYER191), -DPLAYER191) \
 	" && \
-	$(MAKE) -C $(appsdir)/tools install prefix=$(targetprefix)
-	touch $@
+	$(MAKE) -C $(appsdir)/tools install prefix=$(targetprefix) DRIVER_TOPDIR=$(driverdir)
+	$(TOUCH)
 

@@ -6,3 +6,5 @@ in the current directory.
 TODO:
 Find out why the busybox 1.11.2 does not boot. Currently a binary of
 busybox 1.13.1 is supplied.
+Audioniek: Done. Procedure now uses the busybox built already as
+originally intended.

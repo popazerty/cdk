@@ -15,7 +15,7 @@ $(D)/bare-os: \
 	zlib \
 	sysvinit \
 	diverse-tools
-	touch $@
+	$(TOUCH)
 
 #
 # NET-UTILS
@@ -25,7 +25,7 @@ $(D)/net-utils: \
 	nfs_utils \
 	vsftpd \
 	autofs
-	touch $@
+	$(TOUCH)
 
 #
 # DISK-UTILS
@@ -33,7 +33,7 @@ $(D)/net-utils: \
 $(D)/disk-utils: \
 	e2fsprogs \
 	jfsutils
-	touch $@
+	$(TOUCH)
 
 #
 # YAUD NONE
@@ -46,4 +46,5 @@ $(D)/yaud-none: \
 	net-utils \
 	driver \
 	tools
-	touch $@
+	$(TOUCH)
+

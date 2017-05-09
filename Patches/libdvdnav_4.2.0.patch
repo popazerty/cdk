@@ -30,16 +30,18 @@
  	mkinstalldirs
 --- libdvdnav-4.1.3.orig/configure.ac	2012-05-10 17:28:37.540182957 +0200
 +++ libdvdnav-4.1.3/configure.ac	2012-05-10 17:29:59.452179512 +0200
-@@ -100,7 +100,7 @@
+@@ -100,7 +100,9 @@
  AC_DISABLE_STATIC
  AC_PROG_LIBTOOL
  AC_SUBST(LIBTOOL_DEPS)
++#LT_CONFIG_LTDL_DIR([libltdl])
++#LTDL_INIT
 -if ${CONFIG_SHELL} ./libtool --features | grep "enable static" >/dev/null; then
 +if ${CONFIG_SHELL} ./libtool --features | grep "enable static" >/dev/null; then
    STATIC="-static"
  else
    STATIC=
-@@ -225,8 +225,9 @@
+@@ -225,8 +227,9 @@
  dnl ---------------------------------------------
  dnl Some include paths ( !!! DO NOT REMOVE !!! )
  dnl ---------------------------------------------

@@ -2,6 +2,7 @@
 # nfs_utils
 #
 $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(NFS_UTILS_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_nfs_utils@
+	$(START_BUILD)
 	@PREPARE_nfs_utils@
 	cd @DIR_nfs_utils@ && \
 		$(CONFIGURE) \
@@ -19,12 +20,13 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(NFS_UTILS_ADAPTED_ETC_FILES:%=ro
 		[ -f $$i ] && $(INSTALL) -m644 $$i $(prefix)/$*cdkroot/etc/$$i || true; \
 		[ "$${i%%/*}" = "init.d" ] && chmod 755 $(prefix)/$*cdkroot/etc/$$i || true; done )
 	@CLEANUP_nfs_utils@
-	touch $@
+	$(TOUCH)
 
 #
 # libevent
 #
 $(D)/libevent: $(D)/bootstrap @DEPENDS_libevent@
+	$(START_BUILD)
 	@PREPARE_libevent@
 	cd @DIR_libevent@ && \
 		$(CONFIGURE) \
@@ -33,12 +35,13 @@ $(D)/libevent: $(D)/bootstrap @DEPENDS_libevent@
 		$(MAKE) && \
 		@INSTALL_libevent@
 	@CLEANUP_libevent@
-	touch $@
+	$(TOUCH)
 
 #
 # libnfsidmap
 #
 $(D)/libnfsidmap: $(D)/bootstrap @DEPENDS_libnfsidmap@
+	$(START_BUILD)
 	@PREPARE_libnfsidmap@
 	cd @DIR_libnfsidmap@ && \
 		$(CONFIGURE) \
@@ -48,12 +51,13 @@ $(D)/libnfsidmap: $(D)/bootstrap @DEPENDS_libnfsidmap@
 		$(MAKE) && \
 		@INSTALL_libnfsidmap@
 	@CLEANUP_libnfsidmap@
-	touch $@
+	$(TOUCH)
 
 #
 # vsftpd
 #
 $(D)/vsftpd: $(D)/bootstrap @DEPENDS_vsftpd@
+	$(START_BUILD)
 	@PREPARE_vsftpd@
 	cd @DIR_vsftpd@ && \
 		$(MAKE) clean && \
@@ -61,12 +65,13 @@ $(D)/vsftpd: $(D)/bootstrap @DEPENDS_vsftpd@
 		@INSTALL_vsftpd@
 		cp $(buildprefix)/root/etc/vsftpd.conf $(targetprefix)/etc
 	@CLEANUP_vsftpd@
-	touch $@
+	$(TOUCH)
 
 #
 # ethtool
 #
 $(D)/ethtool: $(D)/bootstrap @DEPENDS_ethtool@
+	$(START_BUILD)
 	@PREPARE_ethtool@
 	cd @DIR_ethtool@ && \
 		$(CONFIGURE) \
@@ -76,12 +81,13 @@ $(D)/ethtool: $(D)/bootstrap @DEPENDS_ethtool@
 		$(MAKE) && \
 		@INSTALL_ethtool@
 	@CLEANUP_ethtool@
-	touch $@
+	$(TOUCH)
 
 #
 # samba
 #
 $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samba@
+	$(START_BUILD)
 	@PREPARE_samba@
 	cd @DIR_samba@ && \
 		cd source3 && \
@@ -89,7 +95,7 @@ $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samb
 		$(BUILDENV) \
 		libreplace_cv_HAVE_GETADDRINFO=no \
 		libreplace_cv_READDIR_NEEDED=no \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix= \
@@ -145,12 +151,13 @@ $(D)/samba: $(D)/bootstrap $(SAMBA_ADAPTED_ETC_FILES:%=root/etc/%) @DEPENDS_samb
 		[ -f $$i ] && $(INSTALL) -m644 $$i $(prefix)/$*cdkroot/etc/$$i || true; \
 		[ "$${i%%/*}" = "init.d" ] && chmod 755 $(prefix)/$*cdkroot/etc/$$i || true; done )
 	@CLEANUP_samba@
-	touch $@
+	$(TOUCH)
 
 #
 # netio
 #
 $(D)/netio: $(D)/bootstrap @DEPENDS_netio@
+	$(START_BUILD)
 	@PREPARE_netio@
 	cd @DIR_netio@ && \
 		$(MAKE_OPTS) \
@@ -158,12 +165,13 @@ $(D)/netio: $(D)/bootstrap @DEPENDS_netio@
 		$(INSTALL) -d $(prefix)/$*cdkroot/usr/bin && \
 		@INSTALL_netio@
 	@CLEANUP_netio@
-	touch $@
+	$(TOUCH)
 
 #
 # ntp
 #
 $(D)/ntp: $(D)/bootstrap @DEPENDS_ntp@
+	$(START_BUILD)
 	@PREPARE_ntp@
 	cd @DIR_ntp@ && \
 		$(CONFIGURE) \
@@ -178,19 +186,21 @@ $(D)/ntp: $(D)/bootstrap @DEPENDS_ntp@
 		$(MAKE) && \
 		@INSTALL_ntp@
 	@CLEANUP_ntp@
-	touch $@
+	$(TOUCH)
 
 #
 # lighttpd
 #
 $(D)/lighttpd.do_prepare: $(D)/bootstrap @DEPENDS_lighttpd@
+	$(START_BUILD)
 	@PREPARE_lighttpd@
-	touch $@
+	$(TOUCH)
 
 $(D)/lighttpd.do_compile: $(D)/lighttpd.do_prepare
+	$(START_BUILD)
 	cd @DIR_lighttpd@ && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix= \
@@ -198,7 +208,7 @@ $(D)/lighttpd.do_compile: $(D)/lighttpd.do_prepare
 			--datarootdir=/usr/share \
 		&& \
 		$(MAKE)
-	touch $@
+	$(TOUCH)
 
 $(D)/lighttpd: \
 $(D)/%lighttpd: $(D)/lighttpd.do_compile
@@ -212,23 +222,25 @@ $(D)/%lighttpd: $(D)/lighttpd.do_compile
 	$(INSTALL) -d $(prefix)/$*cdkroot/etc/lighttpd && $(INSTALL) -m755 root/etc/lighttpd/lighttpd.conf $(prefix)/$*cdkroot/etc/lighttpd
 	$(INSTALL) -d $(prefix)/$*cdkroot/etc/init.d && $(INSTALL) -m755 root/etc/init.d/lighttpd $(prefix)/$*cdkroot/etc/init.d
 	@CLEANUP_lighttpd@
-	[ "x$*" = "x" ] && touch $@ || true
+	[ "x$*" = "x" ] && $(TOUCH) || true
 
 #
 # wireless_tools
 #
 $(D)/wireless_tools: $(D)/bootstrap @DEPENDS_wireless_tools@
+	$(START_BUILD)
 	@PREPARE_wireless_tools@
 	cd @DIR_wireless_tools@ && \
 		$(MAKE) CC="$(target)-gcc" CFLAGS="$(TARGET_CFLAGS) -I." && \
 		@INSTALL_wireless_tools@
 	@CLEANUP_wireless_tools@
-	touch $@
+	$(TOUCH)
 
 #
 # libnl
 #
-$(D)/libnl: $(D)/bootstrap $(OPENSSL) @DEPENDS_libnl@
+$(D)/libnl: $(D)/bootstrap $(D)/openssl @DEPENDS_libnl@
+	$(START_BUILD)
 	@PREPARE_libnl@
 	cd @DIR_libnl@ && \
 		$(CONFIGURE) \
@@ -236,46 +248,101 @@ $(D)/libnl: $(D)/bootstrap $(OPENSSL) @DEPENDS_libnl@
 		$(MAKE) && \
 		@INSTALL_libnl@
 	@CLEANUP_libnl@
-	touch $@
+	$(TOUCH)
 
 #
 # wpa_supplicant
 #
-$(D)/wpa_supplicant: $(D)/bootstrap $(OPENSSL) $(D)/wireless_tools @DEPENDS_wpa_supplicant@
+$(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools @DEPENDS_wpa_supplicant@
+	$(START_BUILD)
 	@PREPARE_wpa_supplicant@
 	cd @DIR_wpa_supplicant@/wpa_supplicant && \
-		$(INSTALL) -m 644 $(buildprefix)/Patches/wpa_supplicant.config .config && \
-		export CFLAGS=-I$(targetprefix)/usr/include && \
-		export CPPFLAGS=-I$(targetprefix)/usr/include && \
+		cp -f defconfig .config && \
+		sed -i 's/CONFIG_DRIVER_NL80211=y/#CONFIG_DRIVER_NL80211=y/' .config && \
+		sed -i 's/#CONFIG_IEEE80211W=y/CONFIG_IEEE80211W=y/' .config && \
+		sed -i 's/#CONFIG_OS=unix/CONFIG_OS=unix/' .config && \
+		sed -i 's/#CONFIG_TLS=openssl/CONFIG_TLS=openssl/' .config && \
+		sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/' .config && \
+		sed -i 's/#CONFIG_INTERWORKING=y/CONFIG_INTERWORKING=y/' .config && \
+		export CFLAGS="-pipe -Os -Wall -g0 -I$(targetprefix)/usr/include" && \
+		export CPPFLAGS="-I$(targetprefix)/usr/include" && \
 		export LIBS="-L$(targetprefix)/usr/lib -Wl,-rpath-link,$(targetprefix)/usr/lib" && \
 		export LDFLAGS="-L$(targetprefix)/usr/lib" && \
-		make CC=$(target)-gcc TARGETPREFIX=$(targetprefix) && \
+		export DESTDIR=$(targetprefix) && \
+		make CC=$(target)-gcc && \
 		$(target)-strip --strip-unneeded wpa_supplicant && \
 		@INSTALL_wpa_supplicant@
 	@CLEANUP_wpa_supplicant@
-	touch $@
+	$(TOUCH)
 
 #
 # xupnpd
 #
 $(D)/xupnpd: $(D)/bootstrap @DEPENDS_xupnpd@
+	$(START_BUILD)
 	@PREPARE_xupnpd@
 	cd @DIR_xupnpd@/src && \
 		$(BUILDENV) \
 		$(MAKE) TARGET=$(target) sh4 && \
 		@INSTALL_xupnpd@
 	@CLEANUP_xupnpd@
-	touch $@
+	$(TOUCH)
 
 #
 # udpxy
 #
 $(D)/udpxy: $(D)/bootstrap @DEPENDS_udpxy@
+	$(START_BUILD)
 	@PREPARE_udpxy@
 	cd @DIR_udpxy@ && \
 		$(BUILDENV) \
 		$(MAKE) $(MAKE_OPTS) && \
 		@INSTALL_udpxy@
 	@CLEANUP_udpxy@
-	touch $@
+	$(TOUCH)
+
+#
+# openvpn
+#
+$(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo @DEPENDS_openvpn@
+	$(START_BUILD)
+	@PREPARE_openvpn@
+	cd @DIR_openvpn@ && \
+		$(CONFIGURE) \
+			--build=$(build) \
+			--host=$(target) \
+			--target=$(target) \
+			--prefix=/usr \
+			--disable-selinux \
+			--disable-systemd \
+			--disable-plugins \
+			--disable-debug \
+			--disable-pkcs11 \
+			--enable-password-save \
+			--enable-small \
+		&& \
+		$(MAKE) && \
+		@INSTALL_openvpn@
+	@CLEANUP_openvpn@
+	$(TOUCH)
+
+$(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl @DEPENDS_openssh@
+	$(START_BUILD)
+	@PREPARE_openssh@
+	cd @DIR_openssh@ && \
+		CC=$(target)-gcc && \
+		./configure \
+			$(CONFIGURE_OPTS) \
+			--prefix=/usr \
+			--mandir=/usr/share/man \
+			--sysconfdir=/etc/ssh \
+			--libexecdir=/sbin \
+			--with-privsep-path=/share/empty \
+			--with-cppflags="-pipe -Os -I$(targetprefix)/usr/include" \
+			--with-ldflags=-"L$(targetprefix)/usr/lib" \
+		&& \
+		$(MAKE) && \
+		@INSTALL_openssh@
+	@CLEANUP_openssh@
+	$(TOUCH)
 

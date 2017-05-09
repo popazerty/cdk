@@ -36,6 +36,10 @@ PATH := $(hostprefix)/bin:$(crossprefix)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/
 #PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
 PATCHES         = $(buildprefix)/Patches
+#Comment next line if you want to see the names of the files being patched
+SILENT_PATCH    = -s
+PATCH           = patch -p1 $(SILENT_PATCH) -i $(PATCHES)
+
 #TARGETLIB       = $(targetprefix)/usr/lib
 #REWRITE_LIBDIR  = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(TARGETLIB)
 #REWRITE_LIBDEP  = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/usr/lib,\$(TARGETLIB)," $(TARGETLIB)
@@ -57,7 +61,15 @@ ADAPTED_ETC_FILES =
 ETC_RW_FILES =
 SOCKSIFY=
 WGET=$(SOCKSIFY) wget --progress=bar
+#enable parallel makes
+CPU_CORES ?= $(shell getconf _NPROCESSORS_ONLN || echo 1)
+MAKEFLAGS=-j$(CPU_CORES)
+MAKEFLAGS+= --no-print-directory
+export MAKEFLAGS
+START_BUILD=@echo "--------------------------------------------"; echo -e "Start build of \033[01;32m$(subst .deps/,,$@)\033[0m."; echo
+TOUCH=@touch $@; echo -e "Build of \033[01;32m$(subst .deps/,,$@)\033[0m completed."; echo
 
+#
 #
 #
 #
@@ -80,8 +92,11 @@ BUILDENV := \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	PKG_CONFIG_PATH="$(targetprefix)/usr/lib/pkgconfig"
 
+#comment next line if you like lots of checking... messages
+CONFIGURE_SILENT= -q
+
 CONFIGURE_OPTS = \
-	--build=$(build) --host=$(target)
+	--build=$(build) --host=$(target) $(CONFIGURE_SILENT)
 
 CONFIGURE = \
 	test -f ./configure || ./autogen.sh && \
@@ -113,8 +128,10 @@ PLATFORM_CPPFLAGS := \
 	$(if $(ATEVIO7500),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_ATEVIO7500 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(OCTAGON1008),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_OCTAGON1008 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(HS7110),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_HS7110 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
+	$(if $(HS7420),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_HS7420 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(HS7810A),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_HS7810A -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(HS7119),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_HS7119 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
+	$(if $(HS7429),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_HS7429 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(HS7819),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_HS7819 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(ATEMIO520),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_ATEMIO520 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(ATEMIO530),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_ATEMIO530 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
@@ -132,13 +149,13 @@ PLATFORM_CPPFLAGS := \
 	$(if $(CUBEREVO_250HD),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_CUBEREVO_250HD -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include" --enable-cuberevo) \
 	$(if $(CUBEREVO_2000HD),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_CUBEREVO_2000HD -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include" --enable-cuberevo) \
 	$(if $(CUBEREVO_9500HD),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_CUBEREVO_9500HD -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include" --enable-cuberevo) \
+	$(if $(CUBEREVO_3000HD),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_CUBEREVO_3000HD -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include" --enable-cuberevo) \
 	$(if $(IPBOX9900),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_IPBOX9900 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(IPBOX99),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_IPBOX99 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(IPBOX55),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_IPBOX55 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(VITAMIN_HD5000),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_VITAMIN_HD5000 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
 	$(if $(SAGEMCOM88),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_SAGEMCOM88 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
-	$(if $(ARIVALINK200),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_ARIVALINK200 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include") \
-	$(if $(FORTIS_DP7000),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_FORTIS_DP7000 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include")
+	$(if $(ARIVALINK200),CPPFLAGS="$(CPPFLAGS) -DPLATFORM_ARIVALINK200 -I$(driverdir)/include -I $(buildprefix)/$(KERNEL_DIR)/include")
 
 DRIVER_PLATFORM := \
 	$(if $(UFS910),UFS910=$(UFS910)) \
@@ -150,8 +167,10 @@ DRIVER_PLATFORM := \
 	$(if $(ATEVIO7500),ATEVIO7500=$(ATEVIO7500)) \
 	$(if $(OCTAGON1008),OCTAGON1008=$(OCTAGON1008)) \
 	$(if $(HS7110),HS7110=$(HS7110)) \
+	$(if $(HS7420),HS7420=$(HS7420)) \
 	$(if $(HS7810A),HS7810A=$(HS7810A)) \
 	$(if $(HS7119),HS7119=$(HS7119)) \
+	$(if $(HS7429),HS7429=$(HS7429)) \
 	$(if $(HS7819),HS7819=$(HS7819)) \
 	$(if $(ATEMIO520),ATEMIO520=$(ATEMIO520)) \
 	$(if $(ATEMIO530),ATEMIO530=$(ATEMIO530)) \
@@ -169,6 +188,7 @@ DRIVER_PLATFORM := \
 	$(if $(CUBEREVO_250HD),CUBEREVO_250HD=$(CUBEREVO_250HD)) \
 	$(if $(CUBEREVO_2000HD),CUBEREVO_2000HD=$(CUBEREVO_2000HD)) \
 	$(if $(CUBEREVO_9500HD),CUBEREVO_9500HD=$(CUBEREVO_9500HD)) \
+	$(if $(CUBEREVO_3000HD),CUBEREVO_3000HD=$(CUBEREVO_3000HD)) \
 	$(if $(HOMECAST5101),HOMECAST5101=$(HOMECAST5101)) \
 	$(if $(IPBOX9900),IPBOX9900=$(IPBOX9900)) \
 	$(if $(IPBOX99),IPBOX99=$(IPBOX99)) \
@@ -176,7 +196,6 @@ DRIVER_PLATFORM := \
 	$(if $(VITAMIN_HD5000),VITAMIN_HD5000=$(VITAMIN_HD5000)) \
 	$(if $(SAGEMCOM88),SAGEMCOM88=$(SAGEMCOM88)) \
 	$(if $(ARIVALINK200),ARIVALINK200=$(ARIVALINK200)) \
-	$(if $(FORTIS_DP7000),FORTIS_DP7000=$(FORTIS_DP7000)) \
 	$(if $(WLANDRIVER),WLANDRIVER=$(WLANDRIVER)) \
 	$(if $(PLAYER191),PLAYER191=$(PLAYER191))
 

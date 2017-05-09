@@ -1,11 +1,13 @@
 #!/bin/sh
-#Version 130927.1
+#Version 151120.1
 
 MODDIR=/lib/modules
 
-echo "Spark"
+echo "Spark Enigma2"
 
-insmod $MODDIR/aotom.ko paramDebug=50
+insmod $MODDIR/e2_proc.ko
+
+insmod $MODDIR/aotom.ko paramDebug=0
 insmod $MODDIR/simu_button.ko
 if [ -e $MODDIR/encrypt.ko ]; then
    insmod $MODDIR/encrypt.ko
@@ -13,7 +15,7 @@ fi
 
 if [ -e /var/etc/.firstboot ]; then
    echo "1MIN" >/dev/vfd
-   echo "WAIT 1 min"
+   echo "WAIT 1 minute"
    rm /var/etc/.firstboot
    sleep 1
    touch /dev/.devfsd
@@ -24,9 +26,6 @@ fi
 
 /etc/init.d/mountvirtfs start
 /etc/init.d/portmap start
-
-insmod $MODDIR/e2_proc.ko
-
 /etc/init.d/autofs start
 
 if [ -e "$MODDIR/cpu_frequ.ko" ]; then
@@ -79,8 +78,8 @@ fi
 
 echo "Loading modules"
 
-if [ ! -e /boot/audio.elf ]; then
-   echo "NO AUDIO FW!!!"
+if [ ! -e /boot/audio.elf ] || [ ! -e /boot/video.elf ]; then
+   echo "NO FIRMWARE(S)!!!"
    echo "NOFW" > /dev/vfd
 fi
 
@@ -106,8 +105,7 @@ insmod $MODDIR/mme_host.ko transport0=shm
 
 echo "Init AVS (LOAD 5)"
 echo "LD 5" > /dev/vfd
-insmod $MODDIR/avs.ko type=avs_pio
-#insmod $MODDIR/avs.ko type=avs_none #HDMU value
+insmod $MODDIR/avs.ko type=avs_none
 
 player=`cat /proc/stb/player/version | awk '{ print substr( $0, length($0) - 2, length($0) ) }'`
 echo "Init player $player (LOAD 4)"
@@ -117,31 +115,24 @@ insmod $MODDIR/mmelog.ko
 insmod $MODDIR/ksound.ko
 insmod $MODDIR/p2div64.ko
 insmod $MODDIR/stm_v4l2.ko
-if [ $player -gt 131 ]; then
-   insmod $MODDIR/stmvout.ko
-   insmod $MODDIR/stmvbi.ko
-fi
+insmod $MODDIR/stmvout.ko
+insmod $MODDIR/stmvbi.ko
+
 insmod $MODDIR/pseudocard.ko
 
 insmod $MODDIR/stv090x.ko
 
-if [ $player -gt 131 ]; then
-   if [ -e $MODDIR/pti.ko ]; then
-      insmod $MODDIR/pti.ko waitMS=20 videoMem=4096
-      if [ ! $?=='2' ]; then
-         pti_arg=""
-         echo "Simple pti"
-         insmod $MODDIR/pti.ko $pti_arg
-      fi
+if [ -e $MODDIR/pti.ko ]; then
+   insmod $MODDIR/pti.ko waitMS=20 videoMem=4096
+   if [ ! $?=='2' ]; then
+      pti_arg=""
+      echo "Simple pti"
+      insmod $MODDIR/pti.ko $pti_arg
    fi
-   insmod $MODDIR/stm_monitor.ko
-   insmod $MODDIR/stmsysfs.ko
-   insmod $MODDIR/stmdvb.ko
-#else
-#   insmod $MODDIR/pti.ko
-#   insmod $MODDIR/stmdvb.ko
-#   insmod $MODDIR/stm_monitor.ko
 fi
+insmod $MODDIR/stm_monitor.ko
+insmod $MODDIR/stmsysfs.ko
+insmod $MODDIR/stmdvb.ko
 
 echo "LD 3" > /dev/vfd
 echo "LOAD 3"
@@ -167,33 +158,15 @@ echo "Init lircd (LOAD 2)"
 echo "LD 2" > /dev/vfd
 /usr/bin/lircd
 rm -rf /dev/rc
-mknod /dev/rc c 147 1 #VFD
+mknod /dev/rc c 147 1
 
 echo "Init smartcard cardreader"
 mknod /dev/sci0 c 169 0
 mknod /dev/sci1 c 169 1
 
-major=$(awk "\$2==\"sparkid\" {print \$1}" /proc/devices)
-rm -f /dev/sparkid
-mknod /dev/sparkid c $major 0
-
 /bin/evremote2 10 100 &
 
 stfbcontrol a 255
-
-# Why is this done twice?
-#/etc/init.d/mountall start
-#/etc/init.d/hostname start
-#echo -n "Starting telnetd "
-#autologin=`cat /etc/enigma2/settings | grep systemoptions.autologin | cut -d "=" -f2`
-#if [ ! $autologin ]; then
-#   /usr/sbin/telnetd -l /bin/autologin
-##   echo "with autologin"
-#else
-#   /usr/sbin/telnetd -l /bin/login
-##    echo "with normal login"
-#fi
-#end twice
 
 wlan=`cat /etc/enigma2/settings | grep systemoptions.wlan | cut -d "=" -f2`
 if [ ! $wlan ] || [ ! -e $MODDIR/$wlan.ko ]; then
@@ -285,8 +258,7 @@ fi
 inettime=`cat /etc/enigma2/settings | grep systemoptions.inettime | cut -d "=" -f2`
 if [ ! $inettime ] && [ -e /sbin/ntpdate ]; then
    echo "Set internet time"
-#   (/sbin/ntpdate pl.pool.ntp.org; /bin/fp_control -s `date +"%H:%M:%S %d-%m-%Y"`) &
-    /sbin/ntpdate de.pool.ntp.org
+   /sbin/ntpdate de.pool.ntp.org
 else
    if [ -e /usr/sbin/time.sh ]; then
       echo "Use transponder time"
@@ -299,29 +271,24 @@ echo "Start Enigma2" > /dev/vfd
 
 until false
 do
-   echo "Entering e2 main loop"
+   echo "Entering E2 main loop"
 #   if [ -e /usr/local/share/enigma2/backdrop.mvi ]; then
 #      showiframe -p /usr/local/share/enigma2/backdrop.mvi
 #   fi
    /usr/local/bin/enigma2
    rtv=$?
-   echo "e2 ended <- RTV:" $rtv
-#   /bin/fp_control -i 46 0
+   echo "E2 ended <- RTV:" $rtv
    case "$rtv" in
-      0)  echo "0"
-          echo "E2 ERROR" > /dev/vfd
+      0)  echo "E2Er" > /dev/vfd
           init 6;;
-      1)  echo "1"
-          echo "SHUTDOWN" > /dev/vfd
+      1)  echo "Shdn" > /dev/vfd
           if [ -e /usr/local/share/enigma2/shutdown.mvi ]; then
              showiframe -p /usr/local/share/enigma2/shutdown.mvi
           fi
           init 0;;
-      2)  echo "2"
-          echo "REBOOT" > /dev/vfd
+      2)  echo "rEbt" > /dev/vfd
           init 6;;
-      3)  echo "3"
-          echo "RESTART GUI" > /dev/vfd
+      3)  echo "RESTART GUI" > /dev/vfd
           echo "0" > /proc/progress
 #          if [ -e /usr/local/share/enigma2/backdrop.mvi ]; then
 #             showiframe -p /usr/local/share/enigma2/backdrop.mvi
@@ -329,7 +296,7 @@ do
              showiframe -p /boot/bootlogo.mvi &;;
 #          fi
       10) echo "SPARK RESTART"
-          echo "SPARK RESTART" > /dev/vfd
+          echo "SPrK" > /dev/vfd
           insmod $MODDIR/i2s.ko
           if [ ! -f /etc/fw_env.config ]; then
              echo "fw_env.config not found - will create it"
@@ -349,12 +316,12 @@ do
           sync
           init 6;;
       *)  echo "ERROR"
-          echo "ERROR" > /dev/vfd
+          echo "Err" > /dev/vfd
           init 6;;
    esac
 done 
 
 #never reached
-echo "REBOOT SPARK" > /dev/vfd
+echo "rEbt" > /dev/vfd
 echo "REBOOT SPARK"
 reboot -f

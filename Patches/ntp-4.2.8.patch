@@ -9,4 +9,3 @@
  
  if [ ! -f .version ]; then
    echo 0 > .version
-

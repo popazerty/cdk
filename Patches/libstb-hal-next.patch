@@ -16,7 +16,7 @@
  	[  --with-boxmodel         valid for dreambox: dm500, dm500plus, dm600pvr, dm56x0, dm7000, dm7020, dm7025
                            valid for ipbox: ip200, ip250, ip350, ip400
 -                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, tf7700],
-+                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, tf7700],
++                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, tf7700],
  	[case "${withval}" in
  		dm500|dm500plus|dm600pvr|dm56x0|dm7000|dm7020|dm7025)
  			if test "$BOXTYPE" = "dreambox"; then
@@ -25,11 +25,11 @@
  			fi
  			;;
 -		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|tf7700)
-+		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|dp7000|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|tf7700)
++		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|tf7700)
  			if test "$BOXTYPE" = "duckbox"; then
  				BOXMODEL="$withval"
  			else
-@@ -387,6 +391,12 @@
+@@ -387,6 +391,11 @@
  AM_CONDITIONAL(BOXMODEL_ATEVIO7500, test "$BOXMODEL" = "atevio7500")
  AM_CONDITIONAL(BOXMODEL_FORTIS_HDBOX,test "$BOXMODEL" = "fortis_hdbox")
  AM_CONDITIONAL(BOXMODEL_OCTAGON1008,test "$BOXMODEL" = "octagon1008")
@@ -37,12 +37,11 @@
 +AM_CONDITIONAL(BOXMODEL_HS7810A,test "$BOXMODEL" = "hs7810a")
 +AM_CONDITIONAL(BOXMODEL_HS7119,test "$BOXMODEL" = "hs7119")
 +AM_CONDITIONAL(BOXMODEL_HS7819,test "$BOXMODEL" = "hs7819")
-+AM_CONDITIONAL(BOXMODEL_DP7000,test "$BOXMODEL" = "dp7000")
 +
  AM_CONDITIONAL(BOXMODEL_CUBEREVO,test "$BOXMODEL" = "cuberevo")
  AM_CONDITIONAL(BOXMODEL_CUBEREVO_MINI2,test "$BOXMODEL" = "cuberevo_mini2")
  AM_CONDITIONAL(BOXMODEL_CUBEREVO_MINI,test "$BOXMODEL" = "cuberevo_mini")
-@@ -441,6 +451,16 @@
+@@ -441,6 +450,14 @@
  	AC_DEFINE(BOXMODEL_FORTIS_HDBOX, 1, [fortis_hdbox])
  elif test "$BOXMODEL" = "octagon1008"; then
  	AC_DEFINE(BOXMODEL_OCTAGON1008, 1, [octagon1008])
@@ -54,14 +53,12 @@
 +	AC_DEFINE(BOXMODEL_HS7119, 1, [hs7119])
 +elif test "$BOXMODEL" = "hs7819"; then
 +	AC_DEFINE(BOXMODEL_HS7819, 1, [hs7819])
-+elif test "$BOXMODEL" = "dp7000"; then
-+	AC_DEFINE(BOXMODEL_DP7000, 1, [dp7000])
  elif test "$BOXMODEL" = "cuberevo"; then
  	AC_DEFINE(BOXMODEL_CUBEREVO, 1, [cuberevo])
  elif test "$BOXMODEL" = "cuberevo_mini2"; then
 --- libstb-hal-next.org/libduckbox/hardware_caps.c
 +++ libstb-hal-next/libduckbox/hardware_caps.c
-@@ -106,6 +106,51 @@
+@@ -106,6 +106,42 @@
  			caps.has_fan = 0;
  			caps.has_CI = 2;
  		}
@@ -93,15 +90,6 @@
 +			caps.has_fan = 0;
 +		}
 +		else if (!strncmp(buf, "hs7819", 6)) {
-+			strcpy(caps.boxvendor, "DUCKBOX");
-+			strcpy(caps.boxname, buf);
-+			caps.can_shutdown = 1;
-+			caps.has_HDMI = 1;
-+			caps.has_SCART = 1;
-+			caps.can_cec = 1;
-+			caps.has_fan = 0;
-+		}
-+		else if (!strncmp(buf, "dp7000", 6)) {
 +			strcpy(caps.boxvendor, "DUCKBOX");
 +			strcpy(caps.boxname, buf);
 +			caps.can_shutdown = 1;
@@ -202,7 +190,7 @@
  	ICON_TER,
  	ICON_FILE,
  	ICON_480i,
-@@ -77,21 +100,41 @@
+@@ -77,7 +100,21 @@
  	ICON_720p,
  	ICON_1080i,
  	ICON_1080p,
@@ -225,7 +213,7 @@
  	FP_ICON_USB = ICON_USB,
  	FP_ICON_REC = ICON_REC,
  	FP_ICON_CLOCK = ICON_TIMER,
- 	FP_ICON_HD = ICON_HD,
+@@ -85,13 +122,90 @@
  	FP_ICON_LOCK = ICON_SCRAMBLED,
  	FP_ICON_DD = ICON_DOLBY,
  	FP_ICON_MUTE = ICON_MUTE,
@@ -242,7 +230,195 @@
 +	FP_ICON_TV = ICON_TV,
 +	FP_ICON_CAM1,
 +	FP_ICON_DOWNLOAD,
++#elif defined(BOXMODEL_TF7700)
++	ICON_CD1 = 32,
++	ICON_CD2,
++	ICON_CD3,
++	ICON_CD4,
++	ICON_CD5,
++	ICON_CD6,
++	ICON_CD7,
++	ICON_CD8,
++	ICON_CD9,
++	ICON_CDCENTER,
++	ICON_HDD = 48,
++	ICON_HDD_1,
++	ICON_HDD_2,
++	ICON_HDD_3,
++	ICON_HDD_4,
++	ICON_HDD_5,
++	ICON_HDD_6,
++	ICON_HDD_7,
++	ICON_HDD_8,
++	ICON_HDD_FRAME,
++	ICON_HDD_FULL,
++	ICON_MP3 = 64,
++	ICON_AC3,
++	ICON_TIMESHIFT,
++	ICON_TV,
++	ICON_MUSIC,
++	ICON_DISH,
++	ICON_REC,
++	ICON_TUNER1,
++	ICON_TUNER2,
++	ICON_RWD,
++	ICON_STEPBACK,
++	ICON_PLAY,
++	ICON_STEPFWD,
++	ICON_FWD,
++	ICON_PAUSE,
++	ICON_MUTE,
++	ICON_AUTOREWLEFT,
++	ICON_AUTOREWRIGHT,
++	ICON_DOLLAR,
++	ICON_ATTN,
++	ICON_DOLBY,
++	ICON_NETWORK,
++	ICON_AM,
++	ICON_TIMER,
++	ICON_PM,
++	ICON_IRDOT,
++	ICON_POWER,
++	ICON_COLON,
++	ICON_ALL = 127,
++	FP_ICON_USB,
++	FP_ICON_REC = ICON_REC,
++	FP_ICON_CLOCK = ICON_TIMER,
++	FP_ICON_HD = ICON_NETWORK,
++	FP_ICON_LOCK = ICON_DOLLAR,
++	FP_ICON_DD = ICON_DOLBY,
++	FP_ICON_MUTE = ICON_MUTE,
++	FP_ICON_BT = FP_ICON_USB,
++	FP_ICON_MP3 = ICON_MP3,
++	FP_ICON_PLAY = ICON_PLAY,
++	FP_ICON_PAUSE = ICON_PAUSE,
++	FP_ICON_HDD = FP_ICON_USB,
++	FP_ICON_MUSIC = ICON_MUSIC,
++	FP_ICON_MAIL = FP_ICON_USB,
++	FP_ICON_FF = ICON_FWD,
++	FP_ICON_FR = ICON_RWD,
++	FP_ICON_RADIO = ICON_MUSIC,
++	FP_ICON_TV = ICON_TV,
++	FP_ICON_CAM1 = FP_ICON_USB,
++	FP_ICON_DOWNLOAD = FP_ICON_USB,
  #elif defined(BOXMODEL_UFS910)
  	FP_ICON_USB = 0x10,
  	FP_ICON_HD,
+--- libstb-hal-next.org/libspark/hardware_caps.c
++++ libstb-hal-next/libspark/hardware_caps.c
+@@ -14,6 +14,10 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ 
+ #include <hardware_caps.h>
+@@ -40,6 +44,7 @@
+ 	const char *tmp;
+ 	char buf[1024];
+ 	int len = -1, ret, val;
++	YWPANEL_Version_t version;
+ 	int fd = open("/proc/cmdline", O_RDONLY);
+ 	if (fd != -1) {
+ 		len = read(fd, buf, sizeof(buf) - 1);
+@@ -149,12 +154,24 @@
+ 	}
+ 	fd = open (FP_DEV, O_RDWR);
+ 	if (fd != -1) {
+-		ret = ioctl(fd, VFDGETVERSION, &val);
++		ret = ioctl(fd, VFDGETVERSION, &version);
+ 		if (ret < 0)
+ 			fprintf(stderr, "[hardware_caps] %s: VFDGETVERSION %m\n", __func__);
+-		else if (val == 1) { /* VFD, others not yet seen in the wild */
++		else if (version.DisplayInfo == 1) { /* VFD, others not yet seen in the wild */
+ 			caps.display_type = HW_DISPLAY_LINE_TEXT;
+ 			caps.display_xres = 8;
++		}
++		else if (version.DisplayInfo == 3) { /* DVFD */
++			caps.display_type = HW_DISPLAY_LINE_TEXT;
++			ret = ioctl(fd, VFDGETDISPLAYTIME, &val);
++			if (val == 1)
++			{
++				caps.display_xres = 10;
++			}
++			else
++			{
++				caps.display_xres = 16;
++			}
+ 		}
+ 		close(fd);
+ 	}
+--- libstb-hal-next.org/tools/spark_fp.c
++++ libstb-hal-next/tools/spark_fp.c
+@@ -30,6 +30,10 @@
+ #include <time.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++
++struct semaphore {
++	int dummy;
++};
+ #include <aotom_main.h>
+ 
+ #define FP_DEV "/dev/vfd"
+@@ -38,7 +42,7 @@
+ {
+ 	printf("usage spark_fp <option>\n");
+ 	printf("\t-g: get wakeup reason (return code == reason)\n");
+-	printf("\t-T: get FP display type (1 = VFD, 2 = LCD, 4 = LED, 8 = LBD)\n");
++	printf("\t-T: get FP display type (1 = VFD, 2 = LCD, 3 = DVFD, 4 = LED, 8 = LBD)\n");
+ 	printf("\t-t: get current FP time\n");
+ 	printf("\t-s <time>: set FP time (time = 0: use current time)\n");
+ 	printf("\t-w <time>: set FP wakeup time (time = 1: no wakeup)\n");
+@@ -126,6 +130,7 @@
+ 	struct aotom_ioctl_data aotom;
+ 	memset(&aotom, 0, sizeof(aotom));
+ 	int ret, c, val;
++	YWPANEL_Version_t version;
+ 	time_t t, t2, diff;
+ 	struct tm *tmp;
+ 
+@@ -228,13 +233,17 @@
+ 				ioctl(fd, VFDSETLED, &aotom);
+ 				break;
+ 			case 'T':
+-				ret = ioctl(fd, VFDGETVERSION, &val);
++				ret = ioctl(fd, VFDGETVERSION, &version);
+ 				if (ret < 0)
+ 					perror("ioctl VFDGETVERSION");
+ 				else
+ 				{
+-					printf("%d\n", val);
+-					ret = val;
++					printf("Displaytype is %d\n", version.DisplayInfo);
++//					if (version.DisplayInfo == 3) //if DVFD
++//					{
++//						return 1; //return VFD
++//					}
++					ret = version.DisplayInfo;
+ 				}
+ 				break;
+ // Reminder to myself, here's a semi-sane default for Pingulux boxes:
+--- libstb-hal-next.org/libeplayer3/Makefile.am
++++ libstb-hal-next/libeplayer3/Makefile.am
+@@ -1,3 +1,4 @@
++AUTOMAKE_OPTIONS = subdir-objects
+ noinst_LTLIBRARIES = libeplayer3.la
+ 
+ CXXFLAGS = -Wall
+--- libstb-hal-next.org/libeplayer3/container/container_ffmpeg.c
++++ libstb-hal-next/libeplayer3/container/container_ffmpeg.c
+@@ -507,7 +507,7 @@
+ 		    while (packet_size > 0) {
+ 			int got_frame = 0;
+ 			if (!decoded_frame) {
+-			    if (!(decoded_frame = avcodec_alloc_frame())) {
++			    if (!(decoded_frame = av_frame_alloc())) {
+ 				fprintf(stderr, "out of memory\n");
+ 				exit(1);
+ 			    }
 

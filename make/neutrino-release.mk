@@ -47,6 +47,7 @@ release_neutrino_cube_common:
 	chmod 777 $(prefix)/release/etc/init.d/reboot
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(targetprefix)/bin/eeprom $(prefix)/release/bin
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/ipbox/micom.ko $(prefix)/release/lib/modules/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx21143}.fw
@@ -102,6 +103,12 @@ release_neutrino_cuberevo: release_neutrino_common_utils release_neutrino_cube_c
 	echo "cuberevo" > $(prefix)/release/etc/hostname
 
 #
+# release_cuberevo_3000hd
+#
+release_neutrino_cuberevo_3000hd: release_neutrino_common_utils release_neutrino_cube_common release_neutrino_cube_common_tuner
+	echo "cuberevo-3000hd" > $(prefix)/release/etc/hostname
+
+#
 # release_common_ipbox
 #
 release_neutrino_common_ipbox:
@@ -112,6 +119,7 @@ release_neutrino_common_ipbox:
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/siinfo/siinfo.ko $(prefix)/release/lib/modules/
 	cp -f $(buildprefix)/root/release/fstab_ipbox $(prefix)/release/etc/fstab
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp -dp $(buildprefix)/root/release/lircd_ipbox.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(buildprefix)/root/release/lircd_ipbox $(prefix)/release/usr/bin/lircd
 	rm -f $(prefix)/release/lib/firmware/*
@@ -160,6 +168,7 @@ release_neutrino_ufs910: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7100.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,stv6306}.fw
 	mv $(prefix)/release/lib/firmware/dvb-fe-cx21143.fw $(prefix)/release/lib/firmware/dvb-fe-cx24116.fw
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
@@ -217,6 +226,7 @@ release_neutrino_ufs922: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/ufs922_fan/fan_ctrl.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
@@ -232,6 +242,7 @@ release_neutrino_ufc960: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
@@ -297,6 +308,7 @@ release_neutrino_fortis_hdbox: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/component_7111_mb618.fw
 	rm -f $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
@@ -334,6 +346,7 @@ release_neutrino_octagon1008: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(targetprefix)/lib/firmware/dvb-fe-avl2108.fw $(prefix)/release/lib/firmware/
 	cp $(targetprefix)/lib/firmware/dvb-fe-stv6306.fw $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/component_7111_mb618.fw
@@ -347,6 +360,23 @@ release_neutrino_octagon1008: release_neutrino_common_utils
 release_neutrino_hs7110: release_neutrino_common_utils
 	echo "hs7110" > $(prefix)/release/etc/hostname
 	cp $(buildprefix)/root/release/halt_hs7110 $(prefix)/release/etc/init.d/halt
+	chmod 755 $(prefix)/release/etc/init.d/halt
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-sti7111.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/video_7111.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7111.elf $(prefix)/release/lib/firmware/audio.elf
+	mv $(prefix)/release/lib/firmware/component_7111_mb618.fw $(prefix)/release/lib/firmware/component.fw
+	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
+	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
+
+#
+# release_hs7420
+#
+release_neutrino_hs7420: release_neutrino_common_utils
+	echo "hs7420" > $(prefix)/release/etc/hostname
+	cp $(buildprefix)/root/release/halt_hs7810a $(prefix)/release/etc/init.d/halt
 	chmod 755 $(prefix)/release/etc/init.d/halt
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
@@ -381,6 +411,23 @@ release_neutrino_hs7810a: release_neutrino_common_utils
 release_neutrino_hs7119: release_neutrino_common_utils
 	echo "hs7119" > $(prefix)/release/etc/hostname
 	cp $(buildprefix)/root/release/halt_hs7119 $(prefix)/release/etc/init.d/halt
+	chmod 755 $(prefix)/release/etc/init.d/halt
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-sti7111.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/video_7111.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7111.elf $(prefix)/release/lib/firmware/audio.elf
+	mv $(prefix)/release/lib/firmware/component_7111_mb618.fw $(prefix)/release/lib/firmware/component.fw
+	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
+	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
+
+#
+# release_hs7429
+#
+release_neutrino_hs7429: release_neutrino_common_utils
+	echo "hs7429" > $(prefix)/release/etc/hostname
+	cp $(buildprefix)/root/release/halt_hs7819 $(prefix)/release/etc/init.d/halt
 	chmod 755 $(prefix)/release/etc/init.d/halt
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
@@ -454,6 +501,7 @@ release_neutrino_hl101: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(targetprefix)/lib/firmware/dvb-fe-avl2108.fw $(prefix)/release/lib/firmware/
 	cp $(targetprefix)/lib/firmware/dvb-fe-stv6306.fw $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
@@ -474,6 +522,7 @@ release_neutrino_adb_box: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/cec_adb_box/cec_ctrl.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/as102/dvb-as102.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/lib/firmware/audio.elf
 	cp $(buildprefix)/root/firmware/as102_data1_st.hex $(prefix)/release/lib/firmware/
 	cp $(buildprefix)/root/firmware/as102_data2_st.hex $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
@@ -492,6 +541,7 @@ release_neutrino_vip1_v2: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/fstab_vip2 $(prefix)/release/etc/fstab
 	cp -dp $(buildprefix)/root/release/lircd_vip1_v2.conf $(prefix)/release/etc/lircd.conf
@@ -508,6 +558,7 @@ release_neutrino_vip2_v1: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/fstab_vip2 $(prefix)/release/etc/fstab
 	cp -dp $(buildprefix)/root/release/lircd_vip2_v1.conf $(prefix)/release/etc/lircd.conf
@@ -523,6 +574,7 @@ release_neutrino_hs5101: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7100.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/lib/firmware/audio.elf
 	cp -dp $(buildprefix)/root/release/lircd_hs5101.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx21143,stv6306}.fw
@@ -538,7 +590,9 @@ release_neutrino_tf7700: release_neutrino_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/tffp/tffp.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/tfswitch/tfswitch.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/lib/firmware/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/lib/firmware/audio.elf
 	cp -f $(buildprefix)/root/release/fstab_tf7700 $(prefix)/release/etc/fstab
 
 #
@@ -581,10 +635,32 @@ release_neutrino_sagemcom88: release_neutrino_common_utils
 	cp -dp $(buildprefix)/root/release/lircd_sagemcom88.conf $(prefix)/release/etc/lircd.conf
 
 #
+# release_ArivaLink200
+#
+release_neutrino_arivalink200: release_neutrino_common_utils
+	echo "arivalink200" > $(prefix)/release/etc/hostname
+	cp -dp $(buildprefix)/root/release/lircd_arivalink200.conf $(prefix)/release/etc/lircd.conf
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
+
+	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,cx21143,stv6306}.fw
+	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
+	cp -p $(targetprefix)/usr/sbin/lircmd $(prefix)/release/usr/bin/
+	cp -p $(targetprefix)/usr/bin/irexec $(prefix)/release/usr/bin/
+	cp -p $(targetprefix)/usr/bin/irrecord $(prefix)/release/usr/bin/
+	cp -p $(targetprefix)/usr/bin/irsend $(prefix)/release/usr/bin/
+	cp -p $(targetprefix)/usr/bin/irw $(prefix)/release/usr/bin/
+	mkdir -p $(prefix)/release/var/run/lirc
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/front_ArivaLink200/vfd.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/front_ArivaLink200/vfd.ko $(prefix)/release/lib/modules/ || true
+
+#
 # release_base
 #
 # the following target creates the common file base
 release_neutrino_base:
+	$(START_BUILD)
 	rm -rf $(prefix)/release || true
 	$(INSTALL_DIR) $(prefix)/release && \
 	$(INSTALL_DIR) $(prefix)/release/{bin,boot,dev,dev.static,etc,hdd,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var} && \
@@ -632,7 +708,6 @@ release_neutrino_base:
 	ln -sf ../sbin/MAKEDEV $(prefix)/release/dev/MAKEDEV && \
 	ln -sf ../../sbin/MAKEDEV $(prefix)/release/lib/udev/MAKEDEV && \
 	cp $(targetprefix)/boot/uImage $(prefix)/release/boot/ && \
-	cp $(targetprefix)/boot/audio.elf $(prefix)/release/lib/firmware/audio.elf && \
 	cp -dp $(targetprefix)/etc/fstab $(prefix)/release/etc/ && \
 	cp -dp $(buildprefix)/root/etc/group $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/host.conf $(prefix)/release/etc/ && \
@@ -659,11 +734,11 @@ release_neutrino_base:
 	cp -aR $(buildprefix)/root/usr/share/udhcpc/* $(prefix)/release/usr/share/udhcpc/ && \
 	cp -aR $(buildprefix)/root/usr/share/zoneinfo/* $(prefix)/release/usr/share/zoneinfo/ && \
 	echo "576i50" > $(prefix)/release/etc/videomode && \
-	cp $(buildprefix)/root/release/rcS_neutrino$(if $(TF7700),_$(TF7700))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(HS7110),_$(HS7110))$(if $(HS7810A),_$(HS7810A))$(if $(HS7119),_$(HS7119))$(if $(HS7819),_$(HS7819))$(if $(ATEMIO520),_$(ATEMIO520))$(if $(ATEMIO530),_$(ATEMIO530))$(if $(HL101),_$(HL101))$(if $(VIP1_V2),_$(VIP1_V2))$(if $(VIP2_V1),_$(VIP2_V1))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_MINI_FTA),_$(CUBEREVO_MINI_FTA))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(CUBEREVO_9500HD),_$(CUBEREVO_9500HD))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162)) $(prefix)/release/etc/init.d/rcS && \
+	cp $(buildprefix)/root/release/rcS_neutrino$(if $(TF7700),_$(TF7700))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(HS7110),_$(HS7110))$(if $(HS7119),_$(HS7119))$(if $(HS7420),_$(HS7420))$(if $(HS7429),_$(HS7429))$(if $(HS7810A),_$(HS7810A))$(if $(HS7819),_$(HS7819))$(if $(ATEMIO520),_$(ATEMIO520))$(if $(ATEMIO530),_$(ATEMIO530))$(if $(HL101),_$(HL101))$(if $(VIP1_V2),_$(VIP1_V2))$(if $(VIP2_V1),_$(VIP2_V1))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_MINI_FTA),_$(CUBEREVO_MINI_FTA))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(CUBEREVO_9500HD),_$(CUBEREVO_9500HD))$(if $(CUBEREVO_3000HD),_$(CUBEREVO_3000HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162)) $(prefix)/release/etc/init.d/rcS && \
 	chmod 755 $(prefix)/release/etc/init.d/rcS && \
 	export CROSS_COMPILE=$(target)- && \
 		$(MAKE) install -C @DIR_busybox@ CONFIG_PREFIX=$(prefix)/release && \
-	cp -dp $(targetprefix)/usr/sbin/vsftpd $(prefix)/release/usr/bin/ && \
+	cp -dp $(targetprefix)/usr/bin/vsftpd $(prefix)/release/usr/bin/ && \
 	cp $(buildprefix)/root/bin/autologin $(prefix)/release/bin/ && \
 	cp $(buildprefix)/root/usr/sbin/fw_printenv $(prefix)/release/usr/sbin/ && \
 	ln -sf ../../usr/sbin/fw_printenv $(prefix)/release/usr/sbin/fw_setenv && \
@@ -682,8 +757,8 @@ if !ENABLE_UFS922
 endif
 endif
 
-	cp -dp $(buildprefix)/root/release/inittab$(if $(FORTIS_HDBOX)$(OCTAGON1008)$(CUBEREVO)$(CUBEREVO_MINI2)$(CUBEREVO_2000HD),_ttyAS1) $(prefix)/release/etc/inittab
-	cp $(buildprefix)/root/release/fw_env.config$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(TF7700),_$(TF7700))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000)) $(prefix)/release/etc/fw_env.config
+	cp -dp $(buildprefix)/root/release/inittab$(if $(FORTIS_HDBOX)$(OCTAGON1008)$(CUBEREVO)$(CUBEREVO_MINI2)$(CUBEREVO_2000HD)$(CUBEREVO_3000HD),_ttyAS1) $(prefix)/release/etc/inittab
+	cp $(buildprefix)/root/release/fw_env.config$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(HS7110),_$(HS7110))$(if $(HS7119),_$(HS7119))$(if $(HS7420),_$(HS7420))$(if $(HS7429),_$(HS7429))$(if $(HS7810A),_$(HS7810A))$(if $(HS7819),_$(HS7819))$(if $(TF7700),_$(TF7700))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000)) $(prefix)/release/etc/fw_env.config
 
 #
 # Player
@@ -722,15 +797,15 @@ endif
 #
 # modules
 #
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko $(prefix)/release/lib/modules/
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko $(prefix)/release/lib/modules/ || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/net/ipv6/ipv6.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/net/ipv6/ipv6.ko $(prefix)/release/lib/modules || true
 
 #
-# multicom 323
+# multicom 324
 #
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxshell/embxshell.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxshell/embxshell.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxmailbox/embxmailbox.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/multicom/embxmailbox/embxmailbox.ko $(prefix)/release/lib/modules || true
@@ -784,6 +859,7 @@ endif
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl871x/8712u.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl871x/8712u.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8188eu/8188eu.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8188eu/8188eu.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8192cu/8192cu.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8192cu/8192cu.ko $(prefix)/release/lib/modules || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8192du/8192du.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/wireless/rtl8192du/8192du.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/as102/dvb-as102.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/as102/dvb-as102.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/rtl2832u/dvb-rtl2832u.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/rtl2832u/dvb-rtl2832u.ko $(prefix)/release/lib/modules || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/smsdvb.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/smsdvb.ko $(prefix)/release/lib/modules || true
@@ -823,6 +899,9 @@ endif
 	cp $(targetprefix)/usr/local/bin/neutrino $(prefix)/release/usr/local/bin/
 	cp $(targetprefix)/usr/local/bin/pzapit $(prefix)/release/usr/local/bin/
 	cp $(targetprefix)/usr/local/bin/sectionsdcontrol $(prefix)/release/usr/local/bin/
+	if [ -e $(targetprefix)/usr/local/bin/install.sh ]; then \
+		cp -aR $(targetprefix)/usr/local/bin/install.sh $(prefix)/release/bin/; \
+	fi
 	if [ -e $(targetprefix)/usr/local/bin/luaclient ]; then \
 		cp $(targetprefix)/usr/local/bin/luaclient $(prefix)/release/bin/; \
 	fi
@@ -847,6 +926,7 @@ endif
 	cp -aR $(buildprefix)/root/root_neutrino/* $(prefix)/release/
 
 if !ENABLE_CUBEREVO_MINI2
+if !ENABLE_CUBEREVO_3000HD
 if !ENABLE_ATEVIO7500
 if !ENABLE_SPARK7162
 	rm -f $(prefix)/release/var/tuxbox/config/cables.xml
@@ -854,11 +934,13 @@ if !ENABLE_SPARK7162
 endif
 endif
 endif
+endif
 
 #
 # iso-codes
 #
-	cp -aR $(targetprefix)/usr/local/share/iso-codes $(prefix)/release/usr/share/
+	[ -e $(targetprefix)/usr/share/iso-codes ] && cp -aR $(targetprefix)/usr/share/iso-codes $(prefix)/release/usr/share/ || true
+	[ -e $(targetprefix)/usr/local/share/iso-codes ] && cp -aR $(targetprefix)/usr/local/share/iso-codes $(prefix)/release/usr/share/ || true
 
 #
 # httpd/icons/locale/themes
@@ -935,6 +1017,14 @@ endif
 	fi
 
 #
+# openvpn
+#
+	if [ -e $(targetprefix)/usr/sbin/openvpn ]; then \
+		cp -f $(targetprefix)/usr/sbin/openvpn $(prefix)/release/usr/sbin; \
+		$(INSTALL_DIR) $(prefix)/release/etc/openvpn; \
+	fi
+
+#
 # udpxy
 #
 	if [ -e $(targetprefix)/usr/bin/udpxy ]; then \
@@ -961,10 +1051,13 @@ endif
 #
 # Plugins
 #
-	if [ -e $(targetprefix)/var/tuxbox/plugins/libfx2.so ]; then \
-		cp -f $(targetprefix)/var/tuxbox/plugins/*.so $(prefix)/release/var/tuxbox/plugins; \
-		cp -f $(targetprefix)/var/tuxbox/plugins/*.cfg $(prefix)/release/var/tuxbox/plugins; \
-		cp -af $(targetprefix)/bin/{shellexec,msgbox,getrc,input} $(prefix)/release/bin; \
+#	if [ -e $(targetprefix)/var/tuxbox/plugins/libfx2.so ]; then \
+#		cp -f $(targetprefix)/var/tuxbox/plugins/*.so $(prefix)/release/var/tuxbox/plugins;
+#		cp -f $(targetprefix)/var/tuxbox/plugins/*.cfg $(prefix)/release/var/tuxbox/plugins;
+#		cp -af $(targetprefix)/bin/{shellexec,msgbox,getrc,input} $(prefix)/release/bin;
+#	fi
+	if [ -d $(targetprefix)/var/tuxbox/plugins ]; then \
+		cp -af $(targetprefix)/var/tuxbox/plugins $(prefix)/release/var/tuxbox/; \
 	fi
 	if [ -e $(prefix)/release/var/tuxbox/plugins/tuxwetter.so ]; then \
 		cp -rf $(targetprefix)/var/tuxbox/config/tuxwetter $(prefix)/release/var/tuxbox/config; \
@@ -974,9 +1067,10 @@ endif
 		ln -s /var/tuxbox/plugins/sokoban $(prefix)/release/usr/share/tuxbox/sokoban; \
 	fi
 
-	if [ -e $(targetprefix)/var/tuxbox/plugins/tuxcom.so -a -e $(targetprefix)/var/tuxbox/plugins/tuxcom.cfg ]; then \
-		cp -f $(targetprefix)/var/tuxbox/plugins/tuxcom* $(prefix)/release/var/tuxbox/plugins; \
-	fi
+#	if [ -e $(targetprefix)/var/tuxbox/plugins/tuxcom.so -a -e $(targetprefix)/var/tuxbox/plugins/tuxcom.cfg ]; then
+#		cp -f $(targetprefix)/var/tuxbox/plugins/tuxcom* $(prefix)/release/var/tuxbox/plugins;
+#	fi
+#
 
 #
 # shairport
@@ -1013,9 +1107,10 @@ endif
 	rm -rf $(prefix)/release/usr/lib/m4-nofpu/
 	rm -f $(prefix)/release/lib/modules/lzo*.ko
 	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
-	rm -rf $(prefix)/release/usr/lib/alsa-lib
+	rm -rf $(prefix)/release/usr/lib/alsa
 	rm -rf $(prefix)/release/usr/lib/alsaplayer
 	rm -rf $(prefix)/release/usr/lib/audit
+	rm -f $(prefix)/release/usr/lib/libc.so
 	rm -rf $(prefix)/release/usr/lib/glib-2.0
 #	rm -f $(prefix)/release/usr/lib/libexpat*
 	rm -f $(prefix)/release/usr/lib/xml2Conf.sh
@@ -1039,8 +1134,8 @@ endif
 # IMPORTANT: it is assumed that only one variable is set. Otherwise the target name won't be resolved.
 #
 $(D)/release_neutrino: \
-$(D)/%release_neutrino: release_neutrino_base release_neutrino_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)
-	touch $@
+$(D)/%release_neutrino: release_neutrino_base release_neutrino_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(CUBEREVO_3000HD)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)
+	$(TOUCH)
 
 #
 # FOR YOUR OWN CHANGES use these folder in cdk/own_build/neutrino-hd

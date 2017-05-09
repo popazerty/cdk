@@ -6,21 +6,20 @@
 # PLUGINS
 #
 $(D)/neutrino-mp-plugins.do_prepare:
+	$(START_BUILD)
 	rm -rf $(sourcedir)/neutrino-mp-plugins
-	rm -rf $(sourcedir)/neutrino-mp-plugins.org
 	[ -d "$(archivedir)/neutrino-mp-plugins.git" ] && \
 	(cd $(archivedir)/neutrino-mp-plugins.git; git pull; cd "$(buildprefix)";); \
 	[ -d "$(archivedir)/neutrino-mp-plugins.git" ] || \
 	git clone https://github.com/Duckbox-Developers/neutrino-mp-plugins.git $(archivedir)/neutrino-mp-plugins.git; \
 	cp -ra $(archivedir)/neutrino-mp-plugins.git $(sourcedir)/neutrino-mp-plugins;\
-	cp -ra $(sourcedir)/neutrino-mp-plugins $(sourcedir)/neutrino-mp-plugins.org
-	touch $@
+	$(TOUCH)
 
 $(sourcedir)/neutrino-mp-plugins/config.status: $(D)/bootstrap $(D)/xupnpd
 	cd $(sourcedir)/neutrino-mp-plugins && \
 		./autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--host=$(target) \
 			--build=$(build) \
 			--prefix= \
@@ -39,13 +38,15 @@ $(sourcedir)/neutrino-mp-plugins/config.status: $(D)/bootstrap $(D)/xupnpd
 			LDFLAGS="$(TARGET_LDFLAGS) -L$(sourcedir)/neutrino-mp-plugins/fx2/lib/.libs"
 
 $(D)/neutrino-mp-plugins.do_compile: $(sourcedir)/neutrino-mp-plugins/config.status
+	$(START_BUILD)
 	cd $(sourcedir)/neutrino-mp-plugins && \
 		$(MAKE)
-	touch $@
+	$(TOUCH)
 
 $(D)/neutrino-mp-plugins: neutrino-mp-plugins.do_prepare neutrino-mp-plugins.do_compile
+	rm -rf $(targetprefix)/var/tuxbox/plugins/*
 	$(MAKE) -C $(sourcedir)/neutrino-mp-plugins install DESTDIR=$(targetprefix)
-	touch $@
+#	$(TOUCH)
 
 neutrino-mp-plugins-clean:
 	rm -f $(D)/neutrino-mp-plugins
@@ -59,31 +60,30 @@ neutrino-mp-plugins-distclean:
 # NHD2 plugins
 #
 yaud-neutrino-hd2-exp-plugins: yaud-none lirc \
-		boot-elf neutrino-hd2-exp neutrino-mp-plugins release_neutrino
+		boot-elf neutrino-hd2-exp nhd2-plugins release_neutrino
 	@TUXBOX_YAUD_CUSTOMIZE@
 
 NEUTRINO_HD2_PLUGINS_PATCHES =
 
 $(D)/nhd2-plugins.do_prepare:
+	$(START_BUILD)
 	rm -rf $(sourcedir)/nhd2-plugins
-	rm -rf $(sourcedir)/nhd2-plugins.org
-	(cd $(archivedir)/neutrino-hd2-exp.git; git pull ; cd "$(buildprefix)";); \
-	[ -d "$(archivedir)/neutrino-hd2-exp.git" ] || \
-	git clone https://github.com/mohousch/neutrinohd2.git $(archivedir)/neutrino-hd2-exp.git; \
-	cp -ra $(archivedir)/neutrino-hd2-exp.git $(sourcedir)/nhd2-plugins; \
-	(cd $(sourcedir)/nhd2-plugins; git checkout plugins; cd "$(buildprefix)";); \
-	cp -ra $(sourcedir)/nhd2-plugins $(sourcedir)/nhd2-plugins.org
+	[ -d "$(archivedir)/nhd2-plugins.git" ] && \
+	(cd $(archivedir)/nhd2-plugins.git; git pull; cd "$(buildprefix)";); \
+	[ -d "$(archivedir)/nhd2-plugins.git" ] || \
+	git clone -b plugins https://github.com/mohousch/neutrinohd2.git $(archivedir)/nhd2-plugins.git; \
+	cp -ra $(archivedir)/nhd2-plugins.git $(sourcedir)/nhd2-plugins;
 	for i in $(NEUTRINO_HD2_PLUGINS_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		cd $(sourcedir)/nhd2-plugins && patch -p1 -i $$i; \
+		set -e; cd $(sourcedir)/nhd2-plugins && patch -p1 -i $$i; \
 	done;
-	touch $@
+	$(TOUCH)
 
 $(sourcedir)/nhd2-plugins/config.status: bootstrap
 	cd $(sourcedir)/nhd2-plugins && \
 		./autogen.sh && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--host=$(target) \
 			--build=$(build) \
 			--prefix= \
@@ -99,14 +99,15 @@ $(sourcedir)/nhd2-plugins/config.status: bootstrap
 			LDFLAGS="$(TARGET_LDFLAGS)"
 
 $(D)/nhd2-plugins.do_compile: $(sourcedir)/nhd2-plugins/config.status
+	$(START_BUILD)
 	cd $(sourcedir)/nhd2-plugins && \
 	$(MAKE)
-	touch $@
+	$(TOUCH)
 
 $(D)/nhd2-plugins: nhd2-plugins.do_prepare nhd2-plugins.do_compile
 	rm -rf $(targetprefix)/var/tuxbox/plugins/*
 	$(MAKE) -C $(sourcedir)/nhd2-plugins install DESTDIR=$(targetprefix)
-#	touch $@
+#	$(TOUCH)
 
 nhd2-plugins-clean:
 	rm -f $(D)/nhd2-plugins

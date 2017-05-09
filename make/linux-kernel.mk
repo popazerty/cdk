@@ -1,7 +1,7 @@
 #
 # IMPORTANT: it is expected that only one define is set
 #
-MODNAME = $(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(FORTIS_HDBOX)$(ATEVIO7500)$(OCTAGON1008)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO530)$(ATEMIO520)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(SPARK)$(SPARK7162)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)$(FORTIS_DP7000)
+MODNAME = $(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(CUBEREVO_3000HD)$(FORTIS_HDBOX)$(ATEVIO7500)$(OCTAGON1008)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(HS7819)$(ATEMIO530)$(ATEMIO520)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(SPARK)$(SPARK7162)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)
 DEPMOD = $(hostprefix)/bin/depmod
 
 #
@@ -62,7 +62,7 @@ UFS913_PATCHES_24 = $(COMMONPATCHES_24) \
 
 OCTAGON1008_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-octagon1008_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-octagon1008_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-octagon1008_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-usbwait123_stm24.patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch
@@ -76,20 +76,33 @@ ATEVIO7500_PATCHES_24 = $(COMMONPATCHES_24) \
 HS7110_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7110_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7110_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-hs7110_mtdconcat_stm24$(PATCH_STR).patch) \
+		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
+		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
+
+HS7420_PATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-lmb_stm24$(PATCH_STR).patch \
+		linux-sh4-hs7420_setup_stm24$(PATCH_STR).patch \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-hs7420_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
 HS7810A_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7810a_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7810a_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-hs7810a_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
 HS7119_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-lmb_stm24$(PATCH_STR).patch \
 		linux-sh4-hs7119_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
+		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
+
+HS7429_PATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-lmb_stm24$(PATCH_STR).patch \
+		linux-sh4-hs7429_setup_stm24$(PATCH_STR).patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		$(if $(P0209)$(P0211),linux-sh4-i2c-stm-downgrade_stm24$(PATCH_STR).patch)
 
@@ -159,7 +172,7 @@ SPARK7162_PATCHES_24 = $(COMMONPATCHES_24) \
 
 FORTIS_HDBOX_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-fortis_hdbox_setup_stm24$(PATCH_STR).patch \
-		$(if $(NEUTRINO),linux-sh4-fortis_hdbox_mtdconcat_stm24$(PATCH_STR).patch) \
+		$(if $(NEUTRINO)$(TVHEADEND),linux-sh4-fortis_hdbox_mtdconcat_stm24$(PATCH_STR).patch) \
 		linux-usbwait123_stm24.patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
 		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
@@ -226,6 +239,11 @@ CUBEREVO_9500HD_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
 		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
 
+CUBEREVO_3000HD_PATCHES_24 = $(COMMONPATCHES_24) \
+		linux-sh4-cuberevo_3000hd_setup_stm24$(PATCH_STR).patch \
+		linux-sh4-i2c-st40-pio_stm24$(PATCH_STR).patch \
+		linux-sh4-cuberevo_rtl8201_stm24$(PATCH_STR).patch
+
 VITAMIN_HD5000_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-vitamin_hd5000_setup_stm24$(PATCH_STR).patch \
 		linux-sh4-stmmac_stm24$(PATCH_STR).patch \
@@ -243,9 +261,6 @@ ARIVALINK200_PATCHES_24 = $(COMMONPATCHES_24) \
 		linux-sh4-ipbox_bdinfo_stm24$(PATCH_STR).patch \
 		linux-sh4-ipbox_dvb_ca_stm24$(PATCH_STR).patch
 
-FORTIS_DP7000_PATCHES_24 = $(COMMONPATCHES_24) \
-		linux-sh4-fortis_dp7000_setup_stm24$(PATCH_STR).patch
-
 KERNELPATCHES_24 = \
 		$(if $(UFS910),$(UFS910_PATCHES_24)) \
 		$(if $(UFS912),$(UFS912_PATCHES_24)) \
@@ -260,8 +275,10 @@ KERNELPATCHES_24 = \
 		$(if $(SPARK7162),$(SPARK7162_PATCHES_24)) \
 		$(if $(FORTIS_HDBOX),$(FORTIS_HDBOX_PATCHES_24)) \
 		$(if $(HS7110),$(HS7110_PATCHES_24)) \
+		$(if $(HS7420),$(HS7420_PATCHES_24)) \
 		$(if $(HS7810A),$(HS7810A_PATCHES_24)) \
 		$(if $(HS7119),$(HS7119_PATCHES_24)) \
+		$(if $(HS7429),$(HS7429_PATCHES_24)) \
 		$(if $(HS7819),$(HS7819_PATCHES_24)) \
 		$(if $(ATEMIO520),$(ATEMIO520_PATCHES_24)) \
 		$(if $(ATEMIO530),$(ATEMIO530_PATCHES_24)) \
@@ -278,10 +295,10 @@ KERNELPATCHES_24 = \
 		$(if $(CUBEREVO_250HD),$(CUBEREVO_250HD_PATCHES_24)) \
 		$(if $(CUBEREVO_2000HD),$(CUBEREVO_2000HD_PATCHES_24)) \
 		$(if $(CUBEREVO_9500HD),$(CUBEREVO_9500HD_PATCHES_24)) \
+		$(if $(CUBEREVO_3000HD),$(CUBEREVO_3000HD_PATCHES_24)) \
 		$(if $(VITAMIN_HD5000),$(VITAMIN_HD5000_PATCHES_24)) \
 		$(if $(SAGEMCOM88),$(SAGEMCOM88_PATCHES_24)) \
-		$(if $(ARIVALINK200),$(ARIVALINK200_PATCHES_24)) \
-		$(if $(FORTIS_DP7000),$(FORTIS_DP7000_PATCHES_24))
+		$(if $(ARIVALINK200),$(ARIVALINK200_PATCHES_24))
 
 if ENABLE_ENIGMA2
 BUILDCONFIG=build-enigma2
@@ -327,29 +344,39 @@ HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,_,$(KERNELVERSION))_$(MODNAME).co
 
 $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) | $(HOST_U_BOOT_TOOLS) \
 	$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=$(PATCHES)/$(BUILDCONFIG)/%))
-	rm -rf linux-sh4*
-	if [ -e $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz ]; then \
+	$(START_BUILD)
+	@rm -rf linux-sh4*
+	@if [ -e $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz ]; then \
 		mkdir $(buildprefix)/$(KERNEL_DIR); \
-		echo "Getting archived P0$(KERNELLABEL) kernel source"; \
+		echo -n "Getting archived P0$(KERNELLABEL) kernel source..."; \
 		tar -xf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz -C $(buildprefix)/$(KERNEL_DIR); \
+		echo " done."; \
 	else \
 		if [ -d $(archivedir)/linux-sh4-2.6.32.y.git ]; then \
-			echo "Updating STlinux kernel source"; \
-			cd $(archivedir)/linux-sh4-2.6.32.y.git; git pull; \
+			echo -n "Updating STlinux kernel source..."; \
+			cd $(archivedir)/linux-sh4-2.6.32.y.git; git pull -q; \
+			echo " done."; \
 		else \
-			echo "Getting STlinux kernel source"; \
-			REPO=git://git.stlinux.com/stm/linux-sh4-2.6.32.y.git;protocol=git;branch=stmicro; \
+			echo "Getting STlinux kernel source..."; \
+			REPO=https://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=https;branch=stmicro; \
 			git clone $$REPO $(archivedir)/linux-sh4-2.6.32.y.git; \
 		fi; \
-		echo "Copying kernel source code to build environment"; \
+		echo -n "Copying kernel source code to build environment..."; \
 		cp -ra $(archivedir)/linux-sh4-2.6.32.y.git $(buildprefix)/$(KERNEL_DIR); \
-		echo "Applying patch level P0$(KERNELLABEL)"; \
+		echo " done."; \
+		echo -n "Applying patch level P0$(KERNELLABEL)..."; \
 		cd $(buildprefix)/$(KERNEL_DIR); \
 		git checkout -q $(HOST_KERNEL_REVISION); \
-		echo "Archiving patched kernel source"; \
+		echo " done."; \
+		echo -n "Archiving patched kernel source..."; \
 		tar --exclude=.git -czf $(archivedir)/stlinux24-$(HOST_KERNEL)-source-sh4-$(HOST_KERNEL_VERSION).noarch.tar.gz .; \
+		echo " done."; \
 	fi
-	$(if $(HOST_KERNEL_PATCHES),cd $(KERNEL_DIR) && cat $(HOST_KERNEL_PATCHES:%=$(buildprefix)/Patches/$(BUILDCONFIG$)/%) | patch -p1)
+	@set -e; cd $(KERNEL_DIR); \
+		for i in $(HOST_KERNEL_PATCHES); do \
+			echo -e "==> \033[31mApplying Patch:\033[0m $$i"; \
+			patch -p1 $(SILENT_PATCH) -i $(buildprefix)/Patches/$(BUILDCONFIG)/$$i; \
+		done
 	$(INSTALL) -m644 Patches/$(BUILDCONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
 	ln -s $(KERNEL_DIR) $(buildprefix)/linux-sh4
 	-rm $(KERNEL_DIR)/localversion*
@@ -372,12 +399,13 @@ $(D)/linux-kernel: $(D)/bootstrap $(buildprefix)/Patches/$(BUILDCONFIG)/$(HOST_K
 	cp $(KERNEL_DIR)/arch/sh/boot/uImage $(targetprefix)/boot/ && \
 	rm $(targetprefix)/lib/modules/$(KERNELVERSION)/build || true && \
 	rm $(targetprefix)/lib/modules/$(KERNELVERSION)/source || true
-	touch $@
+	$(TOUCH)
 
 $(D)/tfkernel.do_compile:
+	$(START_BUILD)
 	cd $(KERNEL_DIR) && \
 		$(MAKE) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(target)- uImage
-	touch $@
+	$(TOUCH)
 
 linux-kernel-clean:
 	rm -f $(DEPDIR)/linux-kernel
@@ -393,3 +421,4 @@ linux-kernel.%:
 	@echo ""
 	diff $(KERNEL_DIR)/.config.old $(KERNEL_DIR)/.config
 	@echo ""
+

@@ -1,6 +1,6 @@
 --- a/lib/Makefile.elf-lib
 +++ b/lib/Makefile.elf-lib
-@@ -50,8 +50,6 @@ install-shlibs install:: $(ELF_LIB) installdirs-elf-lib $(DEP_INSTALL_SYMLINK)
+@@ -50,8 +50,6 @@
  	$(E) "	SYMLINK $(libdir)/$(ELF_IMAGE).so"
  	$(Q) $(INSTALL_SYMLINK) $(ELF_INSTALL_DIR)/$(ELF_SONAME) \
  		$(libdir)/$(ELF_IMAGE).so $(DESTDIR)
@@ -9,7 +9,7 @@
  
  install-strip: install
  	$(E) "	STRIP-LIB $(ELF_INSTALL_DIR)/$(ELF_LIB)"
-@@ -67,7 +65,6 @@ uninstall-shlibs uninstall::
+@@ -67,7 +65,6 @@
  	$(RM) -f $(DESTDIR)$(ELF_INSTALL_DIR)/$(ELF_LIB) \
  		$(DESTDIR)$(ELF_INSTALL_DIR)/$(ELF_SONAME) \
  		$(DESTDIR)$(libdir)/$(ELF_IMAGE).so
@@ -19,7 +19,7 @@
  	$(RM) -rf elfshared
 --- a/misc/Makefile.in
 +++ b/misc/Makefile.in
-@@ -150,10 +150,10 @@
+@@ -151,10 +151,10 @@
  	$(E) "	LD $@"
  	$(Q) $(CC) $(ALL_LDFLAGS) -o partinfo partinfo.o
  
@@ -32,7 +32,7 @@
  
  tune2fs: $(TUNE2FS_OBJS) $(DEPLIBS) $(DEPLIBS_E2P) $(DEPLIBBLKID) \
  		$(DEPLIBUUID) $(DEPLIBQUOTA) $(LIBEXT2FS)
-@@ -303,10 +303,10 @@
+@@ -304,10 +304,10 @@
  		$(PROFILED_DUMPE2FS_OBJS) $(PROFILED_LIBS) \
  		$(PROFILED_LIBE2P) $(PROFILED_LIBUUID) $(LIBINTL) $(SYSLIBS)
  
@@ -47,7 +47,7 @@
  	$(E) "	LD $@"
 --- a/lib/et/Makefile.in
 +++ b/lib/et/Makefile.in
-@@ -25,8 +25,8 @@ SHARE_FILES= et_c.awk et_h.awk
+@@ -25,8 +25,8 @@
  LIBRARY= libcom_err
  LIBDIR= et
  

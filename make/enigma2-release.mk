@@ -46,6 +46,7 @@ release_enigma2_cube_common:
 	chmod 777 $(prefix)/release/etc/init.d/reboot
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp $(targetprefix)/bin/eeprom $(prefix)/release/bin
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/ipbox/micom.ko $(prefix)/release/lib/modules/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx21143}.fw
@@ -103,6 +104,12 @@ release_enigma2_cuberevo: release_enigma2_common_utils release_enigma2_cube_comm
 	echo "cuberevo" > $(prefix)/release/etc/hostname
 
 #
+# release_cuberevo_3000hd
+#
+release_enigma2_cuberevo_3000hd: release_enigma2_common_utils release_enigma2_cube_common release_enigma2_cube_common_tuner
+	echo "cuberevo-3000hd" > $(prefix)/release/etc/hostname
+
+#
 # release_common_ipbox
 #
 release_enigma2_common_ipbox:
@@ -113,6 +120,7 @@ release_enigma2_common_ipbox:
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/siinfo/siinfo.ko $(prefix)/release/lib/modules/
 	cp -f $(buildprefix)/root/release/fstab_ipbox $(prefix)/release/etc/fstab
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp -dp $(buildprefix)/root/release/lircd_ipbox.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(buildprefix)/root/release/lircd_ipbox $(prefix)/release/usr/bin/lircd
 	mkdir -p $(prefix)/release/var/run/lirc
@@ -169,6 +177,7 @@ release_enigma2_ufs910: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7100.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/boot/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,stv6306}.fw
 	mv $(prefix)/release/lib/firmware/dvb-fe-cx21143.fw $(prefix)/release/lib/firmware/dvb-fe-cx24116.fw
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
@@ -197,6 +206,7 @@ release_enigma2_ufs912: release_enigma2_common_utils
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
+	cp -f $(buildprefix)/root/release/rc_ufs912.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_ufs912.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
 
 #
@@ -230,6 +240,7 @@ release_enigma2_ufs922: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/ufs922_fan/fan_ctrl.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116}.fw
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/eeprom
@@ -277,10 +288,10 @@ release_enigma2_spark: release_enigma2_common_utils
 	cp -f $(buildprefix)/root/sbin/nand* $(prefix)/release/sbin
 	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/share/fonts/
 	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD/plugin.pyo ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/sparkVFD; \
 		sync; \
@@ -306,7 +317,8 @@ release_enigma2_spark7162: release_enigma2_common_utils
 	rm -f $(prefix)/release/bin/gotosleep
 	rm -f $(prefix)/release/bin/vdstandby
 	rm -f $(prefix)/release/bin/eeprom
-	cp -p $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/
+	[ -e $(targetprefix)/usr/bin/ntpdate ] && cp -f $(targetprefix)/usr/bin/ntpdate $(prefix)/release/sbin/ || true
+	[ -e $(targetprefix)/usr/sbin/ntpdate ] && cp -f $(targetprefix)/usr/sbin/ntpdate $(prefix)/release/sbin/ || true
 	cp -dp $(buildprefix)/root/release/lircd_spark7162.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	mkdir -p $(prefix)/release/var/run/lirc
@@ -314,8 +326,8 @@ release_enigma2_spark7162: release_enigma2_common_utils
 	cp -f $(buildprefix)/root/sbin/flash_* $(prefix)/release/sbin
 	cp -f $(buildprefix)/root/sbin/nand* $(prefix)/release/sbin
 	cp $(targetprefix)/usr/local/share/fonts/* $(prefix)/release/usr/share/fonts/
-	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png; \
+	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD/plugin.pyo ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/spark7162VFD; \
@@ -336,12 +348,13 @@ release_enigma2_fortis_hdbox: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	rm -f $(prefix)/release/lib/firmware/component_7111_mb618.fw
 	rm -f $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	rm -f $(prefix)/release/bin/eeprom
 	cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/fs9000VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/fs9000VFD; \
@@ -372,7 +385,7 @@ release_enigma2_atevio7500: release_enigma2_common_utils
 	rm -f $(prefix)/release/lib/modules/mpeg2hw.ko
 	rm -f $(prefix)/release/bin/eeprom
 	cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs8200VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs8200VFD; \
@@ -393,6 +406,7 @@ release_enigma2_octagon1008: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp $(targetprefix)/lib/firmware/dvb-fe-avl2108.fw $(prefix)/release/lib/firmware/
 	cp $(targetprefix)/lib/firmware/dvb-fe-stv6306.fw $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/component_7111_mb618.fw
@@ -400,7 +414,7 @@ release_enigma2_octagon1008: release_enigma2_common_utils
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
 	rm -f $(prefix)/release/bin/eeprom
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs9510VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
 		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs9510VFD; \
@@ -427,12 +441,39 @@ release_enigma2_hs7110: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7110VFD; \
+		sync; \
+	fi
+	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_fortis.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
+
+#
+# release_hs7420
+#
+release_enigma2_hs7420: release_enigma2_common_utils
+	echo "hs7420" > $(prefix)/release/etc/hostname
+	cp $(buildprefix)/root/release/halt_hs742x $(prefix)/release/etc/init.d/halt
+	chmod 755 $(prefix)/release/etc/init.d/halt
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-sti7111.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/video_7111.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7111.elf $(prefix)/release/boot/audio.elf
+	mv $(prefix)/release/lib/firmware/component_7111_mb618.fw $(prefix)/release/lib/firmware/component.fw
+	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
+	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
+	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
+	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD/plugin.py ]; then \
+		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
+		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD; \
+		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
+		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD; \
 		sync; \
 	fi
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_fortis.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
@@ -454,10 +495,10 @@ release_enigma2_hs7810a: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		sync; \
@@ -481,12 +522,39 @@ release_enigma2_hs7119: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
+		sync; \
+	fi
+	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_fortis.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
+
+#
+# release_hs7429
+#
+release_enigma2_hs7429: release_enigma2_common_utils
+	echo "hs7429" > $(prefix)/release/etc/hostname
+	cp $(buildprefix)/root/release/halt_hs742x $(prefix)/release/etc/init.d/halt
+	chmod 755 $(prefix)/release/etc/init.d/halt
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/nuvoton/nuvoton.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/lnb/lnb.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-sti7111.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/boot/video_7111.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7111.elf $(prefix)/release/boot/audio.elf
+	mv $(prefix)/release/lib/firmware/component_7111_mb618.fw $(prefix)/release/lib/firmware/component.fw
+	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
+	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
+	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
+	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD/plugin.py ]; then \
+		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
+		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD; \
+		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
+		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs742xVFD; \
 		sync; \
 	fi
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_fortis.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
@@ -508,10 +576,10 @@ release_enigma2_hs7819: release_enigma2_common_utils
 	rm $(prefix)/release/lib/firmware/component_7105_pdk7105.fw
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
-	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/rc.png || true
 	if [ -e $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/plugin.py ]; then \
 		rm -f $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons/*; \
-		cp -f $(buildprefix)/root/release/vfddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
+		cp -f $(buildprefix)/root/release/leddisplay.png $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD/* $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/VFD-Icons; \
 		rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/Extensions/hs7810aVFD; \
 		sync; \
@@ -565,6 +633,7 @@ release_enigma2_hl101: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp $(targetprefix)/lib/firmware/dvb-fe-avl2108.fw $(prefix)/release/lib/firmware/
 	cp $(targetprefix)/lib/firmware/dvb-fe-stv6306.fw $(prefix)/release/lib/firmware/
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
@@ -587,6 +656,7 @@ release_enigma2_adb_box: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/adb_box_fan/cooler.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/cec_adb_box/cec_ctrl.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/boot/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl6222,cx24116,cx21143}.fw
 	cp -f $(buildprefix)/root/release/fstab_adb_box $(prefix)/release/etc/fstab
 	cp -dp $(buildprefix)/root/release/lircd_adb_box.conf $(prefix)/release/etc/lircd.conf
@@ -606,6 +676,7 @@ release_enigma2_vip1_v2: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/fstab_vip2 $(prefix)/release/etc/fstab
 	cp -dp $(buildprefix)/root/release/lircd_vip1_v2.conf $(prefix)/release/etc/lircd.conf
@@ -625,6 +696,7 @@ release_enigma2_vip2_v1: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,avl6222,cx24116,cx21143,stv6306}.fw
 	cp -f $(buildprefix)/root/release/fstab_vip2 $(prefix)/release/etc/fstab
 	cp -dp $(buildprefix)/root/release/lircd_vip2_v1.conf $(prefix)/release/etc/lircd.conf
@@ -643,6 +715,7 @@ release_enigma2_hs5101: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7100.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7100.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7100.elf $(prefix)/release/boot/audio.elf
 	cp -dp $(buildprefix)/root/release/lircd_hs5101.conf $(prefix)/release/etc/lircd.conf
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	mkdir -p $(prefix)/release/var/run/lirc
@@ -660,10 +733,14 @@ release_enigma2_tf7700: release_enigma2_common_utils
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/tffp/tffp.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
+	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/tfswitch/tfswitch.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp -f $(buildprefix)/root/release/fstab_tf7700 $(prefix)/release/etc/fstab
 	cp -f $(targetprefix)/sbin/shutdown $(prefix)/release/sbin/
 	rm -f $(prefix)/release/bin/vdstandby
+	cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/skin_default/rc.png; \
+	[ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ] && cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/rc.png; \
 	cp -f $(buildprefix)/root/root_enigma2/usr/local/share/enigma2/keymap_tf7700.xml $(prefix)/release/usr/local/share/enigma2/keymap.xml
 
 #
@@ -716,8 +793,8 @@ release_enigma2_arivalink200: release_enigma2_common_utils
 	cp -dp $(buildprefix)/root/release/lircd_arivalink200.conf $(prefix)/release/etc/lircd.conf
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/stgfb/stmfb/stmcore-display-stx7109c3.ko $(prefix)/release/lib/modules/
 	cp $(targetprefix)/boot/video_7109.elf $(prefix)/release/boot/video.elf
+	cp $(targetprefix)/boot/audio_7109.elf $(prefix)/release/boot/audio.elf
 	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontends/*.ko $(prefix)/release/lib/modules/
-
 	rm -f $(prefix)/release/lib/firmware/dvb-fe-{avl2108,cx21143,stv6306}.fw
 	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
 	cp -p $(targetprefix)/usr/sbin/lircmd $(prefix)/release/usr/bin/
@@ -729,26 +806,14 @@ release_enigma2_arivalink200: release_enigma2_common_utils
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/front_ArivaLink200/vfd.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/frontcontroller/front_ArivaLink200/vfd.ko $(prefix)/release/lib/modules/ || true
 
 #
-# release_FORTIS_DP7000
-#
-release_enigma2_fortis_dp7000: release_enigma2_common_utils
-	echo "fortis_dp7000" > $(prefix)/release/etc/hostname
-	cp -p $(targetprefix)/usr/sbin/lircd $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/sbin/lircmd $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irexec $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irrecord $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irsend $(prefix)/release/usr/bin/
-	cp -p $(targetprefix)/usr/bin/irw $(prefix)/release/usr/bin/
-	mkdir -p $(prefix)/release/var/run/lirc
-
-#
 # release_base
 #
 # the following target creates the common file base
 release_enigma2_base:
+	$(START_BUILD)
 	rm -rf $(prefix)/release || true
 	$(INSTALL_DIR) $(prefix)/release && \
-	$(INSTALL_DIR) $(prefix)/release/{bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,share,sys,tmp,usr,var} && \
+	$(INSTALL_DIR) $(prefix)/release/{autofs,bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,share,sys,tmp,usr,var} && \
 	$(INSTALL_DIR) $(prefix)/release/etc/{enigma2,init.d,network,tuxbox,tuxtxt} && \
 	$(INSTALL_DIR) $(prefix)/release/etc/network/{if-down.d,if-post-down.d,if-pre-up.d,if-up.d} && \
 	$(INSTALL_DIR) $(prefix)/release/lib/{modules,firmware} && \
@@ -761,7 +826,7 @@ release_enigma2_base:
 	$(INSTALL_DIR) $(prefix)/release/usr/local/share/{enigma2,keymaps} && \
 	ln -s /usr/local/share/keymaps $(prefix)/release/usr/share/keymaps
 	$(INSTALL_DIR) $(prefix)/release/usr/share/{fonts,zoneinfo,udhcpc} && \
-	$(INSTALL_DIR) $(prefix)/release/var/{etc,opkg} && \
+	$(INSTALL_DIR) $(prefix)/release/var/{etc,opkg,run} && \
 	touch $(prefix)/release/var/etc/.firstboot && \
 	cp -a $(targetprefix)/bin/* $(prefix)/release/bin/ && \
 	ln -sf /bin/showiframe $(prefix)/release/usr/bin/showiframe && \
@@ -789,9 +854,9 @@ release_enigma2_base:
 	cp -dp $(buildprefix)/root/sbin/MAKEDEV $(prefix)/release/sbin/MAKEDEV && \
 	ln -sf ../sbin/MAKEDEV $(prefix)/release/dev/MAKEDEV && \
 	cp $(targetprefix)/boot/uImage $(prefix)/release/boot/ && \
-	cp $(targetprefix)/boot/audio.elf $(prefix)/release/boot/audio.elf && \
 	cp -dp $(targetprefix)/etc/fstab $(prefix)/release/etc/ && \
 	cp -dp $(buildprefix)/root/etc/group $(prefix)/release/etc/ && \
+	cp -dp $(buildprefix)/root/etc/issue $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/host.conf $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hostname $(prefix)/release/etc/ && \
 	cp -dp $(targetprefix)/etc/hosts $(prefix)/release/etc/ && \
@@ -818,12 +883,12 @@ release_enigma2_base:
 	cp $(buildprefix)/root/root_enigma2/etc/tuxbox/tuxtxt2.conf $(prefix)/release/etc/tuxtxt/ && \
 	cp -aR $(buildprefix)/root/usr/share/udhcpc/* $(prefix)/release/usr/share/udhcpc/ && \
 	cp -aR $(buildprefix)/root/usr/share/zoneinfo/* $(prefix)/release/usr/share/zoneinfo/ && \
-	echo "576i50" > $(prefix)/release/etc/videomode && \
-	cp $(buildprefix)/root/release/rcS$(if $(TF7700),_$(TF7700))$(if $(HL101),_$(HL101))$(if $(VIP1_V2),_$(VIP1_V2))$(if $(VIP2_V1),_$(VIP2_V1))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(UFS922),_$(UFS922))$(if $(UFC960),_$(UFC960))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(HS7110),_$(HS7110))$(if $(HS7810A),_$(HS7810A))$(if $(HS7119),_$(HS7119))$(if $(HS7819),_$(HS7819))$(if $(ATEMIO520),_$(ATEMIO520))$(if $(ATEMIO530),_$(ATEMIO530))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_MINI_FTA),_$(CUBEREVO_MINI_FTA))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(CUBEREVO_9500HD),_$(CUBEREVO_9500HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000))$(if $(SAGEMCOM88),_$(SAGEMCOM88))$(if $(ARIVALINK200),_$(ARIVALINK200)) $(prefix)/release/etc/init.d/rcS && \
+	echo "720p50" > $(prefix)/release/etc/videomode && \
+	cp $(buildprefix)/root/release/rcS$(if $(TF7700),_$(TF7700))$(if $(HL101),_$(HL101))$(if $(VIP1_V2),_$(VIP1_V2))$(if $(VIP2_V1),_$(VIP2_V1))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(UFS922),_$(UFS922))$(if $(UFC960),_$(UFC960))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(HS7110),_$(HS7110))$(if $(HS7420),_$(HS7420))$(if $(HS7810A),_$(HS7810A))$(if $(HS7119),_$(HS7119))$(if $(HS7429),_$(HS7429))$(if $(HS7819),_$(HS7819))$(if $(ATEMIO520),_$(ATEMIO520))$(if $(ATEMIO530),_$(ATEMIO530))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_MINI_FTA),_$(CUBEREVO_MINI_FTA))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(CUBEREVO_9500HD),_$(CUBEREVO_9500HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000))$(if $(SAGEMCOM88),_$(SAGEMCOM88))$(if $(ARIVALINK200),_$(ARIVALINK200)) $(prefix)/release/etc/init.d/rcS && \
 	chmod 755 $(prefix)/release/etc/init.d/rcS && \
 	export CROSS_COMPILE=$(target)- && \
 		$(MAKE) install -C @DIR_busybox@ CONFIG_PREFIX=$(prefix)/release && \
-	cp -dp $(targetprefix)/usr/sbin/vsftpd $(prefix)/release/usr/bin/ && \
+	cp -dp $(targetprefix)/usr/bin/vsftpd $(prefix)/release/usr/bin/ && \
 	cp $(buildprefix)/root/bootscreen/bootlogo.mvi $(prefix)/release/boot/ && \
 	cp $(buildprefix)/root/bin/autologin $(prefix)/release/bin/ && \
 	cp $(buildprefix)/root/usr/sbin/fw_printenv $(prefix)/release/usr/sbin/ && \
@@ -833,8 +898,9 @@ release_enigma2_base:
 	cp -dp $(targetprefix)/sbin/blkid $(prefix)/release/sbin/ && \
 	cp -p $(targetprefix)/usr/bin/ffmpeg $(prefix)/release/sbin/ && \
 	cp -p $(targetprefix)/usr/bin/opkg-cl $(prefix)/release/usr/bin/opkg && \
-	cp -p $(targetprefix)/usr/bin/python $(prefix)/release/usr/bin/ && \
+	cp -dp $(targetprefix)/usr/bin/python* $(prefix)/release/usr/bin/ && \
 	cp -p $(targetprefix)/usr/sbin/ethtool $(prefix)/release/usr/sbin/ && \
+	cp -p $(targetprefix)/usr/sbin/livestreamersrv $(prefix)/release/usr/sbin/ && \
 	cp -dp $(targetprefix)/sbin/mkfs $(prefix)/release/sbin/
 if !ENABLE_UFS910
 if !ENABLE_UFS922
@@ -847,7 +913,7 @@ endif
 endif
 
 	cp -dp $(buildprefix)/root/release/inittab$(if $(FORTIS_HDBOX)$(OCTAGON1008)$(CUBEREVO)$(CUBEREVO_MINI2)$(CUBEREVO_2000HD),_ttyAS1) $(prefix)/release/etc/inittab
-	cp $(buildprefix)/root/release/fw_env.config$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(TF7700),_$(TF7700))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000)) $(prefix)/release/etc/fw_env.config
+	cp $(buildprefix)/root/release/fw_env.config$(if $(ATEVIO7500),_$(ATEVIO7500))$(if $(FORTIS_HDBOX),_$(FORTIS_HDBOX))$(if $(OCTAGON1008),_$(OCTAGON1008))$(if $(HS7110),_$(HS7110))$(if $(HS7119),_$(HS7119))$(if $(HS7420),_$(HS7420))$(if $(HS7429),_$(HS7429))$(if $(HS7810A),_$(HS7810A))$(if $(HS7819),_$(HS7819))$(if $(TF7700),_$(TF7700))$(if $(UFS910),_$(UFS910))$(if $(UFS912),_$(UFS912))$(if $(UFS913),_$(UFS913))$(if $(UFS922),_$(UFS922))$(if $(ADB_BOX),_$(ADB_BOX))$(if $(CUBEREVO),_$(CUBEREVO))$(if $(CUBEREVO_MINI),_$(CUBEREVO_MINI))$(if $(CUBEREVO_MINI2),_$(CUBEREVO_MINI2))$(if $(CUBEREVO_250HD),_$(CUBEREVO_250HD))$(if $(CUBEREVO_2000HD),_$(CUBEREVO_2000HD))$(if $(IPBOX9900),_$(IPBOX9900))$(if $(IPBOX99),_$(IPBOX99))$(if $(IPBOX55),_$(IPBOX55))$(if $(SPARK),_$(SPARK))$(if $(SPARK7162),_$(SPARK7162))$(if $(VITAMIN_HD5000),_$(VITAMIN_HD5000)) $(prefix)/release/etc/fw_env.config
 
 #
 # Player
@@ -886,11 +952,11 @@ endif
 #
 # modules
 #
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko $(prefix)/release/lib/modules/
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/avs/avs.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/bpamem/bpamem.ko $(prefix)/release/lib/modules/ || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/boxtype/boxtype.ko $(prefix)/release/lib/modules/ || true
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko $(prefix)/release/lib/modules/
-	cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko $(prefix)/release/lib/modules/
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/compcache/ramzswap.ko $(prefix)/release/lib/modules/ || true
+	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/e2_proc/e2_proc.ko $(prefix)/release/lib/modules/ || true
 	[ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/net/ipv6/ipv6.ko ] && cp $(targetprefix)/lib/modules/$(KERNELVERSION)/kernel/net/ipv6/ipv6.ko $(prefix)/release/lib/modules || true
 
 #
@@ -1043,6 +1109,7 @@ endif
 	rm -rf $(prefix)/release/usr/lib/m4-nofpu/
 	rm -rf $(prefix)/release/lib/modules/$(KERNELVERSION)
 	rm -rf $(prefix)/release/usr/lib/gcc
+	rm -f $(prefix)/release/usr/lib/libc.so
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/DemoPlugins
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/FrontprocessorUpgrade
 	rm -rf $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/NFIFlash
@@ -1059,6 +1126,7 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/unittest/test
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/Cheetah/Tests
+	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/livestreamer_cli
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/lxml
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxml2mod.so
 	rm -f $(prefix)/release$(PYTHON_DIR)/site-packages/libxsltmod.so
@@ -1086,60 +1154,51 @@ endif
 	rm -rf $(prefix)/release$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION).egg-info
 
 # delete mips remote control files
-# old rc_models scheme
-	if [ ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9500/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu/*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000/*; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/et9500; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/vu; \
-		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000; \
-	fi
-#
-# delete mips remote control files
-# new rc_models scheme
-	if [ -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et7x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et8000.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9500.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/formuler1.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd1100.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd2400.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu*.*; \
-		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000.*; \
-	fi
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et4x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et6x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et7x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et8000.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9x00.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/et9500.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/formuler1.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd1100.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hd2400.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/vu*.*
+	rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/xp1000.*
 
 #
-# delete unnecessary remote control file and VFD plugins
-# old rc_models scheme
-		if [ ! ENABLE_SPARK7162 && ! ENABLE_SPARK && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/spark/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/spark; \
-		fi
+# delete unnecessary remote control files and VFD plugins
+#
+	cp -f $(buildprefix)/root/release/rc_spark.png $(prefix)/release/usr/local/share/enigma2/rc_models/spark.png
+	cp -f $(buildprefix)/root/release/rc_fs9000.png $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000.png
+	cp -f $(buildprefix)/root/release/rc_hs9510.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510.png
+	cp -f $(buildprefix)/root/release/rc_hs7110.png $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110.png
+	cp -f $(buildprefix)/root/release/rc_tf7700.png $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700.png
 
-		if [ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500  && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000; \
-		fi
+	if [[ ! ENABLE_SPARK7162 && ! ENABLE_SPARK ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/spark/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/spark; \
+	fi
 
-		if [ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7810A && ! ENABLE_HS7819  && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510; \
-		fi
+	if [[ ! ENABLE_HDBOX && ! ENABLE_ATEVIO7500 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/fs9000; \
+	fi
 
-		if [ ! ENABLE_HS7110 && ! ENABLE_HS7119  && ! -e $(prefix)/release/usr/local/share/enigma2/rc_models/rc_models.cfg ]; then \
-			rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
-			rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
-		fi
+	if [[ ! ENABLE_OCTAGON1008 && ! ENABLE_HS7420 && ! ENABLE_HS7810A && ! ENABLE_HS7429 && ! ENABLE_HS7819 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs9510; \
+	fi
+
+	if [[ ! ENABLE_HS7110 && ! ENABLE_HS7119 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/hs7110; \
+	fi
+
+	if [[ ! ENABLE_TF7700 ]]; then \
+		rm -rf $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700/*; \
+		rmdir $(prefix)/release/usr/local/share/enigma2/rc_models/tf7700; \
+	fi
 
 #
 # Complete the videomode selection picture set
@@ -1148,24 +1207,6 @@ endif
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/SystemPlugins/Videomode/YPbPr.png $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/Videomode/Component.png; \
 		cp -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/SystemPlugins/Videomode/lcd_YPbPr.png $(prefix)/release/usr/lib/enigma2/python/Plugins/SystemPlugins/Videomode/lcd_Component.png; \
 	fi
-
-#
-# Do not remove pyo files, remove pyc instead
-#
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.pyc' -exec rm -f {} \;
-#	find $(prefix)/release/usr/lib/enigma2/ -not -name 'mytest.py' -name '*.py' -exec rm -f {} \;
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.a' -exec rm -f {} \;
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.o' -exec rm -f {} \;
-	find $(prefix)/release/usr/lib/enigma2/ -name '*.la' -exec rm -f {} \;
-
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
-#	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
-#	find $(prefix)/release$(PYTHON_DIR)/site-packages/cryptography/hazmat -name '*.py' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
-	find $(prefix)/release$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
 
 #
 # alsa
@@ -1211,9 +1252,7 @@ if ENABLE_MEDIAFWGSTREAMER
 	if [ -d $(prefix)/release/usr/lib/gstreamer-1.0 ]; then \
 		rm -rf $(prefix)/release/usr/lib/gstreamer-1.0/*; \
 		cp -a $(targetprefix)/usr/bin/gst-* $(prefix)/release/usr/bin/; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/bin/gst-launch*; \
 		cp -a $(targetprefix)/usr/lib/gstreamer-1.0/libgst*.so $(prefix)/release/usr/lib/gstreamer-1.0/; \
-		sh4-linux-strip --strip-unneeded $(prefix)/release/usr/lib/gstreamer-1.0/*; \
 	fi
 endif
 
@@ -1273,19 +1312,44 @@ endif
 		cp $(buildprefix)/root/firmware/as102_data1_st.hex $(prefix)/release/lib/firmware/; \
 		cp $(buildprefix)/root/firmware/as102_data2_st.hex $(prefix)/release/lib/firmware/; \
 	fi
+	if [ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/ ]; then \
+		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/siano/* $(prefix)/release/lib/modules/; \
+		cp $(buildprefix)/root/firmware/dvb_nova_12mhz_b0.inp $(prefix)/release/lib/firmware/; \
+	fi
+	if [ -e $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko ]; then \
+		cp $(targetprefix)/lib/modules/$(KERNELVERSION)/extra/dvbt/it913x/dvb-it913x.ko $(prefix)/release/lib/modules/; \
+		cp $(buildprefix)/root/firmware/dvb-usb-it9135-01.fw $(prefix)/release/lib/firmware/; \
+		cp $(buildprefix)/root/firmware/dvb-usb-it9135-02.fw $(prefix)/release/lib/firmware/; \
+		cp $(buildprefix)/root/firmware/dvb-usb-it9137.fw $(prefix)/release/lib/firmware/; \
+	fi
 
 #
 # The main target depends on the model.
 # IMPORTANT: it is assumed that only one variable is set. Otherwise the target name won't be resolved.
 #
 $(D)/release_enigma2: \
-$(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7810A)$(HS7119)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)$(FORTIS_DP7000)
-	touch $@
+$(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(VIP1_V2)$(VIP2_V1)$(UFS910)$(UFS912)$(UFS913)$(UFS922)$(UFC960)$(SPARK)$(SPARK7162)$(OCTAGON1008)$(FORTIS_HDBOX)$(ATEVIO7500)$(HS7110)$(HS7420)$(HS7810A)$(HS7119)$(HS7429)$(HS7819)$(ATEMIO520)$(ATEMIO530)$(CUBEREVO)$(CUBEREVO_MINI)$(CUBEREVO_MINI2)$(CUBEREVO_MINI_FTA)$(CUBEREVO_250HD)$(CUBEREVO_2000HD)$(CUBEREVO_9500HD)$(HOMECAST5101)$(IPBOX9900)$(IPBOX99)$(IPBOX55)$(ADB_BOX)$(VITAMIN_HD5000)$(SAGEMCOM88)$(ARIVALINK200)
+#
+# Do not remove pyo files, remove pyc instead
+#
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.pyc' -exec rm -f {} \;
+#	find $(prefix)/release/usr/lib/enigma2/ -not -name 'mytest.py' -name '*.py' -exec rm -f {} \;
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.a' -exec rm -f {} \;
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.o' -exec rm -f {} \;
+	find $(prefix)/release/usr/lib/enigma2/ -name '*.la' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
+#	find $(prefix)/release$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
+	find $(prefix)/release$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
+	$(TOUCH)
 
 #
 # FOR YOUR OWN CHANGES use these folder in cdk/own_build/enigma2
 #
-#	default for all receiver
+#	default for all receivers
 	find $(buildprefix)/own_build/enigma2/ -mindepth 1 -maxdepth 1 -exec cp -at$(prefix)/release/ -- {} +
 #	receiver specific (only if directory exist)
 	[ -d "$(buildprefix)/own_build/enigma2.$(BOXTYPE)" ] && find $(buildprefix)/own_build/enigma2.$(BOXTYPE)/ -mindepth 1 -maxdepth 1 -exec cp -at$(prefix)/release/ -- {} + || true
@@ -1301,4 +1365,3 @@ $(D)/%release_enigma2: release_enigma2_base release_enigma2_$(TF7700)$(HL101)$(V
 #
 release-enigma2-clean:
 	rm -f $(D)/release
-

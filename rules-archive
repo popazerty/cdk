@@ -10,47 +10,47 @@
 # core
 #
 ccache-3.1.9.tar.gz;http://samba.org/ftp/ccache
-squashfs3.0.tar.gz;http://heanet.dl.sourceforge.net/sourceforge/squashfs
-lzma442.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/sevenzip
-squashfs4.0.tar.gz;http://heanet.dl.sourceforge.net/sourceforge/squashfs
-lzma465.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/sevenzip
-cramfs-1.1.tar.gz;http://heanet.dl.sourceforge.net/sourceforge/cramfs
-mtd-utils-1.5.1.tar.bz2;ftp://ftp.infradead.org/pub/mtd-utils
+squashfs3.0.tar.gz;https://sourceforge.net/projects/squashfs/files/squashfs/squashfs3.0
+lzma442.tar.bz2;https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/4.42
+squashfs4.0.tar.gz;https://sourceforge.net/projects/squashfs/files/squashfs/squashfs4.0
+lzma465.tar.bz2;https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/4.65
+cramfs-1.1.tar.gz;https://sourceforge.net/projects/cramfs/files/cramfs/1.1
+mtd-utils-1.5.2.tar.bz2;ftp://ftp.infradead.org/pub/mtd-utils
 ipkg-utils-050831.tar.gz;ftp://ftp.gwdg.de/linux/handhelds/packages/ipkg-utils
-pkg-config-0.28.tar.gz;http://pkgconfig.freedesktop.org/releases
-u-boot-1.3.1.tar.bz2;http://ftp.denx.de/pub/u-boot
+pkg-config-0.28.tar.gz;https://pkg-config.freedesktop.org/releases
+u-boot-1.3.1.tar.bz2;ftp://ftp.denx.de/pub/u-boot
 
 #
 # root
 #
-busybox-1.23.2.tar.bz2;http://www.busybox.net/downloads
+busybox-1.25.1.tar.bz2;https://busybox.net/downloads
 lsb_3.2-20.tar.gz;http://debian.sdinet.de/etch/sdinet/lsb
 ipkg-0.99.163.tar.gz;ftp://ftp.gwdg.de/linux/handhelds/packages/ipkg
-module-init-tools-3.16.tar.bz2;http://ftp.be.debian.org/pub/linux/utils/kernel/module-init-tools
+module-init-tools-3.16.tar.gz;https://launchpad.net/module-init-tools/trunk/3.16/+download
 sysvinit_2.88dsf.orig.tar.gz;ftp://ftp.debian.org/debian/pool/main/s/sysvinit
 
 #
 # Graphics and Font Libraries
 #
-freetype-2.5.5.tar.bz2;http://prdownloads.sourceforge.net/sourceforge/freetype
+freetype-2.6.1.tar.bz2;https://sourceforge.net/projects/freetype/files/freetype2/2.6.1
 fontconfig-2.8.0.tar.gz;http://www.freedesktop.org/software/fontconfig/release
-fribidi-0.19.6.tar.bz2;http://fribidi.org/download
-giflib-4.1.6.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
-giflib-5.0.6.tar.bz2;http://downloads.sourceforge.net/project/giflib
-libungif-4.1.4.tar.bz2;http://heanet.dl.sourceforge.net/sourceforge/giflib
+fribidi-0.19.7.tar.bz2;http://fribidi.org/download
+giflib-4.1.6.tar.bz2;https://sourceforge.net/projects/giflib/files/giflib-4.x/giflib-4.1.6
+giflib-5.1.2.tar.bz2;https://sourceforge.net/projects/giflib/files/
+libungif-4.1.4.tar.bz2;https://sourceforge.net/projects/giflib/files/libungif-4.x/libungif-4.1.4
 jpegsrc.v8d.tar.gz;http://www.ijg.org/files
-libjpeg-turbo-1.4.0.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.4.0
-libpng-1.2.50.tar.bz2;http://sourceforge.net/projects/libpng/files/libpng12/1.2.50
-libpng-1.6.17.tar.gz;http://sourceforge.net/projects/libpng/files/libpng16/1.6.17
+libjpeg-turbo-1.4.2.tar.gz;http://sourceforge.net/projects/libjpeg-turbo/files/1.4.2
+libpng-1.6.24.tar.gz;https://sourceforge.net/projects/libpng/files/libpng16/older-releases/1.6.24
+png++-0.2.9.tar.gz;http://download.savannah.gnu.org/releases/pngpp
 tiff-4.0.3.tar.gz;http://download.osgeo.org/libtiff
 pixman-0.18.0.tar.gz;http://cairographics.org/releases
 
 #
 # Multimedia Libraries and Drivers
 #
-alsa-lib-1.0.29.tar.bz2;ftp://ftp.alsa-project.org/pub/lib
-alsa-utils-1.0.29.tar.bz2;ftp://ftp.alsa-project.org/pub/utils
-flac-1.3.0.tar.xz;http://downloads.xiph.org/releases/flac
+alsa-lib-1.1.0.tar.bz2;ftp://ftp.alsa-project.org/pub/lib
+alsa-utils-1.1.0.tar.bz2;ftp://ftp.alsa-project.org/pub/utils
+flac-1.3.1.tar.xz;http://downloads.xiph.org/releases/flac
 a52dec-0.7.4.tar.gz;http://liba52.sourceforge.net/files
 libao-1.1.0.tar.gz;http://downloads.xiph.org/releases/ao
 libass-0.11.1.tar.gz;https://github.com/libass/libass/releases/download/0.11.1
@@ -58,34 +58,35 @@ libbluray-0.5.0.tar.bz2;http://download.videolan.org/pub/videolan/libbluray/0.5.
 libdvdcss-1.2.13.tar.bz2;http://download.videolan.org/pub/libdvdcss/1.2.13
 libdvdnav-4.2.1.tar.xz;http://dvdnav.mplayerhq.hu/releases
 libdvdread-4.9.9.tar.xz;http://dvdnav.mplayerhq.hu/releases
-libid3tag-0.15.1b.tar.gz;http://download.sf.net/mad
-libmad-0.15.1b.tar.gz;http://download.sf.net/mad
-libmpeg2-0.5.1.tar.gz;http://libmpeg2.sourceforge.net/files
+libid3tag-0.15.1b.tar.gz;https://sourceforge.net/projects/mad/files/libid3tag/0.15.1b
+libmad-0.15.1b.tar.gz;https://sourceforge.net/projects/mad/files/libmad/0.15.1b
+libmpeg2-0.5.1.tar.gz;http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz
 libogg-1.3.2.tar.gz;http://downloads.xiph.org/releases/ogg
 libsamplerate-0.1.8.tar.gz;http://www.mega-nerd.com/SRC
 libvorbis-1.3.4.tar.gz;http://downloads.xiph.org/releases/vorbis
 libvorbisidec_1.0.2+svn18153.orig.tar.gz;http://ftp.debian.org/debian/pool/main/libv/libvorbisidec
+libdca-0.0.5.tar.bz2;http://download.videolan.org/pub/videolan/libdca/0.0.5/
 
 #
 # contrib libs
 #
 ncurses-5.9.tar.gz;ftp://ftp.gnu.org/gnu/ncurses
 gmp-6.0.0a.tar.xz;https://gmplib.org/download/gmp/
-lua-5.2.3.tar.gz;http://www.lua.org/ftp
+lua-5.2.4.tar.gz;http://www.lua.org/ftp
 luaposix.git;git://github.com/luaposix/luaposix.git;release-v31
 luacurl.git;git://github.com/Lua-cURL/Lua-cURLv3.git
 luaexpat-1.3.0.tar.gz;http://matthewwild.co.uk/projects/luaexpat
 howl-1.0.0.tar.gz;http://downloads.sourceforge.net/project/howl/howl/1.0.0
-zlib-1.2.8.tar.gz;http://zlib.net
+zlib-1.2.8.tar.gz;http://www.zlib.net/fossils
 readline-6.2.tar.gz;http://ftp.gnu.org/gnu/readline
 rtmpdump.git;git://github.com/oe-alliance/rtmpdump;2.4
-lirc-0.9.0.tar.gz;http://prdownloads.sourceforge.net/lirc
+lirc-0.9.0.tar.gz;https://sourceforge.net/projects/lirc/files/LIRC/0.9.0
 libsigc++-1.2.7.tar.gz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/1.2
 libsigc++-2.3.2.tar.xz;http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.3
-glib-2.45.4.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.45
+glib-2.51.0.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.51
 libffi-3.2.1.tar.gz;ftp://sourceware.org/pub/libffi
 libiconv-1.14.tar.gz;http://ftp.gnu.org/gnu/libiconv
-libmng-1.0.10.tar.bz2;http://dfn.dl.sourceforge.net/sourceforge/libmng
+libmng-1.0.10.tar.bz2;https://sourceforge.net/projects/libmng/files/libmng-devel/1.0.10
 lcms-1.17.tar.gz;http://sourceforge.net/projects/lcms/files/lcms/1.17
 DirectFB-1.4.11.tar.gz;http://directfb.org/downloads/Core/DirectFB-1.4
 DFB++-1.0.0.tar.gz;http://www.directfb.org/downloads/Extras
@@ -96,33 +97,35 @@ sqlite-autoconf-3080600.tar.gz;http://www.sqlite.org/2014
 enchant-1.5.0.tar.gz;http://www.abisource.com/downloads/enchant/1.5.0
 lite-0.9.0+git0.7982ccc.tar.bz2;http://www.duckbox.info/files/packages
 cairo-1.8.10.tar.gz;http://cairographics.org/releases
-expat-2.1.0.tar.gz;http://prdownloads.sourceforge.net/sourceforge/expat
-ffmpeg-2.6.3.tar.bz2;http://ffmpeg.org/releases
+expat-2.1.0.tar.gz;https://sourceforge.net/projects/expat/files/expat/2.1.0
+ffmpeg-3.0.1.tar.bz2;http://ffmpeg.org/releases
 fdk-aac.git;git://github.com/mstorsjo/fdk-aac.git
 libcap-2.22.tar.bz2;http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2
 BroFS1.2.tgz;http://www.avalpa.com/assets/freesoft/other
-libdvbsi++-0.3.7.tar.bz2;http://www.saftware.de/libdvbsi++
-libmodplug-0.8.8.4.tar.gz;http://downloads.sourceforge.net/project/modplug-xmms/libmodplug/0.8.8.4
+libdvbsi++.git;git://git.opendreambox.org/git/obi/libdvbsi++.git
+libmodplug-0.8.8.4.tar.gz;https://sourceforge.net/projects/modplug-xmms/files/libmodplug/0.8.8.4
 lzo-2.06.tar.gz;http://www.oberhumer.com/opensource/lzo/download
 yajl.git;git://github.com/lloyd/yajl;f4b2b1af87483caac60e50e5352fc783d9b2de2d
-pcre-8.30.tar.bz2;http://sourceforge.net/projects/pcre/files/pcre/8.30
+pcre-8.39.tar.bz2;http://sourceforge.net/projects/pcre/files/pcre/8.39
 libcdio-0.83.tar.gz;http://ftp.gnu.org/gnu/libcdio
 jasper-1.900.1.zip;http://www.ece.uvic.ca/~frodo/jasper/software
 mysql-5.1.40.tar.gz;http://downloads.mysql.com/archives/mysql-5.1
 libmicrohttpd-0.9.19.tar.gz;http://ftp.halifax.rwth-aachen.de/gnu/libmicrohttpd
-libexif-0.6.20.tar.gz;http://sourceforge.net/projects/libexif/files/libexif/0.6.20
-minidlna-1.1.3.tar.gz;http://sourceforge.net/projects/minidlna/files/minidlna/1.1.3
-djmount-0.71.tar.gz;http://sourceforge.net/projects/djmount/files/djmount/0.71
-libupnp-1.6.17.tar.bz2;http://sourceforge.net/projects/pupnp/files/latest/download
-rarfs-0.1.0.tar.gz;http://downloads.sourceforge.net/project/rarfs/rarfs/0.1.0
+libexif-0.6.20.tar.gz;https://sourceforge.net/projects/libexif/files/libexif/0.6.20
+minidlna-1.1.5.tar.gz;https://sourceforge.net/projects/minidlna/files/minidlna/1.1.5
+djmount-0.71.tar.gz;https://sourceforge.net/projects/djmount/files/djmount/0.71
+libupnp-1.6.17.tar.bz2;https://sourceforge.net/projects/pupnp/files/latest/download
+rarfs-0.1.0.tar.gz;https://downloads.sourceforge.net/project/rarfs/rarfs/0.1.0
 sshfs-fuse-2.4.tar.bz2;http://fossies.org/linux/misc
-tinyxml_2_6_2.tar.gz;http://ignum.dl.sourceforge.net/project/tinyxml/tinyxml/2.6.2
+tinyxml_2_6_2.tar.gz;https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2
 taglib-1.8.tar.gz;https://github.com/downloads/taglib/taglib
 libnfs.git;git://github.com/sahlberg/libnfs.git
 libxml2-2.8.0.tar.gz;http://xmlsoft.org/sources
 libxml2-2.9.0.tar.gz;http://xmlsoft.org/sources
 libxslt-1.1.28.tar.gz;http://xmlsoft.org/sources
 pugixml-1.6.tar.gz;http://github.com/zeux/pugixml/releases/download/v1.6
+libudev.git;git://git.kernel.org/pub/scm/linux/hotplug/udev.git
+libkmod.git;git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 
 #
 # contrib apps
@@ -130,48 +133,52 @@ pugixml-1.6.tar.gz;http://github.com/zeux/pugixml/releases/download/v1.6
 bzip2-1.0.6.tar.gz;http://www.bzip.org/1.0.6
 grep-2.5.1.tar.bz2;ftp://mirrors.kernel.org/gnu/grep
 grep_2.5.1.ds2-6.diff.gz;http://64studio.hivelocity.net/apt/pool/main/g/grep
-openrdate-1.1.2.tar.gz;http://prdownloads.sourceforge.net/sourceforge/openrdate
+openrdate-1.1.2.tar.gz;https://sourceforge.net/projects/openrdate/files/openrdate/openrdate-1.1.2
 termcap-2.0.8.tar.gz;http://fresh.t-systems-sfr.com/linux/src
 mc-4.8.1.7.tar.bz2;http://www.midnight-commander.org/downloads
 console-data_1.03.orig.tar.gz;ftp://ftp.debian.org/debian/pool/main/c/console-data
 nano-2.0.6.tar.gz;http://www.nano-editor.org/dist/v2.0
 rsync-2.6.9.tar.gz;http://samba.anu.edu.au/ftp/rsync
-curlftpfs-0.9.2.tar.gz;http://sourceforge.net/projects/curlftpfs/files/latest/download
-boost_1_53_0.tar.bz2;http://prdownloads.sourceforge.net/sourceforge/boost
+curlftpfs-0.9.2.tar.gz;https://sourceforge.net/projects/curlftpfs/files/curlftpfs/0.9.2
+boost_1_53_0.tar.bz2;https://sourceforge.net/projects/boost/files/boost/1.53.0
 pngquant-1.1-src.tgz;ftp://ftp.simplesystems.org/pub/libpng/png/applications/pngquant
 mplayer-export-snapshot.tar.bz2;ftp://ftp.mplayerhq.hu/MPlayer/releases
-opkg-0.2.0.tar.gz;http://opkg.googlecode.com/files
+opkg-0.2.2.tar.gz;http://git.yoctoproject.org/cgit/cgit.cgi/opkg/snapshot
 sysstat-11.1.2.tar.bz2;http://pagesperso-orange.fr/sebastien.godard
 ImageMagick-6.7.7-7.tar.bz2;ftp://ftp.fifi.org/pub/ImageMagick
 shairport.git;git://github.com/abrasive/shairport;1.0-dev
 wget-1.15.tar.gz;http://ftp.gnu.org/gnu/wget
+iso-codes.git;git://anonscm.debian.org/pkg-isocodes/iso-codes.git
 
 #
 # AirPlay
 #
 avahi-0.6.31.tar.gz;http://www.avahi.org/download
-dbus-dbus-1.8.tar.gz;http://cgit.freedesktop.org/dbus/dbus/snapshot
+#dbus-dbus-1.8.tar.gz;http://cgit.freedesktop.org/dbus/dbus/snapshot
+dbus-1.8.0.tar.gz;http://dbus.freedesktop.org/releases/dbus
 libdaemon-0.14.tar.gz;http://0pointer.de/lennart/projects/libdaemon
 libplist-1.10.tar.gz;http://cgit.sukimashita.com/libplist.git/snapshot
 
 #
 # PYTHON
 #
-Python-2.7.9.tar.xz;http://www.python.org/ftp/python/2.7.9
+Python-2.7.11.tar.xz;https://www.python.org/ftp/python/2.7.11
 gdata-2.0.18.tar.gz;https://gdata-python-client.googlecode.com/files
-elementtree-1.2.6-20050316.tar.gz;http://effbot.org/media/downloads
-lxml-2.2.8.tgz;http://launchpad.net/lxml/2.2/2.2.8/+download
+#elementtree-1.2.6-20050316.tar.gz;https://effbot.org/media/downloads
+#elementtree-1.2.6-20050316.tar.gz;http://pkgs.fedoraproject.org/repo/pkgs/python-elementtree/elementtree-1.2.6-20050316.tar.gz/e1b21716be8bfff8bf192fc3880ad008
+lxml-2.2.8.tgz;https://launchpadlibrarian.net/54848077
 libxmlccwrap-0.0.12.tar.gz;http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwrap/download
-setuptools-5.2.tar.gz;http://pypi.python.org/packages/source/s/setuptools
-Twisted-13.2.0.tar.bz2;http://twistedmatrix.com/Releases/Twisted/13.2
-Imaging-1.1.7.tar.gz;http://effbot.org/downloads
-pycrypto-2.5.tar.gz;http://pypi.python.org/packages/source/p/pycrypto
+setuptools-5.2.tar.gz;https://pypi.python.org/packages/source/s/setuptools
+Twisted-16.0.0.tar.bz2;https://pypi.python.org/packages/source/T/Twisted
+Imaging-1.1.7.tar.gz;https://effbot.org/media/downloads
+#Imaging-1.1.7.tar.gz;https://ftp.heanet.ie/mirrors/xbmc/build-deps/sources
+pycrypto-2.6.1.tar.gz;https://pypi.python.org/packages/source/p/pycrypto
 pyOpenSSL-0.13.1.tar.gz;http://pypi.python.org/packages/source/p/pyOpenSSL
 pyusb-1.0.0a3.tar.gz;http://pypi.python.org/packages/source/p/pyusb
-python-wifi-0.5.0.tar.bz2;http://freefr.dl.sourceforge.net/project/pythonwifi.berlios
+python-wifi-0.6.1.tar.bz2;http://pypi.python.org/packages/source/p/python-wifi
 Cheetah-2.4.4.tar.gz;http://pypi.python.org/packages/source/C/Cheetah
-mechanize-0.2.5.tar.gz;http://pypi.python.org/packages/source/m/mechanize
-zope.interface-4.1.1.tar.gz;http://pypi.python.org/packages/source/z/zope.interface
+mechanize-0.2.5.tar.gz;https://pypi.python.org/packages/source/m/mechanize
+zope.interface-4.1.1.tar.gz;https://pypi.python.org/packages/source/z/zope.interface
 six-1.9.0.tar.gz;https://pypi.python.org/packages/source/s/six
 cffi-1.2.1.tar.gz;https://pypi.python.org/packages/source/c/cffi
 enum34-1.0.4.tar.gz;https://pypi.python.org/packages/source/e/enum34
@@ -179,19 +186,25 @@ pyasn1-0.1.8.tar.gz;https://pypi.python.org/packages/source/p/pyasn1
 pyasn1-modules-0.0.7.tar.gz;https://pypi.python.org/packages/source/p/pyasn1-modules
 pycparser-2.14.tar.gz;https://pypi.python.org/packages/source/p/pycparser
 cryptography-0.8.1.tar.gz;https://pypi.python.org/packages/source/c/cryptography
+requests-2.7.0.tar.gz;https://pypi.python.org/packages/source/r/requests
+futures-2.1.6.tar.gz;https://pypi.python.org/packages/source/f/futures
+singledispatch-3.4.0.3.tar.gz;https://pypi.python.org/packages/source/s/singledispatch
+livestreamer.git;git://github.com/chrippa/livestreamer
+livestreamersrv.git;git://github.com/athoik/livestreamersrv
 
 #
 # GSTREAMER
 #
 orc-0.4.24.tar.xz;http://gstreamer.freedesktop.org/src/orc
 gmediarender-0.0.6.tar.bz2;http://savannah.nongnu.org/download/gmrender
-gstreamer-1.5.2.tar.xz;http://gstreamer.freedesktop.org/src/gstreamer
-gst-plugins-base-1.5.2.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-base
-gst-plugins-good-1.5.2.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-good
-gst-plugins-bad-1.5.2.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-bad
-gst-plugins-ugly-1.5.2.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-ugly
+gst-plugins-dvbmediasink.git;git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmediasink.git
+gstreamer-1.8.3.tar.xz;http://gstreamer.freedesktop.org/src/gstreamer
+gst-plugins-base-1.8.3.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-base
+gst-plugins-good-1.8.3.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-good
+gst-plugins-bad-1.8.3.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-bad
+gst-plugins-ugly-1.8.3.tar.xz;http://gstreamer.freedesktop.org/src/gst-plugins-ugly
 gst-fluendo-mpegdemux-0.10.71.tar.gz;http://core.fluendo.com/gstreamer/src/gst-fluendo-mpegdemux
-gst-libav-1.5.2.tar.xz;http://gstreamer.freedesktop.org/src/gst-libav
+gst-libav-1.8.3.tar.xz;http://gstreamer.freedesktop.org/src/gst-libav
 gst-plugin-subsink.git;git://github.com/christophecvr/gstreamer1.0-plugin-subsink.git
 
 #
@@ -211,16 +224,15 @@ libdreamdvd.git;git://github.com/mirakels/libdreamdvd
 # EXTERNAL_LCD
 #
 graphlcd-base-touchcol.git;git://projects.vdr-developer.org/graphlcd-base.git;touchcol
-libusb-1.0.9.tar.bz2;http://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-1.0.9
-libusb-compat-0.1.5.tar.bz2;http://downloads.sourceforge.net/project/libusb/libusb-compat-0.1/libusb-compat-0.1.5
+libusb-1.0.9.tar.bz2;https://sourceforge.net/projects/libusb/files/libusb-1.0/libusb-1.0.9
+libusb-compat-0.1.5.tar.bz2;https://sourceforge.net/projects/libusb/files/libusb-compat-0.1/libusb-compat-0.1.5
 libgd-2.1.0.tar.gz;http://bitbucket.org/libgd/gd-libgd/downloads
 dpf-ax.svn;svn://svn.code.sf.net/p/dpf-ax/code/trunk
 
 #
 # Security
 #
-openssl-0.9.8zf.tar.gz;http://www.openssl.org/source
-openssl-1.0.2d.tar.gz;http://www.openssl.org/source
+openssl-1.0.2k.tar.gz;ftp://ftp.openssl.org/source
 gnutls-3.4.3.tar.xz;ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4
 nettle-3.1.tar.gz;https://ftp.gnu.org/gnu/nettle
 
@@ -232,36 +244,39 @@ e2fsprogs-1.42.13.tar.gz;http://sourceforge.net/projects/e2fsprogs/files/e2fspro
 fdisk-1.3.0a.tar.gz;http://ftp.gnu.org/gnu/fdisk
 fuse-2.9.2.tar.gz;http://dfn.dl.sourceforge.net/sourceforge/fuse
 hddtemp-0.3-beta15.tar.bz2;http://savannah.c3sl.ufpr.br/hddtemp
-hdparm-9.43.tar.gz;http://prdownloads.sourceforge.net/sourceforge/hdparm
+hdparm-9.48.tar.gz;https://sourceforge.net/projects/hdparm/files/hdparm
 jfsutils-1.1.15.tar.gz;http://jfs.sourceforge.net/project/pub
 lm_sensors-2.9.2.tar.gz;http://dl.lm-sensors.org/lm-sensors/releases
 sdparm-1.07.tgz;http://sg.danny.cz/sg/p
 parted-3.0.tar.gz;http://ftp.gnu.org/pub/gnu/parted
-util-linux-2.25.2.tar.gz;http://ftp.kernel.org/pub/linux/utils/util-linux/v2.25
+#util-linux-2.25.2.tar.gz;http://ftp.kernel.org/pub/linux/utils/util-linux/v2.25
+util-linux-2.25.2.tar.xz;https://www.kernel.org/pub/linux/utils/util-linux/v2.25
 xfsprogs-3.1.8.tar.gz;http://ftp.gwdg.de/pub/linux/misc/xfs/xfs/cmd_tars
+smartmontools-6.4.tar.gz;http://sourceforge.net/projects/smartmontools/files/smartmontools/6.4
 
 #
 # Networking Libraries / Networking Utilities
 #
-autofs-4.1.4.tar.gz;http://kernel.org/pub/linux/daemons/autofs/v4
-curl-7.42.1.tar.bz2;http://curl.haxx.se/download
-portmap_6.0.0.orig.tar.gz;http://ftp.de.debian.org/debian/pool/main/p/portmap
-portmap_6.0.0-2.diff.gz ;http://debian.osuosl.org/debian/pool/main/p/portmap
-nfs-utils-1.3.2.tar.bz2;http://downloads.sourceforge.net/project/nfs/nfs-utils/1.3.2
+autofs-4.1.4.tar.gz;https://kernel.org/pub/linux/daemons/autofs/v4
+curl-7.51.0.tar.bz2;https://curl.haxx.se/download
+portmap_6.0.0.orig.tar.gz;http://ftp.gnome.org/mirror/cdimage/snapshot/Debian/pool/main/p/portmap/
+portmap_6.0.0-2.diff.gz ;http://ftp.gnome.org/mirror/cdimage/snapshot/Debian/pool/main/p/portmap/
+nfs-utils-1.3.3.tar.bz2;https://sourceforge.net/projects/nfs/files/nfs-utils/1.3.3
 libevent-2.0.20-stable.tar.gz;http://downloads.sourceforge.net/project/levent/libevent/libevent-2.0
 libnfsidmap-0.25.tar.gz;http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap
 libsoup-2.50.0.tar.xz;http://download.gnome.org/sources/libsoup/2.50
-vsftpd-3.0.2.tar.gz;https://security.appspot.com/downloads
-#ntp-4.2.6p5.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
+vsftpd-3.0.3.tar.gz;https://security.appspot.com/downloads
 ntp-4.2.8.tar.gz;http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 samba-3.6.12.tar.gz;http://www.samba.org/samba/ftp/stable
 netio126.zip;http://bnsmb.de/files/public/windows
 lighttpd-1.4.15.tar.gz;http://www.lighttpd.net/download
 zd1211lnxdrv_2_15_0_0.tar.gz;http://www.lutec.eu/treiber
-wireless_tools.29.tar.gz;http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux
+wireless_tools.29.tar.gz;http://www.labs.hpe.com/personal/Jean_Tourrilhes/Linux/
 libnl-2.0.tar.gz;http://www.carisma.slowglass.com/~tgr/libnl/files
-wpa_supplicant-0.7.3.tar.gz;http://hostap.epitest.fi/releases
+wpa_supplicant-0.7.3.tar.gz;http://w1.fi/releases
 ethtool-6.tar.gz;http://downloads.openwrt.org/sources
 xupnpd.git;git://github.com/clark15b/xupnpd
 udpxy.1.0.23-0-prod.tar.gz;http://www.udpxy.com/download/1_23
-glib-networking-2.45.1.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/2.45
+glib-networking-2.50.0.tar.xz;http://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/2.50
+openvpn-2.3.12.tar.xz;http://swupdate.openvpn.org/community/releases
+openssh-7.1p1.tar.gz;http://artfiles.org/openbsd/OpenSSH/portable

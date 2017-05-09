@@ -2,6 +2,7 @@
 # tuxtxtlib
 #
 $(D)/tuxtxtlib: bootstrap @DEPENDS_tuxtxtlib@
+	$(START_BUILD)
 	@PREPARE_tuxtxtlib@
 	cd @DIR_tuxtxtlib@ && \
 		aclocal && \
@@ -9,7 +10,7 @@ $(D)/tuxtxtlib: bootstrap @DEPENDS_tuxtxtlib@
 		autoconf && \
 		automake --foreign --add-missing && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
@@ -20,12 +21,13 @@ $(D)/tuxtxtlib: bootstrap @DEPENDS_tuxtxtlib@
 		$(MAKE) all && \
 		@INSTALL_tuxtxtlib@
 	@CLEANUP_tuxtxtlib@
-	touch $@
+	$(TOUCH)
 
 #
 # tuxtxt32bpp
 #
 $(D)/tuxtxt32bpp: tuxtxtlib @DEPENDS_tuxtxt32bpp@
+	$(START_BUILD)
 	@PREPARE_tuxtxt32bpp@
 	cd @DIR_tuxtxt32bpp@ && \
 		aclocal && \
@@ -33,7 +35,7 @@ $(D)/tuxtxt32bpp: tuxtxtlib @DEPENDS_tuxtxt32bpp@
 		autoconf && \
 		automake --foreign --add-missing && \
 		$(BUILDENV) \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(build) \
 			--host=$(target) \
 			--prefix=/usr \
@@ -44,7 +46,7 @@ $(D)/tuxtxt32bpp: tuxtxtlib @DEPENDS_tuxtxt32bpp@
 		$(MAKE) all && \
 		@INSTALL_tuxtxt32bpp@
 	@CLEANUP_tuxtxt32bpp@
-	touch $@
+	$(TOUCH)
 
 #
 # Plugins
@@ -55,8 +57,9 @@ $(D)/enigma2-plugins: enigma2_networkbrowser enigma2_openwebif
 # enigma2-openwebif
 #
 $(D)/enigma2_openwebif: $(D)/bootstrap $(D)/python $(D)/python_cheetah @DEPENDS_enigma2_openwebif@
-	[ -d "$(archivedir)/e2openplugin-OpenWebif.git" ] && \
-	(cd $(archivedir)/e2openplugin-OpenWebif.git; git pull ; git checkout HEAD; cd "$(buildprefix)";); \
+	$(START_BUILD)
+	@[ -d "$(archivedir)/e2openplugin-OpenWebif.git" ] && \
+	(cd $(archivedir)/e2openplugin-OpenWebif.git; git pull -q ; git checkout -q HEAD; cd "$(buildprefix)";)
 	@PREPARE_enigma2_openwebif@
 	cd @DIR_enigma2_openwebif@ && \
 		$(BUILDENV) \
@@ -74,14 +77,15 @@ $(D)/enigma2_openwebif: $(D)/bootstrap $(D)/python $(D)/python_cheetah @DEPENDS_
 		msgfmt -cv -o $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/locale/pl/LC_MESSAGES/OpenWebif.mo locale/pl.po && \
 		msgfmt -cv -o $(targetprefix)/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif/locale/uk/LC_MESSAGES/OpenWebif.mo locale/uk.po
 	@CLEANUP_enigma2_openwebif@
-	touch $@ || true
+	$(TOUCH) || true
 
 #
 # enigma2-networkbrowser
 #
 $(D)/enigma2_networkbrowser: @DEPENDS_enigma2_networkbrowser@
-	[ -d "$(archivedir)/enigma2-openpli-plugins-enigma2.git" ] && \
-	(cd $(archivedir)/enigma2-openpli-plugins-enigma2.git; git pull ; git checkout HEAD; cd "$(buildprefix)";); \
+	$(START_BUILD)
+	@[ -d "$(archivedir)/enigma2-openpli-plugins-enigma2.git" ] && \
+	(cd $(archivedir)/enigma2-openpli-plugins-enigma2.git; git pull -q; git checkout -q HEAD; cd "$(buildprefix)";)
 	@PREPARE_enigma2_networkbrowser@
 	cd @DIR_enigma2_networkbrowser@/src/lib && \
 		$(BUILDENV) \
@@ -112,4 +116,4 @@ $(D)/enigma2_networkbrowser: @DEPENDS_enigma2_networkbrowser@
 		cp -a src/lib/netscan.so $(targetprefix)/usr/lib/enigma2/python/Plugins/SystemPlugins/NetworkBrowser/ && \
 		rm -rf $(targetprefix)/usr/lib/enigma2/python/Plugins/SystemPlugins/NetworkBrowser/lib
 	@CLEANUP_enigma2_networkbrowser@
-	touch $@ || true
+	$(TOUCH) || true

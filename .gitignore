@@ -28,9 +28,11 @@ missing
 BUILD/
 BUILDLOG/
 own_build/
-linux-sh4/
-linux-sh4*/
+linux-sh4
+linux-sh*/
 busybox-*/
 custom/yaud-neutrino-*
 custom/yaud-enigma2-*
 custom/yaud-tvheadend-*
+root/boot/*
+

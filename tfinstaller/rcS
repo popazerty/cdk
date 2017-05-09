@@ -1,10 +1,9 @@
 #!/bin/sh
 /sbin/mount -t proc /proc /proc
 /sbin/mount -t sysfs /sysfs /sys
-/bin/stty -F /dev/ttyAS0 speed 115200
-/bin/stty -F /dev/ttyAS0
+/bin/stty -F /dev/ttyAS0 speed 115200 > /dev/null
+#/bin/stty -F /dev/ttyAS0
 
-busybox --install
 insmod /drvko/e2_proc.ko
 insmod /drvko/tffp.ko
 

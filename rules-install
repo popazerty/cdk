@@ -14,10 +14,10 @@ host_u_boot_tools
 #
 # Core
 #
-#squashfs
-ccache;make:install:DESTDIR=HOST
-cramfs;install:mkcramfs:HOST/bin
 ipkg_utils;make:install
+ccache;make:install:DESTDIR=HOST
+host_cramfs;install:mkcramfs:HOST/bin
+host_squashfs;make:install:INSTALL_DIR=HOST/bin
 host_pkgconfig;make:install
 host_module_init_tools;make:install
 host_mtd_utils;make:install:DESTDIR=HOST/bin
@@ -47,6 +47,7 @@ libjpeg;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libjpeg.la
 libjpeg_turbo;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libjpeg.la
 #libpng12;rewrite-pkgconfig:libpng12.pc;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libpng.la:TARGET/usr/lib/libpng12.la
 libpng;rewrite-pkgconfig:libpng16.pc;make:install:prefix=TARGET/usr;rewrite-libtool:TARGET/usr/lib/libpng.la:TARGET/usr/lib/libpng16.la
+pngpp;make:install-headers:PREFIX=TARGET/usr
 tiff;make:install:prefix=/usr:DESTDIR=TARGET
 pixman;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libpixman-1.la;rewrite-pkgconfig:TARGET/usr/lib/pkgconfig/pixman-1.pc
 
@@ -70,6 +71,7 @@ libogg;rewrite-pkgconfig:ogg.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARG
 libsamplerate;make:install:prefix=/usr:DESTDIR=TARGET
 libvorbis;rewrite-pkgconfig:vorbis.pc:vorbisenc.pc:vorbisfile.pc;make:install:prefix=/usr:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libvorbis.la:TARGET/usr/lib/libvorbisenc.la:TARGET/usr/lib/libvorbisfile.la
 libvorbisidec;make:install:DESTDIR=TARGET;install:-m644:vorbisidec.pc:TARGET/usr/lib/pkgconfig;rewrite-pkgconfig:TARGET/usr/lib/pkgconfig/vorbisidec.pc;rewrite-libtool:TARGET/usr/lib/libvorbisidec.la
+libdca;rewrite-pkgconfig:libdca/libdca.pc:libdca/libdts.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libdca.la
 
 #
 # contrib libs
@@ -130,6 +132,8 @@ libxml2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGET;rewrite-libt
 libxml2_e2;rewrite-pkgconfig:libxml-2.0.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libxml2.la;rewrite-dependency:TARGET/usr/lib/libxml2.la
 libxslt;rewrite-pkgconfig:libxslt.pc:libexslt.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libxslt.la:TARGET/usr/lib/libexslt.la;rewrite-dependency:TARGET/usr/lib/libexslt.la
 pugixml;make:install:DESTDIR=TARGET
+libudev;make:install:DESTDIR=TARGET
+libkmod;make:install:DESTDIR=TARGET
 
 #
 # contrib apps
@@ -151,6 +155,12 @@ imagemagick;rewrite-pkgconfig:magick/ImageMagick.pc:magick/MagickCore.pc:wand/Ma
 shairport;make:install:PREFIX=TARGET/usr
 mtd_utils;make:install:DESTDIR=TARGET
 wget;make:install:DESTDIR=TARGET
+usb_modeswitch;make:install:DESTDIR=TARGET
+usb_modeswitch_data;make:install:DESTDIR=TARGET
+pppd;make:install:DESTDIR=TARGET
+modem_scripts;make:install:DESTDIR=TARGET
+usbutils;make:install:DESTDIR=TARGET
+iso_codes;make:install:DESTDIR=TARGET
 
 #
 # AirPlay
@@ -210,7 +220,6 @@ libdpfax;make:install:DESTDIR=TARGET
 # Security
 #
 openssl;rewrite-pkgconfig:libcrypto.pc:libssl.pc:openssl.pc;make:install_sw:INSTALL_PREFIX=TARGET
-openssl_e2;rewrite-pkgconfig:libcrypto.pc:libssl.pc:openssl.pc;make:install_sw:INSTALL_PREFIX=TARGET
 gnutls;rewrite-pkgconfig:lib/gnutls.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libgnutls.la:TARGET/usr/lib/libgnutlsxx.la;rewrite-dependency:TARGET/usr/lib/libgnutlsxx.la
 nettle;rewrite-pkgconfig:nettle.pc:hogweed.pc;make:install:DESTDIR=TARGET
 
@@ -229,6 +238,7 @@ sdparm;make:install:DESTDIR=TARGET
 parted;make:install
 utillinux;rewrite-pkgconfig:libsmartcols/smartcols.pc;make:install:DESTDIR=TARGET;rewrite-libtool:TARGET/usr/lib/libsmartcols.la
 xfsprogs;make:install:prefix=TARGET/usr
+smartmontools;make:install:prefix=TARGET/usr
 
 #
 # Networking Libraries / Networking Utilities
@@ -252,6 +262,8 @@ ethtool;make:install:DESTDIR=TARGET
 xupnpd;make:install:DESTDIR=TARGET
 udpxy;make:install:INSTALLROOT=TARGET/usr
 glibnetworking;make:install:INSTALLROOT=TARGET
+openvpn;make:install:DESTDIR=TARGET
+openssh;make:install:DESTDIR=TARGET
 
 
 >>?;rules-install-local
